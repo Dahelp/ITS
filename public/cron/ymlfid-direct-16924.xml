@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:30:01+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories>
+					<category id="1">Шины для спецтехники</category><category id="19" parentId='1'>Шины для экскаваторов-погрузчиков</category></categories>				
+				<offers><offer id="9206" available="true">
+                      <url>https://its-center.ru/product/16-9-24-12pr-tl-shina-pnevmaticheskaya-ekr-4-ekka</url>
+                      <price>41470</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/12a044d73d88470d5ff853c6d0b7942c.webp</picture>					  					  
+                      <name>16.9-24 12PR EKR-4 EKKA Шина для экскаватора-погрузчика</name>
+					  <model>EKR-4</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">73.7</param><param name="Глубина протектора (мм)">28</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">260</param><param name="Макс. Нагрузка (кг)">3250</param><param name="Наружный диаметр, мм">1309</param><param name="Область применения">грунт, песок</param><param name="Объём, м3">0.735</param><param name="Посадочный диаметр (дюйм)">24</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKR-4</param><param name="Размер диска (RIM)">15Lx24</param><param name="Размер шины">16.9-24</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">430</param><param name="Ширина профиля (дюйм)">16.9</param></offer><offer id="9205" available="true">
+                      <url>https://its-center.ru/product/16-9-24-14pr-tl-shina-pnevmaticheskaya-ekt-2-ekka</url>
+                      <price>44130</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1bc44ac0033c593e2dc89989d941e18a.webp</picture>					  					  
+                      <name>16.9-24 14PR EKT-2 EKKA Шина для экскаватора-погрузчика</name>
+					  <model>EKT-2</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">78.5</param><param name="Глубина протектора (мм)">24</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">290</param><param name="Макс. Нагрузка (кг)">3540</param><param name="Наружный диаметр, мм">1310</param><param name="Область применения">асфальт, бетон, строй площадка</param><param name="Объём, м3">0.738</param><param name="Посадочный диаметр (дюйм)">24</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKT-2</param><param name="Размер диска (RIM)">15Lx24</param><param name="Размер шины">16.9-24</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">14</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">420</param><param name="Ширина профиля (дюйм)">16.9</param></offer><offer id="7104" available="true">
+                      <url>https://its-center.ru/product/16-9-24-12pr-tl-shina-pnevmaticheskaya-superguider-qh601</url>
+                      <price>40590</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e8906d4ecb5f93626c74dcece5177f66.webp</picture>					  					  
+                      <name>16.9-24 12PR QH601 Superguider Шина для экскаватора-погрузчика</name>
+					  <model>QH601</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">83</param><param name="Глубина протектора (мм)">27</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">260</param><param name="Макс. Нагрузка (кг)">3250</param><param name="Наружный диаметр, мм">1310</param><param name="Область применения">грунт, песок</param><param name="Объём, м3">0.65</param><param name="Посадочный диаметр (дюйм)">24</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH601</param><param name="Размер диска (RIM)">15Lx24</param><param name="Размер шины">16.9-24</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">429</param><param name="Ширина профиля (дюйм)">16.9</param></offer><offer id="10270" available="true">
+                      <url>https://its-center.ru/product/16-9-24-qh608-12pr-superguider-shina-dlya-ekskavatora-pogruzchika</url>
+                      <price>50650</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/f11c97f6f8fd1bda120edbf8b2831b29.webp</picture>					  					  
+                      <name>16.9-24 QH608 12PR Superguider Шина для экскаватора-погрузчика</name>
+					  <model>QH608</model>
+                      <vendor>Superguider</vendor><param name="Макс. Давление (КПа)">300</param><param name="Макс. Нагрузка (кг)">3530</param><param name="Наружный диаметр, мм">1310</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH608</param><param name="Размер диска (RIM)">DW15</param><param name="Размер шины">16.9-24</param><param name="Рисунок протектора">Скала</param><param name="Слойность (PR)">12</param><param name="Тип шины">TL (Бескамерная шина)</param><param name="Ширина протектора (мм)">440</param></offer></offers>
+	  </shop>
+	</yml_catalog>

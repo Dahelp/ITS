@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:20:00+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories>
+					<category id="34">Шины</category><category id="2" parentId='34'>Шины АТВ</category></categories>				
+				<offers><offer id="9091" available="true">
+                      <url>https://its-center.ru/product/16x8-7-p361-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4200</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/c6421ab00cb74335cb4d0d2354a46bbf.jpg</picture>					  					  
+                      <name>16х8-7 P361 EKKA Шины для квадроциклов</name>
+					  <model>P361</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.58</param><param name="Глубина протектора (мм)">10.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">80</param><param name="Наружный диаметр, мм">390</param><param name="Объём, м3">0.033</param><param name="Посадочный диаметр (дюйм)">7 дюймов</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P361</param><param name="Размер шины">16x8-7</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">156</param></offer><offer id="9082" available="true">
+                      <url>https://its-center.ru/product/19x7-8-p311-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5200</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/5d3707d262cc8b0ce24be4bdbc5f6258.jpg</picture>					  					  
+                      <name>19х7-8 P311 EKKA Шины для квадроциклов</name>
+					  <model>P311</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.48</param><param name="Глубина протектора (мм)">15.0</param><param name="Макс. Давление (PSI)">10</param><param name="Макс. Нагрузка (кг)">100</param><param name="Наружный диаметр, мм">482</param><param name="Объём, м3">0.039</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P311</param><param name="Размер шины">19x7-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">177</param></offer><offer id="9081" available="true">
+                      <url>https://its-center.ru/product/19x9-50-8-p311-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5850</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/5d84c82276e97d5945366487cf34f64d.jpg</picture>					  					  
+                      <name>19х9.50-8 P311 EKKA Шины для квадроциклов</name>
+					  <model>P311</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.82</param><param name="Глубина протектора (мм)">15.0</param><param name="Макс. Давление (PSI)">10</param><param name="Макс. Нагрузка (кг)">125</param><param name="Модель">P311</param><param name="Наружный диаметр, мм">482</param><param name="Объём, м3">0.05</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P311</param><param name="Размер шины">19x9.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">229</param></offer><offer id="9079" available="true">
+                      <url>https://its-center.ru/product/20x10-9-p354-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>6500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e954a42bd5aa86f583f71a24e33dbb8c.jpg</picture>					  					  
+                      <name>20х10-9 P354 EKKA Шины для квадроциклов</name>
+					  <model>P354</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.6</param><param name="Глубина протектора (мм)">8.0</param><param name="Макс. Давление (PSI)">10</param><param name="Макс. Нагрузка (кг)">118</param><param name="Наружный диаметр, мм">505</param><param name="Объём, м3">0.065</param><param name="Посадочный диаметр (дюйм)">9</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P354</param><param name="Размер шины">20x10-9</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">257</param></offer><offer id="9080" available="true">
+                      <url>https://its-center.ru/product/21x7-10-p354-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/45b98f42ae7363a4970e52b400f8c22c.jpg</picture>					  					  
+                      <name>21х7-10 P354 EKKA Шины для квадроциклов</name>
+					  <model>P354</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.23</param><param name="Глубина протектора (мм)">8.0</param><param name="Макс. Давление (PSI)">10</param><param name="Макс. Нагрузка (кг)">93</param><param name="Наружный диаметр, мм">535</param><param name="Объём, м3">0.045</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P354</param><param name="Размер шины">21x7-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">181</param></offer><offer id="9096" available="true">
+                      <url>https://its-center.ru/product/22x10-10-p306-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9200</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/bf48d682b599ba3ae9b6629c5269118a.jpg</picture>					  					  
+                      <name>22х10-10 P306 EKKA Шины для квадроциклов</name>
+					  <model>P306</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.972</param><param name="Глубина протектора (мм)">14.0</param><param name="Макс. Давление (PSI)">14</param><param name="Макс. Нагрузка (кг)">175</param><param name="Наружный диаметр, мм">559</param><param name="Объём, м3">0.080</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P306</param><param name="Размер шины">22x10-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.5</param><param name="Ширина протектора (мм)">256</param></offer><offer id="9097" available="true">
+                      <url>https://its-center.ru/product/22x7-10-p306-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>6650</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/7d4faa260d2f136a3f8c250fd254991e.jpg</picture>					  					  
+                      <name>22х7-10 P306 EKKA Шины для квадроциклов</name>
+					  <model>P306</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.4</param><param name="Глубина протектора (мм)">14.0</param><param name="Макс. Давление (PSI)">14</param><param name="Макс. Нагрузка (кг)">171</param><param name="Наружный диаметр, мм">545</param><param name="Объём, м3">0.055</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P306</param><param name="Размер шины">22x7-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">180</param></offer><offer id="9078" available="true">
+                      <url>https://its-center.ru/product/3-00-4-p523-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>1300</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/f97f6e000a5bd7a28321650af49adfe7.jpg</picture>					  					  
+                      <name>3.00-4 P523 EKKA Шины для квадроциклов</name>
+					  <model>P523</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">0.75</param><param name="Глубина протектора (мм)">2.3</param><param name="Макс. Давление (PSI)">50</param><param name="Макс. Нагрузка (кг)">100</param><param name="Наружный диаметр, мм">263</param><param name="Объём, м3">0.005</param><param name="Посадочный диаметр (дюйм)">4</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P523</param><param name="Размер шины">3.00-4</param><param name="Слойность (PR)">4</param><param name="Тип">TT</param><param name="Ширина диска (дюйм)">2.15</param><param name="Ширина протектора (мм)">93</param></offer><offer id="9538" available="true">
+                      <url>https://its-center.ru/product/13x5-6-p336-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2050</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1ed4c037f071a9433d0d37e9b0799859.jpg</picture>					  					  
+                      <name>13х5-6 P336 EKKA Шины для квадроциклов</name>
+					  <model>P336</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.46</param><param name="Глубина протектора (мм)">9.5</param><param name="Макс. Давление (PSI)">15</param><param name="Макс. Нагрузка (кг)">88</param><param name="Наружный диаметр, мм">330</param><param name="Объём, м3">0.013</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P336</param><param name="Размер шины">13x5-6</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">3.5</param><param name="Ширина протектора (мм)">112</param></offer><offer id="9543" available="true">
+                      <url>https://its-center.ru/product/145-70-6-p319-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2450</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1eb968df248f3a24773215382f3157f0.jpg</picture>					  					  
+                      <name>145/70-6 P319 EKKA Шины для квадроциклов</name>
+					  <model>P319</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.59</param><param name="Глубина протектора (мм)">5.5</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">75</param><param name="Наружный диаметр, мм">355</param><param name="Объём, м3">0.002</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P319</param><param name="Размер шины">145/70-6</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.0</param><param name="Ширина протектора (мм)">140</param></offer><offer id="9536" available="true">
+                      <url>https://its-center.ru/product/16x8-7-p319-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>3500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/c1c7a89308dfc4e15fd3d157ee43ce8a.jpg</picture>					  					  
+                      <name>16х8-7 P319 EKKA Шины для квадроциклов</name>
+					  <model>P319</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">2.86</param><param name="Глубина протектора (мм)">9.0</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">80</param><param name="Наружный диаметр, мм">406</param><param name="Объём, м3">0.033</param><param name="Посадочный диаметр (дюйм)">7 дюймов</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P319</param><param name="Размер шины">16x8-7</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">185</param></offer><offer id="9327" available="true">
+                      <url>https://its-center.ru/product/20x10-9-p357-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>6500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/21496f85630c74ac4b577ccac9d5e4f9.jpg</picture>					  					  
+                      <name>20х10-9 P357 EKKA Шины для квадроциклов</name>
+					  <model>P357</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.32</param><param name="Глубина протектора (мм)">18.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">118</param><param name="Наружный диаметр, мм">505</param><param name="Объём, м3">0.065</param><param name="Посадочный диаметр (дюйм)">9</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P357</param><param name="Размер шины">20x10-9</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">252</param></offer><offer id="9325" available="true">
+                      <url>https://its-center.ru/product/20x7-8-p322-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4100</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/b9aff64b37735a2d291ef7e25496416e.jpg</picture>					  					  
+                      <name>20х7-8 P322 EKKA Шины для квадроциклов</name>
+					  <model>P322</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.404</param><param name="Глубина протектора (мм)">7.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">89</param><param name="Наружный диаметр, мм">494</param><param name="Объём, м3">0.046</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P322</param><param name="Размер шины">20x7-8</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">177</param></offer><offer id="9326" available="true">
+                      <url>https://its-center.ru/product/21x7-10-p348-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/a51d9cf9ed0a03d546999155ff367c6a.jpg</picture>					  					  
+                      <name>21х7-10 P348 EKKA Шины для квадроциклов</name>
+					  <model>P348</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.08</param><param name="Глубина протектора (мм)">15.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">93</param><param name="Наружный диаметр, мм">530</param><param name="Объём, м3">0.045</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P348</param><param name="Размер шины">21x7-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">171</param></offer><offer id="9329" available="true">
+                      <url>https://its-center.ru/product/22x10-10-p357-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8700</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1693a4cc525d2aacafd3f81974772d0c.jpg</picture>					  					  
+                      <name>22х10-10 P357 EKKA Шины для квадроциклов</name>
+					  <model>P357</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">8.051</param><param name="Глубина протектора (мм)">18.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">136</param><param name="Наружный диаметр, мм">555</param><param name="Объём, м3">0.080</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P357</param><param name="Размер шины">22x10-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">258</param></offer><offer id="9544" available="true">
+                      <url>https://its-center.ru/product/22x7-r12-p3501-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5000</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/956c75fc7eeee913c21863603b0469b2.jpg</picture>					  					  
+                      <name>22х7-12 P3501 EKKA Шины для квадроциклов</name>
+					  <model>P3501</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.76</param><param name="Макс. Нагрузка (кг)">330</param><param name="Объём, м3">0.055</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P3501</param><param name="Размер шины">22x7-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.0</param></offer><offer id="10277" available="true">
+                      <url>https://its-center.ru/product/23x7-10-ekka-eos-shiny-dlya-kvadrociklov</url>
+                      <price>6300</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/7c280ec8554bd024c445c25686bc527e.jpg</picture>					  					  
+                      <name>23х7-10 EKKA EOS Шины для квадроциклов</name>
+					  <model>EOS</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.3</param><param name="Глубина протектора (мм)">15.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">109</param><param name="Наружный диаметр, мм">577</param><param name="Объём, м3">0.061</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">EOS</param><param name="Размер шины">23x7-10</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">175</param></offer><offer id="9331" available="true">
+                      <url>https://its-center.ru/product/25x10-12-p341-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9750</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e0b574e853f4f9496fa557e55963bc69.jpg</picture>					  					  
+                      <name>25х10-12 P341 EKKA Шины для квадроциклов</name>
+					  <model>P341</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10.405</param><param name="Глубина протектора (мм)">20.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">166</param><param name="Наружный диаметр, мм">638</param><param name="Объём, м3">0.102</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P341</param><param name="Размер шины">25x10-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">238</param></offer><offer id="11140" available="true">
+                      <url>https://its-center.ru/product/25h10-12-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9800</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/dd0cadcef242f6788d29bad38dc56ed3.jpg</picture>					  					  
+                      <name>25х10-12 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.304</param><param name="Глубина протектора (мм)">16.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">166</param><param name="Наружный диаметр, мм">630</param><param name="Объём, м3">0.076</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">25x10-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">253</param></offer><offer id="9330" available="true">
+                      <url>https://its-center.ru/product/25x8-12-p341-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8850</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/6971cc45da46dc4e88d4e5525821a9a9.jpg</picture>					  					  
+                      <name>25х8-12 P341 EKKA Шины для квадроциклов</name>
+					  <model>P341</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.43</param><param name="Глубина протектора (мм)">20.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">132</param><param name="Наружный диаметр, мм">638</param><param name="Объём, м3">0.080</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P341</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">200</param></offer><offer id="11139" available="true">
+                      <url>https://its-center.ru/product/25h8-12-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8450</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/95d23100847fcce0f7899d5c96808591.jpg</picture>					  					  
+                      <name>25х8-12 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.628</param><param name="Глубина протектора (мм)">16.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">132</param><param name="Наружный диаметр, мм">638</param><param name="Объём, м3">0.062</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">200</param></offer><offer id="9332" available="true">
+                      <url>https://its-center.ru/product/25x8-r12-p3035-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8050</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/7ea8423c8edfad854fe95a57dfef6798.jpg</picture>					  					  
+                      <name>25х8-R12 P3035 EKKA Шины для квадроциклов</name>
+					  <model>P3035</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.6</param><param name="Глубина протектора (мм)">16</param><param name="Макс. Давление (PSI)">18</param><param name="Макс. Нагрузка (кг)">252</param><param name="Наружный диаметр, мм">635</param><param name="Объём, м3">0.080</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P3035</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">204</param></offer><offer id="9541" available="true">
+                      <url>https://its-center.ru/product/29x9-14-ekka-p350-shiny-dlya-kvadrociklov</url>
+                      <price>12650</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/3b3458531c476c3602b0fc022ef5842e.jpg</picture>					  					  
+                      <name>29х9-14 EKKA P350 Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">13.44</param><param name="Глубина протектора (мм)">20.0</param><param name="Макс. Давление (PSI)">18</param><param name="Макс. Нагрузка (кг)">354</param><param name="Наружный диаметр, мм">735</param><param name="Объём, м3">0.124</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">29x9-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">225</param></offer><offer id="10279" available="true">
+                      <url>https://its-center.ru/product/25x8-12-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/eb92ea835fe520b7c5666a5df0f60366.jpg</picture>					  					  
+                      <name>25х8-12 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">8</param><param name="Глубина протектора (мм)">20</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">150</param><param name="Наружный диаметр, мм">635</param><param name="Объём, м3">0.082</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">203</param></offer><offer id="11143" available="true">
+                      <url>https://its-center.ru/product/27x9-12-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/619565d56ac7be9f412fd57647efed69.jpg</picture>					  					  
+                      <name>27х9-12 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10.37</param><param name="Глубина протектора (мм)">20</param><param name="Макс. Давление (PSI)">20</param><param name="Макс. Нагрузка (кг)">190</param><param name="Наружный диаметр, мм">685</param><param name="Объём, м3">0.088</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">27x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">229</param></offer><offer id="10274" available="true">
+                      <url>https://its-center.ru/product/26x9-12-mars-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8900</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e548025b4ed0923f8b922345999c045a.jpg</picture>					  					  
+                      <name>26х9-12 Mars EKKA Шины для квадроциклов</name>
+					  <model>Mars</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.5</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">200</param><param name="Наружный диаметр, мм">660</param><param name="Объём, м3">0.116</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Mars</param><param name="Размер шины">26x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">229</param></offer><offer id="10275" available="true">
+                      <url>https://its-center.ru/product/26x11-12-mars-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/861180a9d898c9046d1f74b23d339f03.jpg</picture>					  					  
+                      <name>26х11-12 Mars EKKA Шины для квадроциклов</name>
+					  <model>Mars</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">217</param><param name="Наружный диаметр, мм">655</param><param name="Объём, м3">0.139</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Mars</param><param name="Размер шины">26x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина протектора (мм)">254</param></offer><offer id="10272" available="true">
+                      <url>https://its-center.ru/product/25x8-12-mars-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>7550</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/3b930bf89e21473f135d0a7db07fa659.jpg</picture>					  					  
+                      <name>25х8-12 Mars EKKA Шины для квадроциклов</name>
+					  <model>Mars</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10.5</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">154</param><param name="Наружный диаметр, мм">640</param><param name="Объём, м3">0.08</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Mars</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">210</param></offer><offer id="9088" available="true">
+                      <url>https://its-center.ru/product/16x6-50-8-p332-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>3800</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/9d8eb6c776e751837906a6f42cc72b3a.jpg</picture>					  					  
+                      <name>16х6.50-8 P332 EKKA Шины для квадроциклов</name>
+					  <model>P332</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.18</param><param name="Глубина протектора (мм)">7.1</param><param name="Макс. Давление (PSI)">28</param><param name="Макс. Нагрузка (кг)">308</param><param name="Наружный диаметр, мм">410</param><param name="Объём, м3">0.027</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P332</param><param name="Размер шины">16x6.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.375</param><param name="Ширина протектора (мм)">165</param></offer><offer id="9904" available="true">
+                      <url>https://its-center.ru/product/13x4-6-p533-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2250</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/bdb17ed7741fbab411b1d5cfc2e2c4c6.jpg</picture>					  					  
+                      <name>13х4-6 P533 EKKA Шины для квадроциклов</name>
+					  <model>P533</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.56</param><param name="Глубина протектора (мм)">14</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">127</param><param name="Наружный диаметр, мм">311</param><param name="Объём, м3">0.011</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P533</param><param name="Размер шины">13x4-6</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">3.25</param><param name="Ширина протектора (мм)">99</param></offer><offer id="9087" available="true">
+                      <url>https://its-center.ru/product/13x5-6-p332-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/4a9dfdb5b6cfc466b23d1a5b343ea326.jpg</picture>					  					  
+                      <name>13х5-6 P332 EKKA Шины для квадроциклов</name>
+					  <model>P332</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.7</param><param name="Глубина протектора (мм)">5.0</param><param name="Макс. Давление (PSI)">40</param><param name="Макс. Нагрузка (кг)">200</param><param name="Наружный диаметр, мм">316</param><param name="Объём, м3">0.013</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P332</param><param name="Размер шины">13x5-6</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">3.5</param><param name="Ширина протектора (мм)">122</param></offer><offer id="9905" available="true">
+                      <url>https://its-center.ru/product/15h5-6-p533-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2800</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/d15db0ad02faa0824352f488bfeac93a.jpg</picture>					  					  
+                      <name>15х5-6 P533 EKKA Шины для квадроциклов</name>
+					  <model>P533</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">2.2</param><param name="Глубина протектора (мм)">14</param><param name="Макс. Давление (PSI)">20</param><param name="Макс. Нагрузка (кг)">184</param><param name="Наружный диаметр, мм">360</param><param name="Объём, м3">0.018</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P533</param><param name="Размер шины">15x5-6</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">3.50</param><param name="Ширина протектора (мм)">120</param></offer><offer id="10088" available="true">
+                      <url>https://its-center.ru/product/19x7-8-p361-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/62e55017e7ce38c578af68c583e1a49f.jpg</picture>					  					  
+                      <name>19х7-8 P361 EKKA Шины для квадроциклов</name>
+					  <model>P361</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5</param><param name="Глубина протектора (мм)">11</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">100</param><param name="Наружный диаметр, мм">483</param><param name="Объём, м3">0.039</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P361</param><param name="Размер шины">19x7-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.50</param><param name="Ширина протектора (мм)">180</param></offer><offer id="10087" available="true">
+                      <url>https://its-center.ru/product/18x9-50-8-p361-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4950</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/2d4ba9f520cf53ab0540d51d0cbe3cca.jpg</picture>					  					  
+                      <name>18х9.50-8 P361 EKKA Шины для квадроциклов</name>
+					  <model>P361</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.8</param><param name="Глубина протектора (мм)">11</param><param name="Макс. Давление (PSI)">10</param><param name="Макс. Нагрузка (кг)">116</param><param name="Наружный диаметр, мм">455</param><param name="Объём, м3">0.044</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P361</param><param name="Размер шины">18x9.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">218</param></offer><offer id="10086" available="true">
+                      <url>https://its-center.ru/product/18x9-50-8-p322-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4750</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/6126f3e5269abb2deb62f0d4861237f1.jpg</picture>					  					  
+                      <name>18х9.50-8 P322 EKKA Шины для квадроциклов</name>
+					  <model>P322</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.02</param><param name="Глубина протектора (мм)">9.5</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">105</param><param name="Наружный диаметр, мм">460</param><param name="Объём, м3">0.044</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P322</param><param name="Размер шины">18x9.50-8</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">212</param></offer><offer id="10280" available="true">
+                      <url>https://its-center.ru/product/25x10-12-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9250</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/ddc980574b65a538b4e6c3b77d59e079.jpg</picture>					  					  
+                      <name>25х10-12 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">190</param><param name="Наружный диаметр, мм">635</param><param name="Объём, м3">0.102</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">25x10-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8</param><param name="Ширина протектора (мм)">244</param></offer><offer id="10243" available="true">
+                      <url>https://its-center.ru/product/28x8-12-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>11500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/0a6bcb29b3cf92f62113baa52aa42d3b.jpg</picture>					  					  
+                      <name>28х8-12 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">12.6</param><param name="Высота шины (дюйм)">28</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">260</param><param name="Наружный диаметр, мм">711</param><param name="Объём, м3">0.1</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">28x8-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Тип шины">Пневматическая</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">203</param><param name="Ширина профиля (дюйм)">8</param></offer><offer id="10244" available="true">
+                      <url>https://its-center.ru/product/28x10-12-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>12850</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/43af2f77454db8dd858f1a6cf516ae53.jpg</picture>					  					  
+                      <name>28х10-12 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">310</param><param name="Наружный диаметр, мм">711</param><param name="Объём, м3">0.128</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">28x10-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8</param><param name="Ширина протектора (мм)">254</param></offer><offer id="9083" available="true">
+                      <url>https://its-center.ru/product/16x6-50-8-p508-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>3800</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/ab0c271d05ea03e7a8d6b01816b90b68.webp</picture>					  					  
+                      <name>16х6.50-8 P508 EKKA Шины для квадроциклов</name>
+					  <model>P508</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.05</param><param name="Глубина протектора (мм)">4.0</param><param name="Макс. Давление (PSI)">14</param><param name="Макс. Нагрузка (кг)">188</param><param name="Объём, м3">0.027</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P508</param><param name="Размер шины">16x6.50-8</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.375</param><param name="Ширина протектора (мм)">165</param></offer><offer id="9094" available="true">
+                      <url>https://its-center.ru/product/18x8-50-8-p509-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4750</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/fc5081a25bc4af85ff877dc2de3be633.webp</picture>					  					  
+                      <name>18х8.50-8 P509 EKKA Шины для квадроциклов</name>
+					  <model>P509</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.5</param><param name="Глубина протектора (мм)">6.0</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">204</param><param name="Объём, м3">0.043</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Гольф-кар, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P509</param><param name="Размер шины">18x8.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">215</param></offer><offer id="9084" available="true">
+                      <url>https://its-center.ru/product/18x9-50-8-p508-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4200</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/00d1d26f59feb76f335237592419c246.webp</picture>					  					  
+                      <name>18х9.50-8 P508 EKKA Шины для квадроциклов</name>
+					  <model>P508</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.89</param><param name="Глубина протектора (мм)">3.8</param><param name="Макс. Давление (PSI)">24</param><param name="Макс. Нагрузка (кг)">472</param><param name="Объём, м3">0.044</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P508</param><param name="Размер шины">18х9.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">223</param></offer><offer id="9089" available="true">
+                      <url>https://its-center.ru/product/20x10-8-p332-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/0c4dff7b1986f50a331c37548cc3615f.webp</picture>					  					  
+                      <name>20х10-8 P332 EKKA Шины для квадроциклов</name>
+					  <model>P332</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.65</param><param name="Глубина протектора (мм)">7.1</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">540</param><param name="Объём, м3">0.065</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">P332</param><param name="Размер шины">20x10-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">250</param></offer><offer id="9095" available="true">
+                      <url>https://its-center.ru/product/205-50-10-p823-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/5c29bdf04ef0d0429e9a4d5efd541498.webp</picture>					  					  
+                      <name>205/50-10 P823 EKKA Шины для квадроциклов</name>
+					  <model>P823</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.82</param><param name="Глубина протектора (мм)">9.0</param><param name="Макс. Давление (PSI)">30</param><param name="Макс. Нагрузка (кг)">306</param><param name="Объём, м3">0.043</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Прицеп, гольф-кар</param><param name="Производитель">EKKA</param><param name="Протектор">P823</param><param name="Размер шины">205/50-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">198</param></offer><offer id="9540" available="true">
+                      <url>https://its-center.ru/product/23x7-10-ekka-p348-shiny-dlya-kvadrociklov</url>
+                      <price>6000</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/bc9d4ec243161fd9a00ba4cc6bae2766.webp</picture>					  					  
+                      <name>23х7-10 EKKA P348 Шины для квадроциклов</name>
+					  <model>P348</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.03</param><param name="Глубина протектора (мм)">15</param><param name="Макс. Нагрузка (кг)">110</param><param name="Объём, м3">0.060</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Производитель">EKKA</param><param name="Протектор">P348</param><param name="Размер шины">23x7-10</param><param name="Слойность (PR)">4</param><param name="Тип">(TL) Бескамерная шина</param></offer><offer id="10278" available="true">
+                      <url>https://its-center.ru/product/18x9-50-8-lg02-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/7fc5455a3ad68054281b5c12e61171d5.webp</picture>					  					  
+                      <name>18х9.50-8 LG02 EKKA Шины для квадроциклов</name>
+					  <model>LG02</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5</param><param name="Макс. Давление (PSI)">24</param><param name="Макс. Нагрузка (кг)">515</param><param name="Объём, м3">0.044</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA</param><param name="Протектор">LG02</param><param name="Размер шины">18x9.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">220</param></offer><offer id="10892" available="true">
+                      <url>https://its-center.ru/product/20x8-8-wave-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>3900</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/ecd067b1cd045288f7a18eb782d01e5d.webp</picture>					  					  
+                      <name>20х8-8 Wave EKKA Шины для квадроциклов</name>
+					  <model>Wave </model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.5</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">430</param><param name="Объём, м3">0.052</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA </param><param name="Протектор">Wave</param><param name="Размер шины">20x8-8</param><param name="Слойность (PR)">4</param><param name="Тип">(TL) Бескамерная шина</param></offer><offer id="10273" available="true">
+                      <url>https://its-center.ru/product/25x10-12-mars-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/c3442848d589b171e37777f68a3b1ec0.webp</picture>					  					  
+                      <name>25х10-12 Mars EKKA Шины для квадроциклов</name>
+					  <model>Mars</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10</param><param name="Объём, м3">0.09</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Mars</param><param name="Размер шины">25x10-12</param><param name="Слойность (PR)">6</param></offer><offer id="10320" available="true">
+                      <url>https://its-center.ru/product/26x9-12-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/fd52a42faa3c7ac9123ded536b301ec5.webp</picture>					  					  
+                      <name>26х9-12 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">200</param><param name="Наружный диаметр, мм">655</param><param name="Объём, м3">0.116</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">26x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">254</param></offer><offer id="10399" available="true">
+                      <url>https://its-center.ru/product/16x6-50-8-lg04-ekka-shina-dlya-kvadrociklov</url>
+                      <price>3600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/b337f52718c0bd00d2ea910661d1c686.webp</picture>					  					  
+                      <name>16х6.50-8 LG04 EKKA Шина для квадроциклов</name>
+					  <model>LG04</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.3</param><param name="Высота шины (дюйм)">16</param><param name="Объём, м3">0.027</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Производитель">EKKA</param><param name="Протектор">LG04</param><param name="Размер шины">16x6.50-8</param><param name="Слойность (PR)">4</param><param name="Ширина профиля (дюйм)">6.50</param></offer><offer id="10324" available="true">
+                      <url>https://its-center.ru/product/20x10-9-eos-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>7000</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e2309608a648158305804ef99d9d4b13.webp</picture>					  					  
+                      <name>20х10-9 EOS EKKA  Шины для квадроциклов</name>
+					  <model>EOS</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7</param><param name="Глубина протектора (мм)">18</param><param name="Макс. Нагрузка (кг)">136</param><param name="Наружный диаметр, мм">505</param><param name="Объём, м3">0.065</param><param name="Посадочный диаметр (дюйм)">9</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">EOS</param><param name="Размер шины">20x10-9</param><param name="Слойность (PR)">6</param><param name="Ширина диска (дюйм)">8</param><param name="Ширина протектора (мм)">252</param></offer><offer id="10552" available="true">
+                      <url>https://its-center.ru/product/22x11-8-p323-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4900</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/40dda04713be7c16471fd3300892dc35.webp</picture>					  					  
+                      <name>22х11-8 P323 EKKA Шины для квадроциклов </name>
+					  <model>P323</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.76</param><param name="Высота шины (дюйм)">22</param><param name="Объём, м3">0.078</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P323</param><param name="Размер шины">22x11-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина профиля (дюйм)">11</param></offer><offer id="10307" available="true">
+                      <url>https://its-center.ru/product/13x5-6-lg01-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/12edffe32d1aef17f4aeee81836812d2.webp</picture>					  					  
+                      <name>13х5-6 LG01 EKKA Шины для квадроциклов</name>
+					  <model>LG01</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.7</param><param name="Высота шины (дюйм)">13</param><param name="Объём, м3">0.014</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">LG01</param><param name="Размер шины">13x5-6</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина профиля (дюйм)">5</param></offer><offer id="10314" available="true">
+                      <url>https://its-center.ru/product/145-70-6-ceto-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/bbb8f4a440fd4f0387383b7e034c211f.webp</picture>					  					  
+                      <name>145/70-6 CETO EKKA Шины для квадроциклов </name>
+					  <model>CETO</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.964</param><param name="Объём, м3">0.017</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">CETO</param><param name="Размер шины">145/70-6</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">145</param></offer><offer id="10308" available="true">
+                      <url>https://its-center.ru/product/15x6-6-lg01-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>3640</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/a264a916625e7362544bd66164f6810c.webp</picture>					  					  
+                      <name>15х6-6 LG01 EKKA Шины для квадроциклов </name>
+					  <model>LG01</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">2.5</param><param name="Высота шины (дюйм)">15</param><param name="Объём, м3">0.022</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">LG01</param><param name="Размер шины">15x6-6</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина профиля (дюйм)">6</param></offer><offer id="10309" available="true">
+                      <url>https://its-center.ru/product/16x6-50-8-lg01-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>3920</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/2acfbcaa5a5a00592de60c76a9a153d6.webp</picture>					  					  
+                      <name>16х6.50-8 LG01 EKKA Шины для квадроциклов</name>
+					  <model>LG01</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.8</param><param name="Высота шины (дюйм)">16</param><param name="Объём, м3">0.027</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">LG01</param><param name="Размер шины">16x6.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина профиля (дюйм)">6.50</param></offer><offer id="10310" available="true">
+                      <url>https://its-center.ru/product/18h8-50-8-wave-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4640</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/37e961200b904791976c665e1cf7e8f5.webp</picture>					  					  
+                      <name>18х8.50-8 Wave EKKA Шины для квадроциклов</name>
+					  <model>Wave</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.7</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">369</param><param name="Наружный диаметр, мм">449</param><param name="Объём, м3">0.045</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Wave</param><param name="Размер шины">18x8.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">215</param></offer><offer id="10591" available="true">
+                      <url>https://its-center.ru/product/18h9-50-8-wave-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>4600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/244ec27aa532d88f5843a7ca84c6610b.webp</picture>					  					  
+                      <name>18х9.50-8 Wave EKKA Шины для квадроциклов</name>
+					  <model>Wave</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5</param><param name="Глубина протектора (мм)">5</param><param name="Макс. Давление (PSI)">24</param><param name="Макс. Нагрузка (кг)">472</param><param name="Наружный диаметр, мм">460</param><param name="Объём, м3">0.04</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Wave</param><param name="Размер шины">18x9.50-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">223</param></offer><offer id="10312" available="true">
+                      <url>https://its-center.ru/product/20h10-8-wave-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/af2f66a2f803f595c4129dae26f8ec63.webp</picture>					  					  
+                      <name>20х10-8 Wave EKKA Шины для квадроциклов</name>
+					  <model>Wave</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.5</param><param name="Глубина протектора (мм)">7.1</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">540</param><param name="Наружный диаметр, мм">500</param><param name="Объём, м3">0.065</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Wave</param><param name="Размер шины">20x10-8</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">250</param></offer><offer id="10311" available="true">
+                      <url>https://its-center.ru/product/20h8-10-wave-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5050</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/9609d3d219ac6d6264f1fc500b217822.webp</picture>					  					  
+                      <name>20х8-10 Wave EKKA Шины для квадроциклов</name>
+					  <model>Wave</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5</param><param name="Глубина протектора (мм)">8</param><param name="Макс. Давление (PSI)">24</param><param name="Макс. Нагрузка (кг)">406</param><param name="Наружный диаметр, мм">505</param><param name="Объём, м3">0.052</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Wave</param><param name="Размер шины">20x8-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.0</param><param name="Ширина протектора (мм)">205</param></offer><offer id="10292" available="true">
+                      <url>https://its-center.ru/product/21h7-10-eos-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/af4a612c8187fa5ba7adadfbd926e143.webp</picture>					  					  
+                      <name>21х7-10 EOS EKKA Шины для квадроциклов</name>
+					  <model>EOS</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">235</param><param name="Наружный диаметр, мм">523</param><param name="Объём, м3">0.05</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">EOS </param><param name="Размер шины">21x7-10</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">5.5</param><param name="Ширина протектора (мм)">168</param></offer><offer id="10322" available="true">
+                      <url>https://its-center.ru/product/26h9-12-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>11050</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/cdb5583bf371adc4588d06dcf6c1288f.webp</picture>					  					  
+                      <name>26х9-12 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10</param><param name="Высота шины (дюйм)">26</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">185</param><param name="Объём, м3">0.116</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">26x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина профиля (дюйм)">9</param></offer><offer id="10298" available="true">
+                      <url>https://its-center.ru/product/27h11-12-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>14050</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/0ee9ce0bf0aff1394e5fbbc10753ee87.webp</picture>					  					  
+                      <name>27х11-12 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">15</param><param name="Высота шины (дюйм)">26.9</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">225</param><param name="Объём, м3">0.131</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">27x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина профиля (дюйм)">10.7</param></offer><offer id="10297" available="true">
+                      <url>https://its-center.ru/product/27h9-12-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>11600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/d0adc18eecb7087ea083c76affad9852.webp</picture>					  					  
+                      <name>27х9-12 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">13</param><param name="Высота шины (дюйм)">27</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">200</param><param name="Объём, м3">0.107</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">27x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина профиля (дюйм)">9</param></offer><offer id="10300" available="true">
+                      <url>https://its-center.ru/product/28h11-12-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>16500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/2d3c0d1f0a50e1cf845394674e2f8902.webp</picture>					  					  
+                      <name>28х11-12 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">15.5</param><param name="Высота шины (дюйм)">27.8</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">235</param><param name="Объём, м3">0.141</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">28х11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина профиля (дюйм)">10.8</param></offer><offer id="10299" available="true">
+                      <url>https://its-center.ru/product/28h9-12-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>14400</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/40993f3e09c624526d2270925259ff49.webp</picture>					  					  
+                      <name>28х9-12 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14</param><param name="Высота шины (дюйм)">27.8</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">200</param><param name="Объём, м3">0.115</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">28х9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина профиля (дюйм)">8.8</param></offer><offer id="10303" available="true">
+                      <url>https://its-center.ru/product/28h9-14-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>13000</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/8bb57e8bad7a163ecd07b848c4f278da.webp</picture>					  					  
+                      <name>28х9-14 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14</param><param name="Высота шины (дюйм)">27.8</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">200</param><param name="Объём, м3">0.115</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">28х9-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина профиля (дюйм)">8.8</param></offer><offer id="10306" available="true">
+                      <url>https://its-center.ru/product/30h11-14-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>16350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/5df2d42e6ee2e421c83d616e1351b56c.webp</picture>					  					  
+                      <name>30х11-14 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">15</param><param name="Высота шины (дюйм)">29.9</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">256</param><param name="Объём, м3">0.162</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">30х11-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина профиля (дюйм)">10.7</param></offer><offer id="10323" available="true">
+                      <url>https://its-center.ru/product/26h11-12-vulcan-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>12500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/9263d4a1d9c7f910321a1dc542180149.webp</picture>					  					  
+                      <name>26х11-12 Vulcan EKKA Шины для квадроциклов</name>
+					  <model>Vulcan</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">12</param><param name="Высота шины (дюйм)">25.8</param><param name="Глубина протектора (мм)">35</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">217</param><param name="Объём, м3">0.139</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Vulcan</param><param name="Размер шины">26х11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина профиля (дюйм)">11</param></offer><offer id="10590" available="true">
+                      <url>https://its-center.ru/product/22x11-8-ares-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5300</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/a35ae87e2a749912abf68ae9af80d0d3.webp</picture>					  					  
+                      <name>22х11-8 Ares EKKA Шины для квадроциклов </name>
+					  <model>Ares</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.7</param><param name="Высота шины (дюйм)">22</param><param name="Объём, м3">0.078</param><param name="Посадочный диаметр (дюйм)">8</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Ares</param><param name="Размер шины">22x11-8</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина профиля (дюйм)">11</param></offer><offer id="10282" available="true">
+                      <url>https://its-center.ru/product/26x9-14-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/068abc5df6fef8ad6aa94fe6df08dc2c.webp</picture>					  					  
+                      <name>26х9-14 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">13</param><param name="Глубина протектора (мм)">20</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">179</param><param name="Наружный диаметр, мм">655</param><param name="Объём, м3">0.1</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">26x9-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">228</param></offer><offer id="10284" available="true">
+                      <url>https://its-center.ru/product/27x10-12-knight-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10250</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e38f690cdab129c7ae252473dea66450.webp</picture>					  					  
+                      <name>27х10-12 Knight EKKA Шины для квадроциклов</name>
+					  <model>Knight</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">13</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">270</param><param name="Наружный диаметр, мм">686</param><param name="Объём, м3">0.119</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Knight</param><param name="Размер шины">27x10-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">254</param></offer><offer id="10288" available="true">
+                      <url>https://its-center.ru/product/27h11-12-mars-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>11100</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1deab6c9c5db5fe35edad0ee6edaf4bf.webp</picture>					  					  
+                      <name>27х11-12 Mars EKKA Шины для квадроциклов</name>
+					  <model>Mars</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14</param><param name="Высота шины (дюйм)">26.9</param><param name="Макс. Давление (PSI)">7</param><param name="Объём, м3">0.131</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Mars</param><param name="Размер шины">27x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина профиля (дюйм)">10.7</param></offer><offer id="10287" available="true">
+                      <url>https://its-center.ru/product/27h9-12-mars-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10300</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/99e2f79b4643ced6a9b066d13e8737f6.webp</picture>					  					  
+                      <name>27х9-12 Mars EKKA Шины для квадроциклов</name>
+					  <model>Mars</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">12</param><param name="Высота шины (дюйм)">27</param><param name="Макс. Давление (PSI)">7</param><param name="Объём, м3">0.107</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Mars</param><param name="Размер шины">27x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина профиля (дюйм)">9</param></offer><offer id="10286" available="true">
+                      <url>https://its-center.ru/product/29h11-14-atlas-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>15360</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/23dfd8616f8760939b47b907b9270281.webp</picture>					  					  
+                      <name>29х11-14 Atlas EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">19</param><param name="Наружный диаметр, мм">740</param><param name="Объём, м3">0.152</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">29x11-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">267</param></offer><offer id="10285" available="true">
+                      <url>https://its-center.ru/product/29h9-14-atlas-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>13350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/bc91a2c03b59195112a6a044dca98f6f.webp</picture>					  					  
+                      <name>29х9-14 Atlas EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">17</param><param name="Наружный диаметр, мм">735</param><param name="Объём, м3">0.124</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">29x9-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">225</param></offer><offer id="10810" available="true">
+                      <url>https://its-center.ru/product/13x5-6-wave-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/b7dcc023f41c43b5f5ac39b59b812f38.webp</picture>					  					  
+                      <name>13х5-6 Wave EKKA Шины для квадроциклов</name>
+					  <model>Wave </model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.7</param><param name="Макс. Давление (PSI)">22</param><param name="Макс. Нагрузка (кг)">430</param><param name="Объём, м3">0.013</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл, садовая техника</param><param name="Производитель">EKKA </param><param name="Протектор">Wave</param><param name="Размер шины">13x5-6</param><param name="Слойность (PR)">4</param><param name="Тип">(TL) Бескамерная шина</param></offer><offer id="10895" available="true">
+                      <url>https://its-center.ru/product/215-40-12-p825-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>5850</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/edddfbf087a520373032e3e5d93af59c.webp</picture>					  					  
+                      <name>215/40-12 P825 EKKA Шины для квадроциклов</name>
+					  <model>P825</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5</param><param name="Макс. Давление (PSI)">30</param><param name="Макс. Нагрузка (кг)">345</param><param name="Объём, м3">0.047</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Гольф-кар</param><param name="Производитель">EKKA</param><param name="Протектор">P825</param><param name="Размер шины">215/40-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">215</param></offer><offer id="11026" available="true">
+                      <url>https://its-center.ru/product/22h11-9-eos-h-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8250</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/2b2f812caec35bceffc4fd46d846d39a.webp</picture>					  					  
+                      <name>22х11-9 EOS-H EKKA  Шины для квадроциклов</name>
+					  <model>EOS-H</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">8</param><param name="Индекс категории скорости">F</param><param name="Индекс нагрузки">43</param><param name="Наружный диаметр, мм">558</param><param name="Объём, м3">0.078</param><param name="Посадочный диаметр (дюйм)">9</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">EOS-H</param><param name="Размер шины">22x11-9</param><param name="Слойность (PR)">6</param><param name="Тип шины">пневматическая</param><param name="Ширина протектора (мм)">279</param></offer><offer id="11141" available="true">
+                      <url>https://its-center.ru/product/25h8-12-p354-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>6900</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/b2d4fcd8a33882de212042fe1aa1f166.webp</picture>					  					  
+                      <name>25х8-12 P354 EKKA Шины для квадроциклов</name>
+					  <model>P354</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">8.56</param><param name="Глубина протектора (мм)">8</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">132</param><param name="Наружный диаметр, мм">638</param><param name="Объём, м3">0.051</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P354</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">200</param></offer><offer id="11142" available="true">
+                      <url>https://its-center.ru/product/25h10-12-p354-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>7750</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/08f48bc12b291585a9572b799802e8d7.webp</picture>					  					  
+                      <name>25х10-12 P354 EKKA Шины для квадроциклов</name>
+					  <model>P354</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">8.152</param><param name="Глубина протектора (мм)">8</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">166</param><param name="Наружный диаметр, мм">638</param><param name="Объём, м3">0.073</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P354</param><param name="Размер шины">25x10-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">238</param></offer><offer id="11150" available="true">
+                      <url>https://its-center.ru/product/26x9-12-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9550</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/29bda963bd764953f06663baf4d609b8.webp</picture>					  					  
+                      <name>26х9-12 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.11</param><param name="Глубина протектора (мм)">20</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">200</param><param name="Наружный диаметр, мм">655</param><param name="Объём, м3">0.078</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">26x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">254</param></offer><offer id="11151" available="true">
+                      <url>https://its-center.ru/product/26x11-12-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/55db4b18496a985d59ba6285a0d9d34b.webp</picture>					  					  
+                      <name>26х11-12 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14.65</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">215</param><param name="Наружный диаметр, мм">655</param><param name="Объём, м3">0.109</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">26x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина протектора (мм)">254</param></offer><offer id="11147" available="true">
+                      <url>https://its-center.ru/product/20x11-10-p357-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>6600</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1912662d727d1053e467c13d0663e67f.webp</picture>					  					  
+                      <name>20х11-10 P357 EKKA Шины для квадроциклов</name>
+					  <model>P357</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.365</param><param name="Глубина протектора (мм)">18.0</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">290</param><param name="Наружный диаметр, мм">505</param><param name="Объём, м3">0.055</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P357</param><param name="Размер шины">20x11-10</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">10.0</param><param name="Ширина протектора (мм)">283</param></offer><offer id="11148" available="true">
+                      <url>https://its-center.ru/product/22x10-10-p349-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/93a31ae35a968b4c5d854890cf3d679f.webp</picture>					  					  
+                      <name>22x10-10 P349 EKKA Шины для квадроциклов</name>
+					  <model>P349</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.97</param><param name="Высота шины (дюйм)">22</param><param name="Глубина протектора (мм)">8</param><param name="Индекс категории скорости">64N</param><param name="Макс. Давление (PSI)">32</param><param name="Макс. Нагрузка (кг)">278,96</param><param name="Наружный диаметр, мм">562</param><param name="Объём, м3">0.063</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P349</param><param name="Размер шины">22x10-10</param><param name="Слойность (PR)">4</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">260</param><param name="Ширина профиля (дюйм)">10</param></offer><offer id="11149" available="true">
+                      <url>https://its-center.ru/product/23x7-10-p349-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>6500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e5c7cd031325f70ad9ea76821214cd25.webp</picture>					  					  
+                      <name>23x7-10 P349 EKKA Шины для квадроциклов</name>
+					  <model>P349</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.97</param><param name="Высота шины (дюйм)">23</param><param name="Глубина протектора (мм)">8</param><param name="Индекс категории скорости">31N</param><param name="Макс. Давление (PSI)">30</param><param name="Макс. Нагрузка (кг)">108,86</param><param name="Наружный диаметр, мм">580</param><param name="Объём, м3">0.063</param><param name="Посадочный диаметр (дюйм)">10</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P349</param><param name="Размер шины">23x7-10</param><param name="Слойность (PR)">4</param><param name="Ширина диска (дюйм)">5.50</param><param name="Ширина протектора (мм)">182</param><param name="Ширина профиля (дюйм)">7</param></offer><offer id="9334" available="true">
+                      <url>https://its-center.ru/product/25x8-12-p377-4pr-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>7550</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/3b1b9dd2ba01af5ebf9ab21ba79f0935.webp</picture>					  					  
+                      <name>25х8-12 P377 4PR EKKA Шины для квадроциклов</name>
+					  <model>P377</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.628</param><param name="Глубина протектора (мм)">16</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">132</param><param name="Наружный диаметр, мм">638</param><param name="Объём, м3">0.08</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P377</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">200</param></offer><offer id="9335" available="true">
+                      <url>https://its-center.ru/product/25x10-12-p377-4pr-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/63d23c47e41163e54647fd6e7ee755f6.webp</picture>					  					  
+                      <name>25х10-12 P377 4PR EKKA Шины для квадроциклов</name>
+					  <model>P377</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.304</param><param name="Глубина протектора (мм)">16</param><param name="Макс. Давление (PSI)">5</param><param name="Макс. Нагрузка (кг)">165</param><param name="Наружный диаметр, мм">630</param><param name="Объём, м3">0.102</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P377</param><param name="Размер шины">25x10-12</param><param name="Слойность (PR)">4</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">8.0</param><param name="Ширина протектора (мм)">253</param></offer><offer id="11419" available="true">
+                      <url>https://its-center.ru/product/27h9-14-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10500</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/7f281dd84814f593f6d727864da0d432.webp</picture>					  					  
+                      <name>27х9-14 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11.55</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">190</param><param name="Наружный диаметр, мм">686</param><param name="Объём, м3">0.090</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">27x9-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">222</param></offer><offer id="11420" available="true">
+                      <url>https://its-center.ru/product/27h11-12-p350a-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>12150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/cb2028b625e614774db6300ff546227a.webp</picture>					  					  
+                      <name>27х11-12 P350A EKKA Шины для квадроциклов</name>
+					  <model>P350A</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14</param><param name="Высота шины (дюйм)">26.9</param><param name="Глубина протектора (мм)">20</param><param name="Макс. Давление (PSI)">7</param><param name="Наружный диаметр, мм">686</param><param name="Объём, м3">0.131</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350A</param><param name="Размер шины">27x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина протектора (мм)">268</param><param name="Ширина профиля (дюйм)">10.7</param></offer><offer id="11421" available="true">
+                      <url>https://its-center.ru/product/27h11-14-p350-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>12350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/ed1eefe10926f4736a1d974d72b40a05.webp</picture>					  					  
+                      <name>27х11-14 P350 EKKA Шины для квадроциклов</name>
+					  <model>P350</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">14.2</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">210</param><param name="Наружный диаметр, мм">660</param><param name="Объём, м3">0.147</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P350</param><param name="Размер шины">27x11-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина протектора (мм)">280</param></offer><offer id="11533" available="true">
+                      <url>https://its-center.ru/product/13h5-6-p512-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>2350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1e20b6d582a67e4c5273874361e0f6ef.webp</picture>					  					  
+                      <name>13х5-6 P512 EKKA Шины для квадроциклов</name>
+					  <model>P512</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.5</param><param name="Высота шины (дюйм)">13</param><param name="Глубина протектора (мм)">4.5</param><param name="Макс. Давление (PSI)">40</param><param name="Макс. Нагрузка (кг)">199.58</param><param name="Наружный диаметр, мм">315</param><param name="Объём, м3">0.013</param><param name="Посадочный диаметр (дюйм)">6</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">P512</param><param name="Размер шины">13x5-6</param><param name="Слойность (PR)">2</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">4.50</param><param name="Ширина протектора (мм)">125</param><param name="Ширина профиля (дюйм)">5</param></offer><offer id="11783" available="true">
+                      <url>https://its-center.ru/product/25h8-12-atlas-6pr-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>7900</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/530c8800bf02d516387c2f1750af1f53.webp</picture>					  					  
+                      <name>25х8-12 Atlas 6PR EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10.5</param><param name="Глубина протектора (мм)">16</param><param name="Индекс категории скорости">F</param><param name="Индекс нагрузки">50</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">154</param><param name="Наружный диаметр, мм">635</param><param name="Объём, м3">0.08</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">25x8-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">203</param></offer><offer id="11784" available="true">
+                      <url>https://its-center.ru/product/25h10-12-atlas-6pr-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/</picture>					  					  
+                      <name>25х10-12 Atlas 6PR EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10.0</param><param name="Глубина протектора (мм)">20</param><param name="Индекс категории скорости">F</param><param name="Индекс нагрузки">50</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">190</param><param name="Наружный диаметр, мм">635</param><param name="Объём, м3">0.102</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">25х10-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">254</param></offer><offer id="11877" available="true">
+                      <url>https://its-center.ru/product/26h9-12-atlas-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>8290</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e60864d6bc7dc3f48a64031b133dd407.webp</picture>					  					  
+                      <name>26х9-12 Atlas EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11</param><param name="Индекс категории скорости">F</param><param name="Индекс нагрузки">48</param><param name="Наружный диаметр, мм">660</param><param name="Объём, м3">0.11</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">26x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">228</param></offer><offer id="11878" available="true">
+                      <url>https://its-center.ru/product/26h11-12-atlas-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>9950</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/0d9b17ba7703e3f0c9caeb2c980903c7.webp</picture>					  					  
+                      <name>26х11-12 Atlas EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11</param><param name="Наружный диаметр, мм">655</param><param name="Объём, м3">0.12</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">26x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина протектора (мм)">279</param></offer><offer id="11879" available="true">
+                      <url>https://its-center.ru/product/27h9-12-atlas-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>10350</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/</picture>					  					  
+                      <name>27х9-12 Atlas EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11</param><param name="Индекс категории скорости">F</param><param name="Индекс нагрузки">49</param><param name="Наружный диаметр, мм">685</param><param name="Объём, м3">0.11</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">27x9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">228</param></offer><offer id="11880" available="true">
+                      <url>https://its-center.ru/product/27h11-12-atlas-ekka-shiny-dlya-kvadrociklov</url>
+                      <price>12150</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1b8e8162957b082996a7dc64ce54a626.webp</picture>					  					  
+                      <name>27х11-12 Atlas EKKA Шины для квадроциклов</name>
+					  <model>Atlas</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11</param><param name="Индекс категории скорости">F</param><param name="Индекс нагрузки">49</param><param name="Объём, м3">0.12</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">EKKA</param><param name="Протектор">Atlas</param><param name="Размер шины">27x11-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">9.0</param><param name="Ширина протектора (мм)">279,4</param></offer><offer id="7443" available="true">
+                      <url>https://its-center.ru/product/26x9-12-rhea-superguider-shiny-dlya-kvadrociklov</url>
+                      <price>6700</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/891f97cff8eef61ff5e352f7bdab66ff.jpg</picture>					  					  
+                      <name>26х9-12 Rhea Superguider Шины для квадроциклов</name>
+					  <model>Rhea</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">9.5</param><param name="Макс. Давление (PSI)">7</param><param name="Макс. Нагрузка (кг)">155</param><param name="Наружный диаметр, мм">652</param><param name="Объём, м3">0.116</param><param name="Посадочный диаметр (дюйм)">12</param><param name="Применение">Квадроцикл</param><param name="Производитель">Superguider</param><param name="Протектор">Rhea</param><param name="Размер шины">26х9-12</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">7.0</param><param name="Ширина протектора (мм)">223</param></offer><offer id="7418" available="true">
+                      <url>https://its-center.ru/product/26x8-14-a-021-sun-f-shiny-dlya-kvadrociklov</url>
+                      <price>4200</price>					  				  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/b898ba363d4f9ea8858b57fdfbab29da.jpg</picture>					  					  
+                      <name>26х8-14 A-021 SUN.F Шины для квадроциклов</name>
+					  <model>A-021</model>
+                      <vendor>SUN.F</vendor><param name="Вес, кг">7.6</param><param name="Макс. Давление (PSI)">18</param><param name="Макс. Нагрузка (кг)">175</param><param name="Наружный диаметр, мм">660</param><param name="Объём, м3">0.087</param><param name="Посадочный диаметр (дюйм)">14</param><param name="Применение">Квадроцикл</param><param name="Производитель">SUN.F</param><param name="Протектор">A-021</param><param name="Размер шины">26x8-14</param><param name="Слойность (PR)">6</param><param name="Тип">TL</param><param name="Ширина диска (дюйм)">6.5</param><param name="Ширина протектора (мм)">203</param></offer></offers>
+	  </shop>
+	</yml_catalog>

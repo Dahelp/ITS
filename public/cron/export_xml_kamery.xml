@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06 05:08">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories><category id="31" parentId='25'>Камеры</category><category id="32" parentId='25'>Ободные ленты</category><category id="33" parentId='25'>Уплотнительные кольца</category></categories>				
+				<offers><offer id="11011" available="true">
+                      <url>https://its-center.ru/product/kamera-28h9-15-dlya-shin</url>
+                      <price>1120</price>
+					  <quantity>57</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/a0726f257dc2d91dda0934d6f460a99c.jpg</picture>					  					  
+                      <name>Камера 28х9-15 для шин</name>
+					  <model>28х9-15</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.65</param><param name="Взаимозаменяемый размер">8.15-15</param><param name="Модель">28х9-15</param><param name="Объём, м3">0.002</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">28х9-15</param></offer><offer id="11010" available="true">
+                      <url>https://its-center.ru/product/kamera-7-00-12-dlya-shin</url>
+                      <price>1020</price>
+					  <quantity>175</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/bcb252350d66973f9d4282732ecd4f14.jpg</picture>					  					  
+                      <name>Камера 7.00-12 для шин</name>
+					  <model>7.00-12</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.35</param><param name="Модель">7.00-12</param><param name="Объём, м3">0.008</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">7.00-12</param></offer><offer id="11008" available="true">
+                      <url>https://its-center.ru/product/kamera-6-00-9-dlya-shin</url>
+                      <price>670</price>
+					  <quantity>95</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/24e390d08cb36b9730fb5dc098bec098.jpg</picture>					  					  
+                      <name>Камера 6.00-9 для шин</name>
+					  <model>6.00-9</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">0.91</param><param name="Модель">6.00-9</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">6.00-9</param><param name="Тип вентиля">JS2</param></offer><offer id="11007" available="true">
+                      <url>https://its-center.ru/product/kamera-5-00-8-dlya-shin</url>
+                      <price>600</price>
+					  <quantity>11</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/f0412e81796388d46d684c96b717b5df.jpg</picture>					  					  
+                      <name>Камера 5.00-8 для шин</name>
+					  <model>5.00-8</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">0.60</param><param name="Модель">5.00-8</param><param name="Объём, м3">0.001</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">5.00-8</param><param name="Тип вентиля">JS2</param></offer><offer id="11602" available="true">
+                      <url>https://its-center.ru/product/kamera-4-00-8-dlya-shin</url>
+                      <price>660</price>
+					  <quantity>198</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/11d57bfacef87aeaa74e925b3c30833e.jpg</picture>					  					  
+                      <name>Камера 4.00-8 для шин</name>
+					  <model>4.00-8</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">0.55</param><param name="Модель">4.00-8</param><param name="Объём, м3">0.001</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">4.00-8</param><param name="Тип вентиля">JS2</param></offer><offer id="11599" available="true">
+                      <url>https://its-center.ru/product/kamera-16-70-20-dlya-shin</url>
+                      <price>3050</price>
+					  <quantity>96</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/2d96022bb55d47d7c7f34dd545d2f3e8.jpg</picture>					  					  
+                      <name>Камера 16/70-20 для шин</name>
+					  <model>16/70-20</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6.1</param><param name="Модель">16/70-20</param><param name="Объём, м3">0.003</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">405/70-20</param></offer><offer id="11853" available="true">
+                      <url>https://its-center.ru/product/kamera-14-9-28-dlya-shin-16-9-28</url>
+                      <price>5020</price>
+					  <quantity>131</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/85406c00238de3e0ef53cb92acd851d5.jpg</picture>					  					  
+                      <name>Камера 14.9-28 для шин</name>
+					  <model>14.9-28</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.9</param><param name="Модель">14.9-28</param><param name="Объём, м3">0.04</param><param name="Применение">Экскаватор-погрузчик</param><param name="Размер шины">16.9-28</param><param name="Тип вентиля">TR218A</param></offer><offer id="11863" available="true">
+                      <url>https://its-center.ru/product/kamera-20-5-70-16-dlya-shin</url>
+                      <price>2350</price>
+					  <quantity>49</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/d8d7ebd19090c8b79fbb0ce7e26207d0.jpg</picture>					  					  
+                      <name>Камера 20.5/70-16 для шин</name>
+					  <model>20.5/70-16</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.2</param><param name="Модель">20.5/70-16</param><param name="Объём, м3">0.003</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Superguider</param><param name="Размер шины">20.5/70-16</param><param name="Тип вентиля">TR78A</param></offer><offer id="11600" available="true">
+                      <url>https://its-center.ru/product/kamera-300-15-dlya-shin</url>
+                      <price>1860</price>
+					  <quantity>83</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/b1918a4981233643538b34f75cdba175.jpg</picture>					  					  
+                      <name>Камера 300-15 для шин</name>
+					  <model>300-15</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.55</param><param name="Модель">300-15</param><param name="Объём, м3">0.002</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">300-15</param></offer><offer id="11012" available="true">
+                      <url>https://its-center.ru/product/kamera-18-00-25-dlya-shin</url>
+                      <price>6100</price>
+					  <quantity>8</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/285228264ddcd589e2e635d6cecd8d6a.jpg</picture>					  					  
+                      <name>Камера 18.00-25 для шин</name>
+					  <model>18.00-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">7.5</param><param name="Модель">18.00-25</param><param name="Объём, м3">0.001</param><param name="Применение">Фронтальный погрузчик, Шахтная техника</param><param name="Производитель">EKKA</param><param name="Размер шины">18.00-25</param></offer><offer id="11603" available="true">
+                      <url>https://its-center.ru/product/kamera-8-25-15-dlya-shin</url>
+                      <price>1860</price>
+					  <quantity>104</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/5b448c47d305d5749bd0365b2f8657dd.jpg</picture>					  					  
+                      <name>Камера 8.25-15 для шин</name>
+					  <model>8.25-15</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">2.3</param><param name="Модель">8.25-15</param><param name="Объём, м3">0.05</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">8.25-15</param></offer><offer id="11865" available="true">
+                      <url>https://its-center.ru/product/kamera-29-5-25-dlya-shin</url>
+                      <price>16020</price>
+					  <quantity>40</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/01ff312adf8a9567b7b34452c8fb778c.jpg</picture>					  					  
+                      <name>Камера 29.5-25 для шин</name>
+					  <model>29.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">20</param><param name="Модель">29.5-25</param><param name="Объём, м3">0.05</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">29.5-25</param><param name="Тип вентиля">TRJ1175C</param></offer><offer id="11864" available="true">
+                      <url>https://its-center.ru/product/kamera-26-5-25-dlya-shin</url>
+                      <price>13730</price>
+					  <quantity>50</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/0f543536c303130285ce73d21fd06b07.jpg</picture>					  					  
+                      <name>Камера 26.5-25 для шин</name>
+					  <model>26.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">11.3</param><param name="Модель">26.5-25</param><param name="Объём, м3">0.002</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">26.5-25</param><param name="Тип вентиля">TRJ1175C</param></offer><offer id="11601" available="true">
+                      <url>https://its-center.ru/product/kamera-250-15-dlya-shin</url>
+                      <price>1370</price>
+					  <quantity>100</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/25704746667aa81a002c6735af8a5c35.webp</picture>					  					  
+                      <name>Камера 250-15 для шин</name>
+					  <model>250-15</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">1.55</param><param name="Модель">250-15</param><param name="Объём, м3">0.002</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">250-15</param></offer><offer id="11851" available="true">
+                      <url>https://its-center.ru/product/kamera-14-00-20-dlya-shin</url>
+                      <price>2900</price>
+					  <quantity>98</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/b9bb5dbd2fb7b3a97924dcc8b0c64f63.webp</picture>					  					  
+                      <name>Камера 14.00-20 для шин</name>
+					  <model>14.00-20</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">5.3</param><param name="Модель">14.00-20</param><param name="Объём, м3">0.001</param><param name="Применение">Грузовая техника</param><param name="Размер шины">14.00R20</param><param name="Тип вентиля">TR179A</param></offer><offer id="9700" available="true">
+                      <url>https://its-center.ru/product/kamery-18-4-26-dlya-shin</url>
+                      <price>4370</price>
+					  <quantity>23</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/04f4a0a3426ee86e20ccb876441056e6.jpg</picture>					  					  
+                      <name>Камера 18.4-26 для шин</name>
+					  <model>18.4-26</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">11.5</param><param name="Модель">18.4-26</param><param name="Объём, м3">0.05</param><param name="Размер шины">18.4-26</param></offer><offer id="9695" available="true">
+                      <url>https://its-center.ru/product/kamery-14-9-24-dlya-shin-16-9-24</url>
+                      <price>4260</price>
+					  <quantity>2</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/871fae34d0f222b7dba9d6bd0970850d.jpg</picture>					  					  
+                      <name>Камера 14.9-24 для шин</name>
+					  <model>14.9-24</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">7.4</param><param name="Модель">14.9-24</param><param name="Объём, м3">0.005</param><param name="Применение">Экскаватор-погрузчик</param><param name="Размер шины">16.9-24</param><param name="Тип вентиля">TR218A</param></offer><offer id="9696" available="true">
+                      <url>https://its-center.ru/product/kamery-15-5-25-dlya-shin</url>
+                      <price>4440</price>
+					  <quantity>41</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/4866f2953c5c5c2c66f6a5dddf98f3eb.jpg</picture>					  					  
+                      <name>Камеры 15.5-25 для шин</name>
+					  <model>15.5-25</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">11</param><param name="Модель">15.5-25</param><param name="Объём, м3">0.05</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">15.5-25</param></offer><offer id="8132" available="true">
+                      <url>https://its-center.ru/product/kamera-23-5-25-dlya-shin</url>
+                      <price>10010</price>
+					  <quantity>230</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/3debe363e2e64f958ee81fa85edbcb59.jpg</picture>					  					  
+                      <name>Камера 23.5-25 для шин</name>
+					  <model>23.5-25</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">16</param><param name="Модель">23.5-25</param><param name="Объём, м3">0.05</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">23.5-25</param></offer><offer id="8502" available="true">
+                      <url>https://its-center.ru/product/kamera-20-5-25-dlya-shin</url>
+                      <price>9430</price>
+					  <quantity>95</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/411467373dc92d4ca5570872035e67a9.jpg</picture>					  					  
+                      <name>Камера 20.5-25 для шин</name>
+					  <model>20.5-25</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">15</param><param name="Модель">20.5-25</param><param name="Объём, м3">0.03</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">20.5-25</param></offer><offer id="6579" available="true">
+                      <url>https://its-center.ru/product/kamery-16-9-28-dlya-shin</url>
+                      <price>6840</price>
+					  <quantity>2</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/b430fd09e7a8b0984bda670c3c1c8b39.jpg</picture>					  					  
+                      <name>Камера 16.9-28 для шин</name>
+					  <model>16.9-28</model>
+                      <vendor>Норм</vendor><param name="Вес, кг">8.6</param><param name="Модель">16.9-28</param><param name="Объём, м3">0.05</param><param name="Применение">Экскаватор-погрузчик</param><param name="Размер шины">16.9-28</param><param name="Тип вентиля">TR4</param></offer><offer id="7733" available="true">
+                      <url>https://its-center.ru/product/kamera-12-5-80-18-dlya-shin</url>
+                      <price>1990</price>
+					  <quantity>18</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/78b9048cd642304a301a5254dc52b6e1.jpg</picture>					  					  
+                      <name>Камера 12.5/80-18 для шин</name>
+					  <model>12.5/80-18</model>
+                      <vendor>Норм</vendor><param name="Вес, кг">2.5</param><param name="Модель">12.5/80-18</param><param name="Объём, м3">0.005</param><param name="Применение">Экскаватор-погрузчик</param><param name="Размер шины">12.5/80-18</param></offer><offer id="10159" available="true">
+                      <url>https://its-center.ru/product/kamera-5-00-10-dlya-shin</url>
+                      <price>830</price>
+					  <quantity>2</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/0e3bf77dc8a0617fca42de80a796ec3c.jpg</picture>					  					  
+                      <name>Камера 5.00-10 для шин</name>
+					  <model>5.00-10</model>
+                      <vendor>Норм</vendor><param name="Вес, кг">1.25</param><param name="Взаимозаменяемый размер">135-254</param><param name="Модель">5.00-10</param><param name="Объём, м3">0.001</param><param name="Применение">сельскохозяйственная техника</param><param name="Размер шины">5.00-10</param><param name="Тип вентиля">TR-13</param></offer><offer id="6573" available="true">
+                      <url>https://its-center.ru/product/kamera-7-50-16-dlya-shin</url>
+                      <price>1140</price>
+					  <quantity>14</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/4a2cd001783b203afd6a40adb2231734.jpg</picture>					  					  
+                      <name>Камера 7.50-16 для шин</name>
+					  <model>7.50-16</model>
+                      <vendor>Норм</vendor><param name="Вес, кг">2</param><param name="Взаимозаменяемый размер">215-16</param><param name="Модель">7.50-16</param><param name="Применение">легкогрузовая техника</param><param name="Размер шины">7.50-16</param><param name="Тип вентиля">TR-77</param></offer><offer id="6602" available="true">
+                      <url>https://its-center.ru/product/kamera-11-00-20-dlya-shin</url>
+                      <price>1400</price>
+					  <quantity>375</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/fe15293e02b919faa091609b826aa568.jpg</picture>					  					  
+                      <name>Камера 11.00-20 для шин</name>
+					  <model>11.00-20</model>
+                      <vendor>Armour</vendor><param name="Вес, кг">4.26</param><param name="Взаимозаменяемый размер">300-508</param><param name="Модель">11.00-20</param><param name="Применение">Экскаватор-погрузчик</param><param name="Размер шины">11.00-20</param><param name="Тип вентиля">V302</param></offer><offer id="6616" available="true">
+                      <url>https://its-center.ru/product/kamera-10-00-20-dlya-shin</url>
+                      <price>1090</price>
+					  <quantity>2</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/8ce2729ab4247cfbc0f255544e0b9403.jpg</picture>					  					  
+                      <name>Камера 10.00-20 для шин</name>
+					  <model>10.00-20</model>
+                      <vendor>Armour</vendor><param name="Вес, кг">3.95</param><param name="Модель">10.00-20</param><param name="Применение">Экскаватор</param><param name="Размер шины">10.00-20</param><param name="Тип вентиля">V304</param></offer><offer id="6569" available="true">
+                      <url>https://its-center.ru/product/kamera-9-50-16-dlya-shin</url>
+                      <price>940</price>
+					  <quantity>80</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/333a30ad51b073868e8242ddc5e2e53a.jpg</picture>					  					  
+                      <name>Камера 9.50-16 для шин</name>
+					  <model>9.50-16</model>
+                      <vendor>Armour</vendor><param name="Вес, кг">2.45</param><param name="Модель">9.50-16</param><param name="Применение">минипогрузчик</param><param name="Размер шины">10-16.5, 12-16.5</param></offer><offer id="10468" available="true">
+                      <url>https://its-center.ru/product/kamera-13x5-6-tr87-dlya-shin</url>
+                      <price>920</price>
+					  <quantity>23</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/73ee6a3cb4af32182a35b0649e108fe1.jpg</picture>					  					  
+                      <name>Камера 13х5-6 TR87 для шин</name>
+					  <model>13x5-6</model>
+                      <vendor>Nexen</vendor><param name="Вес, кг">0.296</param><param name="Модель">13x5-6</param><param name="Объём, м3">0.001</param><param name="Применение">Квадроцикл</param><param name="Производитель">Nexen</param><param name="Размер шины">13x5-6</param><param name="Тип вентиля">TR87</param></offer><offer id="10103" available="true">
+                      <url>https://its-center.ru/product/kamera-20x8-8-tr13-dlya-shin</url>
+                      <price>1520</price>
+					  <quantity>12</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/92e2342083c5c3c0c3381427d6bdd28f.jpg</picture>					  					  
+                      <name>Камера 20х8-8 TR13 для шин</name>
+					  <model>20x8-8</model>
+                      <vendor>Nexen</vendor><param name="Вес, кг">0.71</param><param name="Модель">20x8-8</param><param name="Объём, м3">0.001</param><param name="Применение">Квадроцикл</param><param name="Производитель">Nexen</param><param name="Размер шины">20x8-8</param><param name="Тип вентиля">TR13</param></offer><offer id="11417" available="false">
+                      <url>https://its-center.ru/product/kamera-11-5-80-15-3-dlya-shin</url>
+                      <price>2630</price>
+					  <quantity>0</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>31</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/e73f984e58cffe08cf69ad41b5359188.webp</picture>					  					  
+                      <name>Камера 11.5/80-15.3 для шин</name>
+					  <model>11.5/80-15.3</model>
+                      <vendor>Kabat</vendor><param name="Вес, кг">2.191</param><param name="Модель">11.5/80-15.3</param><param name="Объём, м3">0.002</param><param name="Применение">минипогрузчик</param><param name="Размер шины">11.5/80-15.3</param></offer><offer id="8575" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-15-5-25</url>
+                      <price>1970</price>
+					  <quantity>33</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/71576eea54a33e5caf853b3069e8df17.jpg</picture>					  					  
+                      <name>Ободная лента 15.5-25</name>
+					  <model>15.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">2.35</param><param name="Модель">15.5-25</param><param name="Объём, м3">0.001</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">15.5-25</param></offer><offer id="8143" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-17-5-25</url>
+                      <price>2070</price>
+					  <quantity>230</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/2c779ed5687b38e25c4f6cee3a37d7b2.jpg</picture>					  					  
+                      <name>Ободная лента 17.5-25</name>
+					  <model>17.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3</param><param name="Модель">17.5-25</param><param name="Объём, м3">0.05</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">17.5-25</param></offer><offer id="8503" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-20-5-25</url>
+                      <price>2400</price>
+					  <quantity>34</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/3edc80a2733f679077f0af1f41da5a28.jpg</picture>					  					  
+                      <name>Ободная лента 20.5-25</name>
+					  <model>20.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">10</param><param name="Модель">20.5-25</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">20.5-25</param></offer><offer id="11013" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-23-5-25</url>
+                      <price>2560</price>
+					  <quantity>27</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/4965b59bb45e85fc81aced2a86833f8b.jpg</picture>					  					  
+                      <name>Ободная лента 23.5-25</name>
+					  <model>23.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">6</param><param name="Модель">23.5-25</param><param name="Объём, м3">0.06</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">23.5-25</param></offer><offer id="11870" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-16-00-24</url>
+                      <price>1480</price>
+					  <quantity>4</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/df41935bd873fb406410fd9d65748a93.jpg</picture>					  					  
+                      <name>Ободная лента 16.00-24</name>
+					  <model>16.00-24</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">2.3</param><param name="Модель">16.00-24</param><param name="Объём, м3">0.001</param><param name="Размер шины">16.00R24</param></offer><offer id="11014" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-18-00-25</url>
+                      <price>2270</price>
+					  <quantity>87</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/efef1454c422258c7ece9f8cdeee7dc6.jpg</picture>					  					  
+                      <name>Ободная лента 18.00-25</name>
+					  <model>18.00-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.9</param><param name="Модель">18.00-25</param><param name="Объём, м3">0.02</param><param name="Применение">Шахтную технику, Фронтальный погрузчик</param><param name="Размер шины">18.00-25</param></offer><offer id="11015" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-16-70-24-405-70-24</url>
+                      <price>1380</price>
+					  <quantity>20</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/ad1d759efadb2972fbdc2007f3e5cfac.jpg</picture>					  					  
+                      <name>Ободная лента 16/70-24 (405/70-24)</name>
+					  <model>16/70-24</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">4.6</param><param name="Взаимозаменяемый размер">405/70-24</param><param name="Модель">16/70-24</param><param name="Объём, м3">0.02</param><param name="Применение">Экскаватор-погрузчик</param><param name="Размер шины">16/70-24</param></offer><offer id="11868" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-300-508-16-00-20-norm</url>
+                      <price>1210</price>
+					  <quantity>22</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/21d7642d4ea4ffc2fd6997f968f9c0a8.webp</picture>					  					  
+                      <name>Ободная лента 300-508 (16.00-20)</name>
+					  <model>300-508</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3.5</param><param name="Модель">300-508</param><param name="Объём, м3">0.001</param><param name="Производитель">EKKA</param><param name="Размер шины">16.00-20</param></offer><offer id="11869" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-14-00-24</url>
+                      <price>1260</price>
+					  <quantity>30</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/05b8ca9a5d0fd9b1fcd0d810ea2ba7f0.webp</picture>					  					  
+                      <name>Ободная лента 14.00-24</name>
+					  <model>14.00-24</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">3</param><param name="Модель">14.00-24</param><param name="Объём, м3">0.001</param><param name="Размер шины">14.00-24</param></offer><offer id="11867" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-26-5-25</url>
+                      <price>3250</price>
+					  <quantity>16</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/d08c1b4f892a9d3a3d8618102ec4f929.webp</picture>					  					  
+                      <name>Ободная лента 26.5-25</name>
+					  <model>26.5-25</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">9.9</param><param name="Модель">26.5-25</param><param name="Объём, м3">0.001</param><param name="Применение">Фронтальный погрузчик</param><param name="Размер шины">26.5-25</param></offer><offer id="6641" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-6-7-20</url>
+                      <price>440</price>
+					  <quantity>12</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/9757c50e99816573af25fc7fe56dc342.jpg</picture>					  					  
+                      <name>Ободная лента 6.7-20</name>
+					  <model>6.7-20</model>
+                      <vendor>Норм</vendor><param name="Вес, кг">1.5</param><param name="Взаимозаменяемый размер">170-508</param><param name="Модель">6.7-20</param><param name="Объём, м3">0.003</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">8.25-20, 9.00-20</param></offer><offer id="6639" available="true">
+                      <url>https://its-center.ru/product/obodnaya-lenta-23x10-12</url>
+                      <price>140</price>
+					  <quantity>2</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>32</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/5bd7b19700ec236cdc93750a66ed08fb.jpg</picture>					  					  
+                      <name>Ободная лента 23х10-12</name>
+					  <model>23x10-12</model>
+                      <vendor>NO NAME</vendor><param name="Модель">23x10-12</param><param name="Применение">Вилочный погрузчик</param><param name="Размер шины">23x10-12</param></offer><offer id="10393" available="true">
+                      <url>https://its-center.ru/product/kolco-uplotnitelnoe-7-mm</url>
+                      <price>710</price>
+					  <quantity>11</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>33</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/1c208cda72fa6df87e41ad87c71c555c.jpg</picture>					  					  
+                      <name>Кольцо уплотнительное 7 мм</name>
+					  <model>6.0/6.5-25</model>
+                      <vendor>NO NAME</vendor><param name="Вес, кг">0.2</param><param name="Диаметр, мм">7</param><param name="Объём, м3">0.002</param><param name="Размер шины">15.5-25, 17.5-25</param></offer><offer id="10394" available="true">
+                      <url>https://its-center.ru/product/kolco-uplotnitelnoe-9-mm</url>
+                      <price>820</price>
+					  <quantity>161</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>33</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/8d4751be8edecccdb24aa5d09940757f.jpg</picture>					  					  
+                      <name>Кольцо уплотнительное 9 мм</name>
+					  <model>9.6/9.8-25</model>
+                      <vendor>NO NAME</vendor><param name="Вес, кг">0.1</param><param name="Диаметр, мм">9</param><param name="Объём, м3">0.001</param><param name="Размер шины">20.5-25, 23.5-25</param></offer></offers>
+	  </shop>
+	</yml_catalog>

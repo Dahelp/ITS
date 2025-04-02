@@ -1,0 +1,49 @@
+{
+  "name": "ckeditor",
+  "version": "4.7.1",
+  "description": "JavaScript WYSIWYG web text editor.",
+  "main": "ckeditor.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckeditor/ckeditor-releases.git"
+  },
+  "keywords": [
+    "ckeditor",
+    "fckeditor",
+    "editor",
+    "wysiwyg",
+    "html",
+    "richtext",
+    "text",
+    "javascript"
+  ],
+  "author": "CKSource (http://cksource.com/)",
+  "license": "(GPL-2.0 OR LGPL-2.1 OR MPL-1.1)",
+  "bugs": {
+    "url": "http://dev.ckeditor.com"
+  },
+  "homepage": "http://ckeditor.com"
+}
+
+{
+  "name": "ckeditor-youtube-plugin",
+  "description": "Youtube plugin for CKEditor",
+  "version": "2.1.18",
+  "author": "fonini",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fonini/ckeditor-youtube-plugin"
+  },
+  "keywords": [
+    "CKEditor",
+    "youtube",
+    "embed"
+  ],
+  "files": [
+    "youtube/",
+    "LICENSE.md",
+    "README.md",
+    "bower.json",
+    "package.json"
+  ]
+}

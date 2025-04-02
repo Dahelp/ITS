@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:32:01+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories>
+					<category id="1">Шины для спецтехники</category><category id="19" parentId='1'>Шины для экскаваторов-погрузчиков</category></categories>				
+				<offers><offer id="9305" available="true">
+                      <url>https://its-center.ru/product/16-9-28-12pr-tl-shina-pnevmaticheskaya-ekr-4-ekka</url>
+                      <price>49660</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/551056b265a5012d0a8ebb067f0d33b6.webp</picture>					  					  
+                      <name>16.9-28 12PR EKR-4 EKKA Шина для экскаватора-погрузчика</name>
+					  <model>EKR-4</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">86.9</param><param name="Глубина протектора (мм)">32</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">260</param><param name="Макс. Нагрузка (кг)">3450</param><param name="Наружный диаметр, мм">1410</param><param name="Область применения">грунт, песок</param><param name="Объём, м3">0.853</param><param name="Посадочный диаметр (дюйм)">28</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKR-4</param><param name="Размер диска (RIM)">W14Lx28</param><param name="Размер шины">16.9-28</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">430</param><param name="Ширина профиля (дюйм)">16.9</param></offer><offer id="9228" available="true">
+                      <url>https://its-center.ru/product/16-9-28-14pr-tl-shina-pnevmaticheskaya-ekt-2-ekka</url>
+                      <price>51930</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/5e92f439790b05894fa6645fd3cb7292.webp</picture>					  					  
+                      <name>16.9-28 14PR EKT-2 EKKA Шина для экскаватора-погрузчика</name>
+					  <model>EKT-2</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">92</param><param name="Глубина протектора (мм)">24</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">300</param><param name="Макс. Нагрузка (кг)">4840</param><param name="Наружный диаметр, мм">1435</param><param name="Область применения">асфальт, бетон, строй площадка</param><param name="Объём, м3">0.885</param><param name="Посадочный диаметр (дюйм)">16.9</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKT-2</param><param name="Размер диска (RIM)">W14Lx28</param><param name="Размер шины">16.9-28</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">14</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">450</param><param name="Ширина профиля (дюйм)">28</param></offer><offer id="9306" available="true">
+                      <url>https://its-center.ru/product/16-9-28-14pr-ekr-4-ekka-shina-dlya-ekskavatora-pogruzchika</url>
+                      <price>51610</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/1bc2d432770545ef9592adefde0636e7.webp</picture>					  					  
+                      <name>16.9-28 14PR EKR-4 EKKA Шина для экскаватора-погрузчика</name>
+					  <model>EKR-4</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">89.9</param><param name="Глубина протектора (мм)">32</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">260</param><param name="Макс. Нагрузка (кг)">3450</param><param name="Наружный диаметр, мм">1410</param><param name="Область применения">грунт, песок</param><param name="Объём, м3">0.853</param><param name="Посадочный диаметр (дюйм)">28</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKR-4</param><param name="Размер диска (RIM)">W14Lx28</param><param name="Размер шины">16.9-28</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">14</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">430</param><param name="Ширина профиля (дюйм)">16.9</param></offer><offer id="11664" available="true">
+                      <url>https://its-center.ru/product/16-9-28-158a8-tl-ms907-l-5-ekka-shina-dlya-ekskavatorov-pogruzchikov</url>
+                      <price>69750</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/d1409d268ae8ad3b95dce014aaf512e1.webp</picture>					  					  
+                      <name>16.9-28 158A8 16PR TL MS907(L-5) EKKA Шина для экскаваторов-погрузчиков</name>
+					  <model>MS907</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">123</param><param name="Конструкция">диагональная</param><param name="Наружный диаметр, мм">1410</param><param name="Объём, м3">0.895</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">MS907</param><param name="Размер шины">16.9-28</param><param name="Рисунок протектора">скала</param><param name="Слойность (PR)">16</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">450</param></offer><offer id="7073" available="true">
+                      <url>https://its-center.ru/product/16-9-28-12pr-tl-shina-pnevmaticheskaya-superguider-qh601</url>
+                      <price>43320</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/2569649281687476671edd86d0752b23.webp</picture>					  					  
+                      <name>16.9-28 12PR Superguider QH601 Шина для экскаватора-погрузчика</name>
+					  <model>QH601</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">86</param><param name="Глубина протектора (мм)">26</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">260</param><param name="Макс. Нагрузка (кг)">3450</param><param name="Наружный диаметр, мм">1410</param><param name="Область применения">грунт, песок</param><param name="Объём, м3">0.88</param><param name="Посадочный диаметр (дюйм)">28</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH601</param><param name="Размер диска (RIM)">W14Lx28</param><param name="Размер шины">16.9-28</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">430</param><param name="Ширина профиля (дюйм)">16.9</param></offer><offer id="9931" available="true">
+                      <url>https://its-center.ru/product/16-9-28-16pr-tl-shina-pnevmaticheskaya-superguider-qh608</url>
+                      <price>53750</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>19</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/13c7ef42fbaf860045bcc757fd82c70c.webp</picture>					  					  
+                      <name>16.9-28 16PR TL Шина пневматическая Superguider QH608</name>
+					  <model>QH608</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">103</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">260</param><param name="Макс. Нагрузка (кг)">3560</param><param name="Объём, м3">0.88</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH608</param><param name="Размер шины">16.9-28</param><param name="Рисунок протектора">скала</param><param name="Слойность (PR)">16</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">435</param></offer></offers>
+	  </shop>
+	</yml_catalog>

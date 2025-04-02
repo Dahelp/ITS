@@ -1,0 +1,42 @@
+# Composer
+/vendor/*
+!/vendor/ishop/
+/vendor/ishop/*
+!/vendor/ishop/core/
+composer.lock
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS system files
+.DS_Store
+Thumbs.db
+
+# Node (если используешь в будущем фронтенд)
+node_modules/
+
+# Cache / temp
+/tmp/
+*.cache
+
+# SSH / .env
+.env
+*.key
+*.pem
+
+# Bash scripts / временные
+deploy.sh
+*.sh
+
+# Конфиги сервера
+cgi-bin/
+
+# Прочее
+/public/hot
+/public/storage
+/storage/
+/crm/

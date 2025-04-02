@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06 05:03">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories><category id="26" parentId='3'>Диски для вилочных погрузчиков</category><category id="27" parentId='3'>Диски для минипогрузчиков</category><category id="28" parentId='3'>Диски для экскаваторов-погрузчиков</category><category id="29" parentId='3'>Диски для грузовой техники</category><category id="30" parentId='3'>Диски для фронтальных погрузчиков</category></categories>				
+				<offers><offer id="10439" available="true">
+                      <url>https://its-center.ru/product/7-00t-15-et-30-pcd6x220-hub170-ekka-dlya-vilochnogo-pogruzchika</url>
+                      <price>10910</price>
+					  <quantity>156</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/94cdeab4357b21c1bb5790eec7cd4dca.jpg</picture>					  					  
+                      <name>7.00T-15 ET-30 PCD6x220 HUB170 EKKA для вилочного погрузчика</name>
+					  <model>7.00T-15</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">30</param><param name="HUB / Диаметр центрального отверстия (мм)">170</param><param name="PCD / Диаметр болтовой окружности (мм)">220</param><param name="Вес, кг">25.5</param><param name="Диаметр крепежных отверстий (мм)">32</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.06</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">7.00T-15</param><param name="Размер шины">28*9-15</param><param name="Тип">Диск сварной</param></offer><offer id="10436" available="true">
+                      <url>https://its-center.ru/product/3-00d-8-et0-pcd6x125-hub100-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>1900</price>
+					  <quantity>211</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/60255e5563be2b28f2c8f1cf74e21631.jpg</picture>					  					  
+                      <name>3.00D-8 ET0 PCD6x125 HUB100 EKKA Диск для вилочного погрузчика</name>
+					  <model>3.00D-8</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">100</param><param name="PCD / Диаметр болтовой окружности (мм)">125</param><param name="Вес, кг">3.9</param><param name="Диаметр крепежных отверстий (мм)">15</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.006</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">3.00D-8</param><param name="Размер шины">5.00-8</param><param name="Тип">Диск сборный</param></offer><offer id="10438" available="true">
+                      <url>https://its-center.ru/product/5-00f-10-et0-pcd6x180-hub150-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>3090</price>
+					  <quantity>9</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/4aabb0204bdd0fe55fcb796139b5695d.jpg</picture>					  					  
+                      <name>5.00F-10 ET0 PCD6x180 HUB150 EKKA Диск для вилочного погрузчика</name>
+					  <model>5.00F-10</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">150</param><param name="PCD / Диаметр болтовой окружности (мм)">180</param><param name="Вес, кг">7.6</param><param name="Диаметр крепежных отверстий (мм)">17.5</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.006</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">5.00F-10</param><param name="Размер шины">6.50-10</param><param name="Тип">Диск сборный</param></offer><offer id="10674" available="true">
+                      <url>https://its-center.ru/product/4-00e-9-et0-pcd6x170-hub140-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>2380</price>
+					  <quantity>49</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/0c5a0ef988f2ce1d660a6fff5fce8e28.jpg</picture>					  					  
+                      <name>4.00E-9 ET0 PCD6x170 HUB140 EKKA Диск для вилочного погрузчика</name>
+					  <model>4.00E-9</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">140</param><param name="PCD / Диаметр болтовой окружности (мм)">170</param><param name="Вес, кг">5</param><param name="Диаметр крепежных отверстий (мм)">17.5</param><param name="Количество крепежных отверстий">6</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">4.00E-9</param><param name="Размер шины">6.00-9</param><param name="Тип">Диск сборный</param></offer><offer id="10675" available="true">
+                      <url>https://its-center.ru/product/4-00e-9-et0-pcd6x180-hub150-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>2380</price>
+					  <quantity>26</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/4e674390af1154c048d31e15947d1ea5.jpg</picture>					  					  
+                      <name>4.00E-9 ET0 PCD6x180 HUB150 EKKA Диск для вилочного погрузчика</name>
+					  <model>4.00E-9</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">150</param><param name="PCD / Диаметр болтовой окружности (мм)">180</param><param name="Вес, кг">4.85</param><param name="Диаметр крепежных отверстий (мм)">17.5</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.003</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">4.00E-9</param><param name="Размер шины">6.00-9</param><param name="Тип">Диск сборный</param></offer><offer id="10676" available="true">
+                      <url>https://its-center.ru/product/4-00e-9-et0-pcd8x160-hub130-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>3250</price>
+					  <quantity>65</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/68512a29fb1fc73cc0268cc992034d36.jpg</picture>					  					  
+                      <name>4.00E-9 ET0 PCD8x160 HUB130 EKKA Диск для вилочного погрузчика</name>
+					  <model>4.00E-9</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">130</param><param name="PCD / Диаметр болтовой окружности (мм)">160</param><param name="Вес, кг">4.85</param><param name="Диаметр крепежных отверстий (мм)">16</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.009</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">4.00E-9</param><param name="Размер шины">6.00-9</param><param name="Тип">Диск сборный</param></offer><offer id="10677" available="true">
+                      <url>https://its-center.ru/product/4-33r-8-et0-pcd5x145-hub110-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>4700</price>
+					  <quantity>349</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/8b61f46d34c7ab63078d43178020e6c2.jpg</picture>					  					  
+                      <name>4.33R-8 ET0 PCD5x145 HUB110 EKKA Диск для вилочного погрузчика</name>
+					  <model>4.33R-8</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">110</param><param name="PCD / Диаметр болтовой окружности (мм)">145</param><param name="Вес, кг">5.05</param><param name="Диаметр крепежных отверстий (мм)">18</param><param name="Количество крепежных отверстий">5</param><param name="Объём, м3">0.004</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">4.33R-8</param><param name="Размер шины">18x7-8</param><param name="Тип">Диск сборный</param></offer><offer id="10678" available="true">
+                      <url>https://its-center.ru/product/5-00f-10-et0-pcd8x160-hub130-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>3630</price>
+					  <quantity>154</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/6c457726b144a1a7415d94a17304d0cf.jpg</picture>					  					  
+                      <name>5.00F-10 ET0 PCD8x160 HUB130 EKKA Диск для вилочного погрузчика</name>
+					  <model>5.00F-10</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">130</param><param name="PCD / Диаметр болтовой окружности (мм)">160</param><param name="Вес, кг">6.8</param><param name="Диаметр крепежных отверстий (мм)">16</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.005</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">5.00F-10</param><param name="Размер шины">6.50-10</param><param name="Тип">Диск сборный</param></offer><offer id="10679" available="true">
+                      <url>https://its-center.ru/product/7-00t-15-et77-pcd6x200-hub150-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>10910</price>
+					  <quantity>90</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/c603c49496ec376686aef8f156865938.jpg</picture>					  					  
+                      <name>7.00T-15 ET77 PCD6x200 HUB150 EKKA Диск для вилочного погрузчика</name>
+					  <model>7.00T-15</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">77</param><param name="HUB / Диаметр центрального отверстия (мм)">150</param><param name="PCD / Диаметр болтовой окружности (мм)">200</param><param name="Вес, кг">25.5</param><param name="Диаметр крепежных отверстий (мм)">32</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.06</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">7.00T-15</param><param name="Размер шины">28х9-15</param><param name="Тип">Диск сварной</param></offer><offer id="10680" available="true">
+                      <url>https://its-center.ru/product/7-00t-15-et19-pcd6x220-hub175-ekka</url>
+                      <price>10910</price>
+					  <quantity>259</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/d584906a584078da39f6fc2417371921.jpg</picture>					  					  
+                      <name>7.00T-15 ET19 PCD6x220 HUB175 EKKA Диск для вилочного погрузчика</name>
+					  <model>7.00T-15</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">19</param><param name="HUB / Диаметр центрального отверстия (мм)">175</param><param name="PCD / Диаметр болтовой окружности (мм)">220</param><param name="Вес, кг">27.5</param><param name="Диаметр крепежных отверстий (мм)">32</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.06</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">7.00T-15</param><param name="Размер шины">28*9-15</param><param name="Тип">Диск сварной</param></offer><offer id="11181" available="true">
+                      <url>https://its-center.ru/product/3-00d-8-et0-pcd5x145-hub110-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>2140</price>
+					  <quantity>87</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/3829f330883d981c4a26e7d3e9d7ca33.jpg</picture>					  					  
+                      <name>3.00D-8 ET0 PCD5x145 HUB110 EKKA Диск для вилочного погрузчика</name>
+					  <model>3.00D-8 </model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">110</param><param name="PCD / Диаметр болтовой окружности (мм)">145</param><param name="Вес, кг">3.8</param><param name="Диаметр крепежных отверстий (мм)">18</param><param name="Количество крепежных отверстий">5</param><param name="Объём, м3">0.002</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">3.00D-8</param><param name="Размер шины">5.00-8</param><param name="Тип">Диск сборный</param></offer><offer id="11182" available="true">
+                      <url>https://its-center.ru/product/5-00s-12-et0-pcd8x190-hub145-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>5660</price>
+					  <quantity>73</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/2a06e3161fc3c531cd82598249eab655.jpg</picture>					  					  
+                      <name>5.00S-12 ET0 PCD8x190 HUB145 EKKA Диск для вилочного погрузчика</name>
+					  <model>5.00S-12</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">145</param><param name="PCD / Диаметр болтовой окружности (мм)">190</param><param name="Вес, кг">10.95</param><param name="Диаметр крепежных отверстий (мм)">26</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.022</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">5.00S-12</param><param name="Размер шины">7.00-12</param><param name="Тип">Диск сборный</param></offer><offer id="11183" available="true">
+                      <url>https://its-center.ru/product/5-00s-12-et0-pcd6x200-hub150-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>5660</price>
+					  <quantity>1</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/351c75e857dc3c8427505c7e0d757fd9.jpg</picture>					  					  
+                      <name>5.00S-12 ET0 PCD6x200 HUB150 EKKA Диск для вилочного погрузчика</name>
+					  <model>5.00S-12</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">150</param><param name="PCD / Диаметр болтовой окружности (мм)">200</param><param name="Вес, кг">10.95</param><param name="Диаметр крепежных отверстий (мм)">27</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.022</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">5.00S-12</param><param name="Размер шины">7.00-12</param><param name="Тип">Диск сборный</param></offer><offer id="11184" available="true">
+                      <url>https://its-center.ru/product/5-00s-12-et0-pcd6x220-hub170-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>6100</price>
+					  <quantity>48</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/647c0e6914b9b8556eb4b765238b35bc.jpg</picture>					  					  
+                      <name>5.00S-12 ET0 PCD6x220 HUB170 EKKA Диск для вилочного погрузчика</name>
+					  <model>5.00S-12</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">170</param><param name="PCD / Диаметр болтовой окружности (мм)">220</param><param name="Вес, кг">10</param><param name="Диаметр крепежных отверстий (мм)">27</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.007</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">5.00S-12</param><param name="Размер шины">7.00-12</param><param name="Тип">Диск сборный</param></offer><offer id="11185" available="true">
+                      <url>https://its-center.ru/product/7-00t-15-et10-pcd6x220-hub165-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>10910</price>
+					  <quantity>111</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/4c300448c87c7e0b08b90ecfe89fbf5c.jpg</picture>					  					  
+                      <name>7.00T-15 ET10 PCD6x220 HUB165 EKKA Диск для вилочного погрузчика</name>
+					  <model>7.00T-15</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">10</param><param name="HUB / Диаметр центрального отверстия (мм)">165</param><param name="PCD / Диаметр болтовой окружности (мм)">220</param><param name="Вес, кг">27.5</param><param name="Диаметр крепежных отверстий (мм)">32</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.06</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">7.00T-15</param><param name="Размер шины">28х9-15</param><param name="Тип">Диск сварной</param></offer><offer id="11904" available="true">
+                      <url>https://its-center.ru/product/5-00f-10-et0-pcd6x170-hub140-ekka-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>3090</price>
+					  <quantity>46</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/df86c770d92e76a4aabe32025be544a2.webp</picture>					  					  
+                      <name>5.00F-10 ET0 PCD6x170 HUB140 EKKA Диск для вилочного погрузчика</name>
+					  <model>5.00F-10</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">140</param><param name="PCD / Диаметр болтовой окружности (мм)">170</param><param name="Вес, кг">7</param><param name="Диаметр крепежных отверстий (мм)">17.5</param><param name="Количество крепежных отверстий">6</param><param name="Применение">Вилочный погрузчик</param><param name="Размер диска (RIM)">5.00F-10</param><param name="Размер шины">6.50-10</param><param name="Тип">Диск сборный</param></offer><offer id="6498" available="false">
+                      <url>https://its-center.ru/product/7-00t-15-et19-pcd6x220-hub175-lantian-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>13890</price>
+					  <quantity>0</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/3a7758724443582ab8856768e8ba2370.jpg</picture>					  					  
+                      <name>7.00T-15 ET19 PCD6x220 HUB175 LANTIAN Диск для вилочного погрузчика</name>
+					  <model>7.00T-15</model>
+                      <vendor>LANTIAN</vendor><param name="ET / Вылет (мм)">19</param><param name="HUB / Диаметр центрального отверстия (мм)">175</param><param name="PCD / Диаметр болтовой окружности (мм)">220</param><param name="Вес, кг">27.5</param><param name="Диаметр крепежных отверстий (мм)">32</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.06</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">LANTIAN</param><param name="Размер диска (RIM)">7.00T-15</param><param name="Размер шины">28*9-15</param><param name="Тип">Диск сварной</param></offer><offer id="6537" available="true">
+                      <url>https://its-center.ru/product/3-00d-8-et0-pcd6x148-hub110-lantian-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>2820</price>
+					  <quantity>-15</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/61c4c88cceb818c0e441a34dd7e9a7a0.jpg</picture>					  					  
+                      <name>3.00D-8 ET0 PCD6x148 HUB110 LANTIAN Диск для вилочного погрузчика</name>
+					  <model>3.00D-8 </model>
+                      <vendor>LANTIAN</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">110</param><param name="PCD / Диаметр болтовой окружности (мм)">148</param><param name="Вес, кг">3.9</param><param name="Диаметр крепежных отверстий (мм)">14.5</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.002</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">LANTIAN</param><param name="Размер диска (RIM)">3.00D-8</param><param name="Размер шины">5.00-8</param><param name="Тип">Диск сборный</param></offer><offer id="10983" available="true">
+                      <url>https://its-center.ru/product/3-00d-8-et0-pcd6x148-hub110-skld-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>2040</price>
+					  <quantity>206</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/d408c399bdc5366235116c5418998646.jpg</picture>					  					  
+                      <name>3.00D-8 ET0 PCD6x148 HUB110 SKLD Диск для вилочного погрузчика</name>
+					  <model>3.00D-8 </model>
+                      <vendor>SKLD</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">110</param><param name="PCD / Диаметр болтовой окружности (мм)">148</param><param name="Вес, кг">3.9</param><param name="Диаметр крепежных отверстий (мм)">14.5</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.006</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">SKLD</param><param name="Размер диска (RIM)">3.00D-8</param><param name="Размер шины">5.00-8</param><param name="Тип">Диск сборный</param></offer><offer id="10924" available="true">
+                      <url>https://its-center.ru/product/3-00d-8-et0-pcd6x125-hub100-skld-disk-dlya-vilochnogo-pogruzchika</url>
+                      <price>2920</price>
+					  <quantity>6</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>26</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/945266b579d1e007d56214963034556d.webp</picture>					  					  
+                      <name>3.00D-8 ET0 PCD6x125 HUB100 SKLD Диск для вилочного погрузчика</name>
+					  <model>3.00D-8 </model>
+                      <vendor>SKLD</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">100</param><param name="PCD / Диаметр болтовой окружности (мм)">125</param><param name="Вес, кг">3.9</param><param name="Диаметр крепежных отверстий (мм)">15</param><param name="Количество крепежных отверстий">6</param><param name="Объём, м3">0.006</param><param name="Применение">Вилочный погрузчик</param><param name="Производитель">SKLD</param><param name="Размер диска (RIM)">3.00D-8</param><param name="Размер шины">5.00-8</param><param name="Тип">Диск сборный</param></offer><offer id="10440" available="true">
+                      <url>https://its-center.ru/product/8-25x16-5-et14-pcd8x203-2-hub152-4-ekka-disk-dlya-minipogruzchika</url>
+                      <price>10640</price>
+					  <quantity>294</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>27</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/d7f3e6744b0a7a272e3dd78e7dc4ac37.jpg</picture>					  					  
+                      <name>8.25x16.5 ET14 PCD8x203.2 HUB152.4 EKKA Диск для минипогрузчика</name>
+					  <model></model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">14</param><param name="HUB / Диаметр центрального отверстия (мм)">152.4</param><param name="PCD / Диаметр болтовой окружности (мм)">203.2</param><param name="Вес, кг">24.5</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.055</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">8.25x16.5</param></offer><offer id="10441" available="true">
+                      <url>https://its-center.ru/product/9-75x16-5-et0-pcd8x203-2-hub152-4-ekka-disk-dlya-minipogruzchika</url>
+                      <price>10050</price>
+					  <quantity>380</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>27</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/3dc343dd21eabc44c800207622d9202e.jpg</picture>					  					  
+                      <name>9.75x16.5 ET0 PCD8x203.2 HUB152.4 EKKA Диск для минипогрузчика</name>
+					  <model></model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">152.4</param><param name="PCD / Диаметр болтовой окружности (мм)">203.2</param><param name="Вес, кг">26.6</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.066</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">9.75x16.5</param></offer><offer id="11186" available="true">
+                      <url>https://its-center.ru/product/9-00x15-3-et0-pcd6x205-hub161-ekka-disk-dlya-minipogruzchika</url>
+                      <price>5460</price>
+					  <quantity>8</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>27</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/321dc81709de9ee814c2207ae97881f6.jpg</picture>					  					  
+                      <name>9.00x15.3 ET0 PCD6x205 HUB161 EKKA Диск для минипогрузчика</name>
+					  <model>9.00x15.3</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">161</param><param name="PCD / Диаметр болтовой окружности (мм)">205</param><param name="Диаметр крепежных отверстий (мм)">15.3</param><param name="Количество крепежных отверстий">6</param><param name="Применение">Минипогрузчик</param><param name="Размер диска (RIM)">9.00x15.3</param><param name="Размер шины">10.0/75-15.3, 11.5/80-15.3</param><param name="Тип">Диск сварной</param></offer><offer id="11407" available="false">
+                      <url>https://its-center.ru/product/9-75x16-5-et40-pcd8x203-2-hub152-4-hywg-disk-dlya-minipogruzchika</url>
+                      <price>10270</price>
+					  <quantity>0</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>27</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/5cb03849054f272ff8b67265648d473a.jpg</picture>					  					  
+                      <name>9.75x16.5 ET40 PCD8x203.2 HUB152.4 HYWG Диск для минипогрузчика</name>
+					  <model>9.75x16.5</model>
+                      <vendor>HYWG</vendor><param name="ET / Вылет (мм)">40</param><param name="HUB / Диаметр центрального отверстия (мм)">152.4</param><param name="PCD / Диаметр болтовой окружности (мм)">203.2</param><param name="Вес, кг">25</param><param name="Диаметр крепежных отверстий (мм)">16.8</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.066</param><param name="Применение">Минипогрузчик</param><param name="Производитель">HYWG</param><param name="Размер диска (RIM)">9.75x16.5</param><param name="Размер шины">12-16.5</param><param name="Тип">Диск сварной</param></offer><offer id="10442" available="true">
+                      <url>https://its-center.ru/product/w15x28-et31-pcd5x335-hub289-5-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>36960</price>
+					  <quantity>33</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/c17aca6188f090f0bedeed664530c26a.jpg</picture>					  					  
+                      <name>W15x28 ET31 PCD5x335 HUB289.5 EKKA Диск для экскаватора-погрузчика</name>
+					  <model>W15x28</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">31</param><param name="HUB / Диаметр центрального отверстия (мм)">289.5</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Вес, кг">60</param><param name="Количество крепежных отверстий">5</param><param name="Объём, м3">0.22</param><param name="Применение">экскаватор-погрузчик</param><param name="Размер диска (RIM)">W15x28</param><param name="Размер шины">16.9x28</param></offer><offer id="10443" available="true">
+                      <url>https://its-center.ru/product/w9x18-et0-pcd5x335-hub290-5-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>11160</price>
+					  <quantity>23</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/a0d88f575d7353df524c27a8cbc2cd14.jpg</picture>					  					  
+                      <name>W9x18 ET0 PCD5x335 HUB290.5 EKKA Диск для экскаватора-погрузчика</name>
+					  <model>W9x18</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">290.5</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Вес, кг">25</param><param name="Количество крепежных отверстий">5</param><param name="Объём, м3">0.073</param><param name="Применение">экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">W9x18</param><param name="Размер шины">12.5/80-18</param></offer><offer id="11194" available="true">
+                      <url>https://its-center.ru/product/11x18-et64-pcd8x275-hub221-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>19150</price>
+					  <quantity>23</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/995cd6a072570530d3bd4d367e946d04.jpg</picture>					  					  
+                      <name>11x18 ET64 PCD8x275 HUB221 EKKA Диск для экскаватора-погрузчика</name>
+					  <model>11x18</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">64</param><param name="HUB / Диаметр центрального отверстия (мм)">221</param><param name="PCD / Диаметр болтовой окружности (мм)">275</param><param name="Вес, кг">25</param><param name="Количество крепежных отверстий">8</param><param name="Объём, м3">0.073</param><param name="Применение">экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">11x18</param><param name="Размер шины">12.5/80-18</param></offer><offer id="11195" available="true">
+                      <url>https://its-center.ru/product/dw15x24-et82-pcd5x335-hub290-5-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>34300</price>
+					  <quantity>13</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/ad2be62b338bb04eef64bb22519d1a3d.jpg</picture>					  					  
+                      <name>DW15x24 ET82 PCD5x335 HUB290.5 EKKA Диск для экскаватора-погрузчика </name>
+					  <model>DW15x24</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">82</param><param name="HUB / Диаметр центрального отверстия (мм)">290.5</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Диаметр крепежных отверстий (мм)">21.5</param><param name="Количество крепежных отверстий">5</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">15x24</param><param name="Размер шины">16.9-24</param><param name="Тип">Диск сварной</param></offer><offer id="11196" available="true">
+                      <url>https://its-center.ru/product/dw15x24-et36-pcd5x335-hub290-5-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>34300</price>
+					  <quantity>16</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/f08013bf70bc6ec3ac7572633b3affde.jpg</picture>					  					  
+                      <name>DW15x24 ET36 PCD5x335 HUB290.5 EKKA Диск для экскаватора-погрузчика </name>
+					  <model>DW15x24</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">36</param><param name="HUB / Диаметр центрального отверстия (мм)">290.5</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Диаметр крепежных отверстий (мм)">21.5</param><param name="Количество крепежных отверстий">5</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">15x24</param><param name="Размер шины">16.9-24</param><param name="Тип">Диск сварной</param></offer><offer id="11197" available="true">
+                      <url>https://its-center.ru/product/w15x28-et50-pcd10x335-hub281-5-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>43680</price>
+					  <quantity>19</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/6e3ccc1dff8e7ecc76eb319695df53c6.jpg</picture>					  					  
+                      <name>W15x28 ET-50 PCD10x335 HUB281.5 EKKA Диск для экскаватора-погрузчика</name>
+					  <model>W15x28</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">-50</param><param name="HUB / Диаметр центрального отверстия (мм)">281.5</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Количество крепежных отверстий">10</param><param name="Применение">экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">W15x28</param><param name="Размер шины">16.9x28</param></offer><offer id="11198" available="true">
+                      <url>https://its-center.ru/product/16x26-et79-pcd5x335-hub-290-ekka-disk-dlya-ekskavatora-pogruzchika</url>
+                      <price>46860</price>
+					  <quantity>8</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>28</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/cd0a612940238c440cb4c69fe0c3e716.jpg</picture>					  					  
+                      <name>16x26 ET79 PCD5x335 HUB 290 EKKA Диск для экскаватора-погрузчика</name>
+					  <model>16x26</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">79</param><param name="HUB / Диаметр центрального отверстия (мм)">290</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Диаметр крепежных отверстий (мм)">21.5</param><param name="Количество крепежных отверстий">5</param><param name="Применение">Экскаватор-погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">16x26</param><param name="Размер шины">18.4-26</param><param name="Тип">Диск сварной</param></offer><offer id="6512" available="true">
+                      <url>https://its-center.ru/product/11-75x22-5-et0-pcd10x335-hub281-lantian-disk-gruzovoy</url>
+                      <price>7640</price>
+					  <quantity>34</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>29</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/f517357fcac90f7072a9cec1e10d3e7e.jpg</picture>					  					  
+                      <name>11.75x22.5 ET0 PCD10x335 HUB281 LANTIAN Диск грузовой</name>
+					  <model></model>
+                      <vendor>LANTIAN</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">281</param><param name="PCD / Диаметр болтовой окружности (мм)">335</param><param name="Вес, кг">47</param><param name="Количество крепежных отверстий">10</param><param name="Объём, м3">0.122</param><param name="Применение">Грузовая техника</param><param name="Размер диска (RIM)">11.75x22.5</param><param name="Размер шины">385/65R22.5-20 </param></offer><offer id="11199" available="true">
+                      <url>https://its-center.ru/product/19-50-2-5-25-et0-pcd10x480-hub421-ekka-disk-dlya-frontalnogo-pogruzchika</url>
+                      <price>51650</price>
+					  <quantity>8</quantity>					  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>30</categoryId>
+                      <picture>https://its-center.ru/images/product/baseimg/5dcd1046a26bf5d8d58494411afb9849.jpg</picture>					  					  
+                      <name>19.50/2.5-25 ET0 PCD10x480 HUB421 EKKA Диск для фронтального погрузчика</name>
+					  <model>19.50/2.5-25</model>
+                      <vendor>EKKA</vendor><param name="ET / Вылет (мм)">0</param><param name="HUB / Диаметр центрального отверстия (мм)">421</param><param name="PCD / Диаметр болтовой окружности (мм)">480</param><param name="Количество крепежных отверстий">10</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">EKKA</param><param name="Размер диска (RIM)">19.50/2.5-25</param><param name="Размер шины">23.5-25</param><param name="Тип">Диск сварной</param></offer></offers>
+	  </shop>
+	</yml_catalog>

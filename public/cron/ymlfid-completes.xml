@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:15:01+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories><category id="2" parentId='34'>Шины АТВ</category><category id="18" parentId='1'>Шины для вилочных погрузчиков</category></categories>				
+				<offers><offer id="C1" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-25h8-12-25h10-12-p341-ekka-dlya-kvadrociklov</url>
+                      <price>37200</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/08bb0fb13d4df685edde85b3240a37d4.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 25х8-12/25х10-12 P341 EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 25х8-12/25х10-12 P341 EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C2" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-16h8-7-p319-ekka-dlya-kvadrociklov</url>
+                      <price>14000</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/3a5f1c96413bbc424d358babe6fe02d3.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 16х8-7 P319 EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 16х8-7 P319 EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C3" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-16x8-7-p361-ekka-dlya-kvadrociklov</url>
+                      <price>16800</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/72a84436f5da0abfbccb337c8b3cc837.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 16x8-7 P361 EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 16x8-7 P361 EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C4" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-22x7-12-p3501-ekka-dlya-kvadrociklov</url>
+                      <price>20000</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/be32de9bd4c93b2671900166c399fcc3.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 22x7-12 P3501 EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 22x7-12 P3501 EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C5" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-21h7-10-20h10-9-eos-ekka-dlya-kvadrociklov</url>
+                      <price>25200</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/d5181567f11ec2172994d19b2a8d1f76.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 21х7-10/20х10-9 EOS EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 21х7-10/20х10-9 EOS EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C8" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-29x9-14-29x11-14-atlas-ekka-dlya-kvadrociklov</url>
+                      <price>57420</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/0e0deae21182a73931d353d475d0f0df.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 29x9-14/29x11-14 Atlas EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 29x9-14/29x11-14 Atlas EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C11" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-27h9-12-27h11-12-mars-ekka-dlya-kvadrociklov</url>
+                      <price>42800</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/365153bdc5b01dc2140019872108c8cd.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 27х9-12/27х11-12 Mars EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 27х9-12/27х11-12 Mars EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C12" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-27h9-12-27h11-12-vulcan-ekka-dlya-kvadrociklov</url>
+                      <price>51300</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/bd2a0fdae9581ee30bf9c58f2913a377.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 27х9-12/27х11-12 Vulcan EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 27х9-12/27х11-12 Vulcan EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C14" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-28h9-12-28h11-12-vulcan-ekka-dlya-kvadrociklov</url>
+                      <price>61800</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/9cdc9c8a9250836d49c4ed6bcc1005d8.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 28х9-12/28х11-12 Vulcan EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 28х9-12/28х11-12 Vulcan EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer><offer id="C17" available="true">
+                      <url>https://its-center.ru/complete/komplekt-shin-19h7-8-18h9-50-8-p361-ekka-dlya-kvadrociklov</url>
+                      <price>21100</price>
+					  <oldprice></oldprice>
+                      <currencyId>RUR</currencyId>
+                      <categoryId>2</categoryId>
+                      <picture>https://its-center.ru/images/complete/baseimg/53bf81f12dc745021217a84c57d14f4c.jpg</picture>					  
+					  <store>true</store>
+  				      <pickup>true</pickup>
+  				      <delivery>true</delivery>					  
+                      <name>Комплект шин 19х7-8/18х9.50-8 P361 EKKA для квадроциклов</name>
+					  <model></model>
+                      <vendor>EKKA</vendor>                     
+					  <sales_notes></sales_notes>
+					  <description>Компания ИТС-Центр является официальным поставщиком продукции  и предлагает купить Комплект шин 19х7-8/18х9.50-8 P361 EKKA для квадроциклов по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.</description>
+					  <country_of_origin></country_of_origin>
+		</offer></offers>
+	  </shop>
+	</yml_catalog>

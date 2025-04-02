@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:22:01+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories>
+					<category id="1">Шины для спецтехники</category><category id="9" parentId='1'>Шины для минипогрузчиков</category></categories>				
+				<offers><offer id="9311" available="true">
+                      <url>https://its-center.ru/product/10-16-5-10pr-tl-shina-pnevmaticheskaya-eks-1-ekka</url>
+                      <price>11410</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/2b697c8b28e8bc44797a27a99a3a53f7.webp</picture>					  					  
+                      <name>10-16.5 10PR EKS-1 EKKA Шина для минипогрузчика</name>
+					  <model>EKS-1</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">22</param><param name="Глубина протектора (мм)">18</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">520</param><param name="Макс. Нагрузка (кг)">2135</param><param name="Наружный диаметр, мм">773</param><param name="Область применения">грунт</param><param name="Объём, м3">0.158</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKS-1</param><param name="Размер диска (RIM)">8.25</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">10</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">264</param><param name="Ширина профиля (дюйм)">10</param></offer><offer id="9200" available="true">
+                      <url>https://its-center.ru/product/10-16-5-10pr-tl-shina-pnevmaticheskaya-ekt-2-ekka</url>
+                      <price>17400</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/a06b8e69e3fda210790b47afb70f660c.webp</picture>					  					  
+                      <name>10-16.5 10PR TL Шина пневматическая EKT-2 EKKA</name>
+					  <model>EKT-2</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">33.8</param><param name="Глубина протектора (мм)">30</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">520</param><param name="Макс. Нагрузка (кг)">2135</param><param name="Наружный диаметр, мм">773</param><param name="Область применения">грунт</param><param name="Объём, м3">0.158</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKT-2</param><param name="Размер диска (RIM)">8.25</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">Шашка</param><param name="Слойность (PR)">10</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">264</param></offer><offer id="11331" available="true">
+                      <url>https://its-center.ru/product/10-16-5-10pr-tl-t608-ekka-shina-dlya-minipogruzchika</url>
+                      <price>19110</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/759adef1a614daaef9f39f3564cd9468.webp</picture>					  					  
+                      <name>10-16.5 10PR TL T608 EKKA Шина для минипогрузчика</name>
+					  <model>T608</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">35.4</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">520</param><param name="Макс. Нагрузка (кг)">2135</param><param name="Область применения">грунт</param><param name="Объём, м3">0.158</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">T608</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">10</param><param name="Тип">(TL) Бескамерная шина</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">264</param></offer><offer id="7094" available="true">
+                      <url>https://its-center.ru/product/10-16-5-sks-1-superguider-shina-dlya-minipogruzchika</url>
+                      <price>10570</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/6588cc53d71049afc55a11cf3d6302ff.webp</picture>					  					  
+                      <name>10-16.5 SKS-1 134A8 10PR TL Superguider Шина для минипогрузчика</name>
+					  <model>SKS-1</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">20</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">520</param><param name="Макс. Нагрузка (кг)">2135</param><param name="Наружный диаметр, мм">779</param><param name="Область применения">грунт</param><param name="Объём, м3">0.15</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">SKS-1</param><param name="Размер диска (RIM)">8.25</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">Клюшка</param><param name="Слойность (PR)">10</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">261</param></offer><offer id="6919" available="true">
+                      <url>https://its-center.ru/product/10-16-5-sks-3-superguider-shina-dlya-minipogruzchika</url>
+                      <price>19290</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/c06d7d5e01ff0cf8faa2f185feb213d4.webp</picture>					  					  
+                      <name>10-16.5 SKS-3 12PR TL 138A8 Superguider Шина для минипогрузчика</name>
+					  <model>SKS-3</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">32</param><param name="Индекс категории скорости">A8</param><param name="Индекс нагрузки">138</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">620</param><param name="Макс. Нагрузка (кг)">2375</param><param name="Наружный диаметр, мм">773</param><param name="Область применения">асфальт, бетон</param><param name="Объём, м3">0.15</param><param name="Применение">минипогрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">SKS-3</param><param name="Размер диска (RIM)">8.25</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">264</param></offer><offer id="7249" available="true">
+                      <url>https://its-center.ru/product/10-16-5-30-10-20-koleso-celnolitoe-ist-v-sbore-s-diskom</url>
+                      <price>56170</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/d8ee07ea95447905853da05c5ea98c5f.webp</picture>					  					  
+                      <name>10-16.5 (30х10-20) Колесо цельнолитое WHEELS STANDARD IST (в сборе с диском)</name>
+					  <model>WHEELS STANDARD</model>
+                      <vendor>IST</vendor><param name="Вес, кг">122</param><param name="Взаимозаменяемый размер">30x10-20</param><param name="Макс. Нагрузка (кг)">2600</param><param name="Область применения">грунт</param><param name="Объём, м3">0.158</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">IST</param><param name="Протектор">WHEELS STANDARD</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">клюшка</param><param name="Тип шины">цельнолитые</param><param name="Ширина протектора (мм)">236</param></offer><offer id="11284" available="true">
+                      <url>https://its-center.ru/product/10-16-5-t608-10pr-134a8-tl-otrstar-shina-dlya-minipogruzchika</url>
+                      <price>19110</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/0867cd76350bc19b3ae8e9f56a42b6d7.webp</picture>					  					  
+                      <name>10-16.5 T608 10PR 134A8 TL OTRSTAR Шина для минипогрузчика</name>
+					  <model>T608</model>
+                      <vendor>OTRSTAR</vendor><param name="Вес, кг">35.8</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">520</param><param name="Макс. Нагрузка (кг)">2135</param><param name="Область применения">грунт</param><param name="Объём, м3">0.167</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">OTRSTAR</param><param name="Протектор">T608</param><param name="Размер шины">10-16.5</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">10</param><param name="Тип">(TL) Бескамерная шина</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">268</param></offer></offers>
+	  </shop>
+	</yml_catalog>

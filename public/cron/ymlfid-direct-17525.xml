@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:50:00+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories>
+					<category id="1">Шины для спецтехники</category><category id="20" parentId='1'>Шины для фронтальных погрузчиков</category></categories>				
+				<offers><offer id="9524" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-tl-shina-pnevmaticheskaya-superguider-qh812</url>
+                      <price>52940</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/181241ed90462f8f820bc13937f26349.webp</picture>					  					  
+                      <name>17.5-25 20PR TL QH812 Superguider Шина для фронтального погрузчика</name>
+					  <model>QH812</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">120</param><param name="Макс. Давление (КПа)">475</param><param name="Макс. Нагрузка (кг)">7300</param><param name="Объём, м3">0.8</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH812</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">445</param></offer><offer id="6926" available="true">
+                      <url>https://its-center.ru/product/17-5-25-16pr-tl-shina-pnevmaticheskaya-superguider-l5</url>
+                      <price>113750</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/48703954c12b3cc72b7c3c6c58b755f7.webp</picture>					  					  
+                      <name>17.5-25 16PR TL L5 Superguider Шина для фронтального погрузчика</name>
+					  <model>L5</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">209</param><param name="Макс. Давление (КПа)">475</param><param name="Макс. Нагрузка (кг)">5400</param><param name="Объём, м3">0.9</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">L5</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">16</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">420</param></offer><offer id="9523" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-tl-shina-pnevmaticheskaya-superguider-qh811</url>
+                      <price>52940</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/98e7a969a4692074924890fc2efaf826.webp</picture>					  					  
+                      <name>17.5-25 20PR TL Шина пневматическая Superguider QH811</name>
+					  <model>QH811</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">120</param><param name="Макс. Давление (КПа)">475</param><param name="Макс. Нагрузка (кг)">7300</param><param name="Объём, м3">0.8</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH811</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">455</param></offer><offer id="9522" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-tl-shina-pnevmaticheskaya-superguider-qh808</url>
+                      <price>52990</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/3fe895edef199d3d68f50ca19da5014f.webp</picture>					  					  
+                      <name>17.5-25 20PR TL Шина пневматическая Superguider QH808</name>
+					  <model>QH808</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">101</param><param name="Макс. Давление (КПа)">280</param><param name="Макс. Нагрузка (кг)">3650</param><param name="Объём, м3">0.811</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">QH808</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">445</param></offer><offer id="9930" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-tl-shina-pnevmaticheskaya-superguider-l5</url>
+                      <price>114010</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/56cee3ff7e6e22512214ab32e094058f.webp</picture>					  					  
+                      <name>17.5-25 20PR TL Шина пневматическая Superguider L5</name>
+					  <model>L5</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">210</param><param name="Макс. Давление (КПа)">475</param><param name="Макс. Нагрузка (кг)">7300</param><param name="Объём, м3">0.9</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">L5</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">425</param></offer><offer id="10003" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-tl-shina-pnevmaticheskaya-hengruida-z601</url>
+                      <price>58450</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/91541c1de32328bf968ba2ef01bf4c16.webp</picture>					  					  
+                      <name>17.5-25 20PR TL Шина пневматическая Hengruida Z601</name>
+					  <model>Z601</model>
+                      <vendor>Hengruida</vendor><param name="Вес, кг">131</param><param name="Макс. Давление (КПа)">475</param><param name="Макс. Нагрузка (кг)">7300</param><param name="Объём, м3">0.82</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Hengruida</param><param name="Протектор">Z601</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">445</param></offer><offer id="11665" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-tt-hengruida-z601-shina-dlya-frontalnogo-pogruzchika</url>
+                      <price>64050</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/edfad2eedf8d3c30309f0adbe7394cb0.webp</picture>					  					  
+                      <name>17.5-25 20PR TT Hengruida Z601 Шина для фронтального погрузчика</name>
+					  <model>Z601</model>
+                      <vendor>Hengruida</vendor><param name="Вес, кг">146</param><param name="Наружный диаметр, мм">1348</param><param name="Объём, м3">0.812</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">Hengruida</param><param name="Протектор">Z601</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TT</param><param name="Ширина протектора (мм)">445</param></offer><offer id="10984" available="true">
+                      <url>https://its-center.ru/product/17-5-25-ht239-20pr-herade-shina-dlya-frontalnogo-pogruzchika</url>
+                      <price>47460</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/81939f780bad966385fd9a9888ce2ebc.webp</picture>					  					  
+                      <name>17.5-25 HT239 TL 20PR HERADE Шина для фронтального погрузчика </name>
+					  <model>HT239</model>
+                      <vendor>HERADE</vendor><param name="Вес, кг">143</param><param name="Индекс нагрузки">168A8</param><param name="Макс. Нагрузка (кг)">5600</param><param name="Наружный диаметр, мм">1350</param><param name="Объём, м3">0.812</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">HERADE</param><param name="Протектор">HT239</param><param name="Размер диска (RIM)">14.00/1.5</param><param name="Размер шины">17.5-25</param><param name="Рисунок протектора">волна</param><param name="Слойность (PR)">20</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">445</param></offer><offer id="11368" available="true">
+                      <url>https://its-center.ru/product/17-5-25-l2-16pr-tl-halitrax-shina-dlya-frontalnogo-pogruzchika</url>
+                      <price>59520</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/faf4dcfa122d5a89f84557357fe660ac.webp</picture>					  					  
+                      <name>17.5-25 L2 16PR TL HALITRAX Шина для фронтального погрузчика</name>
+					  <model>L2</model>
+                      <vendor>HALITRAX</vendor><param name="Вес, кг">94.69</param><param name="Макс. Давление (КПа)">280</param><param name="Макс. Нагрузка (кг)">3350</param><param name="Объём, м3">0.69</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">HALITRAX</param><param name="Протектор">L2</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">16</param><param name="Тип">TL</param><param name="Ширина протектора (мм)">445</param></offer><offer id="11758" available="true">
+                      <url>https://its-center.ru/product/17-5-25-20pr-164b-ttf-e3-l3-huayi-shina-dlya-frontalnogo-pogruzchika</url>
+                      <price>47680</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>20</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/e6fac5032f1fb3a19ba0a29ca678f8b2.webp</picture>					  					  
+                      <name>17.5-25 20PR 164B TTF E3/L3 HUAYI Шина для фронтального погрузчика</name>
+					  <model>E3/L3</model>
+                      <vendor>HUAYI</vendor><param name="Вес, кг">120</param><param name="Индекс категории скорости">B</param><param name="Индекс нагрузки">164</param><param name="Наружный диаметр, мм">1350</param><param name="Объём, м3">0.811</param><param name="Применение">Фронтальный погрузчик</param><param name="Производитель">HUAYI</param><param name="Протектор">E3/L3</param><param name="Размер шины">17.5-25</param><param name="Слойность (PR)">20</param><param name="Тип">TTF</param><param name="Ширина протектора (мм)">445</param></offer></offers>
+	  </shop>
+	</yml_catalog>

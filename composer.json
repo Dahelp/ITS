@@ -1,0 +1,21 @@
+{
+  "autoload": {
+    "psr-4": {
+      "ishop\\": "vendor/ishop/core",
+      "app\\": "app"
+    }
+  },
+  "require": {
+    "gabordemooij/redbean": "dev-master",
+    "vlucas/valitron": "^1.4",
+    "swiftmailer/swiftmailer": "^5.4",
+    "phpoffice/phpword": "dev-master",
+    "datatables/datatables": "^1.10",
+    "datatables.net/editor-php": "^2.0",
+    "phpoffice/phpspreadsheet": "^1.12",
+    "dompdf/dompdf": "^2.0",
+    "php-imap/php-imap": "^2.0",
+    "guzzlehttp/guzzle": "*",
+    "phpro/soap-client": "^1.7"
+  }
+}

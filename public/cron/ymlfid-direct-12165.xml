@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+              <yml_catalog date="2025-03-06T11:27:01+03:00">
+              <shop>
+                <name>ИТС-Центр</name>
+                <company>ООО ИТС-Центр</company>
+                <url>https://its-center.ru</url>
+                <currencies>
+                  <currency id="RUR" rate="1"/>
+                </currencies>
+				<categories>
+					<category id="1">Шины для спецтехники</category><category id="9" parentId='1'>Шины для минипогрузчиков</category></categories>				
+				<offers><offer id="9312" available="true">
+                      <url>https://its-center.ru/product/12-16-5-12pr-tl-shina-pnevmaticheskaya-eks-1-ekka</url>
+                      <price>16350</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/9bd0db3e4fc16aa44509714d5d55b690.webp</picture>					  					  
+                      <name>12-16.5 12PR EKS-1 EKKA Шина для минипогрузчика</name>
+					  <model>EKS-1</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">31.8</param><param name="Глубина протектора (мм)">19</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">550</param><param name="Макс. Нагрузка (кг)">2865</param><param name="Наружный диаметр, мм">831</param><param name="Область применения">грунт</param><param name="Объём, м3">0.212</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKS-1</param><param name="Размер диска (RIM)">9.75</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">Клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">307</param><param name="Ширина профиля (дюйм)">12</param></offer><offer id="9201" available="true">
+                      <url>https://its-center.ru/product/12-16-5-12pr-tl-shina-pnevmaticheskaya-ekt-2-ekka</url>
+                      <price>21650</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/c86f72e49fd5de939f0b8ed5317042b1.webp</picture>					  					  
+                      <name>12-16.5 12PR TL Шина пневматическая EKT-2 EKKA</name>
+					  <model>EKT-2</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">41</param><param name="Глубина протектора (мм)">30</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">550</param><param name="Макс. Нагрузка (кг)">2865</param><param name="Наружный диаметр, мм">831</param><param name="Область применения">грунт</param><param name="Объём, м3">0.212</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">EKT-2</param><param name="Размер диска (RIM)">9.75</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">Клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">307</param></offer><offer id="11332" available="true">
+                      <url>https://its-center.ru/product/12-16-5-12pr-tl-t608-ekka-shina-dlya-minipogruzchika</url>
+                      <price>24230</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/4f0dfa01dde26983c00675ccc54d180c.webp</picture>					  					  
+                      <name>12-16.5 12PR TL 145A8 T608 EKKA Шина для минипогрузчика</name>
+					  <model>T608</model>
+                      <vendor>EKKA</vendor><param name="Вес, кг">30.8</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">550</param><param name="Макс. Нагрузка (кг)">2885</param><param name="Область применения">грунт</param><param name="Объём, м3">0.212</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">EKKA</param><param name="Протектор">T608</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">12</param><param name="Тип">(TL) Бескамерная шина</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">307</param></offer><offer id="11359" available="true">
+                      <url>https://its-center.ru/product/12-16-5-33h12-20-koleso-celnolitoe-wheels-standard-ekka-v-sbore-s-diskom</url>
+                      <price>79470</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/05384bbfa49bb08ee71009c5e1b5733f.webp</picture>					  					  
+                      <name>12-16.5 (33х12-20) Колесо цельнолитое WHEELS STANDARD EKKA (в сборе с диском для BOBCAT)</name>
+					  <model>WHEELS STANDARD</model>
+                      <vendor>EKKA</vendor><param name="HUB / Диаметр центрального отверстия (мм)">152.4</param><param name="PCD / Диаметр болтовой окружности (мм)">203.2</param><param name="Вес, кг">150</param><param name="Взаимозаменяемый размер">33x12-20</param><param name="Количество крепежных отверстий">8</param><param name="Макс. Нагрузка (кг)">4850</param><param name="Область применения">грунт</param><param name="Объём, м3">0.212</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик типа BOBCAT</param><param name="Производитель">EKKA</param><param name="Протектор">WHEELS STANDARD</param><param name="Размер диска (RIM)">7.50</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">клюшка</param><param name="Тип шины">цельнолитые</param><param name="Ширина протектора (мм)">280</param></offer><offer id="7113" available="true">
+                      <url>https://its-center.ru/product/12-16-5-12pr-tl-shina-pnevmaticheskaya-superguider-sks-1</url>
+                      <price>13340</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/0a95b9a786cdc40dacf63e54c6371365.webp</picture>					  					  
+                      <name>12-16.5 12PR TL 144A8 SKS-1 Superguider Шина для минипогрузчика</name>
+					  <model>SKS-1</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">25</param><param name="Индекс категории скорости">A8</param><param name="Индекс нагрузки">144</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">550</param><param name="Макс. Нагрузка (кг)">2865</param><param name="Область применения">грунт</param><param name="Объём, м3">0.21</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">SKS-1</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">клюшка</param><param name="Слойность (PR)">12</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматическая</param><param name="Ширина протектора (мм)">307</param></offer><offer id="6966" available="true">
+                      <url>https://its-center.ru/product/12-16-5-14pr-tl-shina-pnevmaticheskaya-superguider-sks-3</url>
+                      <price>25300</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/7ba486b117543cc2029ed078a40c2ab3.webp</picture>					  					  
+                      <name>12-16.5 14PR TL Шина пневматическая Superguider SKS-3</name>
+					  <model>SKS-3</model>
+                      <vendor>Superguider</vendor><param name="Вес, кг">37.4</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">620</param><param name="Макс. Нагрузка (кг)">3075</param><param name="Область применения">асфальт, бетон</param><param name="Объём, м3">0.21</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">Superguider</param><param name="Протектор">SKS-3</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">шашка</param><param name="Слойность (PR)">14</param><param name="Тип">TL (Бескамерная шина)</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">307</param></offer><offer id="7251" available="true">
+                      <url>https://its-center.ru/product/12-16-5-33-12-20-koleso-celnolitoe-ist-v-sbore-s-diskom</url>
+                      <price>71680</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/4577b32de7016ca0a379a9412639614c.webp</picture>					  					  
+                      <name>12-16.5 (33х12-20) Колесо цельнолитое WHEELS STANDARD IST (в сборе с диском)</name>
+					  <model>WHEELS STANDARD</model>
+                      <vendor>IST</vendor><param name="Вес, кг">148</param><param name="Взаимозаменяемый размер">33x12-20</param><param name="Макс. Нагрузка (кг)">4850</param><param name="Область применения">грунт</param><param name="Объём, м3">0.212</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">IST</param><param name="Протектор">WHEELS STANDARD</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">клюшка</param><param name="Тип шины">цельнолитые</param><param name="Ширина протектора (мм)">280</param></offer><offer id="10952" available="true">
+                      <url>https://its-center.ru/product/12-16-5-12pr-145a8-t608-herade-shina-dlya-minipogruzchika</url>
+                      <price>24230</price>		  
+                      <currencyId>RUR</currencyId>
+                      <categoryId>9</categoryId>
+                      <picture>https://its-center.ru/images/product/unload/de8c52f354a470c3ccfbb4961074d464.webp</picture>					  					  
+                      <name>12-16.5 12PR 145A8 T608 HERADE Шина для минипогрузчика</name>
+					  <model>T608</model>
+                      <vendor>HERADE</vendor><param name="Вес, кг">44</param><param name="Конструкция">диагональная</param><param name="Макс. Давление (КПа)">550</param><param name="Макс. Нагрузка (кг)">2885</param><param name="Область применения">грунт</param><param name="Объём, м3">0.22</param><param name="Посадочный диаметр (дюйм)">16.5</param><param name="Применение">минипогрузчик</param><param name="Производитель">HERADE</param><param name="Протектор">T608</param><param name="Размер шины">12-16.5</param><param name="Рисунок протектора">скала</param><param name="Слойность (PR)">12</param><param name="Тип">(TL) Бескамерная шина</param><param name="Тип шины">пневматические</param><param name="Ширина протектора (мм)">315</param></offer></offers>
+	  </shop>
+	</yml_catalog>
