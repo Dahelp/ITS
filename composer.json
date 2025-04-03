@@ -17,5 +17,13 @@
     "php-imap/php-imap": "^2.0",
     "guzzlehttp/guzzle": "*",
     "phpro/soap-client": "^1.7"
-  }
+  },
+  "scripts": {
+    "post-install-cmd": [
+        "bash scripts/clean-vendor-git.sh"
+    ],
+    "post-update-cmd": [
+        "bash scripts/clean-vendor-git.sh"
+    ]
+}
 }
