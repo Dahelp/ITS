@@ -17,7 +17,7 @@ try {
     $testserver = $client->request('GET', $config['host'], [
         'auth' => $config['auth'],
         'allow_redirects' => false,
-        'timeout' => 5
+        'timeout' => 15
     ]);
 
     if ($testserver->getStatusCode() == 200) {
@@ -41,7 +41,7 @@ try {
             try {
                 $res = $client->request('GET', $config['host'] . '?code=' . $product["article"], [
                     'auth' => $config['auth'],
-                    'timeout' => 5
+                    'timeout' => 15
                 ]);
 
                 $json = json_decode($res->getBody(), true);
