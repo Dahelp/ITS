@@ -116,7 +116,6 @@
 				<meta itemprop="itemCondition" content="https://schema.org/UsedCondition" />
 				<meta itemprop="price" content="<?=$price * $curr['value'];?>" />
 				<meta itemprop="priceValidUntil" content="<?=$product->data_edit_price?>" />
-				<?php $rezerv = \R::findOne('in_stock', 'product_id = ? AND branch_id = ?', [$product->id, 9]); ?>
 				<?php if(!$mods): // Без модификация товаров ?>
 					<div class="fw-normal">
 						<div class="item_price_2 text-accent" id="base-price" data-base="<?=$price * $curr['value'];?>">
@@ -180,7 +179,7 @@
 					</div>
 					<div class="fw-normal">
 						<div class="vnalichie">
-							<?php $itog_qty = $product->quantity - $rezerv["quantity"];		
+							<?php $itog_qty = $product->quantity - $product["reserve"];		
 								if($itog_qty == 0) { 
 									if($product->stock_status_id == 0){
 								?>
@@ -199,9 +198,9 @@
 							<?php if($itog_qty > 0) { 
 							
 								$quantity = $product->quantity;								
-								if($rezerv["quantity"] > 0) {								
+								if($product["reserve"] > 0) {								
 								?>
-									<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> Свободное наличие: <?=$itog_qty?></span> (В резерве: <?=$rezerv["quantity"]?> шт.)
+									<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> Свободное наличие: <?=$itog_qty?></span> (В резерве: <?=$product["reserve"]?> шт.)
 									
 								<?php }else{ ?>
 									<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> В наличии: <?=$quantity?> шт.</span>
@@ -276,14 +275,14 @@
 							</div>
 						<?php } ?>
 						<?php if($quantity > 0) { 
-								$itog_qty = $product->quantity + $sum_mods - $rezerv["quantity"];
+								$itog_qty = $product->quantity + $sum_mods - $product["reserve"];
 						?>
 							<div class="fw-normal">
 								<div class="vnalichie">
 								<?php $quantity = $product->quantity + $sum_mods;								
-								if($rezerv["quantity"] > 0) {									
+								if($product["reserve"] > 0) {									
 								?>
-									<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> Свободное наличие: <?=$itog_qty?></span> (В резерве: <?=$rezerv["quantity"]?> шт.)
+									<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> Свободное наличие: <?=$itog_qty?></span> (В резерве: <?=$product["reserve"]?> шт.)
 									
 								<?php }else{ ?>
 									<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> В наличии: <?=$quantity?> шт.</span>

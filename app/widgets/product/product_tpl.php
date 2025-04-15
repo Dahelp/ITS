@@ -44,7 +44,7 @@
 			<a href="product/<?=$product["alias"]?>">
 				<span itemprop="name">
 				<?php
-					$inseo_prod = \R::findOne('plagins_inseo', "tip = ? AND category_id = ? AND hide = 'show'", [product, $cat_prod["id"]]);												
+					$inseo_prod = \R::findOne('plagins_inseo', "tip = ? AND category_id = ? AND hide = 'show'", ['product', $cat_prod["id"]]);												
 					if($inseo_prod["name"]) { 					
 						echo $name = \ishop\App::seoreplace($inseo_prod["name"], $product["id"]);
 					}
@@ -75,20 +75,20 @@
 		<div class="product-info">
 			<?php // модификации
 				$modification = \R::getAll("SELECT quantity,price FROM modification WHERE product_id = '".$product["id"]."'");
-				$rezerv = \R::findOne('in_stock', 'product_id = ? AND branch_id = ?', [$product["id"], 9]);
+				
 				if($modification) {
 					foreach($modification as $item) {						
 						$quantity[$product["id"]] += $item["quantity"];
 						$modprice[$product["id"]] .= "".$item["price"].", ";
 					}
-					$quantity[$product["id"]] = $quantity[$product["id"]] + $product["quantity"] - $rezerv["quantity"];
+					$quantity[$product["id"]] = $quantity[$product["id"]] + $product["quantity"] - $product["reserve"];
 					
 					$sql_modprice[$product["id"]] = "".$product["price"].", ".$modprice[$product["id"]]."";
 					$sql_modprice[$product["id"]] = rtrim($sql_modprice[$product["id"]], ', ');	
 					$max[$product["id"]]=[];
 					$max_price[$product["id"]]=max($max[$product["id"]]=explode(",", $sql_modprice[$product["id"]]));
 				}else{
-					$quantity[$product["id"]] = $product["quantity"]-$rezerv["quantity"];
+					$quantity[$product["id"]] = $product["quantity"]-$product["reserve"];
 				}
 				
 				if($modification){
@@ -226,4 +226,3 @@
 	
 	</div>
 </div>
-				            

@@ -191,12 +191,19 @@
 							<span class="nalich_postuplenie">Ожидается поступление. Уточняйте у менеджера.</span>
 						<?php } ?>						
 						<?php } ?>						
-						<?php if($product->quantity > 0) { ?><span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> В наличии: <?=$product->quantity?> шт.</span>
-						<?php 
-							$rezerv = \R::findOne('in_stock', 'product_id = ? AND branch_id = ?', [$product->id, 9]);
-							if($rezerv["quantity"] > 0) { echo "(В резерве: ".$rezerv["quantity"]." шт.)"; } 
+						<?php $quantity = $product->quantity + $sum_mods;								
+						if($product["reserve"] > 0) {									
 						?>
-						<?php } ?>					
+							<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> Свободное наличие: <?=$itog_qty?></span> (В резерве: <?=$product["reserve"]?> шт.)
+							
+						<?php }else{ ?>
+							<span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> В наличии: <?=$quantity?> шт.</span>
+						<?php } ?>
+						<?php 
+							
+							if($product->reserve > 0) { echo "(В резерве: ".$product->reserve." шт.)"; } 
+						?>
+											
 						
 					</div>		
 				</div>				

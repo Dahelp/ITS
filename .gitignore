@@ -40,3 +40,4 @@ cgi-bin/
 /public/storage
 /storage/
 /crm/
+/backup_from_server/

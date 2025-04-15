@@ -63,6 +63,12 @@
                  			</select>
 							</div>
                         </div>
+						<div class="form-group row">
+							<label class="col-sm-3 col-form-label" for="categories">Категории (через запятую)</label>
+							<div class="col-sm-9">
+								<input type="text" name="categories" class="form-control" id="categories" value="<?=h($cron->categories ?? '');?>" placeholder="Пример: 9,18,19">
+							</div>
+						</div>
 					</div>				
 				</div><!-- /.card-body -->			  
             </div>

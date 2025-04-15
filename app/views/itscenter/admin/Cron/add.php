@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Новый CRON задания</h1>
+            <h1 class="m-0">CRON задания</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -64,6 +64,12 @@
                  			</select>
 							</div>
                         </div>
+						<div class="form-group row">
+							<label class="col-sm-3 col-form-label" for="categories">Категории (через запятую)</label>
+							<div class="col-sm-9">
+								<input type="text" name="categories" class="form-control" id="categories" value="" placeholder="Пример: 9,18,19">
+							</div>
+						</div>
 					</div>
                 <!-- /.tab-content -->				
 				</div><!-- /.card-body -->			  

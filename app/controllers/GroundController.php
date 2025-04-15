@@ -24,6 +24,8 @@ class GroundController extends AppController {
 			if($_GET['sort'] == "price") { $sql_sort = "ORDER BY product.price ASC"; }
 			if($_GET['sort'] == "nal") { $sql_sort = "ORDER BY product.stock_status_id DESC"; }
 			if($_GET['sort'] == "rate") { $sql_sort = "ORDER BY product.hit DESC"; }
+		}else{
+			$sql_sort = "ORDER BY FIELD(`stock_status_id`, 1,3,2,0), name ASC";
 		}
 		
         $total = \R::exec("SELECT product_id FROM attribute_product, product WHERE attribute_product.product_id = product.id AND attribute_product.attr_id = '".$find->id."' $sql_sort");
