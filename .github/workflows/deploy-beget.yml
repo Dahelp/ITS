@@ -36,6 +36,10 @@ jobs:
         run: |
           rsync -rlgoDzvc --delete \
             -e "ssh -i ~/.ssh/beget_deploy_key -p ${{ secrets.BEGET_PORT }}" \
+            --include='vendor/' \
+            --include='vendor/ishop/' \
+            --include='vendor/ishop/core/***' \
+            --exclude='vendor/***' \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.gitignore' \
@@ -53,3 +57,11 @@ jobs:
             --exclude='config/config_db_tamozh.php' \
             --exclude='config/params.php' \
             ./ "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:${{ secrets.BEGET_PATH }}/"
+
+      - name: Install Composer dependencies
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key \
+            -p "${{ secrets.BEGET_PORT }}" \
+            "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && composer install --no-dev --no-interaction --optimize-autoloader"

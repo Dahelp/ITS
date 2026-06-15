@@ -3,7 +3,6 @@
 !/vendor/ishop/
 /vendor/ishop/*
 !/vendor/ishop/core/
-composer.lock
 
 # IDE
 .vscode/
