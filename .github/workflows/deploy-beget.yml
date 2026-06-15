@@ -34,7 +34,7 @@ jobs:
       - name: Deploy files
         shell: bash
         run: |
-          rsync -rlgoDzvc \
+          rsync -rlgoDzvc --delete \
             -e "ssh -i ~/.ssh/beget_deploy_key -p ${{ secrets.BEGET_PORT }}" \
             --exclude='.git/' \
             --exclude='.github/' \
