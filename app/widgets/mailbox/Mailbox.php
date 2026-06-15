@@ -2,21 +2,21 @@
 
 namespace app\widgets\mailbox;
 
-use ishop\App;
+class Mailbox
+{
+    public string $tpl;
+    public array $data;
 
-class Mailbox{
-
-    public $tpl;
-	
-    public function __construct($tpl){
-
-		$this->tpl = $tpl;
+    public function __construct(string $tpl, array $data = [])
+    {
+        $this->tpl = $tpl;
+        $this->data = $data;
         $this->run();
-    } 
-	
-	protected function run(){
+    }
 
+    protected function run(): void
+    {
+        extract($this->data, EXTR_SKIP);
         require $this->tpl;
-
     }
 }

@@ -20,7 +20,7 @@
 <section class="content">
 	<div class="row">
 		<div class="col-md-2">
-			<?php new \app\widgets\mailbox\Mailbox('mailbox_tpl.php'); ?>
+			<?php new \app\widgets\mailbox\Mailbox('mailbox_tpl.php', compact('folderStats', 'currentFolder')); ?>
 		</div>
 		<div class="col-md-10">
 			<form action="<?=ADMIN?>/mailbox/compose" method="post" enctype="multipart/form-data">

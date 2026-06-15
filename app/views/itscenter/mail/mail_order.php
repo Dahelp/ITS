@@ -58,7 +58,10 @@
 											<td style="padding: 8px; border: 1px solid #ddd;"><?=$_SESSION['cart.qty'] ?></td>
 										</tr>
 										<tr>
-											<td colspan="3" style="padding: 8px; border: 1px solid #ddd;">На сумму: (Применён промокод: <?=$_SESSION['promocart']?>)</td>
+											<?php $promoCode = trim((string)($promo ?? '')); ?>
+											<td colspan="3" style="padding: 8px; border: 1px solid #ddd;">
+											На сумму:<?= $promoCode !== '' ? ' (Применён промокод: ' . htmlspecialchars($promoCode, ENT_QUOTES, 'UTF-8') . ')' : '' ?>
+											</td>
 											<td style="padding: 8px; border: 1px solid #ddd;"><?= $_SESSION['cart.currency']['symbol_left'] . $_SESSION['cart.sum'] . " {$_SESSION['cart.currency']['symbol_right']}" ?></td>
 										</tr>
 										</tbody>
@@ -76,6 +79,7 @@
 									<b>Имя:</b> <?=$uname?><br>
 									<b>Номер телефона:</b> <?=$telefon?><br>
 									<b>E-mail:</b> <a href="mailto:<?=$user_email?>" target="_blank"><?=$user_email?></a><br>
+									<b>Способ обратной связи:</b> <?=$formCallback?><br>
 									<b>Комментарий:</b> <?=$note?><br>
 									<b>Время заказа:</b> <?=$date?><br><br><br>
 										С уважением, <?=$namecomp?> <br>

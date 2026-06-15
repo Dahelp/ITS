@@ -6,28 +6,62 @@ use ishop\base\Model;
 
 class AppModel extends Model{
 
-    public static function createAlias($table, $field, $str, $id){
-        $str = self::str2url($str);
+    public static function createAlias($table, $field, $str, $id = null, $allowDot = false, $allowSlash = false)
+    {
+        $str = self::str2url($str, $allowDot, $allowSlash);
+
         $res = \R::findOne($table, "$field = ?", [$str]);
-        if($res){
-            $str = "{$str}-{$id}";
-            $res = \R::count($table, "$field = ?", [$str]);
-            if($res){
-                $str = self::createAlias($table, $field, $str, $id);
-            }
+
+        if ($res && $res->id != $id) {
+            $counter = 2;
+            $newStr = $str;
+            do {
+                $newStr = "{$str}-{$counter}";
+                $res = \R::findOne($table, "$field = ?", [$newStr]);
+                $counter++;
+            } while ($res && $res->id != $id);
+
+            return $newStr;
         }
+
         return $str;
     }
 
-    public static function str2url($str) {
+    public static function str2url($str, $allowDot = false, $allowSlash = false)
+    {
         // переводим в транслит
         $str = self::rus2translit($str);
         // в нижний регистр
         $str = strtolower($str);
-        // заменям все ненужное нам на "-"
-        $str = preg_replace('~[^-a-z0-9_]+~u', '-', $str);
-        // удаляем начальные и конечные '-'
-        $str = trim($str, "-");
+
+        // Разрешённые символы:
+        // - всегда: a-z 0-9 _ -
+        // - опционально: .
+        // - опционально: /
+        $allowed = '-a-z0-9_';
+
+        if ($allowDot) {
+            $allowed .= '\.';
+        }
+
+        if ($allowSlash) {
+            $allowed .= '\/';
+        }
+
+        $pattern = '~[^' . $allowed . ']+~u';
+        $str = preg_replace($pattern, '-', $str);
+
+        // чистим повторяющиеся дефисы
+        $str = preg_replace('~-{2,}~', '-', $str);
+
+        // чистим повторяющиеся слеши
+        if ($allowSlash) {
+            $str = preg_replace('~/+~', '/', $str);
+        }
+
+        // удаляем мусор по краям
+        $str = trim($str, "-/");
+
         return $str;
     }
 
@@ -87,65 +121,128 @@ class AppModel extends Model{
     }
 	
 	/**
-     * @param string $target путь к оригинальному файлу
-     * @param string $dest путь сохранения обработанного файла
-     * @param string $wmax максимальная ширина
-     * @param string $hmax максимальная высота
-     * @param string $ext расширение файла
+     * Универсальный ресайз с сохранением пропорций и поддержкой прозрачности.
+     *
+     * @param string $src     Путь к исходному файлу
+     * @param string $dest    Путь сохранения результата
+     * @param int    $wmax    Максимальная ширина рамки
+     * @param int    $hmax    Максимальная высота рамки
+     * @param string $outExt  Формат результата: webp|jpeg|jpg|png|gif
+     * @param array  $opts    Опции качества: ['jpeg_quality'=>85,'webp_quality'=>85,'png_compress'=>6,'no_upscale'=>true]
+     * @return bool
      */
-	public static function resize($target, $dest, $wmax, $hmax, $ext){
-        list($w_orig, $h_orig) = getimagesize($target);
-        $ratio = $w_orig / $h_orig; // =1 - квадрат, <1 - альбомная, >1 - книжная
+    public static function resize(string $src, string $dest, int $wmax, int $hmax, string $outExt = 'webp', array $opts = []): bool
+    {
+        if (!is_file($src)) return false;
 
-        if(($wmax / $hmax) > $ratio){
-            $wmax = $hmax * $ratio;
-        }else{
-            $hmax = $wmax / $ratio;
+        $outExt = strtolower($outExt);
+        if ($outExt === 'jpg') $outExt = 'jpeg';
+
+        // Качества и флаги
+        $jpegQ = isset($opts['jpeg_quality']) ? (int)$opts['jpeg_quality'] : 85;
+        $webpQ = isset($opts['webp_quality']) ? (int)$opts['webp_quality'] : 85;
+        $pngC  = isset($opts['png_compress']) ? (int)$opts['png_compress'] : 6; // 0..9
+        $noUps = array_key_exists('no_upscale', $opts) ? (bool)$opts['no_upscale'] : true;
+
+        // Читаем исходник и определяем его тип
+        $info = @getimagesize($src);
+        if (!$info) return false;
+
+        $wOrig = (int)$info[0];
+        $hOrig = (int)$info[1];
+        $type  = (int)$info[2]; // IMAGETYPE_*
+
+        // Не апскейлим при желании
+        if ($noUps) {
+            $wmax = min($wmax, $wOrig);
+            $hmax = min($hmax, $hOrig);
         }
 
-        $img = "";
-        // imagecreatefromjpeg | imagecreatefromgif | imagecreatefrompng
-        switch($ext){
-            case("gif"):
-                $img = imagecreatefromgif($target);
+        if ($wOrig <= 0 || $hOrig <= 0 || $wmax <= 0 || $hmax <= 0) return false;
+
+        // Коэффициенты вписывания
+        $ratioOrig = $wOrig / $hOrig;
+        $ratioBox  = $wmax / $hmax;
+
+        if ($ratioBox > $ratioOrig) {
+            // рамка "шире" — ограничиваем высотой
+            $wNew = (int)round($hmax * $ratioOrig);
+            $hNew = $hmax;
+        } else {
+            // рамка "уже" — ограничиваем шириной
+            $wNew = $wmax;
+            $hNew = (int)round($wmax / $ratioOrig);
+        }
+
+        // Загружаем исходник
+        switch ($type) {
+            case IMAGETYPE_JPEG: $im = @imagecreatefromjpeg($src); break;
+            case IMAGETYPE_PNG:  $im = @imagecreatefrompng($src);  break;
+            case IMAGETYPE_GIF:  $im = @imagecreatefromgif($src);  break;
+            case IMAGETYPE_WEBP:
+                if (function_exists('imagecreatefromwebp')) {
+                    $im = @imagecreatefromwebp($src);
+                    break;
+                }
+                // fallback — попробуем как jpeg
+                $im = @imagecreatefromjpeg($src);
                 break;
-            case("png"):
-                $img = imagecreatefrompng($target);
-                break;
-			case("webp"):
-                $img = imagecreatefromjpeg($target);
-                break;	
             default:
-                $img = imagecreatefromjpeg($target);
+                // неизвестный формат — пробуем jpeg
+                $im = @imagecreatefromjpeg($src);
         }
-        $newImg = imagecreatetruecolor($wmax, $hmax); // создаем оболочку для новой картинки
+        if (!$im) return false;
 
-        if($ext == "png"){
-            imagesavealpha($newImg, true); // сохранение альфа канала
-            $transPng = imagecolorallocatealpha($newImg,0,0,0,127); // добавляем прозрачность
-            imagefill($newImg, 0, 0, $transPng); // заливка
+        // Целевой холст
+        $new = imagecreatetruecolor($wNew, $hNew);
+
+        // Прозрачность
+        $preserveAlpha = in_array($type, [IMAGETYPE_PNG, IMAGETYPE_GIF], true) || $outExt === 'png' || $outExt === 'gif' || $outExt === 'webp';
+        if ($preserveAlpha) {
+            // для GIF: сделаем прозрачный фон
+            imagealphablending($new, false);
+            imagesavealpha($new, true);
+            $transparent = imagecolorallocatealpha($new, 0, 0, 0, 127);
+            imagefill($new, 0, 0, $transparent);
         }
 
-        imagecopyresampled($newImg, $img, 0, 0, 0, 0, $wmax, $hmax, $w_orig, $h_orig); // копируем и ресайзим изображение
-        switch($ext){
-            case("gif"):
-                imagegif($newImg, $dest);
+        // Сам ресайз
+        if (function_exists('imagepalettetotruecolor')) @imagepalettetotruecolor($im);
+        imagealphablending($im, true);
+        imagesavealpha($im, true);
+
+        imagecopyresampled($new, $im, 0, 0, 0, 0, $wNew, $hNew, $wOrig, $hOrig);
+
+        // Сохранение в нужный формат
+        $ok = false;
+        switch ($outExt) {
+            case 'webp':
+                if (function_exists('imagewebp')) {
+                    // качество 0..100
+                    $ok = @imagewebp($new, $dest, $webpQ);
+                }
                 break;
-            case("png"):
-                imagepng($newImg, $dest);
+            case 'jpeg':
+                // качество 0..100
+                $ok = @imagejpeg($new, $dest, $jpegQ);
                 break;
-			case("webp"):
-				imagepalettetotruecolor($newImg);
-				imagealphablending($newImg, true);
-				imagesavealpha($newImg, true);
-				imagewebp($newImg, $dest);				
-                break;	
+            case 'png':
+                // уровень сжатия 0..9 (0 — без сжатия, 9 — макс.)
+                $ok = @imagepng($new, $dest, max(0, min(9, $pngC)));
+                break;
+            case 'gif':
+                // у GIF нет понятия "качества" в GD
+                $ok = @imagegif($new, $dest);
+                break;
             default:
-                imagejpeg($newImg, $dest);
+                // по умолчанию — jpeg
+                $ok = @imagejpeg($new, $dest, $jpegQ);
         }
-        imagedestroy($newImg);
-	}
-	
-	
-	
+
+        imagedestroy($new);
+        imagedestroy($im);
+
+        return (bool)$ok;
+    }
+
 }

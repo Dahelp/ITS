@@ -16,28 +16,43 @@ composer.lock
 .DS_Store
 Thumbs.db
 
-# Node (если используешь в будущем фронтенд)
+# Node
 node_modules/
 
 # Cache / temp
 /tmp/
+/public/tmp/
 *.cache
 
-# SSH / .env
+# Local environment and secrets
 .env
 *.key
 *.pem
 
-# Bash scripts / временные
+# Local archives and backups
+/archive/
+/.git.corrupt-*
+/backup_from_server/
+
+# Generated exports and feeds
+/public/cron/
+/public/xls/
+/public/xml/
+
+# Runtime/user storage
+/public/hot
+/public/storage/
+/public/uploads/
+/storage/
+
+# Server/local-only folders
+/cgi-bin/
+/crm/
+
+# Deployment scripts
 deploy.sh
 *.sh
 
-# Конфиги сервера
-cgi-bin/
-
-# Прочее
-/public/hot
-/public/storage
-/storage/
-/crm/
-/backup_from_server/
+# Database dumps/backups
+*backup*.sql
+*dump*.sql

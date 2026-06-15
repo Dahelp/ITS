@@ -4,6 +4,7 @@ namespace app\controllers\admin;
 
 use app\models\AppModel;
 use app\models\admin\SSP;
+use app\services\admin\AdminActivityLogger;
 use ishop\App;
 use ishop\libs\Pagination;
 use app\models\admin\PlaginsComplete;
@@ -16,6 +17,9 @@ use app\models\admin\PlaginsTechnicsManufacturer;
 use app\models\admin\PlaginsIndexnow;
 use app\models\admin\PlaginsPromocode;
 use app\models\admin\PlaginsYandexTovars;
+use app\models\admin\PlaginsBanner;
+use app\helpers\ImageConverter;
+use app\helpers\Upload;
 
 class PlaginsController extends AppController {
 
@@ -66,7 +70,7 @@ class PlaginsController extends AppController {
 				}
 				$sql_part = rtrim($sql_part, ',');
 				\R::exec("INSERT INTO plagins_promocode_category (promocode_id, category_id) VALUES $sql_part");
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','28','plagins_promocode','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(28, 'plagins_promocode', (int)$last->id);
                 
                 $_SESSION['success'] = 'Промокод добавлен';
                 redirect();
@@ -100,7 +104,7 @@ class PlaginsController extends AppController {
 				}
 				$sql_part = rtrim($sql_part, ',');
 				\R::exec("INSERT INTO plagins_promocode_category (promocode_id, category_id) VALUES $sql_part");
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','29','plagins_promocode','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(29, 'plagins_promocode', (int)$id);
                 
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
@@ -712,7 +716,7 @@ class PlaginsController extends AppController {
 				$technics->editSizeBackTechnics($id, $data);
 				$technics->editSizeAltTechnics($id, $data);
 				$technics->editSizeAltBackTechnics($id, $data);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','13','technics','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(13, 'technics', (int)$id);
                 
 				// API IndexNow
 				$indexnow = new PlaginsIndexnow();
@@ -759,7 +763,7 @@ class PlaginsController extends AppController {
                 $technics = \R::load('technics', $id);
 				if($data['alias']!=""){ $technics->alias = $data['alias'];}
 				else{$technics->alias = $alias;}
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','14','technics','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(14, 'technics', (int)$id);
                 \R::store($technics);
 				
 				// API IndexNow
@@ -818,7 +822,7 @@ class PlaginsController extends AppController {
 		}
 		
 		//Запись в историю
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','15','technics','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(15, 'technics', (int)$id);
         
         // API IndexNow
 		$indexnow = new PlaginsIndexnow();
@@ -849,7 +853,7 @@ class PlaginsController extends AppController {
                 $p = \R::load('technics_type', $id);
                 $p->alias = $alias;
                 \R::store($p);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','22','technics_type','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(22, 'technics_type', (int)$id);
                 $_SESSION['success'] = 'Категория техники добавлена';
             }
             redirect();
@@ -877,7 +881,7 @@ class PlaginsController extends AppController {
                 $types = \R::load('technics_type', $id);
 				if($data['alias']!=""){ $types->alias = $data['alias'];}
 				else{$types->alias = $alias;}
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','23','technics_type','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(23, 'technics_type', (int)$id);
                 \R::store($types);
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
@@ -923,9 +927,9 @@ class PlaginsController extends AppController {
 			foreach($related_size as $rel_size) {
 				\R::exec("DELETE FROM technics_tiposize WHERE id = ?", [$rel_size->id]);
 			}
-			\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','15','technics_type','".$rel->id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+			AdminActivityLogger::admin(15, 'technics_type', (int)$rel->id);		
 		}
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','24','technics_type','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(24, 'technics_type', (int)$id);
         \R::trash($types);		
 		
         $_SESSION['success'] = 'Категория '.$types["name"].' удалена';
@@ -958,7 +962,7 @@ class PlaginsController extends AppController {
                 $p = \R::load('technics_manufacturer', $id);
                 $p->alias = $alias;
                 \R::store($p);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','25','technics_manufacturer','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(25, 'technics_manufacturer', (int)$id);
                 $_SESSION['success'] = 'Производитель техники добавлен';
             }
             redirect();
@@ -986,7 +990,7 @@ class PlaginsController extends AppController {
                 $manufacturer = \R::load('technics_manufacturer', $id);
 				if($data['alias']!=""){ $manufacturer->alias = $data['alias'];}
 				else{$manufacturer->alias = $alias;}
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','26','technics_manufacturer','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(26, 'technics_manufacturer', (int)$id);
                 \R::store($manufacturer);
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
@@ -1024,7 +1028,7 @@ class PlaginsController extends AppController {
         $manufacturer = \R::load('technics_manufacturer', $id);
 		@unlink(WWW . "/images/technics_manufacturer/baseimg/".$manufacturer["img"]."");
 		
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','27','technics_manufacturer','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(27, 'technics_manufacturer', (int)$id);
         \R::trash($manufacturer);		
 		
         $_SESSION['success'] = 'Производитель '.$manufacturer["name"].' удален';
@@ -1087,7 +1091,7 @@ class PlaginsController extends AppController {
 						$t = \R::load('technics_type', $type["id"]);
 						$t->alias = $alias_type;	
 						\R::store($t);
-						\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','22','technics_type','".$type["id"]."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");												
+						AdminActivityLogger::admin(22, 'technics_type', (int)$type["id"]);												
 					}
 					$technics->attributes['type_id'] = $type["id"];
 					$manufacturer = \R::findOne('technics_manufacturer', 'name = ?', [$manufacturer_name]);
@@ -1099,7 +1103,7 @@ class PlaginsController extends AppController {
 						$m = \R::load('technics_manufacturer', $manufacturer["id"]);
 						$m->alias = $alias_manufacturer;	
 						\R::store($m);
-						\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','25','technics_manufacturer','".$manufacturer["id"]."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");												
+						AdminActivityLogger::admin(25, 'technics_manufacturer', (int)$manufacturer["id"]);												
 					}
 					$technics->attributes['manufacturer_id'] = $manufacturer["id"];
 					$technics->attributes['model'] = $model;	
@@ -1129,7 +1133,7 @@ class PlaginsController extends AppController {
 							if($row->size_back !=""){ $technics->editSizeBackTechnicsImport($id, $data); }
 							if($row->size_alt !=""){ $technics->editSizeAltTechnicsImport($id, $data); }
 							if($row->size_alt_back !=""){ $technics->editSizeAltBackTechnicsImport($id, $data); }
-							\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','13','technics','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");								
+							AdminActivityLogger::admin(13, 'technics', (int)$id);								
 						}
 					}
 					
@@ -1390,5 +1394,500 @@ class PlaginsController extends AppController {
         return;
     }
 /* AND IMAGES PLAGINS RAZDEL */	
+	
+	/* Конвертер в AVIF/WEBP */
+	
+	    /** Унифицированный JSON */
+    private function j($data, int $code = 200): void {
+        while (ob_get_level()) ob_end_clean();
+        http_response_code($code);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
+    /** Страница конвертера */
+    public function convertImagesAction()
+    {
+        if (empty($_SESSION['user']['id']) || ($_SESSION['user']['groups'] ?? '') !== '1') {
+            throw new \Exception('Доступ запрещён', 403);
+        }
+        $this->setMeta('Конвертация изображений');
+        // Рендер views/itscenter/admin/plagins/convert-images.php
+    }
+
+    /** Снять блокировку (ручной «разблок») */
+    public function convertImagesUnlockAction()
+    {
+        if (empty($_SESSION['user']['id']) || ($_SESSION['user']['groups'] ?? '') !== '1') {
+            return $this->j(['ok'=>false,'error'=>'forbidden'], 403);
+        }
+        $section = $_GET['section'] ?? 'product';
+        $lock = $this->lockPath($section);
+        @unlink($lock);
+        $this->j(['ok'=>true, 'message'=>"unlock: $section"]);
+    }
+
+    /** Батч-обработчик */
+    public function convertImagesBatchAction()
+	{
+		if (empty($_SESSION['user']['id']) || ($_SESSION['user']['groups'] ?? '') !== '1') {
+			return $this->j(['error'=>'forbidden'], 403);
+		}
+
+		@set_time_limit(0);
+		@ini_set('memory_limit', '1024M');
+		@ignore_user_abort(true);
+
+		try {
+			$section = trim((string)($_GET['section'] ?? 'product'));
+			$limit   = max(1, min(2000, (int)($_GET['limit'] ?? 200)));
+			$offset  = max(0, (int)($_GET['offset'] ?? 0));
+			$dry     = (int)($_GET['dry'] ?? 1);
+			$token   = (string)($_GET['token'] ?? '');
+
+			// Целевой формат (query > params)
+			$targetCfg = strtolower((string)(App::$app->getProperty('img_target_format') ?? 'webp'));
+			$target    = Upload::pickTargetExt((string)($_GET['target'] ?? $targetCfg));
+
+			// Блокировка
+			$lockPath = $this->lockPath($section);
+			if ($token === '') {
+				if (is_file($lockPath) && (time() - filemtime($lockPath)) < 3600) {
+					return $this->j(['error' => 'locked', 'message' => 'Уже запущено (менее часа). Нажмите «Разблокировать».']);
+				}
+				$token = bin2hex(random_bytes(8));
+				@file_put_contents($lockPath, $token);
+			} else {
+				if (!is_file($lockPath) || trim((string)@file_get_contents($lockPath)) !== $token) {
+					return $this->j(['error'=>'bad token', 'message'=>'Неверный токен или процесс завершён.']);
+				}
+			}
+			@touch($lockPath);
+
+			// Секции
+			$sections = ($section === 'all')
+				? ['product','complete','review','technics','technics_type','technics_brand','category','brand','contents']
+				: [$section];
+
+			$log = [];
+			$ok = $skip = $err = $fix = $del_gal = 0;
+
+			// total
+			$totalAll = 0;
+			foreach ($sections as $sec) {
+				$totalAll += $this->countForSection($sec);
+			}
+
+			// выборка порции
+			$worklist  = $this->sliceIdsForSections($sections, $limit, $offset, $totalAll);
+			$processed = count($worklist);
+
+			foreach ($worklist as [$sec, $id]) {
+				try {
+					$res = $this->convertOne($sec, (int)$id, $target, $dry === 1, $log);
+					$ok   += $res['ok']   ?? 0;
+					$skip += $res['skip'] ?? 0;
+					$err  += $res['err']  ?? 0;
+					$fix  += $res['fix']  ?? 0;
+					$del_gal += $res['del_gal'] ?? 0;
+				} catch (\Throwable $e) {
+					$err++;
+					$log[] = "ERR[$sec:$id] ".$e->getMessage();
+				}
+			}
+
+			$next = $offset + $processed;
+			$done = ($next >= $totalAll);
+			if ($done) { @unlink($lockPath); }
+
+			return $this->j([
+				'token'          => $token,
+				'section'        => $section,
+				'target'         => $target,
+				'total'          => $totalAll,
+				'processed'      => $processed,
+				'ok'             => $ok,
+				'skip'           => $skip,
+				'err'            => $err,
+				'fix'            => $fix,
+				'deleted_gallery'=> $del_gal,
+				'next_offset'    => $done ? null : $next,
+				'done'           => $done,
+				'dry'            => $dry,
+				'log'            => $log,
+			]);
+		} catch (\Throwable $e) {
+			// ЛЮБАЯ ошибка — всё равно JSON
+			return $this->j(['error'=>'exception', 'message'=>$e->getMessage()], 500);
+		}
+	}
+
+
+    /* ----------------- helpers ----------------- */
+
+    private function lockPath(string $section): string {
+        $tmp = rtrim(sys_get_temp_dir(), '/');
+        return $tmp.'/itsc_convert_lock_'.$section.'.lock';
+    }
+
+    private function countForSection(string $section): int
+    {
+        switch ($section) {
+            case 'product':               return (int)\R::getCell('SELECT COUNT(*) FROM product');
+            case 'complete':              return (int)\R::getCell('SELECT COUNT(*) FROM plagins_complete');
+            case 'review':                return (int)\R::getCell('SELECT COUNT(*) FROM review_gallery');
+            case 'technics':              return (int)\R::getCell('SELECT COUNT(*) FROM technics');
+            case 'technics_type':         return (int)\R::getCell('SELECT COUNT(*) FROM technics_type');
+            case 'technics_brand':        return (int)\R::getCell('SELECT COUNT(*) FROM technics_manufacturer');
+            case 'category':              return (int)\R::getCell('SELECT COUNT(*) FROM category');
+            case 'brand':                 return (int)\R::getCell('SELECT COUNT(*) FROM brand');
+            case 'contents':              return (int)\R::getCell('SELECT COUNT(*) FROM contents');
+            default:                      return 0;
+        }
+    }
+
+    private function idsForSection(string $section): array
+    {
+        switch ($section) {
+            case 'product':               return \R::getCol('SELECT id FROM product ORDER BY id');
+            case 'complete':              return \R::getCol('SELECT id FROM plagins_complete ORDER BY id');
+            case 'review':                return \R::getCol('SELECT id FROM review_gallery ORDER BY id');
+            case 'technics':              return \R::getCol('SELECT id FROM technics ORDER BY id');
+            case 'technics_type':         return \R::getCol('SELECT id FROM technics_type ORDER BY id');
+            case 'technics_brand':        return \R::getCol('SELECT id FROM technics_manufacturer ORDER BY id');
+            case 'category':              return \R::getCol('SELECT id FROM category ORDER BY id');
+            case 'brand':                 return \R::getCol('SELECT id FROM brand ORDER BY id');
+            case 'contents':              return \R::getCol('SELECT id FROM contents ORDER BY id');
+            default:                      return [];
+        }
+    }
+
+    /** Смешиваем списки id из нескольких секций и берём «страницу» */
+    private function sliceIdsForSections(array $sections, int $limit, int $offset, int $totalAll): array
+    {
+        $flat = [];
+        foreach ($sections as $sec) {
+            $ids = $this->idsForSection($sec);
+            foreach ($ids as $id) $flat[] = [$sec, (int)$id];
+        }
+        if (!$flat) return [];
+        return array_slice($flat, $offset, $limit);
+    }
+
+    /**
+     * Конвертируем 1 сущность (без изменения размеров, в нужный формат).
+     * dry=true — только проверка (ничего не пишем/не удаляем)
+     * Возвращаем счётчики: ok/skip/err/fix/del_gal
+     */
+    private function convertOne(string $section, int $id, string $target, bool $dry, array &$log): array
+    {
+        $ok=$skip=$err=$fix=$del_gal=0;
+
+        // локальный удобный ран: если $dry — только «как будет называться»
+        $run = function(string $absPath, string $toExt) use (&$ok,&$skip,&$err,&$fix,&$log,$dry) {
+            if (!is_file($absPath)) { $skip++; return null; }
+            if ($dry) { $ok++; return basename($absPath); }
+            $new = Upload::convertFile($absPath, $toExt, []);
+            if ($new) { $ok++; return $new; }
+            $err++; return null;
+        };
+
+        try {
+            switch ($section) {
+                case 'product': {
+                    $row = \R::findOne('product','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+
+                    $baseDir = WWW.'/images/product/baseimg/';
+                    $miniDir = WWW.'/images/product/mini/';
+                    $galDir  = WWW.'/images/product/gallery/';
+                    $unlDir  = WWW.'/images/product/unload/';
+
+                    // base+mini
+                    if (!empty($row->img)) {
+                        $absB = $baseDir.$row->img;
+                        $absM = $miniDir.$row->img;
+
+                        $newB = $run($absB, $target);
+                        if ($newB && !$dry && $newB !== $row->img) {
+                            \R::exec('UPDATE product SET img=? WHERE id=?', [$newB, $id]);
+                        }
+                        if (is_file($absM)) $run($absM, $target);
+                    } else { $skip++; }
+
+                    // gallery
+                    $gal = \R::findAll('gallery','product_id=?',[$id]);
+                    foreach ($gal as $g) {
+                        if (empty($g->img)) { $skip++; continue; }
+                        $abs = $galDir.$g->img;
+                        $new = $run($abs, $target);
+                        if ($new && !$dry && $new !== $g->img) { $g->img=$new; \R::store($g); }
+                    }
+
+                    // unload — всегда JPG (не зависит от $target)
+                    if (!empty($row->unload_img)) {
+                        $absU = $unlDir.$row->unload_img;
+                        $newU = $run($absU, 'jpg');
+                        if ($newU && !$dry && $newU !== $row->unload_img) {
+                            \R::exec('UPDATE product SET unload_img=? WHERE id=?', [$newU, $id]);
+                        }
+                    }
+                    break;
+                }
+
+                case 'complete': {
+                    $row = \R::findOne('plagins_complete','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+
+                    $baseDir = WWW.'/images/complete/baseimg/';
+                    $miniDir = WWW.'/images/complete/mini/';
+                    $galDir  = WWW.'/images/complete/gallery/';
+
+                    if (!empty($row->img)) {
+                        $absB = $baseDir.$row->img;
+                        $absM = $miniDir.$row->img;
+
+                        $newB = $run($absB, $target);
+                        if ($newB && !$dry && $newB !== $row->img) {
+                            \R::exec('UPDATE plagins_complete SET img=? WHERE id=?', [$newB, $id]);
+                        }
+                        if (is_file($absM)) $run($absM, $target);
+                    } else { $skip++; }
+
+                    // галерея комплектов (если используете)
+                    $gal = \R::findAll('plagins_complete_gallery','complete_id=?',[$id]);
+                    foreach ($gal as $g) {
+                        if (empty($g->img)) { $skip++; continue; }
+                        $abs = $galDir.$g->img;
+                        $new = $run($abs, $target);
+                        if ($new && !$dry && $new !== $g->img) { $g->img=$new; \R::store($g); }
+                    }
+                    break;
+                }
+
+                case 'review': {
+                    $g = \R::findOne('review_gallery','id=?',[$id]);
+                    if (!$g) { $skip++; break; }
+                    $absG = WWW.'/images/review/gallery/'.$g->img;
+                    $absM = WWW.'/images/review/mini/'.$g->img;
+                    $newG = $run($absG, $target);
+                    if ($newG && !$dry && $newG !== $g->img) { $g->img=$newG; \R::store($g); }
+                    if (is_file($absM)) $run($absM, $target);
+                    break;
+                }
+
+                case 'technics': {
+                    $row = \R::findOne('technics','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+                    if (!empty($row->img)) {
+                        $absB = WWW.'/images/technics/baseimg/'.$row->img;
+                        $absM = WWW.'/images/technics/mini/'.$row->img;
+                        $newB = $run($absB, $target);
+                        if ($newB && !$dry && $newB !== $row->img) {
+                            \R::exec('UPDATE technics SET img=? WHERE id=?', [$newB, $id]);
+                        }
+                        if (is_file($absM)) $run($absM, $target);
+                    } else { $skip++; }
+                    break;
+                }
+
+                case 'technics_type': {
+                    $row = \R::findOne('technics_type','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+                    if (!empty($row->img)) {
+                        $abs = WWW.'/images/technics_type/baseimg/'.$row->img;
+                        $new = $run($abs, $target);
+                        if ($new && !$dry && $new !== $row->img) {
+                            \R::exec('UPDATE technics_type SET img=? WHERE id=?', [$new, $id]);
+                        }
+                    } else { $skip++; }
+                    break;
+                }
+
+                case 'technics_brand': {
+                    $row = \R::findOne('technics_manufacturer','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+                    if (!empty($row->img)) {
+                        $abs = WWW.'/images/technics_manufacturer/baseimg/'.$row->img;
+                        $new = $run($abs, $target);
+                        if ($new && !$dry && $new !== $row->img) {
+                            \R::exec('UPDATE technics_manufacturer SET img=? WHERE id=?', [$new, $id]);
+                        }
+                    } else { $skip++; }
+                    break;
+                }
+
+                case 'category': {
+                    $row = \R::findOne('category','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+                    if (!empty($row->img)) {
+                        $abs = WWW.'/images/category/baseimg/'.$row->img;
+                        $new = $run($abs, $target);
+                        if ($new && !$dry && $new !== $row->img) {
+                            \R::exec('UPDATE category SET img=? WHERE id=?', [$new, $id]);
+                        }
+                    } else { $skip++; }
+                    break;
+                }
+
+                case 'brand': {
+                    $row = \R::findOne('brand','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+                    if (!empty($row->img)) {
+                        $abs = WWW.'/images/brand/baseimg/'.$row->img;
+                        $new = $run($abs, $target);
+                        if ($new && !$dry && $new !== $row->img) {
+                            \R::exec('UPDATE brand SET img=? WHERE id=?', [$new, $id]);
+                        }
+                    } else { $skip++; }
+                    break;
+                }
+
+                case 'contents': {
+                    $row = \R::findOne('contents','id=?',[$id]);
+                    if (!$row) { $skip++; break; }
+                    if (!empty($row->img)) {
+                        $absB = WWW.'/images/contents/baseimg/'.$row->img;
+                        $absM = WWW.'/images/contents/mini/'.$row->img;
+                        $newB = $run($absB, $target);
+                        if ($newB && !$dry && $newB !== $row->img) {
+                            \R::exec('UPDATE contents SET img=? WHERE id=?', [$newB, $id]);
+                        }
+                        if (is_file($absM)) $run($absM, $target);
+                    } else { $skip++; }
+                    break;
+                }
+
+                default:
+                    $skip++;
+            }
+        } catch (\Throwable $e) {
+            $err++;
+            $log[] = 'ERR: '.$e->getMessage();
+        }
+
+        return compact('ok','skip','err','fix','del_gal');
+    }
+
+	/* Конвертер в AVIF/WEBP */
+	
+	//banner
+	//Список
+    public function bannersAction()
+    {
+        $banners = \R::findAll('plagins_banner', 'ORDER BY position DESC, id DESC');
+        $this->setMeta('Баннеры акций');
+        $this->set(compact('banners'));
+    }
+
+    // ADD (GET form + POST save)
+    public function bannersAddAction()
+    {
+        if (!empty($_POST)) {
+            $banner = new PlaginsBanner();
+            $data = $_POST;
+            $banner->load($data);
+
+            // нормализация флагов
+            $banner->attributes['target_blank'] = !empty($data['target_blank']) ? 1 : 0;
+            $banner->attributes['position']     = (int)($data['position'] ?? 0);
+
+            // загрузка изображений (если пришли)
+            if (!empty($_FILES['img']['name'])) {
+                $res = Upload::handle('banners', 'single', $_FILES['img'], 'webp');
+                if (!empty($res['ok'])) $banner->attributes['img'] = $res['file'];
+            }
+            if (!empty($_FILES['img2']['name'])) {
+                $res2 = Upload::handle('banners', 'single', $_FILES['img2'], 'webp');
+                if (!empty($res2['ok'])) $banner->attributes['img2'] = $res2['file'];
+            }
+
+            if (!$banner->validate($data)) {
+                $banner->getErrors();
+                $_SESSION['form_data'] = $data;
+                redirect();
+            }
+
+            if ($banner->save('plagins_banner')) {
+                $_SESSION['success'] = 'Баннер добавлен';
+            } else {
+                $_SESSION['error'] = 'Ошибка сохранения';
+            }
+            redirect(ADMIN . '/plagins/banners');
+        }
+
+        $this->setMeta('Добавить баннер');
+    }
+
+    // EDIT
+    public function bannersEditAction()
+    {
+        $id = (int)($_GET['id'] ?? 0);
+        $item = \R::load('plagins_banner', $id);
+        if (!$id || !$item->id) {
+            $_SESSION['error'] = 'Баннер не найден';
+            redirect(ADMIN . '/plagins/banners');
+        }
+
+        if (!empty($_POST)) {
+            $banner = new PlaginsBanner();
+            $data = $_POST;
+            $banner->load($data);
+
+            $banner->attributes['target_blank'] = !empty($data['target_blank']) ? 1 : 0;
+            $banner->attributes['position']     = (int)($data['position'] ?? 0);
+
+            // изображения
+            if (!empty($_FILES['img']['name'])) {
+                $res = Upload::handle('banners', 'single', $_FILES['img'], 'webp');
+                if (!empty($res['ok'])) $banner->attributes['img'] = $res['file'];
+            } else {
+                $banner->attributes['img'] = $item->img;
+            }
+            if (!empty($_FILES['img2']['name'])) {
+                $res2 = Upload::handle('banners', 'single', $_FILES['img2'], 'webp');
+                if (!empty($res2['ok'])) $banner->attributes['img2'] = $res2['file'];
+            } else {
+                $banner->attributes['img2'] = $item->img2;
+            }
+
+            if (!$banner->validate($data)) {
+                $banner->getErrors();
+                $_SESSION['form_data'] = $data;
+                redirect();
+            }
+
+            foreach ($banner->attributes as $k => $v) $item->$k = $v;
+            \R::store($item);
+
+            $_SESSION['success'] = 'Баннер сохранён';
+            redirect(ADMIN . '/plagins/banners');
+        }
+
+        $this->setMeta('Редактировать баннер');
+        $this->set(compact('item'));
+    }
+
+    // DELETE
+    public function bannersDeleteAction()
+    {
+        $id = (int)($_GET['id'] ?? 0);
+        if ($id) \R::trash('plagins_banner', $id);
+        $_SESSION['success'] = 'Баннер удалён';
+        redirect(ADMIN . '/plagins/banners');
+    }
+
+    // (опционально) смена статуса AJAX
+    public function bannersToggleAction()
+    {
+        $id = (int)($_POST['id'] ?? 0);
+        $item = \R::load('plagins_banner', $id);
+        if ($item->id) {
+            $item->hide = ($item->hide == 'show') ? 'hide' : 'show';
+            R::store($item);
+            echo json_encode(['ok' => true, 'hide' => $item->hide]); exit;
+        }
+        echo json_encode(['ok' => false]); exit;
+    }
 }

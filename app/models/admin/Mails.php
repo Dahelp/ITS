@@ -47,6 +47,7 @@ class Mails extends AppModel {
 
         // Send the message
         $result = $mailer->send($message);
+        self::storeSentMessage($subject, $email, $body, !empty($_FILES['attachment_file']['tmp_name']));
 
         $_SESSION['success'] = 'Письмо отправлено!';
     }
@@ -90,7 +91,29 @@ class Mails extends AppModel {
 
         // Send the message
         $result = $mailer->send($message);
+        self::storeSentMessage($subject, $email, $body, !empty($_FILES['attachment_file']['tmp_name']));
 
         $_SESSION['success'] = 'Письмо отправлено!';
+    }
+
+    private static function storeSentMessage(string $subject, string $email, string $body, bool $hasAttachment): void
+    {
+        $messageId = (int)\R::getCell('SELECT COALESCE(MAX(message_id), 0) + 1 FROM mails_imap');
+        $now = date('Y-m-d H:i:s');
+        \R::exec(
+            "INSERT INTO mails_imap
+                (message_id, folder, from_mail, from_name, user_id, subject, content, date_dispatch, date_last_modified, id_flagged, is_seen, attachments)
+             VALUES (?, 'Sent', ?, ?, NULL, ?, ?, ?, ?, '0', '1', ?)",
+            [
+                $messageId,
+                App::$app->getProperty('smtp_login'),
+                App::$app->getProperty('shop_name'),
+                h($subject),
+                base64_encode($body),
+                $now,
+                $now,
+                $hasAttachment ? '1' : '0',
+            ]
+        );
     }
 }

@@ -1,84 +1,71 @@
-<!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Заявки о поступлении товара</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<?=ADMIN;?>">Главная</a></li>
-              <li class="breadcrumb-item active">Заявки о поступлении товара</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+<?php $e = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); ?>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6"><h1 class="m-0">Заявки о поступлении товара</h1></div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="<?= ADMIN ?>">Главная</a></li>
+          <li class="breadcrumb-item active">Заявки о поступлении товара</li>
+        </ol>
+      </div>
     </div>
-    <!-- /.content-header -->
+  </div>
+</div>
 
-<!-- Main content -->
 <section class="content">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-				<div class="card-header">
-                    <h3 class="card-title">Список заявок о поступлении товара</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-					<div class="table-responsive">
-						<table id="example" class="table table-bordered display" width="100%"></table>  
-					</div>
-                </div>               
-            </div>
-        </div>
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Список заявок о поступлении товара</h3></div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table id="availability-table" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Статус</th>
+              <th>Пользователь</th>
+              <th>E-mail</th>
+              <th>Товар</th>
+              <th>Дата заявки</th>
+              <th>Дата поступления</th>
+              <th>Отправка</th>
+              <th style="width:90px">Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($availability as $item): ?>
+              <?php
+                $isNew = (string)$item['status_nalichiya'] === '0';
+                $isSent = (string)$item['status_otpravki'] === '1';
+                $productUrl = !empty($item['product_id']) ? ADMIN . '/product/edit?id=' . (int)$item['product_id'] : '';
+                $userUrl = !empty($item['user_id']) ? ADMIN . '/user/edit?id=' . (int)$item['user_id'] : '';
+              ?>
+              <tr class="<?= $isNew ? 'table-warning' : '' ?>">
+                <td><?= (int)$item['id'] ?></td>
+                <td><?= $isNew ? '<span class="badge badge-danger">Ожидает</span>' : '<span class="badge badge-success">Закрыта</span>' ?></td>
+                <td><?php if ($userUrl): ?><a href="<?= $e($userUrl) ?>"><?= $e($item['user_name'] ?: ('#' . $item['user_id'])) ?></a><?php else: ?><span class="text-muted">Гость</span><?php endif; ?></td>
+                <td><?= $e($item['email']) ?></td>
+                <td><?php if ($productUrl): ?><a href="<?= $e($productUrl) ?>"><?= $e($item['product_name']) ?></a><?php else: ?><?= $e($item['product_name']) ?><?php endif; ?></td>
+                <td><?= $e($item['data_create']) ?></td>
+                <td><?= $e($item['data_postupleniya']) ?></td>
+                <td><?= $isSent ? '<span class="badge badge-success">Отправлено</span>' : '<span class="badge badge-secondary">Не отправлено</span>' ?></td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <?php if ($isNew): ?><a class="btn btn-default" title="Обработано" data-toggle="tooltip" href="<?= ADMIN ?>/availability/done?id=<?= (int)$item['id'] ?>"><i class="fas fa-check-circle text-success"></i></a><?php endif; ?>
+                    <?php if ($isNew): ?><a class="btn btn-default delete" title="Закрыть" data-toggle="tooltip" href="<?= ADMIN ?>/availability/delete?id=<?= (int)$item['id'] ?>"><i class="fas fa-times-circle text-danger"></i></a><?php endif; ?>
+                  </div>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </section>
-<!-- /.content -->
 
 <script>
-var dataSet = [
-<?php foreach($availability as $item) {
-	$uname = \R::findOne('user', 'id = ?', [$item['user_id']]);
-	if($uname>0){ $otvname = "<a href='".ADMIN."/user/edit?id=".$uname["id"]."'>".$uname["name"]."</a>"; } else { $otvname = "Без регистрации"; }
-	$contdate = \ishop\App::contdatetime($item['data_create']);
-	$product = \R::findOne('product', 'id = ?', [$item['product_id']]);
-	if($item['status_nalichiya'] == "0"){ $status = "Нет в наличии"; }
-	if($item['status_nalichiya'] == "1"){ $status = "В наличии"; }
-	if($item['status_otpravki'] == "0"){ $status_otpravki = "Не отправлен"; }
-	if($item['status_otpravki'] == "1"){ $status_otpravki = "Отправлен"; } 
-	$option = "<a href='".ADMIN."/availability/view?id=".$item["id"]."'><i class='fas fa-fw fa-eye'></i></a> <a class='delete' href='".ADMIN."/availability/delete?id=".$item["id"]."'><i class='fas fa-times-circle text-danger'></i></a>";
-    $set .= '[ "'.$item["id"].'", "'.$otvname.'", "'.$contdate.'", "'.$status.'", "'.$product["name"].'", "'.$item["data_postupleniya"].'", "'.$status_otpravki.'", "'.$item["data_mail"].'", "'.$option.'" ],';
- } echo "".$set.""; ?>
- 
-];
- 
-$(document).ready(function() {
-	
-    var table = $('#example').DataTable( {		
-		"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "Все"]],
-		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 6 ] }],
-		"aaSorting": [[ 0, "desc" ]],
-        data: dataSet,
-        columns: [
-            { title: "ID" },
-			{ title: "Пользователь" },
-			{ title: "Дата" },
-            { title: "Статус наличия" },
-			{ title: "Товар" },
-			{ title: "Дата поступления" },
-			{ title: "Стату отправки" },
-			{ title: "Дата отправки" },
-			{ title: "Действия", "width": "60px" }
-        ],
-		
-        createdRow: function( row, data, dataIndex){
-            if( data[4] == "Закрыт"  ){
-                $(row).css('background-color', '#fed8d8');
-            }			
-		}		
-    } );
-
-
-} );
+$(function(){
+  $('#availability-table').DataTable({order:[[0,'desc']], pageLength:50});
+});
 </script>

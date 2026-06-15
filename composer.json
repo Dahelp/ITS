@@ -6,24 +6,15 @@
     }
   },
   "require": {
-    "gabordemooij/redbean": "dev-master",
+    "gabordemooij/redbean": "5.7.5",
     "vlucas/valitron": "^1.4",
     "swiftmailer/swiftmailer": "^5.4",
-    "phpoffice/phpword": "dev-master",
+    "phpoffice/phpword": "1.4",
     "datatables/datatables": "^1.10",
     "datatables.net/editor-php": "^2.0",
-    "phpoffice/phpspreadsheet": "^1.12",
+    "phpoffice/phpspreadsheet": "1.29",
     "dompdf/dompdf": "^2.0",
     "php-imap/php-imap": "^2.0",
-    "guzzlehttp/guzzle": "*",
-    "phpro/soap-client": "^1.7"
-  },
-  "scripts": {
-    "post-install-cmd": [
-        "bash scripts/clean-vendor-git.sh"
-    ],
-    "post-update-cmd": [
-        "bash scripts/clean-vendor-git.sh"
-    ]
-}
+    "guzzlehttp/guzzle": "*"
+  }
 }

@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Attribute;
+use app\services\admin\AdminActivityLogger;
 use ishop\App;
 
 class AttributeController extends AppController {
@@ -17,7 +18,7 @@ class AttributeController extends AppController {
         $id = $this->getRequestID();        
         $attribute = \R::load('attribute', $id);        
 		\R::exec('DELETE FROM attribute_comparison WHERE attribute_id = ?', [$id]);
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','57','attribute_comparison','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(57, 'attribute_comparison', (int)$id);
 		\R::trash($attribute);
         $_SESSION['success'] = 'Атрибут '.$attribute["attribute_name"].' удален';
         redirect();
@@ -48,7 +49,7 @@ class AttributeController extends AppController {
 					$sql_part = rtrim($sql_part, ',');
 					\R::exec("INSERT INTO attribute_comparison (category_id, attribute_id) VALUES $sql_part");
 				}
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','55','attribute_comparison','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(55, 'attribute_comparison', (int)$id);
                 $_SESSION['success'] = 'Атрибут добавлен';
             }
             redirect();
@@ -83,7 +84,7 @@ class AttributeController extends AppController {
 					$sql_part = rtrim($sql_part, ',');
 					\R::exec("INSERT INTO attribute_comparison (category_id, attribute_id) VALUES $sql_part");
 				}
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','56','attribute_comparison','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(56, 'attribute_comparison', (int)$id);
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
             }

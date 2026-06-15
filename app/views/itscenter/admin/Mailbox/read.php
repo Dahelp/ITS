@@ -1,8 +1,12 @@
 <?php
-	$email = $mailbox->getMail(
-		$_GET["id"], // ID of the email, you want to get
-		false // Do NOT mark emails as seen (optional)
-	);
+	$email = null;
+	if ($mailbox && isset($message) && (string)$message->attachments === '1' && in_array((string)$message->folder, ['', 'INBOX'], true)) {
+		try {
+			$email = $mailbox->getMail((int)$_GET["id"], false);
+		} catch (\Throwable $e) {
+			$email = null;
+		}
+	}
 ?>
 <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -26,7 +30,7 @@
 <section class="content">
 	<div class="row">
 		<div class="col-md-2">
-			<?php new \app\widgets\mailbox\Mailbox('mailbox_tpl.php'); ?>
+			<?php new \app\widgets\mailbox\Mailbox('mailbox_tpl.php', compact('folderStats', 'currentFolder')); ?>
 		</div>
 		<div class="col-md-10">
 			<?php if($message) { ?>
@@ -64,7 +68,7 @@
 </div>
 <?php            
 // Save attachments one by one
-if (!$mailbox->getAttachmentsIgnore()) {
+if ($email && !$mailbox->getAttachmentsIgnore()) {
     $attachments = $email->getAttachments();            
 ?>
 <div class="card-footer bg-white">
@@ -112,4 +116,4 @@ if (!$mailbox->getAttachmentsIgnore()) {
 </section>
 <!-- /.content -->
 
-<?php $mailbox->disconnect(); ?>
+<?php if ($mailbox && method_exists($mailbox, 'safeDisconnect')) { $mailbox->safeDisconnect(); } ?>

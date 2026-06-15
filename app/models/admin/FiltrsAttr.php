@@ -11,10 +11,13 @@ class FiltrsAttr extends AppModel{
 		'alias' => '',
         'attr_group_id' => '',
 		'content' => '',
+        'top_content' => '',
+        'seo_h1' => '',
 		'title' => '',
 		'description' => '',
         'keywords' => '',		
         'hide' => '',
+        'img' => '',
     ];
 
     public $rules = [

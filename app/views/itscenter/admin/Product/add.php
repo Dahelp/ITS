@@ -70,6 +70,12 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="sku">SKU</label>
+							<div class="col-sm-9">
+								<input type="text" name="sku" class="form-control" id="sku" placeholder="SKU товара" value="<?php isset($_SESSION['form_data']['sku']) ? h($_SESSION['form_data']['sku']) : null; ?>">
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="price">Цена</label>
 							<div class="col-sm-9">
 								<input type="text" name="price" class="form-control" id="price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?php isset($_SESSION['form_data']['price']) ? h($_SESSION['form_data']['price']) : null; ?>" required data-error="Допускаются цифры и десятичная точка">
@@ -85,6 +91,12 @@
                             <label class="col-sm-3 col-form-label" for="opt_price">Цена оптовая</label>
 							<div class="col-sm-9">
 								<input type="text" name="opt_price" class="form-control" id="opt_price" placeholder="Цена оптовая" pattern="^[0-9.]{1,}$" value="<?php isset($_SESSION['form_data']['opt_price']) ? h($_SESSION['form_data']['opt_price']) : null; ?>" data-error="Допускаются цифры и десятичная точка">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="spec_price">Спец. цена</label>
+							<div class="col-sm-9">
+								<input type="text" name="spec_price" class="form-control" id="spec_price" placeholder="Спец. цена" pattern="^[0-9.]{1,}$" value="<?php isset($_SESSION['form_data']['spec_price']) ? h($_SESSION['form_data']['spec_price']) : null; ?>" data-error="Допускаются цифры и десятичная точка">
                             </div>
                         </div>
 						<div class="form-group row">
@@ -182,28 +194,42 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="img">Базовое изображение</label>
-							<div class="col-sm-9">
-                                        <div id="single" class="btn btn-success" data-url="product/add-image" data-name="single" data-razdel="product">Выбрать файл</div>
-                                        <p><small>Рекомендуемые размеры: 600х450</small></p>
-                                        <div class="single"></div>
-                                    
-                                    <div class="overlay">
-                                        <i class="fa fa-refresh fa-spin"></i>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="img_gallery">Картинки галереи</label>
-							<div class="col-sm-9">
-								<div id="multi" class="btn btn-success" data-url="product/add-image" data-name="multi" data-razdel="product">Выбрать файл</div>
-								<p><small>Рекомендуемые размеры: 1000х750</small></p>
-								<div class="multi"></div>								
-								<div class="overlay">
-									<i class="fa fa-refresh fa-spin"></i>
-								</div>
-							</div>
-						</div>           
+                            <label class="col-sm-3 col-form-label">Базовое изображение</label>
+                            <div class="col-sm-9">
+                                <div id="single" class="btn btn-success"
+                                    data-url="media/upload" data-name="single" data-razdel="product"
+                                    data-w="600" data-h="450" data-wmini="250" data-hmini="250">Выбрать файл</div>
+                                <p><small>Рекомендуемые размеры: 600×450 (мини: 250×250)</small></p>
+                                <div class="single"></div>
+                                <div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+                            </div>
+                            </div>
+
+                            <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Картинки галереи</label>
+                            <div class="col-sm-9">
+                                <div id="multi" class="btn btn-success"
+                                    data-url="media/upload" data-name="multi" data-razdel="product"
+                                    data-w="1000" data-h="750">Выбрать файл</div>
+                                <p><small>Рекомендуемые размеры: 1000×750</small></p>
+                                <div class="multi"></div>
+                                <div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+                            </div>
+                            </div>
+
+                            <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Изображение для выгрузки</label>
+                            <div class="col-sm-9">
+                                <div id="unload" class="btn btn-success"
+                                    data-url="media/upload" data-name="unload" data-razdel="product"
+                                    data-w="600" data-h="600">Выбрать файл</div>
+                                <p><small>Рекомендуемые размеры: 600×600. (Всегда JPEG — для CSV/XML/XLSX)</small></p>
+                                <div class="unload"></div>
+                                <div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+                            </div>
+                            </div>
+
+                                   
 						</div>
                   </div>
                   <!-- /.tab-pane -->
@@ -227,10 +253,16 @@
                                 <input type="text" name="alias" class="form-control" id="alias" placeholder="Если пусто, создается автоматически" value="<?php isset($_SESSION['form_data']['alias']) ? h($_SESSION['form_data']['alias']) : null; ?>">
 							</div>
                         </div>
-                        <div class="form-group row">
+						<div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="title">Заголовок (Title)</label>
                             <div class="col-sm-9">
 								<input type="text" name="title" class="form-control" id="title" placeholder="Если пусто, то используется Название" value="<?php isset($_SESSION['form_data']['title']) ? h($_SESSION['form_data']['title']) : null; ?>">
+							</div>
+                        </div>
+						<div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="seo_h1">SEO H1</label>
+                            <div class="col-sm-9">
+								<input type="text" name="seo_h1" class="form-control" id="seo_h1" placeholder="Если пусто, то используется InSEO или название товара" value="<?=isset($_SESSION['form_data']['seo_h1']) ? h($_SESSION['form_data']['seo_h1']) : '';?>">
 							</div>
                         </div>
 						<div class="form-group row">

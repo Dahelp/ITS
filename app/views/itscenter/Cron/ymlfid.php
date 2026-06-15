@@ -28,7 +28,7 @@ $fd = fopen("cron/".$viewcrons["url_download"]."", 'w+') or die("не удало
 	$text.= "</categories>				
 				<offers>";
 
-	$offers = \R::getAll("SELECT product.*, product.id AS prod_id, brand.name as vendor FROM product JOIN brand ON brand.id = product.brand_id AND product.hide ='show' AND product.article != '' AND product.img != '' AND product.price !='0' AND product.stock_status_id !='0'");
+	$offers = \R::getAll("SELECT product.*, product.id AS prod_id, brand.name as vendor FROM product JOIN brand ON brand.id = product.brand_id AND product.hide ='show' AND product.sku != '' AND product.img != '' AND product.price !='0' AND product.stock_status_id !='0'");
 	foreach($offers as $offer) {
 		
 		if($offer["quantity"]==0){ $available = "false"; }
@@ -39,14 +39,29 @@ $fd = fopen("cron/".$viewcrons["url_download"]."", 'w+') or die("не удало
 		$desc = strip_tags($desc);
 		$desc = substr($desc, 0, 600);
 		$desc = rtrim($desc, "!,.-");
-		$desc = substr($desc, 0, strrpos($desc, ' '));
+		$desc = substr($desc, 0, strrpos($desc, ' '));		
 		
-			$text.= "<offer id=\"".$offer["article"]."\" available=\"".$available."\">
-                      <url>".PATH."/product/".$offer["alias"]."</url>
-                      <price>".$offer["price"]."</price>";
-			if($offer["price_rrs"] =="" or $offer["price_rrs"] =="0") {}else{
-				$text.= "<oldprice>".$offer["price_rrs"]."</oldprice>";
+			$text.= "<offer id=\"".$offer["sku"]."\" available=\"".$available."\">
+                      <url>".PATH."/product/".$offer["alias"]."</url>";
+
+			$productId = $offer['id'] ?? 0;
+			$action = \R::findOne('actions', 'product_id = ?', [$productId]);
+
+			if ($action && isset($action->znachenie)) {
+				$price = $offer['price'] - $action->znachenie;
+				$text .= "<price>{$price}</price>";
+				$text .= "<oldprice>{$offer['price']}</oldprice>";
+			} else {
+				$price = $offer['price'];
+				$text .= "<price>{$price}</price>";
+
+				if($offer["price_rrs"] =="" or $offer["price_rrs"] =="0") {}else{
+					$text.= "<oldprice>".$offer["price_rrs"]."</oldprice>";
+				}
 			}
+
+                      
+			
 			if($offer["category_id"] == 2 or $offer["category_id"] == 9 or $offer["category_id"] == 18 or $offer["category_id"] == 19 or $offer["category_id"] == 20 or $offer["category_id"] == 21 or $offer["category_id"] == 22 or $offer["category_id"] == 23 or $offer["category_id"] == 24 or $offer["category_id"] == 35 or $offer["category_id"] == 36){ $type = "Шины"; }
 			if($offer["category_id"] == 26 or $offer["category_id"] == 27 or $offer["category_id"] == 28 or $offer["category_id"] == 29 or $offer["category_id"] == 30){ $type = "Диск колёсный"; }
 			if($offer["category_id"] == 10){ $type = "Фильтр воздушный"; }

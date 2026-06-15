@@ -3,55 +3,160 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Order;
+use app\services\admin\AdminActivityLogger;
 use ishop\App;
 use ishop\libs\Pagination;
 
 class OrderController extends AppController {
 
     public function indexAction(){
-        $count = \R::count('order');
+        $statusFilter = isset($_GET['status']) ? (int)$_GET['status'] : 0;
+        $where = $statusFilter > 0 ? 'WHERE `order`.`status` = ?' : '';
+        $params = $statusFilter > 0 ? [$statusFilter] : [];
+        $count = $statusFilter > 0 ? \R::count('order', 'status = ?', [$statusFilter]) : \R::count('order');
 		$curr = \R::findOne('currency');
         $orders = \R::getAll("SELECT `order_status`.`status_name`, `order`.`id`, `order`.`user_id`, `order`.`status`, `order`.`inv`, `order`.`date`, `order`.`update_at`, `order`.`currency`, `user`.`name`, `user`.`admin_id`, `user`.`email`, `order`.`comp_id`, ROUND(SUM(`order_product`.`price` * `order_product`.`qty`), 2) AS `sum` FROM `order`
 			JOIN `user` ON `order`.`user_id` = `user`.`id`
 			JOIN `order_product` ON `order`.`id` = `order_product`.`order_id`
 			JOIN `order_status` ON `order`.`status` = `order_status`.`id`
-			GROUP BY `order`.`id`");
+            {$where}
+			GROUP BY `order`.`id`", $params);
 
         $this->setMeta('Список заказов');
         $this->set(compact('orders', 'count', 'curr'));
     }
 
-    public function viewAction(){
-		if(!empty($_POST)){
-			$id = $this->getRequestID();
-			$order = new Order();
-			$data = $_POST;
-            $order->load($data);			
-			$order->editOrder($id, $data);
-			$order->editOrderProduct($id, $data);
-			
-			\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','44','order','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
-			$_SESSION['success'] = 'Изменения сохранены';
-            redirect();
+	public function statProductAction()
+	{
+		$productId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		if ($productId <= 0) {
+			throw new \Exception('Некорректный ID товара');
 		}
+
+		$product = \R::findOne('product', 'id = ?', [$productId]);
+		if (!$product) {
+			throw new \Exception('Товар не найден');
+		}
+
+		$curr = \R::findOne('currency');
+
+		$orders = \R::getAll("
+			SELECT 
+				o.id,
+				o.inv,
+				o.user_id,
+				o.admin_id,
+				o.comp_id,
+				o.status,
+				os.status_name,
+				o.date,
+
+				ROUND(SUM(op.price * op.qty), 2) AS order_sum,
+				SUM(CASE WHEN op.product_id = ? THEN op.qty ELSE 0 END) AS qty_item,
+
+				u.name  AS user_name,
+				u.email AS user_email,
+				u.role  AS user_role,
+
+				c.comp_short_name,
+				c.inn,
+
+				ua.name AS manager_name
+			FROM `order` o
+			JOIN `order_product` op ON o.id = op.order_id
+			JOIN `order_status` os ON o.status = os.id
+			JOIN `user` u ON o.user_id = u.id
+
+			LEFT JOIN `company` c ON o.comp_id = c.id
+			LEFT JOIN `user` ua ON o.admin_id = ua.id
+
+			GROUP BY o.id
+			HAVING qty_item > 0
+			ORDER BY o.id DESC
+		", [$productId]);
+
+		foreach ($orders as &$row) {
+			$role = $row['user_role'] ?? 'user';
+
+			$isB2B = ($role === 'b2buser');
+			$row['source'] = $isB2B ? 'B2B ИТС-Центр' : 'ИТС-Центр';
+
+			// Контакт (ссылка на редактирование пользователя — одна таблица)
+			$row['contact_name']  = $row['user_name'] ?? '';
+			$row['contact_email'] = $row['user_email'] ?? '';
+			$row['contact_link']  = ADMIN . "/user/edit?id=" . (int)$row['user_id'];
+
+			// Заказ (единый просмотр)
+			$row['order_link'] = ADMIN . "/order/view?id=" . (int)$row['id'];
+		}
+		unset($row);
+
+		$count_sales = count($orders);
+
+		$this->setMeta('Продажи по позиции: ' . ($product['title'] ?? ''));
+		$this->set(compact('orders', 'product', 'productId', 'count_sales', 'curr'));
+	}
+
+    public function viewAction(){
+		if (!empty($_POST)) {
+			$id = $this->getRequestID();
+			$orderModel = new Order();
+			$data = $_POST;
+
+			$orderModel->load($data);
+			$orderModel->editOrder($id, $data);
+			$orderModel->editOrderProduct($id, $data);
+
+			AdminActivityLogger::admin(44, 'order', (int)$id);
+
+			$_SESSION['success'] = 'Изменения сохранены';
+			redirect();
+		}
+
 		$namecomp = App::$app->getProperty('shop_name');
-        $order_id = $this->getRequestID();
+		$order_id = $this->getRequestID();
 		$order_prefix = \ishop\App::options('order_prefix');
 		$curr = \R::findOne('currency');
-        $order = \R::getRow("SELECT `order_status`.`status_name`, `order`.*, `user`.`name`, `user`.`admin_id`, `user`.`telefon`, `user`.`email`, `user`.`groups`, `dostavka`.`name` AS dostavkaname, `dostavka`.`id` AS dostavka_id, `order_product`.`discount`, `order_product`.`discount_amount`, ROUND(SUM(`order_product`.`price` * `order_product`.`qty`), 2) AS `sum` FROM `order`
-  JOIN `user` ON `order`.`user_id` = `user`.`id`
-  JOIN `order_product` ON `order`.`id` = `order_product`.`order_id`
-  JOIN `order_status` ON `order`.`status` = `order_status`.`id`
-  JOIN `dostavka` ON `order`.`dostavka_id` = `dostavka`.`id`
-  WHERE `order`.`id` = ?
-  GROUP BY `order`.`id` ORDER BY `order`.`status`, `order`.`id` LIMIT 1", [$order_id]);
-        if(!$order){
-            throw new \Exception('Страница не найдена', 404);
-        }
-        $order_products = \R::findAll('order_product', "order_id = ?", [$order_id]);
-        $this->setMeta("Заказ №{$order_prefix}{$order_id}");
-        $this->set(compact('order', 'order_products', 'curr', 'namecomp'));
-    }
+
+		$order = \R::getRow("
+			SELECT 
+				`order_status`.`status_name`,
+				`order`.*,
+				`user`.`name`,
+				`user`.`admin_id`,
+				`user`.`telefon`,
+				`user`.`email`,
+				`user`.`groups`,
+				`dostavka`.`name` AS `dostavkaname`,
+				`dostavka`.`id` AS `dostavka_id`,
+				ROUND(SUM(`order_product`.`price` * `order_product`.`qty`), 2) AS `sum`
+			FROM `order`
+			JOIN `user` ON `order`.`user_id` = `user`.`id`
+			JOIN `order_product` ON `order`.`id` = `order_product`.`order_id`
+			JOIN `order_status` ON `order`.`status` = `order_status`.`id`
+			JOIN `dostavka` ON `order`.`dostavka_id` = `dostavka`.`id`
+			WHERE `order`.`id` = ?
+			GROUP BY `order`.`id`
+			ORDER BY `order`.`status`, `order`.`id`
+			LIMIT 1
+		", [$order_id]);
+
+		if (!$order) {
+			throw new \Exception('Страница не найдена', 404);
+		}
+
+		$order_products = \R::findAll('order_product', "order_id = ?", [$order_id]);
+
+		$comp = null;
+		if (!empty($order['comp_id'])) {
+			$comp = \R::findOne('company', 'id = ?', [$order['comp_id']]);
+		} elseif (!empty($order['user_id'])) {
+			$comp = \R::findOne('company', 'user_id = ?', [$order['user_id']]);
+		}
+
+		$this->setMeta("Заказ №{$order_prefix}{$order_id}");
+		$this->set(compact('order', 'order_products', 'curr', 'namecomp', 'comp'));
+	}
 	
 	public function addAction(){		
 		if(!empty($_POST)){
@@ -63,7 +168,7 @@ class OrderController extends AppController {
 				$user = \R::findLast('user');
 				$user_id = $user->id;
 				$data['user_id'] = $user_id;
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','36','user','".$user_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(36, 'user', (int)$user_id);
 			}
 			$comp_name = $data['comp_name'];
 			if($comp_name) {
@@ -72,7 +177,7 @@ class OrderController extends AppController {
 				$comp_id = $company->id;
 				$data['comp_id'] = $comp_id;
 				\R::exec("UPDATE user SET comp_id = '".$comp_id."' WHERE id = ?", [$user_id]);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','33','company','".$comp_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(33, 'company', (int)$comp_id);
 			}
             $order->load($data);
 			$last_order = \R::findLast('order');
@@ -80,7 +185,7 @@ class OrderController extends AppController {
 			$order->addOrder($id, $data);
 			$order->addOrderProduct($id, $data);
 			
-			\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','43','order','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+			AdminActivityLogger::admin(43, 'order', (int)$id);
 			$_SESSION['success'] = 'Заказ создан';
             redirect();
 		}
@@ -108,7 +213,7 @@ class OrderController extends AppController {
 			$orders->changeEmail($order_id, $user, $template);
 		}
         \R::store($order);
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','46','order','".$order_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(46, 'order', (int)$order_id);
         $_SESSION['success'] = 'Изменения сохранены - Присвоен статус '.$order_status->status_name.'';
         redirect(ADMIN . '/order/view?id='.$order_id.'');
     }
@@ -130,7 +235,7 @@ class OrderController extends AppController {
 		$orders->managerEmail($order_manager["email"], $order_id, $user);
         \R::store($order);
 		\R::store($user);
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','52','order','".$order_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(52, 'order', (int)$order_id);
         $_SESSION['success'] = 'Изменения сохранены - Заказу привязан менеджер '.$order_manager->name.'';		
 		
         redirect(ADMIN . '/order/view?id='.$order_id.'');
@@ -153,7 +258,7 @@ class OrderController extends AppController {
         \R::store($order);
 	    \R::store($user);
 	   
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','52','order','".$order_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(52, 'order', (int)$order_id);
         $_SESSION['success'] = 'Изменения сохранены - Заказу '.$order_id.' привязан менеджер '.$order_manager->name.'';		
 		
         redirect(ADMIN . '/order');
@@ -176,7 +281,7 @@ class OrderController extends AppController {
 		$inv = \ishop\App::invoice_num($order_id, 9, $order_prefix);
 		$order->inv = $inv;
         \R::store($order);
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','54','order','".$order_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(54, 'order', (int)$order_id);
         $_SESSION['success'] = 'Изменения сохранены - Присвоен продавец '.$company->comp_short_name.'';
         redirect(ADMIN . '/order/view?id='.$order_id.'');
     }
@@ -185,7 +290,7 @@ class OrderController extends AppController {
         $order_id = $this->getRequestID();
         $order = \R::load('order', $order_id);
         \R::trash($order);
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','45','order','".$order_id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(45, 'order', (int)$order_id);
         $_SESSION['success'] = 'Заказ удален';
         redirect(ADMIN . '/order');
     }
@@ -229,81 +334,115 @@ class OrderController extends AppController {
     }
 	
 	public function productpriceAction(){
-		$id = isset($_GET['id']) ? $_GET['id'] : '';
-		$comp_id = isset($_GET['comp_id']) ? $_GET['comp_id'] : 'no';
-		
-		if($id) {
+		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+		$comp_id = isset($_GET['comp_id']) ? (int)$_GET['comp_id'] : 0;
+
+		$product = null;
+		$stock = [];
+		$sale = [];
+
+		if ($id > 0) {
 			$product = \R::findOne('product', 'id = ?', [$id]);
-			$stock = \R::getRow('SELECT * FROM in_stock WHERE product_id = ? AND branch_id = ? GROUP BY product_id', [$id, 9]);
-			if($comp_id !="no") {
-				$sale = \R::getRow('SELECT * FROM company_typeprice WHERE company_id = ? AND category_id = ?', [$comp_id, $product->category_id]);
-			}else{
-				$sale->znachenie = "";
+			$stock = \R::getRow(
+				'SELECT * FROM in_stock WHERE product_id = ? AND branch_id = ? GROUP BY product_id',
+				[$id, 9]
+			);
+
+			if ($product && $comp_id > 0) {
+				$sale = \R::getRow(
+					'SELECT * FROM company_typeprice WHERE company_id = ? AND category_id = ?',
+					[$comp_id, $product->category_id]
+				);
 			}
-		}else{
-			$product->article = "";
 		}
-		echo json_encode(array('result1'=>''.$product->article.'', 'result2'=>''.$product->price.'', 'result3'=>''.$product->quantity.'', 'result4'=>''.$stock["quantity"].'', 'result5'=>''.$product->weight.'', 'result6'=>''.$product->volume.'', 'result7'=>''.$sale["znachenie"].''));		
+
+		echo json_encode([
+			'result1' => (string)($product->article ?? ''),
+			'result2' => (string)($product->price ?? 0),
+			'result3' => (string)($product->quantity ?? 0),
+			'result4' => (string)($stock['quantity'] ?? 0),
+			'result5' => (string)($product->weight ?? 0),
+			'result6' => (string)($product->volume ?? 0),
+			'result7' => (string)($sale['znachenie'] ?? ''),
+		]);
 		die;
-    }
+	}
 	
 	public function compinfoAction(){
-		$id = isset($_GET['id']) ? $_GET['id'] : '';
-		if($id) {
-			$company = \R::getRow("SELECT * FROM company, user WHERE company.user_id = user.id AND company.id = ?", [$id]);
-			
-		}else{
-			$company->name = "";
-			$company->telefon = "";
-			$company->email = "";
-			$company->nds = "";
-			$company->tip = "";
-			$company->url_address = "";
-			$company->postal_address = "";
-			$company->ogrn = "";
-			$company->inn = "";
-			$company->kpp = "";
-			$company->bik = "";
-			$company->raschet = "";
-			$company->korschet = "";
-			$company->bank = "";
-			$company->dir_name = "";
-			$company->dogovor = "";
-			$company->hide = "";
+		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+		if ($id > 0) {
+			$company = \R::getRow(
+				"SELECT * FROM company, user WHERE company.user_id = user.id AND company.id = ?",
+				[$id]
+			);
+		} else {
+			$company = [];
 		}
-		echo json_encode(array('uname'=>''.$company["name"].'', 'uid'=>''.$company["user_id"].'', 'utelefon'=>''.$company["telefon"].'', 'uemail'=>''.$company["email"].'', 'cnds'=>''.$company["nds"].'', 'tip'=>''.$company["tip"].'', 'url_address'=>''.$company["url_address"].'', 'postal_address'=>''.$company["postal_address"].'', 'ogrn'=>''.$company["ogrn"].'', 'inn'=>''.$company["inn"].'', 'kpp'=>''.$company["kpp"].'', 'bik'=>''.$company["bik"].'', 'raschet'=>''.$company["raschet"].'', 'korschet'=>''.$company["korschet"].'', 'bank'=>''.$company["bank"].'', 'dir_name'=>''.$company["dir_name"].'', 'dogovor'=>''.$company["dogovor"].'', 'hide'=>''.$company["hide"].''));
+
+		echo json_encode([
+			'uname' => (string)($company['name'] ?? ''),
+			'uid' => (string)($company['user_id'] ?? ''),
+			'utelefon' => (string)($company['telefon'] ?? ''),
+			'uemail' => (string)($company['email'] ?? ''),
+			'cnds' => (string)($company['nds'] ?? ''),
+			'tip' => (string)($company['tip'] ?? ''),
+			'url_address' => (string)($company['url_address'] ?? ''),
+			'postal_address' => (string)($company['postal_address'] ?? ''),
+			'ogrn' => (string)($company['ogrn'] ?? ''),
+			'inn' => (string)($company['inn'] ?? ''),
+			'kpp' => (string)($company['kpp'] ?? ''),
+			'bik' => (string)($company['bik'] ?? ''),
+			'raschet' => (string)($company['raschet'] ?? ''),
+			'korschet' => (string)($company['korschet'] ?? ''),
+			'bank' => (string)($company['bank'] ?? ''),
+			'dir_name' => (string)($company['dir_name'] ?? ''),
+			'dogovor' => (string)($company['dogovor'] ?? ''),
+			'hide' => (string)($company['hide'] ?? ''),
+		]);
 		die;
-    }
+	}
 	
 	public function usercontactAction(){
-		$id = isset($_GET['id']) ? $_GET['id'] : '';
-		if($id) {
-			$user = \R::getRow("SELECT user.groups, user.telefon, user.email, user_groups.name as groups_name FROM user, user_groups WHERE user.groups = user_groups.id AND user.id = ?", [$id]);
+		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+		if ($id > 0) {
+			$user = \R::getRow(
+				"SELECT user.groups, user.telefon, user.email, user_groups.name as groups_name
+				 FROM user, user_groups
+				 WHERE user.groups = user_groups.id AND user.id = ?",
+				[$id]
+			);
 			$company = \R::getRow("SELECT * FROM company WHERE user_id = ?", [$id]);
-		}else{
-			$user->telefon = "";
-			$user->email = "";
-			$user->groups = "";
-			$user->groups_name = "";
-			$company->nds = "";
-			$company->tip = "";
-			$company->url_address = "";
-			$company->postal_address = "";
-			$company->ogrn = "";
-			$company->inn = "";
-			$company->kpp = "";
-			$company->bik = "";
-			$company->raschet = "";
-			$company->korschet = "";
-			$company->bank = "";
-			$company->dir_name = "";
-			$company->dogovor = "";
-			$company->hide = "";
-			
+		} else {
+			$user = [];
+			$company = [];
 		}
-		echo json_encode(array('groups'=>''.$user["groups"].'', 'groups_name'=>''.$user["groups_name"].'', 'utelefon'=>''.$user["telefon"].'', 'uemail'=>''.$user["email"].'', 'tip'=>''.$company["tip"].'', 'comp_name'=>''.$company["comp_name"].'', 'comp_id'=>''.$company["id"].'', 'cnds'=>''.$company["nds"].'', 'tip'=>''.$company["tip"].'', 'url_address'=>''.$company["url_address"].'', 'postal_address'=>''.$company["postal_address"].'', 'ogrn'=>''.$company["ogrn"].'', 'inn'=>''.$company["inn"].'', 'kpp'=>''.$company["kpp"].'', 'bik'=>''.$company["bik"].'', 'raschet'=>''.$company["raschet"].'', 'korschet'=>''.$company["korschet"].'', 'bank'=>''.$company["bank"].'', 'dir_name'=>''.$company["dir_name"].'', 'dogovor'=>''.$company["dogovor"].'', 'hide'=>''.$company["hide"].''));
+
+		echo json_encode([
+			'groups' => (string)($user['groups'] ?? ''),
+			'groups_name' => (string)($user['groups_name'] ?? ''),
+			'utelefon' => (string)($user['telefon'] ?? ''),
+			'uemail' => (string)($user['email'] ?? ''),
+			'comp_name' => (string)($company['comp_name'] ?? ''),
+			'comp_id' => (string)($company['id'] ?? ''),
+			'cnds' => (string)($company['nds'] ?? ''),
+			'tip' => (string)($company['tip'] ?? ''),
+			'url_address' => (string)($company['url_address'] ?? ''),
+			'postal_address' => (string)($company['postal_address'] ?? ''),
+			'ogrn' => (string)($company['ogrn'] ?? ''),
+			'inn' => (string)($company['inn'] ?? ''),
+			'kpp' => (string)($company['kpp'] ?? ''),
+			'bik' => (string)($company['bik'] ?? ''),
+			'raschet' => (string)($company['raschet'] ?? ''),
+			'korschet' => (string)($company['korschet'] ?? ''),
+			'bank' => (string)($company['bank'] ?? ''),
+			'dir_name' => (string)($company['dir_name'] ?? ''),
+			'dogovor' => (string)($company['dogovor'] ?? ''),
+			'hide' => (string)($company['hide'] ?? ''),
+		]);
 		die;
-    }
+	}
 	
 	public function pdfscoreAction(){
 		$order_id = $_GET["id"];		

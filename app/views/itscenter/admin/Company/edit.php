@@ -66,6 +66,7 @@
 								<select class="form-control" id="tip" name="tip" onclick="vidTip(this)">									
 									<option value="1" <?php if($company->tip == "1") { echo "selected=\"selected\""; } ?>>Розничная торговля</option>
 									<option value="2" <?php if($company->tip == "2") { echo "selected=\"selected\""; } ?>>Оптовая торговля</option>
+                                    <option value="3" <?php if($company->tip == "3") { echo "selected=\"selected\""; } ?>>Спец. торговля</option>
 									<option value="0" <?php if($company->tip == "0") { echo "selected=\"selected\""; } ?>>Выставление счетов</option>
 								</select>
                             </div>
@@ -89,9 +90,9 @@
                             </div>
                         </div>
 						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="ogrn">ОГРН, ОГРНИП <span class="text-danger">*</span></label>
+                            <label class="col-sm-3 col-form-label" for="ogrn">ОГРН, ОГРНИП</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" name="ogrn" id="ogrn" value="<?=h($company->ogrn);?>" placeholder="ОГРН 13 цифр, ОГРНИП 15 цифр" maxlength="15" required>
+								<input type="text" class="form-control" name="ogrn" id="ogrn" value="<?=h($company->ogrn);?>" placeholder="ОГРН 13 цифр, ОГРНИП 15 цифр" maxlength="15">
                             </div>
                         </div>
 						<div class="form-group row">
@@ -152,6 +153,24 @@
 									<option value="1" <?php if($company->dogovor == "1") { echo "selected=\"selected\""; } ?>>Договор</option>
 									<option value="2" <?php if($company->dogovor == "2") { echo "selected=\"selected\""; } ?>>Счёт-договор</option>									
 								</select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="dogovor_number">№ договора</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="dogovor_number" id="dogovor_number" value="<?=h($company->dogovor_number);?>">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="data_dogovor">Дата договора</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="data_dogovor" id="data_dogovor" value="<?=h($company->data_dogovor);?>" placeholder="2025-07-24">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="date_postponement">Отсрочка</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="date_postponement" id="date_postponement" value="<?=h($company->date_postponement);?>">
                             </div>
                         </div>
                         <div class="form-group row">

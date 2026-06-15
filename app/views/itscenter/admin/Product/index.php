@@ -63,7 +63,8 @@
 ?>
 <script>
 $(document).ready(function () {
-	$('#example').DataTable({		
+	var hideFromExport = [1, 6, 7, 8, 9, 10];
+	var table = $('#example').DataTable({		
 		"processing": true,
 		"serverSide": true,
 		"stateSave": true,
@@ -87,7 +88,8 @@ $(document).ready(function () {
 				text: 'Копировать'
 			},
 			{
-				extend: 'csv',
+				extend: 'csvHtml5',
+				bom: true,
 				exportOptions: {
 					columns: function ( idx, data, node ) {
 					var isVisible = table.column( idx ).visible();
@@ -97,7 +99,7 @@ $(document).ready(function () {
 				}
 			},
 			{
-				extend: 'excel',
+				extend: 'excelHtml5',
 				exportOptions: {
 					columns: function ( idx, data, node ) {
 					var isVisible = table.column( idx ).visible();
@@ -107,7 +109,7 @@ $(document).ready(function () {
 				}
 			},
 			{
-				extend: 'pdf',
+				extend: 'pdfHtml5',
 				exportOptions: {
 					columns: function ( idx, data, node ) {
 					var isVisible = table.column( idx ).visible();

@@ -2,9 +2,9 @@
 	$online = \ishop\App::on_line(); 
 	$shop_name = \ishop\App::$app->getProperty('shop_name');
 	$today = date("Y-m-d");
-	$NewMails = \R::count('mails_imap', "is_seen != '1'");
-	$NewOrders = \R::count('order', "status = '1'");
-	$Availability = \R::count('mail_availability', "status_nalichiya = '0'");
+
+	$notificationItems = \app\services\admin\AdminDashboardService::notificationItems();
+	$notificationTotal = \app\services\admin\AdminDashboardService::notificationsCount();
 ?>
 <?php
     header("Content-Type: text/html; charset=utf-8");
@@ -65,10 +65,14 @@
 	<script src="plugins/jszip/jszip.min.js"></script>
 	<script src="plugins/pdfmake/pdfmake.min.js"></script>
 	<script src="plugins/pdfmake/vfs_fonts.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.colVis.min.js"></script>
+	<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+	<script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
+	<script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 	<script src="../js/typeahead.bundle.js"></script>
+
+
+
+ 
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
@@ -105,9 +109,9 @@
           <i class="fas fa-search"></i>
         </a>
         <div class="navbar-search-block">
-          <form class="form-inline">
+          <form class="form-inline" action="<?= ADMIN ?>/search" method="get">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar typeahead" type="search" id="typeahead" placeholder="Поиск" aria-label="Search">
+              <input class="form-control form-control-navbar typeahead" type="search" id="typeahead" name="q" placeholder="Поиск" aria-label="Search">
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -121,116 +125,20 @@
         </div>
       </li>
 
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Гость #1
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Интересует наличие...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 часа назад</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Гость #2
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Сколько стоят...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 часа назад</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Гость #3
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Есть у вас доставка?</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 часа назад</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">Все сообщения</a>
-        </div>
-      </li>
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <?php if($notificationTotal > 0) { ?><span class="badge badge-warning navbar-badge"><?= (int)$notificationTotal ?></span><?php } ?>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 новых уведомлений</span>
+          <span class="dropdown-item dropdown-header"><?= (int)$notificationTotal ?> новых уведомлений</span>
           <div class="dropdown-divider"></div>
-		  <?php if($NewMails) { ?>
-          <a href="<?=ADMIN?>/mailbox" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> Входящие письма: <?=$NewMails;?>
-            <span class="float-right text-muted text-sm">
-				<?php 
-					$mails_date = \R::findOne('mails_imap', 'is_seen = ? ORDER BY date_dispatch LIMIT 1', [0]);
-					list($mails_pastdate, $mails_pastoclock) = explode(' ', $mails_date->date_dispatch);
-					echo \ishop\App::getPeriod($mails_pastdate,$today);					
-				?></span>
-          </a>
-          <div class="dropdown-divider"></div>
-		  <?php } ?>
-          <a href="<?=ADMIN?>/callback" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> Обратный звонок: 4
-            <span class="float-right text-muted text-sm">3 минуты</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> Пользователей: 8
-            <span class="float-right text-muted text-sm">12 часов</span>
-          </a>
-          <div class="dropdown-divider"></div>
-		  <?php if($NewOrders) { ?>
-          <a href="<?=ADMIN?>/order" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> Заказов: <?=$NewOrders;?>
-            <span class="float-right text-muted text-sm">
-				<?php
-					$order_date = \R::findOne('order', 'status = ? ORDER BY date DESC LIMIT 1', [1]);					
-					list($pastdate, $pastoclock) = explode(' ', $order_date->date);										
-					echo \ishop\App::getPeriod($pastdate,$today);					
-				?></span>
-          </a>
-		  <div class="dropdown-divider"></div>
-		  <?php } ?>
-		  <?php if($Availability) { ?>
-          <a href="<?=ADMIN?>/availability" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> Заявка о поступлении: <?=$Availability;?>
-            <span class="float-right text-muted text-sm">
-				<?php
-					$availability_date = \R::findOne('mail_availability', 'status_nalichiya = ? ORDER BY data_create DESC LIMIT 1', [0]);					
-					list($pastdate, $pastoclock) = explode(' ', $availability_date->date);										
-					echo \ishop\App::getPeriod($pastdate,$today);					
-				?></span>
+		  <?php foreach($notificationItems as $item) { ?>
+          <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>" class="dropdown-item">
+            <i class="<?= htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8') ?> mr-2"></i>
+            <?= htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8') ?>: <?= (int)$item['count'] ?>
+            <span class="float-right text-muted text-sm"><?= $this->safePeriod($item['date'] ?? null, $today); ?></span>
           </a>
           <div class="dropdown-divider"></div>
 		  <?php } ?>
@@ -270,6 +178,9 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Optionally, you can add icons to the links -->
                 <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/"><i class="nav-icon fas fa-home"></i> <p>Главная</p></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/manager-sales"><i class="nav-icon fas fa-chart-line"></i> <p>Продажи менеджеров</p></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/activity"><i class="nav-icon fas fa-history"></i> <p>Журнал действий</p></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/stock"><i class="nav-icon fas fa-boxes"></i> <p>Наличие товаров</p></a></li>
 				<li class="nav-item">
                     <a class="nav-link" href="#">
 						<i class="nav-icon  far fa-file-alt"></i>
@@ -480,9 +391,5 @@
 		format: 'YYYY-MM-DD HH:mm:ss'	
 	});
 </script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.4/pdfmake.js" integrity="sha512-yfb1lLOhiYYJh7C3dsBE4XGCnDCEe4dJ/jdVgoinVdKwVuDP2SJqrEngf0Q+m6gaU8vOjCaJ0EaeakGzXXfWIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.4/vfs_fonts.js" integrity="sha512-cktKDgjEiIkPVHYbn8bh/FEyYxmt4JDJJjOCu5/FQAkW4bc911XtKYValiyzBiJigjVEvrIAyQFEbRJZyDA1wQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
 </body>
 </html>

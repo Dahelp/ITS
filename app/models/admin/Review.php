@@ -3,6 +3,7 @@
 namespace app\models\admin;
 
 use app\models\AppModel;
+use app\helpers\Upload;
 
 class Review extends AppModel {
 
@@ -22,40 +23,25 @@ class Review extends AppModel {
         ],        
     ];
 	
-	public function uploadImg($name, $wmax, $hmax, $wmaxmini, $hmaxmini){		
-        $ext = strtolower(preg_replace("#.+\.([a-z]+)$#i", "$1", $_FILES[$name]['name'])); // расширение картинки
-        $types = array("image/gif", "image/png", "image/jpeg", "image/pjpeg", "image/x-png"); // массив допустимых расширений
-		$size = \R::findOne('options', 'alt_name = ?', [option_size_product]);
-		$size_product = $size->znachenie * 1048576;
-        if($_FILES[$name]['size'] > $size_product){
-            $res = array("error" => "Ошибка! Максимальный вес файла - ".$size." Мб!");
-            exit(json_encode($res));
-        }
-        if($_FILES[$name]['error']){
-            $res = array("error" => "Ошибка! Возможно, файл слишком большой.");
-            exit(json_encode($res));
-        }
-        if(!in_array($_FILES[$name]['type'], $types)){
-            $res = array("error" => "Допустимые расширения - .gif, .jpg, .png");
-            exit(json_encode($res));
-        }
-        $new_name = md5(time()).".$ext";
-		
-		$tmpdir = WWW . '/images/review/tmp/'.$new_name.'';
-		$galdir = WWW . '/images/review/gallery/'.$new_name.'';
-		$minidir = WWW . '/images/review/mini/'.$new_name.'';
+	
 
-		if($name == 'multi'){
-			if(@move_uploaded_file($_FILES[$name]['tmp_name'], $tmpdir)){
-                $_SESSION['multi'][] = $new_name;
-				
-				self::resize($tmpdir, $galdir, $wmax, $hmax, $ext);
-				self::resize($tmpdir, $minidir, $wmax, $hmax, $ext);
-				$res = array("file" => $new_name);
-				exit(json_encode($res));
-			}
-        }		
-    }
+public function uploadImg($name, $wmax, $hmax, $wmaxmini, $hmaxmini) {
+    $res = Upload::handle($name, [
+        'max_mb'   => \R::findOne('options', 'alt_name = ?', [option_size_product])->znachenie ?? 5,
+        'base_dir' => WWW,
+        'variants' => [
+            'multi' => [
+                ['dir' => '/images/review/gallery', 'name'=>'{basename}.{ext}', 'w'=>$wmax,     'h'=>$hmax],
+                ['dir' => '/images/review/mini',    'name'=>'{basename}.{ext}', 'w'=>$wmaxmini, 'h'=>$hmaxmini],
+            ],
+        ],
+        'session' => ['multi'=>'multi'],
+    ]);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($res, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 	
 	public function editReviewProduct($id, $data){
         $review_product = \R::getCol('SELECT product_id FROM review_product WHERE review_id = ?', [$id]);

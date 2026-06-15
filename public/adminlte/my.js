@@ -1,105 +1,4 @@
-﻿ $(document).on('click', '.delete', function() {
-    var res = confirm('Подтвердите удаление');
-    if(!res) return false;
-});
-
-$('.del-item').on('click', function(){
-    var res = confirm('Подтвердите удаление');
-    if(!res) return false;
-    var $this = $(this),
-        id = $this.data('id'),
-        src = $this.data('src');
-		razdel = $this.data('razdel');
-		plagins = $this.data('plagins');
-    $.ajax({
-        url: adminpath + '/' + $this.data('razdel') + '/delete-gallery',
-        data: {id: id, src: src, razdel: razdel, plagins: plagins},
-        type: 'POST',
-        beforeSend: function(){
-            $this.closest('.file-upload').find('.overlay').css({'display':'block'});
-        },
-        success: function(res){
-            setTimeout(function(){
-                $this.closest('.file-upload').find('.overlay').css({'display':'none'});
-                if(res == 1){
-                    $this.fadeOut();
-                }
-            }, 1000);
-        },
-        error: function(){
-            setTimeout(function(){
-                $this.closest('.file-upload').find('.overlay').css({'display':'none'});
-                alert('Ошибка');
-            }, 1000);
-        }
-    });
-});
-
-$('.del-base').on('click', function(){
-    var res = confirm('Подтвердите удаление');
-    if(!res) return false;
-    var $this = $(this),
-        id = $this.data('id'),
-        src = $this.data('src');
-		razdel = $this.data('razdel');
-		plagins = $this.data('plagins');
-    $.ajax({
-        url: adminpath + '/' + $this.data('razdel') + '/delete-baseimg',
-        data: {id: id, src: src, razdel: razdel, plagins: plagins},
-        type: 'POST',
-        beforeSend: function(){
-            $this.closest('.file-upload').find('.overlay').css({'display':'block'});
-        },
-        success: function(res){
-            setTimeout(function(){
-                $this.closest('.file-upload').find('.overlay').css({'display':'none'});
-                if(res == 1){
-                    $this.fadeOut();
-                }
-            }, 1000);
-        },
-        error: function(){
-            setTimeout(function(){
-                $this.closest('.file-upload').find('.overlay').css({'display':'none'});
-                alert('Ошибка');
-            }, 1000);
-        }
-    });
-});
-
-$('.del-unload').on('click', function(){
-    var res = confirm('Подтвердите удаление');
-    if(!res) return false;
-    var $this = $(this),
-        id = $this.data('id'),
-        src = $this.data('src');
-		razdel = $this.data('razdel');
-		plagins = $this.data('plagins');
-    $.ajax({
-        url: adminpath + '/' + $this.data('razdel') + '/delete-unload',
-        data: {id: id, src: src, razdel: razdel, plagins: plagins},
-        type: 'POST',
-        beforeSend: function(){
-            $this.closest('.file-upload').find('.overlay').css({'display':'block'});
-        },
-        success: function(res){
-            setTimeout(function(){
-                $this.closest('.file-upload').find('.overlay').css({'display':'none'});
-                if(res == 1){
-                    $this.fadeOut();
-                }
-            }, 1000);
-        },
-        error: function(){
-            setTimeout(function(){
-                $this.closest('.file-upload').find('.overlay').css({'display':'none'});
-                alert('Ошибка');
-            }, 1000);
-        }
-    });
-});
-
-$('.sidebar-menu a').each(function(){
+﻿$('.sidebar-menu a').each(function(){
     var location = window.location.protocol + '//' + window.location.host + window.location.pathname;
     var link = this.href;
     if(link == location){
@@ -324,94 +223,6 @@ $('.rrs-click').click(function(){
 	}
 });
 
-if($('div').is('#single')){
-    var buttonSingle = $("#single"),
-        file;
-}
-if($('div').is('#multi')){
-    var buttonMulti = $("#multi"),
-        file;
-}
-if($('div').is('#unload')){
-    var buttonUnload = $("#unload"),
-        file;
-}
-
-if(buttonSingle){
-    new AjaxUpload(buttonSingle, {
-        action: adminpath + buttonSingle.data('url') + "?upload=1",
-        data: {name: buttonSingle.data('name')},
-        name: buttonSingle.data('name'),
-	razdel: buttonSingle.data('razdel'),
-        onSubmit: function(file, ext){
-            if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-                alert('Ошибка! Разрешены только картинки');
-                return false;
-            }
-            buttonSingle.closest('.file-upload').find('.overlay').css({'display':'block'});
-
-        },
-        onComplete: function(file, response){
-            setTimeout(function(){
-                buttonSingle.closest('.file-upload').find('.overlay').css({'display':'none'});
-
-                response = JSON.parse(response);
-                $('.' + buttonSingle.data('name')).html('<img src="/images/' + buttonSingle.data('razdel') + '/baseimg/' + response.file + '" style="max-height: 160px;">');
-            }, 1000);
-        }
-    });
-}
-
-if(buttonMulti){
-    new AjaxUpload(buttonMulti, {
-        action: adminpath + buttonMulti.data('url') + "?upload=1",
-        data: {name: buttonMulti.data('name')},
-        name: buttonMulti.data('name'),
-	razdel: buttonMulti.data('razdel'),
-        onSubmit: function(file, ext){
-            if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-                alert('Ошибка! Разрешены только картинки');
-                return false;
-            }
-            buttonMulti.closest('.file-upload').find('.overlay').css({'display':'block'});
-
-        },
-        onComplete: function(file, response){
-            setTimeout(function(){
-                buttonMulti.closest('.file-upload').find('.overlay').css({'display':'none'});
-
-                response = JSON.parse(response);
-                $('.' + buttonMulti.data('name')).append('<img src="/images/' + buttonMulti.data('razdel') + '/gallery/' + response.file + '" style="max-height: 150px;">');
-            }, 1000);
-        }
-    });
-}
-
-if(buttonUnload){
-    new AjaxUpload(buttonUnload, {
-        action: adminpath + buttonUnload.data('url') + "?upload=1",
-        data: {name: buttonUnload.data('name')},
-        name: buttonUnload.data('name'),
-	razdel: buttonUnload.data('razdel'),
-        onSubmit: function(file, ext){
-            if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-                alert('Ошибка! Разрешены только картинки');
-                return false;
-            }
-            buttonUnload.closest('.file-upload').find('.overlay').css({'display':'block'});
-
-        },
-        onComplete: function(file, response){
-            setTimeout(function(){
-                buttonUnload.closest('.file-upload').find('.overlay').css({'display':'none'});
-
-                response = JSON.parse(response);
-                $('.' + buttonUnload.data('name')).append('<img src="/images/' + buttonUnload.data('razdel') + '/unload/' + response.file + '" style="max-height: 150px;">');
-            }, 1000);
-        }
-    });
-}
-
 $('#add').on('submit', function(){
      if(!isNumeric( $('#category_id').val() )){
          alert('Выберите категорию');
@@ -443,11 +254,17 @@ var products = new Bloodhound({
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     remote: {
         wildcard: '%QUERY',
-        url: path + '/search/typeahead?query=%QUERY'
+        url: adminpath + '/search/typeahead?query=%QUERY'
     }
 });
 
 products.initialize();
+
+function adminSearchEscape(text) {
+    return String(text || '').replace(/[&<>"']/g, function(ch) {
+        return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'}[ch];
+    });
+}
 
 $("#typeahead").typeahead({
     // hint: false,
@@ -456,11 +273,273 @@ $("#typeahead").typeahead({
     name: 'products',
     display: 'name',
     limit: 10,
-    source: products
+    source: products,
+    templates: {
+        suggestion: function(item) {
+            var type = item.type ? '<span class="admin-search-suggest__type">' + adminSearchEscape(item.type) + '</span>' : '';
+            var subtitle = item.subtitle ? '<span class="admin-search-suggest__subtitle">' + adminSearchEscape(item.subtitle) + '</span>' : '';
+            return '<div class="admin-search-suggest">' +
+                '<span class="admin-search-suggest__title">' + adminSearchEscape(item.name) + '</span>' +
+                type +
+                subtitle +
+            '</div>';
+        },
+        notFound: '<div class="admin-search-suggest admin-search-suggest--empty">Ничего не найдено</div>'
+    }
 });
 
 $('#typeahead').bind('typeahead:select', function(ev, suggestion) {
     // console.log(suggestion);
-    window.location = path + '/search/?s=' + encodeURIComponent(suggestion.name);
+    window.location = suggestion.url || (adminpath + '/search?q=' + encodeURIComponent(suggestion.name));
 });
+
+$('#typeahead').closest('form').on('submit', function() {
+    var q = $.trim($('#typeahead').typeahead('val') || $('#typeahead').val() || '');
+    if (!q) {
+        return false;
+    }
+});
+
+
+/* UPLOAD / DELETE */
+
+/* global AjaxUpload, $ */
+(function(){
+  // === БАЗА ================================================================
+  var adminpath = window.adminpath || '/admin/';
+
+    function parseJsonSafe(raw){
+        if (raw == null) return null;
+        raw = String(raw).trim().replace(/^<pre[^>]*>/i,'').replace(/<\/pre>$/i,'');
+        // быстрые успешные «не JSON» ответы
+        if (raw === '' || raw === '1' || /^ok$/i.test(raw)) {
+            return { ok: true, result: 1, _raw: raw };
+        }
+        try { return JSON.parse(raw); }
+        catch(e){ console.error('Bad JSON:', raw); return null; }
+    }
+
+
+  function toggleOverlay($btn, on){
+    var $ov = $btn.closest('.file-upload').find('.overlay');
+    if ($ov.length) $ov.css('display', on ? 'block' : 'none');
+  }
+
+  function buildUrl(section, mode, file){
+    // приоритет previewUrl с бэка
+    if (file.previewUrl) return file.previewUrl;
+    // иначе соберём сами
+    var base = '/images/' + section + '/';
+    if (mode === 'single') return base + 'baseimg/' + file.file;
+    if (mode === 'multi')  return base + 'gallery/' + file.file;
+    if (mode === 'unload') return base + 'unload/'  + file.file;
+    return base + file.file;
+  }
+
+  function successOk(data){
+    if (!data) return false;
+    if (data.ok === true) return true;
+    if (data.result === 1) return true;
+    if (data.status && String(data.status).toLowerCase() === 'ok') return true;
+    // если сервер вернул «1»/«OK», мы из parseJsonSafe уже сделали ok:true
+    return false;
+    }
+
+  // === ЗАГРУЗКА ============================================================
+  var Uploader = {
+    // Инициализируем кнопки загрузки (single / multi / unload)
+    init: function(){
+      if (typeof AjaxUpload === 'undefined') {
+        console.error('AjaxUpload не найден. Подключи скрипт AjaxUpload.');
+        return;
+      }
+      this.wireBtn('#single',  'single',  '.single');  // базовое
+      this.wireBtn('#multi',   'multi',   '.multi');   // галерея
+      this.wireBtn('#unload',  'unload',  '.unload');  // для выгрузки
+    },
+
+    wireBtn: function(selector, mode, previewContainerSel){
+      var $btn = $(selector);
+      if (!$btn.length) return;
+
+      // Раздел берём из data-section (новый) или data-razdel (старый)
+      var section = ($btn.data('section') || $btn.data('razdel') || 'product');
+
+      // Доп. настраиваемые размеры можно прокинуть через data-*, если нужно
+      var w      = parseInt($btn.data('w')      || 0, 10);
+      var h      = parseInt($btn.data('h')      || 0, 10);
+      var wmini  = parseInt($btn.data('wmini')  || 0, 10);
+      var hmini  = parseInt($btn.data('hmini')  || 0, 10);
+
+      // Для наглядности, куда рисовать превью
+      var $preview = $(previewContainerSel);
+
+      new AjaxUpload($btn, {
+        action: adminpath + 'media/upload?upload=1',
+        name: 'file', // поле файла
+        data: {
+          section: section,
+          mode: mode,
+          w: w, h: h, wmini: wmini, hmini: hmini
+        },
+        onSubmit: function(file, ext){
+          if (!(ext && /^(jpg|jpeg|png|gif|webp|avif)$/i.test(ext))) {
+            alert('Ошибка! Разрешены: jpg, jpeg, png, gif, webp, avif');
+            return false;
+          }
+          toggleOverlay($btn, true);
+        },
+        onComplete: function(file, response){
+          toggleOverlay($btn, false);
+          var data = parseJsonSafe(response);
+          if (!data || !data.ok) {
+            alert((data && data.error) || 'Ошибка загрузки');
+            console.debug('Ответ загрузки:', response);
+            return;
+          }
+
+          // URL превью
+          var url = buildUrl(section, mode, data);
+
+          // HTML превью с классом удаления и нужными data-*
+          var html = '';
+          if (mode === 'single') {
+            // Базовое — одно изображение, перезаписываем контейнер
+            html = '<img src="'+url+'" ' +
+                   'class="del-base" style="max-height:150px;cursor:pointer" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
+            $preview.html(html);
+          } else if (mode === 'unload') {
+            html = '<img src="'+url+'" ' +
+                   'class="del-unload" style="max-height:150px;cursor:pointer" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
+            $preview.html(html);
+          } else {
+            // Галерея — добавляем
+            html = '<img src="'+url+'" ' +
+                   'class="del-item" style="max-height:150px;cursor:pointer;margin:4px" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
+            $preview.append(html);
+          }
+        }
+      });
+    }
+  };
+
+    // =======================
+    // УДАЛЕНИЕ ИЗОБРАЖЕНИЙ
+    // =======================
+
+    (function() {
+    // базовый путь админки
+    var adminpath = window.adminpath || '/admin/';
+
+    // удобный helper для overlay
+    function withOverlay(el, on) {
+        var wrap = el.closest('.file-upload');
+        if (wrap) {
+        var ov = wrap.querySelector('.overlay');
+        if (ov) ov.style.display = on ? 'block' : 'none';
+        }
+    }
+
+    // отправка x-www-form-urlencoded
+    function postForm(url, dataObj) {
+        return fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: new URLSearchParams(dataObj)
+        }).then(function(r){ return r.json(); });
+    }
+
+    // удаление превью из DOM
+    function removePreviewNode(imgEl) {
+        // если это базовая/выгрузочная — обычно она одна: очищаем контейнер
+        var parent = imgEl.parentElement;
+        if (parent) {
+        if (parent.classList.contains('single') || parent.classList.contains('unload')) {
+            parent.innerHTML = '';
+        } else {
+            imgEl.remove();
+        }
+        }
+    }
+
+    // Определяем режим по классам (чтобы не ломать твёрдо прошитую верстку)
+    function resolveModeByClass(imgEl) {
+        if (imgEl.classList.contains('del-unload')) return 'unload'; // product unload
+        if (imgEl.classList.contains('del-item'))   return 'multi';  // галерея
+        return 'single';                                           // базовая
+    }
+
+    // Один общий обработчик для всех *.del-*
+    document.addEventListener('click', function(e) {
+        var img = e.target;
+
+        // Поддерживаем обе схемы: либо единый класс .js-del-img, либо старые классы
+        if (!(img.classList && (img.classList.contains('js-del-img') || img.classList.contains('del-item') || img.classList.contains('del-base') || img.classList.contains('del-unload')))) {
+        return;
+        }
+
+        e.preventDefault();
+
+        // подтверждение
+        if (!confirm('Подтвердите удаление')) return;
+
+        // собираем данные
+        var section = img.dataset.razdel || img.dataset.section || 'product';  // product|complete|review|...
+        var id      = img.dataset.id ? parseInt(img.dataset.id, 10) : 0;
+        var src     = img.dataset.src || img.getAttribute('data-src') || '';
+        var mode    = img.dataset.mode || resolveModeByClass(img);
+
+        if (!src) {
+        alert('Не указан файл (src) для удаления');
+        return;
+        }
+
+        // overlay on
+        withOverlay(img, true);
+
+        postForm(adminpath + 'media/delete', {
+        section: section,
+        id:      String(id),
+        src:     src,
+        mode:    mode
+        })
+        .then(function(json) {
+        // overlay off
+        withOverlay(img, false);
+
+        if (!json || json.ok !== true) {
+            var msg = (json && json.error) ? json.error : 'Неизвестная ошибка';
+            alert('Ошибка удаления: ' + msg);
+            return;
+        }
+
+        // успех — сразу убираем превью с страницы
+        removePreviewNode(img);
+        // по желанию можно показать mini-toast:
+        // console.log('Удалено:', section, mode, src);
+        })
+        .catch(function(err) {
+        withOverlay(img, false);
+        alert('Ошибка сети: ' + err);
+        });
+    });
+    })();
+
+
+  // === СТАРТ ===============================================================
+  $(function(){
+    Uploader.init();
+  });
+})();
+
+
+
+
 

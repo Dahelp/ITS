@@ -36,19 +36,19 @@
 									<?php foreach($user_groups as $group): ?>
 										<option value="<?=$group["id"];?>"<?php if($user->groups == $group["id"]) echo ' selected'; ?>><?=$group["name"];?></option>
 									<?php endforeach; ?>
-								</select>
+								</select>                                
 							</div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="new_password">Новый пароль</label>
 							<div class="col-sm-9">
-								<input type="password" class="form-control" name="new_password" id="new_password" placeholder="Введите пароль, если хотите его изменить">
+								<input type="password" class="form-control" name="new_password" id="new_password" placeholder="Введите пароль, если хотите его изменить" autocomplete="new-password">
 							</div>
                         </div>
 						<div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="confirm_password">Подтвердите пароль</label>
 							<div class="col-sm-9">
-								<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Введите пароль, если хотите его изменить">
+								<input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Введите пароль, если хотите его изменить" autocomplete="confirm_password">
 							</div>
                         </div>
                         <div class="form-group row">

@@ -9,7 +9,31 @@ use ishop\App;
 class BrandController extends AppController {
 
     public function indexAction(){
-        $brands = \R::getAll("SELECT * FROM brand ORDER BY name");
+        $brands = \R::getAll(
+            "SELECT
+                b.*,
+                COALESCE(pc.product_count, 0) AS product_count,
+                COALESCE(pc.active_product_count, 0) AS active_product_count,
+                (
+                    SELECT av.id
+                    FROM attribute_group ag
+                    INNER JOIN attribute_value av ON av.attr_group_id = ag.id
+                    WHERE ag.url_params = 'brand'
+                      AND av.alias = b.alias
+                      AND av.hide = 'show'
+                    LIMIT 1
+                ) AS brand_attr_value_id
+            FROM brand b
+            LEFT JOIN (
+                SELECT
+                    brand_id,
+                    COUNT(*) AS product_count,
+                    SUM(CASE WHEN hide = 'show' THEN 1 ELSE 0 END) AS active_product_count
+                FROM product
+                GROUP BY brand_id
+            ) pc ON pc.brand_id = b.id
+            ORDER BY b.name"
+        );
         $this->setMeta('Список производителей');
         $this->set(compact('brands'));
     }
@@ -29,9 +53,13 @@ class BrandController extends AppController {
 	public function deleteAction(){
         $id = $this->getRequestID();        
         $brand = \R::load('brand', $id);
+        $productCount = \R::count('product', 'brand_id = ?', [$id]);
 		@unlink(WWW . "/images/brand/baseimg/".$brand["img"]."");	
         \R::trash($brand);
         $_SESSION['success'] = 'Производитель '.$brand["name"].' удален';
+        if ($productCount > 0) {
+            $_SESSION['success'] .= '. Products were linked to this brand: '.$productCount;
+        }
         redirect();
     }
 	

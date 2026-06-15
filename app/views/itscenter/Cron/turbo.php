@@ -27,7 +27,7 @@ $fd = fopen("xml/turbo.xml", 'w+') or die("не удалось создать ф
 	$text.= "</categories>				
 				<offers>";
 
-	$offers = \R::getAll("SELECT product.*, product.id AS prod_id, brand.name as vendor FROM product JOIN brand ON brand.id = product.brand_id AND product.hide ='show' AND product.article != '' AND product.img != '' AND product.price !='0'");
+	$offers = \R::getAll("SELECT product.*, product.id AS prod_id, brand.name as vendor FROM product JOIN brand ON brand.id = product.brand_id AND product.hide ='show' AND product.sku != '' AND product.img != '' AND product.price !='0'");
 	foreach($offers as $offer) {
 		
 		if($offer["quantity"]==0){ $available = "false"; }
@@ -36,7 +36,7 @@ $fd = fopen("xml/turbo.xml", 'w+') or die("не удалось создать ф
         else { $img = ""; }
 		$desc = "Компания ИТС-Центр является официальным поставщиком продукции ".$offer["vendor"]." и предлагает купить ".$offer["name"]." по низким ценам. Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.";
 		  
-			$text.= "<offer id=\"".$offer["article"]."\" available=\"".$available."\">
+			$text.= "<offer id=\"".$offer["sku"]."\" available=\"".$available."\">
                       <url>".PATH."/product/".$offer["alias"]."</url>
                       <price>".$offer["price"]."</price>					 
                       <currencyId>RUR</currencyId>

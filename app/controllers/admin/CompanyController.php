@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Company;
+use app\services\admin\AdminActivityLogger;
 use app\models\AppModel;
 use ishop\App;
 use ishop\libs\Pagination;
@@ -30,7 +31,7 @@ class CompanyController extends AppController {
 		}
         $company = \R::load('company', $id);
         \R::trash($company);
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','35','company','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(35, 'company', (int)$id);
         $_SESSION['success'] = 'Компания '.$company["comp_name"].' удалена';
         redirect();
     }
@@ -50,7 +51,7 @@ class CompanyController extends AppController {
             if($id = $company->save('company')){
 				$company->editCompanyTypeprice($id, $data);
 				\R::exec("UPDATE user SET comp_id = '".$id."' WHERE id = ?", [$company->attributes['user_id']]);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','33','company','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(33, 'company', (int)$id);
                 $_SESSION['success'] = 'Компания добавлена';
             }
             redirect();
@@ -72,7 +73,7 @@ class CompanyController extends AppController {
             if($company->update('company', $id)){
 				$company->editCompanyTypeprice($id, $data);
 				\R::exec("UPDATE user SET comp_id = '".$id."' WHERE id = ?", [$company->attributes['user_id']]);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','34','company','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(34, 'company', (int)$id);
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
             }

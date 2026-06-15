@@ -6,6 +6,7 @@ use app\models\admin\User;
 use app\models\admin\UserCustomer;
 use app\models\admin\UserRole;
 use app\models\admin\UserGroup;
+use app\services\admin\AdminActivityLogger;
 use app\models\AppModel;
 use ishop\App;
 use ishop\libs\Pagination;
@@ -14,7 +15,7 @@ use ishop\base\Controller;
 class UserController extends AppController {
 
     public function indexAction(){
-        $users = \R::getAll("SELECT user.id, user.email, user.name, user.date_last_visit, user_groups.name AS groups, user.admin_id, user.comp_id FROM user, user_groups, roles WHERE user.role = roles.alt_name AND user.groups = user_groups.id AND user.role = 'user'");
+        $users = \R::getAll("SELECT user.id, user.email, user.name, user.date_last_visit, user_groups.name AS groups, user.admin_id, user.comp_id FROM user, user_groups, roles WHERE user.role = roles.alt_name AND user.groups = user_groups.id AND user.role IN ('user', 'b2buser')");
         $this->setMeta('Список клиентов');
         $this->set(compact('users'));
     }
@@ -47,7 +48,7 @@ class UserController extends AppController {
 					if($data["newsletter"] == 1) {
 						$user->editNewsletterGroup($id, $data);
 					}
-					\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','36','user','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+					AdminActivityLogger::admin(36, 'user', (int)$id);
                     $_SESSION['success'] = 'Пользователь зарегистрирован';
                 }else{
                     $_SESSION['error'] = 'Ошибка!';
@@ -56,7 +57,7 @@ class UserController extends AppController {
             redirect();
         }
         $this->setMeta('Новый клиент');
-		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role = 'user'");
+		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role IN ('user', 'b2buser')");
         $this->set(compact('user_groups'));
     }
 	
@@ -96,31 +97,56 @@ class UserController extends AppController {
 
     public function editAction(){
         if(!empty($_POST)){
-            $id = $this->getRequestID(false);
-            $user = new \app\models\admin\User();
-            $data = $_POST;
-            $user->load($data);
-            if(!$_POST['confirm_password']){
-                unset($_POST['new_password']);
-            }else{
-                if($_POST['new_password'] == $_POST['confirm_password']) {
-					$user->attributes['password'] = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
-				}else{
-					$_SESSION['error'] = 'Пароли не совпадают';
-					redirect();
-				}
+        $id = $this->getRequestID(false);
+        $user = new \app\models\admin\User();
+        $data = $_POST;
+
+        // 👉 Определим роль по ID группы
+        if (!empty($data['groups'])) {
+            $group_id = (int)$data['groups'];
+            $role = \R::getCell("SELECT `role` FROM user_groups WHERE id = ?", [$group_id]);
+            if ($role) {
+                $data['role'] = $role;
             }
-            if(!$user->validate($data) || !$user->checkUnique()){
-                $user->getErrors();
+        }
+
+        // 👉 Обработка пароля — только если оба поля НЕ пустые
+        if (!empty($data['new_password']) && !empty($data['confirm_password'])) {
+            if ($data['new_password'] === $data['confirm_password']) {
+                $data['password'] = password_hash($data['new_password'], PASSWORD_DEFAULT);
+            } else {
+                $_SESSION['error'] = 'Пароли не совпадают';
                 redirect();
             }
-            if($user->update('user', $id)){
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','37','user','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
-                $_SESSION['success'] = 'Изменения сохранены';
-            }
+        }
+
+        // 👉 Удаляем мусорные поля, чтобы они не попали в attributes
+        unset($data['new_password'], $data['confirm_password']);
+
+        // ❗️Если пароль не установлен — явно исключаем его из data (даже пустой строкой)
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        // 👉 Загружаем очищенные данные
+        $user->load($data);
+
+        // 👉 Валидация
+        if (!$user->validate($data) || !$user->checkUnique()) {
+            $user->getErrors();
             redirect();
         }
-		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role = 'user'");
+
+        // 👉 Обновление
+        if ($user->update('user', $id)) {
+            AdminActivityLogger::admin(37, 'user', (int)$id);
+            $_SESSION['success'] = 'Изменения сохранены';
+        }
+
+        redirect();
+    }
+
+		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role IN ('user', 'b2buser')");
         $user_id = $this->getRequestID();
         $user = \R::load('user', $user_id);
 		$newsletters = \R::getAll("SELECT * FROM user_newsletter, newsletter WHERE user_newsletter.newsletter_id = newsletter.id AND user_newsletter.user_id = '".$user_id."'");
@@ -204,7 +230,7 @@ class UserController extends AppController {
 		if($find->role == "admin") { $_SESSION['error'] = 'Нельзя удалить администратора';
 		}else{		
 			\R::trash($user);
-			\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','38','user','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+			AdminActivityLogger::admin(38, 'user', (int)$id);
 			$_SESSION['success'] = 'Клиент '.$user["email"].' удален';			
 		}
 		redirect();
@@ -249,7 +275,7 @@ class UserController extends AppController {
 					if($data["newsletter"] == 1) {
 						$user->editNewsletterGroup($id, $data);
 					}
-					\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','39','user','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+					AdminActivityLogger::admin(39, 'user', (int)$id);
                     $_SESSION['success'] = 'Пользователь зарегистрирован';
                 }else{
                     $_SESSION['error'] = 'Ошибка!';
@@ -284,7 +310,7 @@ class UserController extends AppController {
                 redirect();
             }
             if($user->update('user', $id)){
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','40','user','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(40, 'user', (int)$id);
                 $_SESSION['success'] = 'Изменения сохранены';
             }
             redirect();
@@ -305,7 +331,7 @@ class UserController extends AppController {
 		if($find->role == "admin") { $_SESSION['error'] = 'Нельзя удалить администратора';
 		}else{		
 			\R::trash($user);
-			\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','41','user','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+			AdminActivityLogger::admin(41, 'user', (int)$id);
 			$_SESSION['success'] = 'Пользователь '.$user["email"].' удален';			
 		}
 		redirect();

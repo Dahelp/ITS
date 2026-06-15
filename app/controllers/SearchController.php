@@ -2,50 +2,148 @@
 
 namespace app\controllers;
 
+use app\services\search\SearchCandidateProvider;
+use app\services\search\SearchChipsBuilder;
+use app\services\search\SearchQueryParser;
+use app\services\search\SearchRanker;
 use ishop\App;
 use ishop\libs\Pagination;
 
-class SearchController extends AppController{
+class SearchController extends AppController
+{
+    private SearchQueryParser $parser;
+    private SearchCandidateProvider $candidateProvider;
+    private SearchRanker $ranker;
+    private SearchChipsBuilder $chipsBuilder;
 
-    public function typeaheadAction(){
-        if($this->isAjax()){
-            $query = !empty(trim($_GET['query'])) ? trim($_GET['query']) : null;
-            if($query){
-                //$products = \R::getAll("SELECT id, name FROM product WHERE concat(name,article) LIKE ? AND hide = 'show' LIMIT 15", ["%{$query}%"]);
-                $products = \R::getAll("SELECT id, name, img, price, alias FROM (SELECT id, name, img, price, alias FROM product WHERE hide = 'show' AND concat(name,article) LIKE '%{$query}%' UNION SELECT product.id, product.name, product.img, product.price, product.alias FROM product, plagins_cross WHERE product.id = plagins_cross.product_id AND (concat(plagins_cross.cross_name,plagins_cross.cross_abbreviated_name) LIKE '%{$query}%')) product LIMIT 15");
-				if($products) { echo json_encode($products); }
+    public function __construct($route)
+    {
+        parent::__construct($route);
 
+        $this->parser = new SearchQueryParser();
+        $this->candidateProvider = new SearchCandidateProvider();
+        $this->ranker = new SearchRanker();
+        $this->chipsBuilder = new SearchChipsBuilder();
+    }
+
+    public function typeaheadAction()
+    {
+        $this->layout = false;
+        $this->view = null;
+
+        header('Content-Type: application/json; charset=UTF-8');
+
+        try {
+            $query = isset($_GET['query']) ? trim((string)$_GET['query']) : '';
+
+            if ($query === '') {
+                echo json_encode([
+                    'keywords' => [],
+                    'products' => [],
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                exit;
             }
+
+            $parsed = $this->parser->parse($query);
+
+			// Для dropdown берём немного больше кандидатов, потом режем
+			$candidates = $this->candidateProvider->findCandidates($parsed, 200);
+
+			if (empty($candidates)) {
+				echo json_encode([
+					'keywords' => [],
+					'products' => [],
+				], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+				exit;
+			}
+
+			$ranked = $this->ranker->rankAll($parsed, $candidates);
+            $chips = $this->chipsBuilder->build($parsed, $ranked, 8);
+
+            $keywords = array_values(array_filter(array_map(static function (array $chip): string {
+                return trim((string)($chip['label'] ?? ''));
+            }, $chips)));
+
+            $topProducts = array_slice($ranked, 0, 8);
+
+            $payload = [
+                'keywords' => $keywords,
+                'products' => array_map(static function (array $row): array {
+                    return [
+                        'id'        => (int)($row['id'] ?? 0),
+                        'name'      => (string)($row['name'] ?? ''),
+                        'img'       => (string)($row['img'] ?? ''),
+                        'price'     => (string)($row['price'] ?? ''),
+                        'opt_price' => (string)($row['opt_price'] ?? ''),
+                        'alias'     => (string)($row['alias'] ?? ''),
+                        'category'  => (string)($row['category_name'] ?? ''),
+                    ];
+                }, $topProducts),
+            ];
+
+            echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit;
+
+        } catch (\Throwable $e) {
+            error_log('[SearchController::typeaheadAction] ' . $e->getMessage());
+
+            echo json_encode([
+                'keywords' => [],
+                'products' => [],
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit;
         }
-        die;
     }
 
-    public function indexAction(){
-		
-		$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $perpage = App::$app->getProperty('pagination');	
-		if(!$_GET['s']){
-            throw new \Exception('Страница не найдена', 404);
-        }
-        $query = !empty(trim($_GET['s'])) ? trim($_GET['s']) : null;
-		
-		$total = \R::getAll("SELECT * FROM (SELECT id, name, price, opt_price, alias, hit, new_product, sale, img, category_id, article, quantity, price_rrs FROM product WHERE hide = 'show' AND concat(name,article) LIKE '%{$query}%' UNION SELECT product.id, product.name, product.price, product.opt_price, product.alias, product.hit, product.new_product, product.sale, product.img, product.category_id, product.article, product.quantity, product.price_rrs FROM product, plagins_cross WHERE product.id = plagins_cross.product_id AND (concat(plagins_cross.cross_name,plagins_cross.cross_abbreviated_name) LIKE '%{$query}%')) product");
-        $total = count($total);
-		$pagination = new Pagination($page, $perpage, $total);
-        $start = $pagination->getStart();
-		
-        if($query){
-            //$products = \R::find('product', "concat(name,article) LIKE ? AND hide = 'show'", ["%{$query}%"]);
-			$products = \R::getAll("SELECT * FROM (SELECT id, name, price, alias, hit, new_product, sale, img, category_id, article, quantity, stock_status_id FROM product WHERE hide = 'show' AND concat(name,article) LIKE '%{$query}%' UNION SELECT product.id, product.name, product.price, product.alias, product.hit, product.new_product, product.sale, product.img, product.category_id, product.article, product.quantity, product.stock_status_id FROM product, plagins_cross WHERE product.id = plagins_cross.product_id AND (concat(plagins_cross.cross_name,plagins_cross.cross_abbreviated_name) LIKE '%{$query}%')) product ORDER BY FIELD(`stock_status_id`, 1,3,2,0), name ASC LIMIT $start, $perpage");
-        
-        }
-        $this->setMeta('Поиск по: ' . h($query));
-		/*SEO*/
-		if($this->route["controller"]){ $path_controller = "/".mb_strtolower($this->route["controller"]).""; }else{ $path_controller = ""; }
-		if($this->route["alias"]){ $path_alias = "/".$this->route["alias"].""; }else{ $path_alias = ""; }
-		$this->setMeta('Поиск по: ' . h($query), '', '', '' . App::$app->getProperty('shop_name') . '', ''.PATH.'/images/' . App::$app->getProperty('og_logo') . '', ''.PATH.''.$path_controller.''.$path_alias.'');
-		/*SEO*/
-        $this->set(compact('products', 'query', 'pagination', 'total'));
-    }
+    public function indexAction()
+	{
+		$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+		$perpage = App::$app->getProperty('pagination') ?: 20;
 
+		if (empty($_GET['s'])) {
+			throw new \Exception('Страница не найдена', 404);
+		}
+
+		$query = trim((string)$_GET['s']);
+		$raw = $query;
+
+		if ($query === '') {
+			throw new \Exception('Страница не найдена', 404);
+		}
+
+		try {
+			$parsed = $this->parser->parse($query);
+
+			// Для страницы поиска допустим больший пул кандидатов
+			$candidateLimit = 500;
+			$candidates = $this->candidateProvider->findCandidates($parsed, $candidateLimit);
+
+			if (empty($candidates)) {
+				$products = [];
+				$total = 0;
+				$pagination = new Pagination($page, $perpage, $total);
+				$searchWidgetContext = [];
+
+				$this->setMeta('Поиск по: ' . h($raw));
+				$this->set(compact('products', 'query', 'pagination', 'total', 'searchWidgetContext'));
+				return;
+			}
+
+			$ranked = $this->ranker->rankAll($parsed, $candidates);
+
+			$total = count($ranked);
+			$pagination = new Pagination($page, $perpage, $total);
+			$start = $pagination->getStart();
+
+			$products = array_slice($ranked, $start, $perpage);
+			$searchWidgetContext = \app\widgets\product\Product::buildContext($products);
+
+			$this->setMeta('Поиск по: ' . h($raw));
+			$this->set(compact('products', 'query', 'pagination', 'total', 'searchWidgetContext'));
+
+		} catch (\Throwable $e) {
+			error_log('[SearchController::indexAction] ' . $e->getMessage());
+			throw $e;
+		}
+	}
 }

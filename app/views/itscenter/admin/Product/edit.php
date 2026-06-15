@@ -20,13 +20,13 @@
 
 <!-- Main content -->
 <section class="content">
-<div class="row">
-          <div class="col-12">
+	<div class="row">
+        <div class="col-12">
 			<div class="menu_btn">
                 <a target="_blank" href="/product/<?=$product["alias"]?>" class="btn btn-success"><i class="fad fa-eye"></i> Просмотр на сайте</a>
 				<a href="<?=ADMIN;?>/product/category?id=<?=$product->category_id?>" class="btn btn-primary"><i class="fal fa-reply-all"></i></a>
 				<a target="_blank" href="<?=ADMIN;?>/review/product?id=<?=$product["id"]?>" class="btn btn-secondary"><i class="fas fa-star-half-alt"></i> Всего отзывов: <?=$count_review?></a>
-				<a target="_blank" href="<?=ADMIN;?>/order/stat_product?id=<?=$product["id"]?>" class="btn btn-purple"><i class="fad fa-cart-plus"></i> Покупок было: <?=$count_order?></a>
+				<a target="_blank" href="<?=ADMIN;?>/order/stat-product?id=<?=$product["id"]?>" class="btn btn-purple"><i class="fad fa-cart-plus"></i> Покупок было: <?=$count_order?></a>
 				<a target="_blank" href="<?=ADMIN;?>/bookmarks/product?id=<?=$product["id"]?>" class="btn btn-cyan"><i class="fad fa-bookmark"></i> В закладках: <?=$count_bookmarks?></a>
 				<a target="_blank" href="<?=ADMIN;?>/product/copy?id=<?=$product["id"]?>" class="btn btn-success"><i class="fas fa-copy"></i> Скопировать</a>
 
@@ -47,213 +47,260 @@
             <form action="<?=ADMIN;?>/product/edit" method="post" data-toggle="validator">
             <!-- Custom Tabs -->
             <div class="card">
-              <div class="card-header d-flex p-0" <?php if($product->hide == "hide") { ?>style="background-color:#fed8d8"<?php } ?><?php if($product->hide == "lock") { ?>style="background-color:#d7d6d6"<?php } ?>>
-                <h3 class="card-title p-3">Редактирование товара <?=$product->name;?></h3>
-                <ul class="nav nav-pills ml-auto p-2">
-					<li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>
-					<li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Атрибуты</a></li>
-					<li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">SEO</a></li>
-					<li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">Фильтры</a></li>
-					<li class="nav-item"><a class="nav-link" href="#tab_5" data-toggle="tab">Модификации</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#tab_6" data-toggle="tab">Доп. параметры</a></li>				  
-                </ul>
-              </div><!-- /.card-header -->
-              <div class="card-body">
-                <div class="tab-content">
-                  <div class="tab-pane active" id="tab_1">
-                    <div class="box-body">
+              	<div class="card-header d-flex p-0" <?php if($product->hide == "hide") { ?>style="background-color:#fed8d8"<?php } ?><?php if($product->hide == "lock") { ?>style="background-color:#d7d6d6"<?php } ?>>
+                	<h3 class="card-title p-3">Редактирование товара <?=$product->name;?></h3>
+					<ul class="nav nav-pills ml-auto p-2">
+						<li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>
+						<li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Атрибуты</a></li>
+						<li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">SEO</a></li>
+						<li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">Фильтры</a></li>
+						<li class="nav-item"><a class="nav-link" href="#tab_5" data-toggle="tab">Модификации</a></li>
+						<li class="nav-item"><a class="nav-link" href="#tab_6" data-toggle="tab">Доп. параметры</a></li>				  
+					</ul>
+                </div><!-- /.card-header -->
+                <div class="card-body">
+                	<div class="tab-content">
+                    	<div class="tab-pane active" id="tab_1">
+                    		<div class="box-body">
+								<div class="form-group row">
+									<label class="col-sm-3 col-form-label" for="name">Наименование товара</label>
+									<div class="col-sm-9">
+										<input type="text" name="name" class="form-control" id="name" placeholder="Наименование товара" value="<?=h($product->name);?>" required>
+									</div>                                        
+								</div>
 							<div class="form-group row">
-								<label class="col-sm-3 col-form-label" for="name">Наименование товара</label>
+								<label class="col-sm-3 col-form-label" for="category_id">Родительская категория</label>
 								<div class="col-sm-9">
-									<input type="text" name="name" class="form-control" id="name" placeholder="Наименование товара" value="<?=h($product->name);?>" required>
-								</div>                                        
+								<?php new \app\widgets\menu\Menu([
+									'tpl' => WWW . '/menu/select.php',
+									'container' => 'select',
+									'cache' => 0,
+									'cacheKey' => 'admin_select',
+									'class' => 'form-control category_id',
+									'attrs' => [
+										'name' => 'category_id',
+										'id' => 'category_id',
+										'onchange' => 'document.form1.parametr = !this.selectedIndex',
+									],
+								]) ?>
+								</div>
+                        	</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="article">Артикул</label>
+								<div class="col-sm-9">
+									<input type="text" name="article" class="form-control" id="article" placeholder="Артикул товара" value="<?=h($product->article);?>">
+								</div>
 							</div>
 							<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="category_id">Родительская категория</label>
-                            <div class="col-sm-9">
-                            <?php new \app\widgets\menu\Menu([
-                                'tpl' => WWW . '/menu/select.php',
-                                'container' => 'select',
-                                'cache' => 0,
-                                'cacheKey' => 'admin_select',
-                                'class' => 'form-control category_id',
-                                'attrs' => [
-                                    'name' => 'category_id',
-                                    'id' => 'category_id',
-									'onchange' => 'document.form1.parametr = !this.selectedIndex',
-                                ],
-                            ]) ?>
-                        </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="article">Артикул (SKU)</label>
-							<div class="col-sm-9">
-								<input type="text" name="article" class="form-control" id="article" placeholder="Артикул товара" value="<?=h($product->article);?>">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="price">Цена</label>
-							<div class="col-sm-9">
-								<input type="text" name="price" class="form-control price" id="price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?=$product->price;?>" required data-error="Допускаются цифры и десятичная точка">
+								<label class="col-sm-3 col-form-label" for="sku">SKU</label>
+								<div class="col-sm-9">
+									<input type="text" name="sku" class="form-control" id="sku" placeholder="SKU товара" value="<?=h($product->sku);?>">
+								</div>
 							</div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="price_rrs">Цена РРЦ</label>
-							<div class="col-sm-9">
-								<input type="text" name="price_rrs" class="form-control price_rrs" id="price_rrs" placeholder="Цена РРЦ" pattern="^[0-9.]{1,}$" value="<?=$product->price_rrs;?>" data-error="Допускаются цифры и десятичная точка">
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="price">Цена</label>
+								<div class="col-sm-9">
+									<input type="text" name="price" class="form-control price" id="price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?=$product->price;?>" required data-error="Допускаются цифры и десятичная точка">
+								</div>
 							</div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="old_price">Цена по акции</label>
-							<div class="col-sm-9">
-								<input type="text" name="old_price" class="form-control" id="old_price" placeholder="Цена по акции" pattern="^[0-9.]{1,}$" value="<?=$product->old_price;?>" data-error="Допускаются цифры и десятичная точка" disabled>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="price_rrs">Цена РРЦ</label>
+								<div class="col-sm-9">
+									<input type="text" name="price_rrs" class="form-control price_rrs" id="price_rrs" placeholder="Цена РРЦ" pattern="^[0-9.]{1,}$" value="<?=$product->price_rrs;?>" data-error="Допускаются цифры и десятичная точка">
+								</div>
 							</div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="opt_price">Цена оптовая</label>
-							<div class="col-sm-9">
-								<input type="text" name="opt_price" class="form-control" id="opt_price" placeholder="Цена оптовая" pattern="^[0-9.]{1,}$" value="<?=$product->opt_price;?>" data-error="Допускаются цифры и десятичная точка">
-                            </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="model">Модель</label>
-							<div class="col-sm-9">
-								<input type="text" name="model" class="form-control" id="model" placeholder="Модель товара" value="<?=$product->model;?>">
-                            </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="brand_id">Производитель</label>
-							<div class="col-sm-9">								
-								<select name="brand_id" class="form-control" style="width: 100%;">
-									<?php $b = \R::findOne('brand', 'id = ?', [$product->brand_id]); ?>
-									<option value= "<?=$b->id?>" selected="selected"><?=$b->name?></option>
-									<?php $brands = \R::getAll('SELECT id, name FROM brand WHERE id != ?', [$b->id]);
-									$i=1;	foreach($brands as $brand_item => $item): ?>									
-									<option value= "<?=$item["id"]?>"><?=$item["name"]?></option>
-								<?php $i++; endforeach; ?>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="old_price">Цена по акции</label>
+								<div class="col-sm-9">
+									<input type="text" name="old_price" class="form-control" id="old_price" placeholder="Цена по акции" pattern="^[0-9.]{1,}$" value="<?=$product->old_price;?>" data-error="Допускаются цифры и десятичная точка" disabled>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="opt_price">Цена оптовая</label>
+								<div class="col-sm-9">
+									<input type="text" name="opt_price" class="form-control" id="opt_price" placeholder="Цена оптовая" pattern="^[0-9.]{1,}$" value="<?=$product->opt_price;?>" data-error="Допускаются цифры и десятичная точка">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="spec_price">Спец. цена</label>
+								<div class="col-sm-9">
+									<input type="text" name="spec_price" class="form-control" id="spec_price" placeholder="Спец. цена" pattern="^[0-9.]{1,}$" value="<?=$product->spec_price;?>" data-error="Допускаются цифры и десятичная точка">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="model">Модель</label>
+								<div class="col-sm-9">
+									<input type="text" name="model" class="form-control" id="model" placeholder="Модель товара" value="<?=$product->model;?>">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="brand_id">Производитель</label>
+								<div class="col-sm-9">								
+									<select name="brand_id" class="form-control" style="width: 100%;">
+										<?php $b = \R::findOne('brand', 'id = ?', [$product->brand_id]); ?>
+										<option value= "<?=$b->id?>" selected="selected"><?=$b->name?></option>
+										<?php $brands = \R::getAll('SELECT id, name FROM brand WHERE id != ?', [$b->id]);
+										$i=1;	foreach($brands as $brand_item => $item): ?>									
+										<option value= "<?=$item["id"]?>"><?=$item["name"]?></option>
+									<?php $i++; endforeach; ?>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="content">Подробное описание</label>
+								<div class="col-sm-9">                        
+									<textarea name="content" id="editor1" cols="80" rows="10"><?=$product->content;?></textarea>
+								</div>
+							</div>                        
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label">Отметить как</label>
+								<div class="col-sm-9">
+									<div class="custom-control custom-checkbox">
+										<input class="custom-control-input" type="checkbox" id="customCheckbox1" name="new_product" <?=$product->new_product ? ' checked' : null;?>>
+										<label style="font-weight:400" for="customCheckbox1" class="custom-control-label">Новинка</label>
+									</div>
+									<div class="custom-control custom-checkbox">
+										<input class="custom-control-input" type="checkbox" id="customCheckbox2" name="hit" <?=$product->hit ? ' checked' : null;?>>
+										<label style="font-weight:400" for="customCheckbox2" class="custom-control-label">Лидер продаж</label>
+									</div>
+									<div class="custom-control custom-checkbox">
+										<input class="custom-control-input rrs-click" type="checkbox" id="customCheckbox3" name="sale" <?=$product->sale ? ' checked' : null;?>>
+										<label style="font-weight:400" for="customCheckbox3" class="custom-control-label">Распродажа (акция)</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label">Статус активности</label>
+								<div class="col-sm-9">
+								<select name="hide" class="form-control" style="width: 100%;">								
+									<option value="show" <?php if($product->hide == "show") { echo "selected=\"selected\""; } ?>>Активный</option>
+									<option value="hide" <?php if($product->hide == "hide") { echo "selected=\"selected\""; } ?>>Не активный</option>
+									<option value="lock" <?php if($product->hide == "lock") { echo "selected=\"selected\""; } ?>>Закрыт от индексации</option>
 								</select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="content">Подробное описание</label>
-							<div class="col-sm-9">                        
-								<textarea name="content" id="editor1" cols="80" rows="10"><?=$product->content;?></textarea>
+								</div>
 							</div>
-						</div>                        
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Отметить как</label>
-							<div class="col-sm-9">
-                                <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1" name="new_product" <?=$product->new_product ? ' checked' : null;?>>
-                                    <label style="font-weight:400" for="customCheckbox1" class="custom-control-label">Новинка</label>
-                                </div>
-								<div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="customCheckbox2" name="hit" <?=$product->hit ? ' checked' : null;?>>
-                                    <label style="font-weight:400" for="customCheckbox2" class="custom-control-label">Лидер продаж</label>
-                                </div>
-								<div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input rrs-click" type="checkbox" id="customCheckbox3" name="sale" <?=$product->sale ? ' checked' : null;?>>
-                                    <label style="font-weight:400" for="customCheckbox3" class="custom-control-label">Распродажа (акция)</label>
-                                </div>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label">Статус наличия</label>
+								<div class="col-sm-9">
+								<select name="stock_status_id" class="form-control" style="width: 100%;">
+									<option value="1" <?php if($product->stock_status_id == 1) { echo "selected=\"selected\""; } ?>>В наличии</option>
+									<option value="0" <?php if($product->stock_status_id == 0) { echo "selected=\"selected\""; } ?>>Нет в наличии</option>
+									<option value="2" <?php if($product->stock_status_id == 2) { echo "selected=\"selected\""; } ?>>Под заказ</option>
+									<option value="3" <?php if($product->stock_status_id == 3) { echo "selected=\"selected\""; } ?>>Ожидается поступление</option>
+								</select>
+								</div>
 							</div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Статус активности</label>
-							<div class="col-sm-9">
-							<select name="hide" class="form-control" style="width: 100%;">								
-								<option value="show" <?php if($product->hide == "show") { echo "selected=\"selected\""; } ?>>Активный</option>
-                    			<option value="hide" <?php if($product->hide == "hide") { echo "selected=\"selected\""; } ?>>Не активный</option>
-                    			<option value="lock" <?php if($product->hide == "lock") { echo "selected=\"selected\""; } ?>>Закрыт от индексации</option>
-                 			</select>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="quantity">Количество</label>
+								<div class="col-sm-9">
+									<input type="text" name="quantity" class="form-control" id="quantity" placeholder="Количество" value="<?=$product->quantity;?>">
+								</div>
 							</div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Статус наличия</label>
-							<div class="col-sm-9">
-							<select name="stock_status_id" class="form-control" style="width: 100%;">
-								<option value="1" <?php if($product->stock_status_id == 1) { echo "selected=\"selected\""; } ?>>В наличии</option>
-                    			<option value="0" <?php if($product->stock_status_id == 0) { echo "selected=\"selected\""; } ?>>Нет в наличии</option>
-                    			<option value="2" <?php if($product->stock_status_id == 2) { echo "selected=\"selected\""; } ?>>Под заказ</option>
-								<option value="3" <?php if($product->stock_status_id == 3) { echo "selected=\"selected\""; } ?>>Ожидается поступление</option>
-                 			</select>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="unit">Единица измерения</label>
+								<div class="col-sm-9">
+								<select name="unit" class="form-control" style="width: 100%;">
+									<option value= "шт" <?php if($product->unit == "шт") { echo "selected=\"selected\""; } ?>>Штука</option>
+									<option value= "упак" <?php if($product->unit == "упак") { echo "selected=\"selected\""; } ?>>Упаковка</option>
+									<option value= "компл" <?php if($product->unit == "компл") { echo "selected=\"selected\""; } ?>>Комплект</option>
+									<option value= "кг" <?php if($product->unit == "кг") { echo "selected=\"selected\""; } ?>>Килограмм</option>
+									<option value= "л" <?php if($product->unit == "л") { echo "selected=\"selected\""; } ?>>Литр</option>
+								</select>
+								</div>
 							</div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="quantity">Количество</label>
-							<div class="col-sm-9">
-								<input type="text" name="quantity" class="form-control" id="quantity" placeholder="Количество" value="<?=$product->quantity;?>">
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="weight">Вес, кг</label>
+								<div class="col-sm-9">
+									<input type="text" name="weight" class="form-control" id="weight" placeholder="Вес товара" value="<?=$product->weight;?>">
+								</div>
 							</div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="unit">Единица измерения</label>
-							<div class="col-sm-9">
-							<select name="unit" class="form-control" style="width: 100%;">
-								<option value= "шт" <?php if($product->unit == "шт") { echo "selected=\"selected\""; } ?>>Штука</option>
-								<option value= "упак" <?php if($product->unit == "упак") { echo "selected=\"selected\""; } ?>>Упаковка</option>
-                    			<option value= "компл" <?php if($product->unit == "компл") { echo "selected=\"selected\""; } ?>>Комплект</option>
-                    			<option value= "кг" <?php if($product->unit == "кг") { echo "selected=\"selected\""; } ?>>Килограмм</option>
-								<option value= "л" <?php if($product->unit == "л") { echo "selected=\"selected\""; } ?>>Литр</option>
-                 			</select>
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="volume">Объём, м3</label>
+								<div class="col-sm-9">
+									<input type="text" name="volume" class="form-control" id="volume" placeholder="Объём товара" value="<?=$product->volume;?>">
+								</div>
 							</div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="weight">Вес, кг</label>
-							<div class="col-sm-9">
-								<input type="text" name="weight" class="form-control" id="weight" placeholder="Вес товара" value="<?=$product->weight;?>">
-                            </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="volume">Объём, м3</label>
-							<div class="col-sm-9">
-								<input type="text" name="volume" class="form-control" id="volume" placeholder="Объём товара" value="<?=$product->volume;?>">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="img">Базовое изображение</label>
-							<div class="col-sm-9">
-                                        <div id="single" class="btn btn-success" data-url="product/add-image" data-name="single" data-razdel="product">Выбрать файл</div>
-                                        <p><small>Рекомендуемые размеры: 600х450</small></p>
-                                        <div class="single">
-                                            <img src="/images/product/baseimg/<?=$product->img;?>" alt="" style="max-height: 150px; cursor: pointer;" data-id="<?=$product->id;?>" data-src="<?=$product->img;?>" data-razdel="product" class="del-base">
-                                        </div>
-                                    
-                                    <div class="overlay">
-                                        <i class="fa fa-refresh fa-spin"></i>
-                                    </div>
-                            </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="img_gallery">Картинки галереи</label>
-							<div class="col-sm-9">
-                                        <div id="multi" class="btn btn-success" data-url="product/add-image" data-name="multi" data-razdel="product">Выбрать файл</div>
-                                        <p><small>Рекомендуемые размеры: 1000х750</small></p>
-                                        <div class="multi">
-                                            <?php if(!empty($gallery)): ?>
-                                                <?php foreach($gallery as $item): ?>
-                                                    <img src="/images/product/gallery/<?=$item;?>" alt="" style="max-height: 150px; cursor: pointer;" data-id="<?=$product->id;?>" data-src="<?=$item;?>" data-razdel="product" class="del-item">
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </div>
-                                    
-                                    <div class="overlay">
-                                        <i class="fa fa-refresh fa-spin"></i>
-                                    </div>
-                                </div>
-                        </div>
-						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="img_unload">Изображение для выгрузки</label>
-							<div class="col-sm-9">
-                                        <div id="unload" class="btn btn-success" data-url="product/add-image" data-name="unload" data-razdel="product">Выбрать файл</div>
-                                        <p><small>Рекомендуемые размеры: 600х600</small></p>
-                                        <div class="unload">
-                                            <img src="/images/product/unload/<?=$product->unload_img;?>" alt="" style="max-height: 150px; cursor: pointer;" data-id="<?=$product->id;?>" data-src="<?=$product->unload_img;?>" data-razdel="product" class="del-unload">
-                                        </div>
-                                    
-                                    <div class="overlay">
-                                        <i class="fa fa-refresh fa-spin"></i>
-                                    </div>
-                            </div>
-                        </div>
+                        	<div class="form-group row">
+								<label class="col-sm-3 col-form-label">Базовое изображение</label>
+								<div class="col-sm-9">
+									<div id="single"
+										class="btn btn-success"
+										data-upload="1"
+										data-section="product"
+										data-mode="single"
+										data-entity="product"
+										data-entity-id="<?=$product->id?>">Выбрать файл</div>
+									<p><small>Рекомендуемые размеры: 600×450 (мини: 250×250)</small></p>
+
+									<div class="single">
+									<?php if (!empty($product->img)): ?>
+										<img src="/images/product/baseimg/<?=$product->img;?>"
+											class="del-base"
+											style="max-height:150px; cursor:pointer;"
+											data-id="<?=$product->id;?>"
+											data-src="<?=$product->img;?>"
+											data-section="product">
+									<?php endif; ?>
+									</div>
+
+									<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label">Картинки галереи</label>
+								<div class="col-sm-9">
+									<div id="multi"
+										class="btn btn-success"
+										data-upload="1"
+										data-section="product"
+										data-mode="multi"
+										data-entity="product"
+										data-entity-id="<?=$product->id?>">Выбрать файл</div>
+									<p><small>Рекомендуемые размеры: 1000×750</small></p>
+
+									<div class="multi">
+									<?php if(!empty($gallery)): ?>
+										<?php foreach($gallery as $item): ?>
+										<img src="/images/product/gallery/<?=$item;?>"
+											class="del-item"
+											style="max-height:150px; cursor:pointer;"
+											data-id="<?=$product->id;?>"
+											data-src="<?=$item;?>"
+											data-section="product">
+										<?php endforeach; ?>
+									<?php endif; ?>
+									</div>
+
+									<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-3 col-form-label">Изображение для выгрузки</label>
+								<div class="col-sm-9">
+									<div id="unload"
+										class="btn btn-success"
+										data-upload="1"
+										data-section="product"
+										data-mode="unload"
+										data-entity="product"
+										data-entity-id="<?=$product->id?>">Выбрать файл</div>
+									<p><small>Рекомендуемые размеры: 600×600. (Всегда JPEG — для CSV/XML/XLSX)</small></p>
+
+									<div class="unload">
+									<?php if (!empty($product->unload_img)): ?>
+										<img src="/images/product/unload/<?=$product->unload_img;?>"
+											class="del-unload"
+											style="max-height:150px; cursor:pointer;"
+											data-id="<?=$product->id;?>"
+											data-src="<?=$product->unload_img;?>"
+											data-section="product">
+									<?php endif; ?>
+									</div>
+									<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>
+								</div>
+							</div>
 						</div>
                   </div>
                   <!-- /.tab-pane -->
@@ -268,7 +315,7 @@
 							<tr id="tr_image_<?=$k?>" style="line-height: 20px;">			
 								<td id="td_name_<?=$k?>" style="padding: 5px 10px; width: 30%;">
 									<select style="padding: 5px 10px; width: 80%;" name="product_attribute[<?=$k?>][attribute_id]" class="form-control">
-										<option value="<?=$att_item["attribute_id"]?>" /><?=$att_item["attribute_name"]?></option>
+										<option value="<?=$att_item["attribute_id"]?>"><?=$att_item["attribute_name"]?></option>
 									</select>
 								</td>
 								<td id="td_text_<?=$k?>" style="padding: 5px 10px; width: 40%;">
@@ -293,10 +340,16 @@
                                 <input type="text" name="alias" class="form-control" id="alias" placeholder="Если пусто, создается автоматически" value="<?=$product->alias;?>">
 							</div>
                         </div>
-                        <div class="form-group row">
+						<div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="title">Заголовок (Title)</label>
                             <div class="col-sm-9">
 								<input type="text" name="title" class="form-control" id="title" placeholder="Если пусто, то используется Название" value="<?=$product->title;?>">
+							</div>
+                        </div>
+						<div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="seo_h1">SEO H1</label>
+                            <div class="col-sm-9">
+								<input type="text" name="seo_h1" class="form-control" id="seo_h1" placeholder="Если пусто, то используется InSEO или название товара" value="<?=h($product->seo_h1 ?? '');?>">
 							</div>
                         </div>
 						<div class="form-group row">

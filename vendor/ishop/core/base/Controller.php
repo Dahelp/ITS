@@ -22,7 +22,7 @@ abstract class Controller{
     }
 
     public function getView(){
-        $viewObject = new View($this->route, $this->layout, $this->view, $this->meta);
+        $viewObject = new View($this->route, $this->meta, $this->layout, $this->view);
         $viewObject->render($this->data);
     }
 

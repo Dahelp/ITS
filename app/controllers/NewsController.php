@@ -2,55 +2,114 @@
 
 namespace app\controllers;
 
-use app\models\Breadcrumbs;
 use ishop\App;
 use ishop\libs\Pagination;
 
-class NewsController extends AppController {
+class NewsController extends AppController
+{
+    public function viewAction()
+    {
+        $alias = rawurldecode($this->route['alias'] ?? '');
+        $alias = trim((string)$alias);
 
-    public function viewAction(){
-		
-		$alias = $this->route['alias'];
-		$up_registr = App::upRegistrLetter($alias);
-		$find = \R::findOne('contents', 'alias = ?', [$alias]);
-		if(!$find){
+        if ($alias === '') {
             throw new \Exception("Страница не найдена", 404);
         }
-		$type = \R::findOne('content_type', 'id = ?', [$find->type_id]);
 
-		// связанные товары
-        $related = \R::getAll("SELECT * FROM content_related JOIN product ON product.id = content_related.related_id WHERE content_related.content_id = ?", [$find->id]);
-		
-		/*SEO*/
-		if($this->route["controller"]){ $path_controller = "/".mb_strtolower($this->route["controller"]).""; }else{ $path_controller = ""; }
-		if($this->route["alias"]){ $path_alias = "/".$this->route["alias"].""; }else{ $path_alias = ""; }
-		if($find->img){$find_img = "".PATH."/images/contents/baseimg/".$find->img.""; }else{ $find_img = "".PATH."/images/".App::$app->getProperty('og_logo').""; }
-		$this->setMeta($find->title, $find->description, $find->keywords, '' . App::$app->getProperty('shop_name') . '', ''.$find_img.'', ''.PATH.''.$path_controller.''.$path_alias.'');
-		/*SEO*/
-		
+        $type = \R::findOne(
+            'content_type',
+            "param_url = ? AND hide = 'show'",
+            ['news']
+        );
+
+        if (!$type) {
+            throw new \Exception("Страница не найдена", 404);
+        }
+
+        $find = \R::findOne(
+            'contents',
+            "alias = ? AND type_id = ? AND hide = 'show'",
+            [$alias, (int)$type->id]
+        );
+
+        if (!$find) {
+            throw new \Exception("Страница не найдена", 404);
+        }
+
+        $related = \R::getAll("
+            SELECT product.*
+            FROM content_related
+            JOIN product ON product.id = content_related.related_id
+            WHERE content_related.content_id = ?
+              AND product.hide = 'show'
+        ", [(int)$find->id]);
+
+        if ($find->img) {
+            $find_img = PATH . "/images/contents/baseimg/" . $find->img;
+        } else {
+            $find_img = PATH . "/images/" . App::$app->getProperty('og_logo');
+        }
+
+        $canonical = rtrim(PATH, '/') . '/'
+            . trim((string)$type->param_url, '/') . '/'
+            . ltrim((string)$find->alias, '/');
+
+        $this->setMeta(
+            $find->title,
+            $find->description,
+            $find->keywords,
+            App::$app->getProperty('shop_name'),
+            $find_img,
+            $canonical
+        );
+
         $this->set(compact('find', 'type', 'related'));
     }
-	public function indexAction(){
-		$alias = strtok($_SERVER["REQUEST_URI"],'?');
-		$alias = str_replace('/', '', $alias);
-		$type = \R::findOne('content_type', 'param_url = ?', [$alias]);
-		
-		$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $perpage = App::$app->getProperty('pagination');
-		
-		$total = \R::count('contents', "hide = 'show' AND type_id = '$type->id'");
+
+    public function indexAction()
+    {
+        $alias = strtok($_SERVER["REQUEST_URI"], '?');
+        $alias = trim((string)$alias, '/');
+
+        $type = \R::findOne(
+            'content_type',
+            "param_url = ? AND hide = 'show'",
+            [$alias]
+        );
+
+        if (!$type) {
+            throw new \Exception("Страница не найдена", 404);
+        }
+
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $perpage = (int)App::$app->getProperty('pagination');
+
+        $total = \R::count(
+            'contents',
+            "hide = ? AND type_id = ?",
+            ['show', (int)$type->id]
+        );
+
         $pagination = new Pagination($page, $perpage, $total);
-        $start = $pagination->getStart();
-		
-		$conts = \R::findAll('contents', 'type_id = ? ORDER BY date_post DESC LIMIT ?, ?', [$type->id, $start, $perpage]);
+        $start = (int)$pagination->getStart();
 
-		/*SEO*/
-		if($this->route["controller"]){ $path_controller = "/".mb_strtolower($this->route["controller"]).""; }else{ $path_controller = ""; }
-		if($this->route["alias"]){ $path_alias = "/".$this->route["alias"].""; }else{ $path_alias = ""; }
-		$this->setMeta($type->title, $type->description, $type->keywords, '' . App::$app->getProperty('shop_name') . '', ''.PATH.'/images/' . App::$app->getProperty('og_logo') . '', ''.PATH.''.$path_controller.''.$path_alias.'');
-		/*SEO*/
-		
+        $conts = \R::findAll(
+            'contents',
+            "hide = ? AND type_id = ? ORDER BY date_post DESC LIMIT ?, ?",
+            ['show', (int)$type->id, $start, $perpage]
+        );
+
+        $canonical = rtrim(PATH, '/') . '/' . trim((string)$type->param_url, '/');
+
+        $this->setMeta(
+            $type->title,
+            $type->description,
+            $type->keywords,
+            App::$app->getProperty('shop_name'),
+            PATH . '/images/' . App::$app->getProperty('og_logo'),
+            $canonical
+        );
+
         $this->set(compact('conts', 'type', 'pagination'));
-	}
-
-} 
+    }
+}

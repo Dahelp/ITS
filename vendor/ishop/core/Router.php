@@ -41,8 +41,10 @@ class Router{
     }
 
     public static function matchRoute($url){
+        $url = (string)($url ?? '');
+
         foreach(self::$routes as $pattern => $route){
-            if(preg_match("#{$pattern}#i", $url, $matches)){
+            if (preg_match("#{$pattern}#i", $url, $matches)) {
                 foreach($matches as $k => $v){
                     if(is_string($k)){
                         $route[$k] = $v;
@@ -78,11 +80,12 @@ class Router{
         if($url){
             $params = explode('&', $url, 2);
             if(false === strpos($params[0], '=')){
-                return rtrim($params[0], '/');
+                return trim($params[0], '/');
             }else{
                 return '';
             }
         }
+        return '';
     }
 
 }

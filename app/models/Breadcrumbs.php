@@ -6,45 +6,71 @@ use ishop\App;
 
 class Breadcrumbs{
 
-    public static function getBreadcrumbs($category_id, $bname = '', $alias_active = '', $controller = ''){
-        $cats = App::$app->getProperty('cats');
-        $breadcrumbs_array = self::getParts($cats, $category_id);
+    public static function getBreadcrumbs(
+    $category_id,
+    $bname = '',
+    $alias_active = '',
+    $controller = '',
+    $lastCategoryAsLink = false
+) {
+    $cats = App::$app->getProperty('cats');
+    $breadcrumbs_array = self::getParts($cats, $category_id);
 
-        if($breadcrumbs_array){			
-			$breadcrumbs = "<li class='breadcrumb-item'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' class='text-nowrap' href='" . PATH . "'><meta itemprop='name' content='Главная'><i class='fas fa-home'></i><meta itemprop='position' content='1'></a></span></li><li class='breadcrumb-item'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' class='text-nowrap' href='" . PATH . "/catalog'>Каталог</a><meta itemprop='name' content='Каталог'><link itemprop='item' href='" . PATH . "/catalog'><meta itemprop='position' content='2'></span></li>";
-            $i=2;
-			foreach($breadcrumbs_array as $alias => $name){
-				$position = $i+1;
-				$pos = $i+1;
-				$caturl = \R::findOne('category', 'alias = ?', [$alias]);
-				if($caturl["type_id"] == "1"){					
-					if($alias_active != $alias){
-						$breadcrumbs .= "<li class='breadcrumb-item' data-id='1'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' href='" . PATH . "/catalog/{$alias}'><span itemprop='name'>{$name}</span><meta itemprop='position' content='{$position}'></a></span></li>";
-					}else{
-						$breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' data-id='1'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'>{$name}<meta itemprop='position' content='{$position}'></span></li>";
-					}
-				}else{
-					if($alias_active != $alias){
-						$breadcrumbs .= "<li class='breadcrumb-item' data-id='3'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' href='" . PATH . "/category/{$alias}'><span itemprop='name'>{$name}</span><meta itemprop='position' content='{$position}'></a></span></li>";
-					}else{
-						$breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' data-id='4'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'>{$name}<meta itemprop='name' content='{$name}'><link itemprop='item' href='" . PATH . "/category/{$alias}'><meta itemprop='position' content='{$position}'></span></li>";
-					}
-				}
-				$i++;
+    $e = function ($value) {
+        return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+    };
+
+    if ($breadcrumbs_array) {
+        $breadcrumbs = "<li class='breadcrumb-item'><a class='text-nowrap' href='" . PATH . "'><i class='fas fa-home'></i><span class='visually-hidden'>Главная</span></a></li>";
+        $breadcrumbs .= "<li class='breadcrumb-item'><a class='text-nowrap' href='" . PATH . "/catalog'>Каталог</a></li>";
+
+        foreach ($breadcrumbs_array as $alias => $name) {
+            $aliasEsc = $e($alias);
+            $nameEsc = $e($name);
+
+            $caturl = \R::findOne('category', 'alias = ?', [$alias]);
+
+            if (!$caturl) {
+                continue;
             }
-        }else{
-			if($bname){
-				$breadcrumbs = "<li class='breadcrumb-item' data-id='5'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' class='text-nowrap' href='" . PATH . "'><meta itemprop='name' content='Главная'><i class='fas fa-home'></i><meta itemprop='position' content='1'></a></span></li><li class='breadcrumb-item'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' class='text-nowrap' href='" . PATH . "/catalog'>Каталог</a><meta itemprop='name' content='Каталог'><link itemprop='item' href='" . PATH . "/catalog'><meta itemprop='position' content='2'></span></li>";
-			}else{
-				$breadcrumbs = "<li class='breadcrumb-item' data-id='6'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><a itemprop='item' class='text-nowrap' href='" . PATH . "'><meta itemprop='name' content='Главная'><i class='fas fa-home'></i><meta itemprop='position' content='1'></a></span></li><li class='breadcrumb-item text-nowrap active'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'>Каталог<meta itemprop='name' content='Каталог'><link itemprop='item' href='" . PATH . "/catalog'><meta itemprop='position' content='2'></span></li>";
-			}
-		}
-        if($bname){
-			$pos = $pos+1;
-            $breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' data-id='7'><span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'>$bname<meta itemprop='name' content='{$bname}'><link itemprop='item' href='".PATH."/{$controller}/{$alias_active}'><meta itemprop='position' content='{$pos}'></span></li>";
+
+            $isActive = ($alias_active == $alias);
+
+            if ((string)$caturl['type_id'] === '1') {
+                $url = PATH . "/catalog/{$aliasEsc}";
+
+                if (!$isActive || $lastCategoryAsLink) {
+                    $breadcrumbs .= "<li class='breadcrumb-item' data-id='1'><a href='{$url}'>{$nameEsc}</a></li>";
+                } else {
+                    $breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' data-id='1' aria-current='page'>{$nameEsc}</li>";
+                }
+            } else {
+                $url = PATH . "/category/{$aliasEsc}";
+
+                if (!$isActive || $lastCategoryAsLink) {
+                    $breadcrumbs .= "<li class='breadcrumb-item' data-id='3'><a href='{$url}'>{$nameEsc}</a></li>";
+                } else {
+                    $breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' data-id='4' aria-current='page'>{$nameEsc}</li>";
+                }
+            }
         }
-        return $breadcrumbs;
+    } else {
+        if ($bname) {
+            $breadcrumbs = "<li class='breadcrumb-item' data-id='5'><a class='text-nowrap' href='" . PATH . "'><i class='fas fa-home'></i><span class='visually-hidden'>Главная</span></a></li>";
+            $breadcrumbs .= "<li class='breadcrumb-item'><a class='text-nowrap' href='" . PATH . "/catalog'>Каталог</a></li>";
+        } else {
+            $breadcrumbs = "<li class='breadcrumb-item' data-id='6'><a class='text-nowrap' href='" . PATH . "'><i class='fas fa-home'></i><span class='visually-hidden'>Главная</span></a></li>";
+            $breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' aria-current='page'>Каталог</li>";
+        }
     }
+
+    if ($bname) {
+        $breadcrumbs .= "<li class='breadcrumb-item text-nowrap active' data-id='7' aria-current='page'>" . $e($bname) . "</li>";
+    }
+
+    return $breadcrumbs;
+}
+	
 
     public static function getParts($cats, $id){
         if(!$id) return false;

@@ -1,141 +1,102 @@
-<?php if($_SESSION['user']['groups'] == 1) { ?>
-<!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">CRON задания</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<?=ADMIN;?>">Главная</a></li>
-              <li class="breadcrumb-item active">Список CRON заданий</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+<?php if ($_SESSION['user']['groups'] == 1) { ?>
+<?php
+$e = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
+$phpBin = '/usr/local/bin/php8.2';
+$projectRoot = '/home/s/shinaspec/its-center.ru/public_html';
+$runner = $projectRoot . '/public/cron/run_task_cli.php';
+?>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6"><h1 class="m-0">CRON задания</h1></div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="<?= ADMIN; ?>">Главная</a></li>
+          <li class="breadcrumb-item active">Список CRON заданий</li>
+        </ol>
+      </div>
     </div>
-    <!-- /.content-header -->
+  </div>
+</div>
 
-<!-- Main content -->
 <section class="content">
-    <div class="row">
-        <div class="col-md-12">
-			<div class="menu_btn">
-                <a href="<?=ADMIN;?>/cron/add" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Добавить задание</a>
-            </div>
-            <div class="card">
-				<div class="card-header">
-                    <h3 class="card-title">Список CRON заданий</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-					<div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Название</th>
-								<th>Системное имя</th>
-								<th>URL-путь</th>                               
-								<th>Статус</th>
-								<th>Дата выполнения</th>
-								<th>Действия</th>                                
-                            </tr>
-					    </thead>
-                        <tbody>
-                            <?php foreach($crons as $cron): ?>
-                                <tr class="cont_td_znach">
-                                    <td><?=$cron['name'];?></td>
-									<td><?=$cron['url_params'];?></td>
-									<td><?=$cron['alias'];?></td>
-                                    <td>
-									  <div class="cron-status" id="cron-status-<?=$cron['id'];?>">
-										<div class="progress-container">
-										  <div class="progress-bar" id="progress-bar-<?=$cron['id'];?>"></div>
-										</div>
-									  </div>
-									</td>	
-									<td><?=$cron['date_update'];?></td>
-									<td>
-										<a href="<?=ADMIN;?>/cron/edit?id=<?=$cron['id'];?>"><i class="fas fa-pencil-alt"></i></a>
-										<a class="delete" href="<?=ADMIN;?>/cron/delete?id=<?=$cron['id'];?>"><i class="fas fa-times-circle text-danger"></i></a>
-										<a href="#" class="run-cron" data-cron-url="<?=PATH?>/cron/<?=$cron['url_params'];?>?id=<?=$cron['id'];?>"><i class="far fa-rocket-launch"></i></a>
-										<a target="_blank" href="/cron/<?=$cron['url_download'];?>"><i class='fas fa-eye'></i></a>
-									</td>                                    
-                                </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                    </table>
-					</div>                                    
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="menu_btn mb-3">
+        <a href="<?= ADMIN; ?>/cron/add" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Добавить задание</a>
+      </div>
+
+      <div class="alert alert-info">
+        Запускайте задания только через CLI на хостинге. HTTP-запуск через сайт отключен, чтобы тяжелые задачи не блокировали страницы и не приводили к 5xx.
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h3 class="card-title">Список CRON заданий</h3></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table id="cron-table" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Название</th>
+                  <th>Системное имя</th>
+                  <th>Категории</th>
+                  <th>Последний запуск</th>
+                  <th>CLI-команда</th>
+                  <th style="width:70px">Действия</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($crons as $cron): ?>
+                  <?php
+                    $command = $phpBin . ' ' . $runner . ' --id=' . (int)$cron['id'];
+                    if (($cron['url_params'] ?? '') === 'refresh-tovars-server') {
+                        $command .= ' --limit=20 --pause-ms=250';
+                    }
+                    $command .= ' > ' . $projectRoot . '/public/cron/logs/cron_' . (int)$cron['id'] . '.log 2>&1';
+                  ?>
+                  <tr>
+                    <td><?= (int)$cron['id']; ?></td>
+                    <td><?= $e($cron['name']); ?></td>
+                    <td><code><?= $e($cron['url_params']); ?></code></td>
+                    <td><?= $e($cron['categories']); ?></td>
+                    <td><?= $e($cron['date_update']); ?></td>
+                    <td>
+                      <textarea class="form-control form-control-sm cron-command" rows="2" readonly><?= $e($command); ?></textarea>
+                    </td>
+                    <td>
+                      <a href="<?= ADMIN; ?>/cron/edit?id=<?= (int)$cron['id']; ?>"><i class="fas fa-pencil-alt"></i></a>
+                      <a class="delete ml-2" href="<?= ADMIN; ?>/cron/delete?id=<?= (int)$cron['id']; ?>"><i class="fas fa-times-circle text-danger"></i></a>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
+<style>
+.cron-command{
+  min-width: 520px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+</style>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.run-cron').forEach(function (btn) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const url = btn.getAttribute('data-cron-url');
-            const idMatch = url.match(/id=(\d+)/);
-            const cronId = idMatch ? idMatch[1] : null;
-
-            const statusWrapper = document.getElementById('cron-status-' + cronId);
-            const progressBar = document.getElementById('progress-bar-' + cronId);
-
-            if (!statusWrapper || !progressBar) return;
-
-            statusWrapper.classList.remove('success', 'error');
-            progressBar.style.width = '0%';
-
-            // Эмуляция плавного роста прогресса (фейковая)
-            let progress = 0;
-            const interval = setInterval(() => {
-                if (progress < 95) {
-                    progress += Math.random() * 5;
-                    progressBar.style.width = progress + '%';
-                }
-            }, 300);
-
-            // Запуск самого cron
-            fetch(url)
-                .then(response => {
-                    clearInterval(interval);
-                    progressBar.style.width = '100%';
-
-                    if (response.ok) {
-                        statusWrapper.classList.add('success');
-                        setTimeout(() => {
-                            statusWrapper.innerHTML = '<span style="color:green;">✅ Успешно</span>';
-                        }, 300);
-                    } else {
-                        statusWrapper.classList.add('error');
-                        setTimeout(() => {
-                            statusWrapper.innerHTML = '<span style="color:red;">❌ Ошибка (' + response.status + ')</span>';
-                        }, 300);
-                    }
-                })
-                .catch(error => {
-                    clearInterval(interval);
-                    progressBar.style.width = '100%';
-                    statusWrapper.classList.add('error');
-                    setTimeout(() => {
-                        statusWrapper.innerHTML = '<span style="color:red;">❌ Ошибка соединения</span>';
-                    }, 300);
-                });
-        });
-    });
+$(function(){
+  $('#cron-table').DataTable({pageLength:50, order:[[0,'asc']]});
 });
 </script>
 
-
-<?php }else{ ?>
+<?php } else { ?>
 <div class="alert alert-warning alert-dismissible">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<h5><i class="icon fas fa-exclamation-triangle"></i> Доступ закрыт!</h5>
-		На этой странице есть ограничения доступа. Обратитесь к администратору.
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+  <h5><i class="icon fas fa-exclamation-triangle"></i> Доступ закрыт!</h5>
+  На этой странице есть ограничения доступа. Обратитесь к администратору.
 </div>
 <?php } ?>

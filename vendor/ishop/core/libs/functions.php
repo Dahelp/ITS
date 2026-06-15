@@ -15,6 +15,15 @@ function redirect($http = false){
     exit;
 }
 
-function h($str){
-    return htmlspecialchars($str, ENT_QUOTES);
+function h($str): string {
+    return htmlspecialchars((string)($str ?? ''), ENT_QUOTES, 'UTF-8');
+}
+
+if (!function_exists('ensure_session_started')) {
+    function ensure_session_started(): void
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+    }
 }

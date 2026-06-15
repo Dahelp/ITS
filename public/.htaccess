@@ -1,23 +1,112 @@
 AddDefaultCharset utf-8
-php_flag magic_quotes_gpc Off
 ErrorDocument 404 /error/404.php
+
+# 1) Без «мультиязычного» сопоставления, чтобы Apache не искал расширения
+Options -MultiViews
+
+# 2) Тип для AVIF
+AddType image/avif avif
 
 RewriteEngine On
 
-# To redirect all users to access the site without the www. prefix
+# ===== LOCAL DEV (skip www/https redirects) =====
+# На локалке НЕ делаем редиректы на https и не трогаем www-правило
+RewriteCond %{HTTP_HOST} ^(its\.local|its-center\.local|localhost)$ [NC]
+RewriteRule ^ - [S=4]
+# ===== /LOCAL DEV =====
 
+RewriteRule ^ - [E=HIT_PUBLIC:1]
+RewriteRule ^home/.*?/product/ - [G,L]
+
+# www -> non-www (боевой)
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-
 RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
-# HTTPS redirect if available
- 
+# http -> https (боевой)
 RewriteCond %{HTTPS} !=on
- 
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-# Engine routing
+# ✅ === FAST 404 ДЛЯ СТАТИКИ ===
+RewriteCond %{REQUEST_URI} \.(?:woff2?|ttf|eot|png|jpe?g|gif|webp|avif|svg|css|js)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ - [R=404,L]
 
+# 3) Короткий шорткат для статики
+RewriteRule \.(?:css|js|mjs|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|eot)$ - [L]
+
+# 4) Роутинг приложения
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule (.*) index.php?$1 [L,QSA]
+
+# ===== Static assets caching =====
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 0 seconds"
+  ExpiresByType text/html                   "access plus 0 seconds"
+  ExpiresByType application/json            "access plus 5 minutes"
+  ExpiresByType text/css                    "access plus 7 days"
+  ExpiresByType application/javascript      "access plus 7 days"
+  ExpiresByType font/woff2                  "access plus 1 year"
+  ExpiresByType font/woff                   "access plus 1 year"
+  ExpiresByType image/avif                  "access plus 1 year"
+  ExpiresByType image/webp                  "access plus 1 year"
+  ExpiresByType image/png                   "access plus 1 year"
+  ExpiresByType image/jpeg                  "access plus 1 year"
+  ExpiresByType image/gif                   "access plus 1 year"
+  ExpiresByType image/svg+xml               "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # 5) Отключить ETag, чтобы не было двойной валидации
+  Header unset ETag
+</IfModule>
+FileETag None
+
+<IfModule mod_headers.c>
+  # CSS/JS — 7 дней + SWR
+  <FilesMatch "\.(?:css|js)$">
+    Header set Cache-Control "public, max-age=604800, stale-while-revalidate=86400, stale-if-error=259200"
+  </FilesMatch>
+
+  # Шрифты — 1 год + immutable + CORS
+  AddType font/woff2 .woff2
+  AddType font/woff  .woff
+  <FilesMatch "\.(?:woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+
+  # Картинки — 1 год + immutable
+  <FilesMatch "\.(?:avif|webp|png|jpe?g|gif|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML — без кэша
+  <FilesMatch "\.(?:html)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # JSON — 5 минут
+  <FilesMatch "\.(?:json)$">
+    Header set Cache-Control "public, max-age=300"
+  </FilesMatch>
+
+  # 6) Не кэшировать 404
+  Header always set Cache-Control "no-store" "expr=%{REQUEST_STATUS} == 404"
+</IfModule>
+
+# 7) Сжатие (если не включено на сервере)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "^admin/chat/(poll|nav)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+  </FilesMatch>
+</IfModule>

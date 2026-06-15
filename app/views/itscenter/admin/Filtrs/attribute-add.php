@@ -26,8 +26,10 @@
 						<div class="card-header d-flex p-0">
 							<h3 class="card-title p-3">Добавить фильтр</h3>
 							<ul class="nav nav-pills ml-auto p-2">
-								<li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>                  
-								<li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">SEO</a></li>				  				  
+								<li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>
+								<li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">SEO</a></li>
+								<li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Перелинковка</a></li>
+								<li class="nav-item"><a class="nav-link" href="#tab_faq" data-toggle="tab">FAQ</a></li>
 							</ul>
 						</div><!-- /.card-header -->
 						<div class="card-body">
@@ -44,7 +46,7 @@
 											<label class="col-sm-3 col-form-label" for="category_id">Группа</label>
 											<div class="col-sm-9">
 												<select name="attr_group_id" id="category_id" class="form-control">
-													<option>Выберите группу</option>
+													<option value="">Выберите группу</option>
 													<?php foreach($group as $item): ?>
 													<option value="<?=$item->id;?>"><?=$item->title;?></option>
 													<?php endforeach; ?>
@@ -52,12 +54,27 @@
 											</div>
 										</div>
 										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="canonical_category_id">Каноническая категория для SEO</label>
+											<div class="col-sm-9">
+												<select name="canonical_category_id" id="canonical_category_id" class="form-control">
+													<option value="0">Не выбрано</option>
+													<?php foreach($canonicalCategories as $cat): ?>
+														<option value="<?=$cat->id;?>"><?=h($cat->name);?></option>
+													<?php endforeach; ?>
+												</select>
+												<small class="form-text text-muted">
+													Используется для 301-редиректа и определения основной category-страницы фильтра.
+													Для типоразмеров выбирается одна каноническая категория, даже если фильтр применяется в нескольких категориях.
+												</small>
+											</div>
+										</div>
+										<div class="form-group row">
 											<label class="col-sm-3 col-form-label" for="hide">Статус активности <span class="text-danger">*</span></label>
 											<div class="col-sm-9">
 												<select class="form-control" name="hide">
-													<option value="" />Выберите статус</option>
-													<option value="show" />Да</option>
-													<option value="hide" />Нет</option>					
+													<option value="">Выберите статус</option>
+													<option value="show">Да</option>
+													<option value="hide">Нет</option>					
 												</select>
 											</div>
 										</div>
@@ -73,9 +90,34 @@
 											</div>
 										</div>
 										<div class="form-group row">
+										<label class="col-sm-3 col-form-label" for="top_content">Текст сверху (над товарами)</label>
+											<div class="col-sm-9">
+												<textarea name="top_content" id="editor2" cols="80" rows="10"></textarea>
+												<small class="form-text text-muted">
+												Короткий вступительный текст для индексации и ориентации пользователя. Показывается под H1 и над товарами.
+												</small>
+											</div>
+										</div>
+										<div class="form-group row">
 											<label class="col-sm-3 col-form-label" for="alias">Ссылка страницы</label>
 											<div class="col-sm-9">
-												<input type="text" class="form-control" name="alias" id="alias" placeholder="Если пусто, создается автоматически"">
+												<input type="text" class="form-control" name="alias" id="alias" placeholder="Если пусто, создается автоматически">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="seo_h1">
+												SEO H1
+											</label>
+											<div class="col-sm-9">
+												<input type="text"
+													class="form-control"
+													name="seo_h1"
+													id="seo_h1"
+													placeholder="Ручной H1 для страницы фильтра">
+												<small class="form-text text-muted">
+													Если заполнено — используется как H1 на странице фильтра.  
+													Имеет приоритет над InSEO. Если пусто — используется InSEO или значение фильтра.
+												</small>
 											</div>
 										</div>
 										<div class="form-group row">
@@ -109,6 +151,55 @@
 									</div>
                   				</div>
                   				<!-- /.tab-pane -->
+								 <div class="tab-pane" id="tab_3">
+									<div class="box-body">
+
+										<div class="form-group row">
+										<label class="col-sm-3 col-form-label" for="related_sizes">Связанные типоразмеры</label>
+										<div class="col-sm-9">
+											<select name="related_sizes[]" id="related_sizes" class="form-control" multiple>
+											<?php foreach($sizeValues as $v): ?>
+												<option value="<?=$v->id;?>"><?=h($v->value);?></option>
+											<?php endforeach; ?>
+											</select>
+											<small class="form-text text-muted">
+											Выберите типоразмеры, на которые нужно сослаться с этой страницы (ручная перелинковка).
+											</small>
+										</div>
+										</div>
+
+										<div class="form-group row">
+										<label class="col-sm-3 col-form-label" for="technic_links">Подходит для техники</label>
+										<div class="col-sm-9">
+											<select name="technic_ids[]" id="technic_links" class="form-control" multiple>
+											<?php foreach($technics as $t): ?>
+												<option value="<?=$t->id;?>"><?=h($t->name);?></option>
+											<?php endforeach; ?>
+											</select>
+											<small class="form-text text-muted">
+											Ручной блок “Подходит для…”. Показывается под верхним текстом (или сразу под H1, если текста нет).
+											</small>
+										</div>
+										</div>
+
+									</div>
+								</div>
+								<!-- /.tab-pane -->
+								<div class="tab-pane" id="tab_faq">
+									<div class="box-body">
+
+										<div class="mb-3">
+										<button type="button" class="btn btn-sm btn-primary" id="faqAddRow">Добавить вопрос</button>
+										<small class="form-text text-muted mt-2">
+											2–6 вопросов на страницу достаточно. Вопрос и ответ обязательны. Порядок — сортировка (меньше = выше).
+										</small>
+										</div>
+
+										<div id="faqWrap"></div>
+
+									</div>
+								</div>
+								<!-- /.tab-pane -->				
                 			</div>
                 			<!-- /.tab-content -->				
 						</div><!-- /.card-body -->			  
@@ -126,3 +217,63 @@
     <!-- END CUSTOM TABS -->		
 </section>
 <!-- /.content -->
+
+<script>
+  $(function () {
+    $('#related_sizes').select2({ width: '100%' });
+    $('#technic_links').select2({ width: '100%' });
+    $('#canonical_category_id').select2({ width: '100%' });
+  });
+</script>
+
+<script>
+(function(){
+  function faqRowTemplate(){
+    return `
+      <div class="card mb-3 faq-row">
+        <div class="card-body">
+          <div class="form-group">
+            <label>Вопрос</label>
+            <input type="text" name="faq[q][]" class="form-control" value="">
+          </div>
+
+          <div class="form-group">
+            <label>Ответ</label>
+            <textarea name="faq[a][]" class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label>Порядок</label>
+              <input type="number" name="faq[s][]" class="form-control" value="500">
+            </div>
+
+            <div class="form-group col-md-3">
+              <label>Показ</label>
+              <select name="faq[h][]" class="form-control">
+                <option value="show" selected>Показывать</option>
+                <option value="hide">Скрыть</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-3 d-flex align-items-end">
+              <button type="button" class="btn btn-outline-danger btn-sm faqRemoveRow">Удалить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  document.addEventListener('click', function(e){
+    if (e.target && e.target.id === 'faqAddRow') {
+      var wrap = document.getElementById('faqWrap');
+      wrap.insertAdjacentHTML('beforeend', faqRowTemplate());
+    }
+    if (e.target && e.target.classList.contains('faqRemoveRow')) {
+      var row = e.target.closest('.faq-row');
+      if (row) row.remove();
+    }
+  });
+})();
+</script>

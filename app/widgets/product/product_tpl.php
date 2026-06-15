@@ -1,228 +1,429 @@
-<div class="card product-card card-static pb-3">
-	<div class="znachki">
-		<?php if($product["hit"]) { ?>
-			<div class="badge bg-warning badge-shadow">Хит</div>
-		<?php } ?>
-		<?php if($product["new_product"]) { ?>
-			<div class="badge bg-success badge-shadow">Новинка</div>
-		<?php } ?>
-		<?php if($product["sale"] == "1" && $product['price'] < $product["price_rrs"]) { ?>
-			<div class="badge bg-danger badge-shadow">Скидка</div>
-		<?php } ?>
-		<?php if($_SESSION['user']['id']) { 
-			$bookmarks = \R::count('product_bookmarks', 'product_id = ? AND user_id = ?', [$product["id"], $_SESSION['user']['id']]);
-			if($bookmarks==1){
-		?>
-			<button id="wishlist-<?=$product["id"]?>" class="btn-wishlist2 btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-original-title="Wishlist" aria-label="Wishlist"><i class="far fa-heart"></i></button>
-		<?php } else { ?>
-			<button id="wishlist-<?=$product["id"]?>" class="btn-wishlist btn-sm" type="button" data-id="<?=$product["id"]?>" data-userid="<?=$_SESSION['user']['id']?>" data-bs-toggle="tooltip" data-bs-placement="left" title="Добавить в избранное" data-bs-original-title="Add to wishlist" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
-		<?php } ?>
-		<?php } ?>
-		<?php if(!$_SESSION['comparison'][$product["id"]]) { ?>
-			<button id="comparison-<?=$product["id"]?>" class="btn-comparison btn-sm" type="button" data-id="<?=$product->id?>" data-categoryid="<?=$product["category_id"]?>" data-bs-toggle="tooltip" data-bs-placement="left" title="Добавить в сравнени" data-bs-original-title="Comparison" aria-label="Comparison"><i class="far fa-tasks"></i></button>
-		<?php } else { ?>
-			<button id="comparison-<?=$product["id"]?>" class="btn-comparison2 btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Добавить в сравнени" data-bs-original-title="Comparison" aria-label="Comparison"><i class="far fa-tasks"></i></button>
-		<?php } ?>
-	</div>						            
-	<a class="card-img-top d-block overflow-hidden" href="product/<?=$product["alias"]?>">							
-		<img itemprop="image" src="images/product/mini/<?=$product["img"]?>" alt="<?php																								
-				if($inseo_prod["name"]) { 					
-					echo $name = \ishop\App::seoreplace($inseo_prod["name"], $product["id"]);
-				}
-				else { echo $product["name"]; }
-			?>" title="<?php																							
-				if($inseo_prod["name"]) { 					
-					echo $name = \ishop\App::seoreplace($inseo_prod["name"], $product["id"]);
-				}
-				else { echo $product["name"]; }
-			?>" />
-	</a>
-	<?php $cat_prod = \R::findOne('category', "id = ?", [$product["category_id"]]); ?>
-	<div class="card-body py-2">
-		<span class="product-meta d-block fs-xs pb-1"><?=$cat_prod["name"]?></span>			
-		<div class="product-title fs-sm text-truncate">
-			<a href="product/<?=$product["alias"]?>">
-				<span itemprop="name">
-				<?php
-					$inseo_prod = \R::findOne('plagins_inseo', "tip = ? AND category_id = ? AND hide = 'show'", ['product', $cat_prod["id"]]);												
-					if($inseo_prod["name"]) { 					
-						echo $name = \ishop\App::seoreplace($inseo_prod["name"], $product["id"]);
-					}
-					else { echo $product["name"]; }
-				?>
-				</span>
-				<span itemprop="description"></span>
-				<link itemprop="url" href="product/<?=$product["alias"]?>">
-				<meta itemprop="priceCurrency" content="RUB">
-				
-			</a>
-		</div>
-		<span class="product-review">
-			<div class="rating">
-			<?php $review_prod = \R::getAll("SELECT SUM(review.point) as bal FROM review_product JOIN review ON review.id = review_product.review_id WHERE review_product.product_id = ?", [$product["id"]]); ?>
-			<?php $rwcount = \R::count('review_product', "product_id = ?", [$product["id"]]); ?>
-			<?php if($rwcount>0) { $srew = $review_prod[0]['bal']/$rwcount; }else{ $srew = 0; } ?>
-			<?php for ($i = 1; $i <= 5; $i++) { ?>
-				<?php if ($srew < $i) { ?>
-					<span class="fa fa-stack"><i class="far fa-star fa-stack-2x"></i></span>
-				<?php } else { ?>
-					<span class="fa fa-stack"><i class="fas fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-				<?php } ?>
-			<?php } ?>
-			</div>
-			<div class="rating-count"><?=$rwcount?> отзывов</div>
-		</span>		
-		<div class="product-info">
-			<?php // модификации
-				$modification = \R::getAll("SELECT quantity,price FROM modification WHERE product_id = '".$product["id"]."'");
-				
-				if($modification) {
-					foreach($modification as $item) {						
-						$quantity[$product["id"]] += $item["quantity"];
-						$modprice[$product["id"]] .= "".$item["price"].", ";
-					}
-					$quantity[$product["id"]] = $quantity[$product["id"]] + $product["quantity"] - $product["reserve"];
-					
-					$sql_modprice[$product["id"]] = "".$product["price"].", ".$modprice[$product["id"]]."";
-					$sql_modprice[$product["id"]] = rtrim($sql_modprice[$product["id"]], ', ');	
-					$max[$product["id"]]=[];
-					$max_price[$product["id"]]=max($max[$product["id"]]=explode(",", $sql_modprice[$product["id"]]));
-				}else{
-					$quantity[$product["id"]] = $product["quantity"]-$product["reserve"];
-				}
-				
-				if($modification){
-			?>
-				<div class="product-price">
-					<div class="product-sku">Код: <?=$product["article"]?></div>
-					<div class="product-curr">
-						<span class="item_price"><?=$max_price[$product["id"]]?></span>
-						<meta itemprop="price" content="<?=$max_price[$product["id"]]?>">
-					</div>
-				</div>	
-						
-				<?php }else{ ?>
-			<div class="product-price">
-				<div class="product-sku">Код: <?=$product["article"]?></div>
-				<?php $ucompany = \R::getRow('SELECT company.tip, company_typeprice.znachenie FROM company, company_typeprice WHERE company.id = company_typeprice.company_id AND company.user_id = ? AND company_typeprice.category_id = ?', [$_SESSION['user']['id'], $cat_prod["id"]]); ?>
-				<div class="product-curr">							
-					<?php if($ucompany["tip"]!=2): ?>
-					<?php 
-					$date = date("Y-m-d H:i:s");
-					$action = \R::findOne('actions', "product_id = ? AND hide = 'show' AND date_end > '".$date."'", [$product["id"]]);
-					
-					if($action->product_id): ?>
-					<span class="item_price">
-						<?=$curr['symbol_left'];?> <?php
-							if($action['type_id'] == "1") {
-										$skidka = $product['price']-($product['price'] / 100 * $action['znachenie']);
-										$skidka = explode('.', $skidka);  
-										$skidka = $skidka[0];
-										$skidka = round($skidka, -1);
-									}
-									if($action['type_id'] == "2") {
-										$skidka = $product['price']-$action['znachenie'];
-									}
-							echo $skidka * $curr['value'];
-						?> <?=$curr['symbol_right'];?>
-					</span>
-						<del style="float: left;"><small>
-							<?=$curr['symbol_left'];?>
-							<?=$product["price"] * $curr['value'];?>
-							<?=$curr['symbol_right'];?>
-						</small></del>
-					<meta itemprop="price" content="<?=$product["price"] * $curr['value']?>">
-					<?php else: ?>
-						<?php if($product["sale"] == "1" && $product['price'] < $product["price_rrs"]): ?>
-									<span class="item_price">
-										<?=$curr['symbol_left'];?>
-										<?=$product["price"] * $curr['value'];?>
-										<?=$curr['symbol_right'];?>
-									</span>
-									<del style="float: left;">
-									<?=$curr['symbol_left'];?>
-									<?=$product["price_rrs"] * $curr['value'];?>
-									<?=$curr['symbol_right'];?>
-									</del>
-									<meta itemprop="price" content="<?=$product["price"] * $curr['value']?>">
-								<?php else: ?>
-									<span class="item_price">
-										<?=$curr['symbol_left'];?>										
-										<?=$product["price"] * $curr['value'];?>
-										<?=$curr['symbol_right'];?>
-									</span>
-									<meta itemprop="price" content="<?=$product["price"] * $curr['value']?>">
-								<?php endif; ?>				
-					<?php endif; ?>
-				<?php else: ?>
-					<span class="item_price">
-						<?=$curr['symbol_left'];?>
-						<?=$product["price"] * $curr['value'];?>
-						<?=$curr['symbol_right'];?>
-					</span>
-					<meta itemprop="price" content="<?=$product["price"] * $curr['value']?>">
-					<br>Опт: 
-					<?=$curr['symbol_left'];?>
-					<?php if($ucompany["znachenie"] =="" ) { ?>
-					<?=$product["opt_price"] * $curr['value'];?>
-					<?php }else{ ?>
-					<?php $price_nds = round($product["price"] - ($product["price"]/1.2), 0) * 6 * $curr['value']; $price_opt = $price_nds - (($price_nds/100) * $ucompany["znachenie"]); echo $opt = round($price_opt / 6) * 6; ?>
-					<?php } ?>
-					<?=$curr['symbol_right'];?>
-				<?php endif; ?>
-				</div>
-			</div>									
-		<?php } ?>
-		<?php if($quantity[$product["id"]] > 0) { ?>
-		<div class="product-btn">
-			<div class="product-floating-btn">										
-				<?php if($_SESSION['cart'][$product["id"]]) { ?>
-					<input class="form-control detail-quantity me-2 korzina-<?=$product->id;?> clear-korzina" style="display:none;caret-color:transparent;" name="quantity" type="hidden" value="1" min="1" max="<?=$itog_qty?>" data-max="<?=$itog_qty?>" data-min="1">
-					<a data-id="<?=$product["id"]?>" class="btn btn-danger <?php if($modification) { ?>add-to-cart-mod<?php }else{ ?>add-to-cart-link<?php } ?> korzina-<?=$product["id"]?> clear-korzina" style="display:none;" href="cart/add?id=<?=$product["id"]?>" data-max="<?=$quantity[$product["id"]]?>" data-toggle="modal" data-target="#exampleModalLive" onclick="ym(87229051,'reachGoal','VKORZINU'); return true;">Купить</a>
-					<button class="btn btn-success vkorzine-<?=$product["id"]?> clear-vkorzine">В корзине</button>
-				<?php }else{ ?>
-					<input class="form-control detail-quantity me-2 korzina-<?=$product->id;?> clear-korzina" style="caret-color:transparent;" name="quantity" type="hidden" value="1" min="1" max="<?=$itog_qty?>" data-max="<?=$itog_qty?>" data-min="1">                  
-					<a data-id="<?=$product["id"]?>" class="btn btn-danger <?php if($modification) { ?>add-to-cart-mod<?php }else{ ?>add-to-cart-link<?php } ?> korzina-<?=$product["id"]?> clear-korzina" href="cart/add?id=<?=$product["id"]?>" data-max="<?=$quantity[$product["id"]]?>" data-toggle="modal" data-target="#exampleModalLive" onclick="ym(87229051,'reachGoal','VKORZINU'); return true;">Купить</a>
-					<button class="btn btn-success vkorzine-<?=$product["id"]?> clear-vkorzine" style="display:none;">В корзине</button>
-				<?php } ?>
-				<input type="hidden" class="modification" value="<?=$product["id"]?>" name="modification" />
-			</div>
-		</div>
-	</div>
-	<?php if($quantity[$product["id"]] > 0) { ?>
-		<link itemprop="availability" href="http://schema.org/InStock">
-	<?php }else{ ?>
-		<link itemprop="availability" href="http://schema.org/OutOfStock">
-	<?php } ?>
-	<div class="product-nalichie">
-		<span class="btn-nalichie">В наличии: <?=$quantity[$product["id"]]?> шт.</span>
-	</div>
-	<?php } ?>
-	<?php if($quantity[$product["id"]] < 0) { ?>
-		<div class="product-btn"></div>
-		</div>
-		<div class="product-nonalichie">		
-			<span class="btn-nonalichie">Нет в наличии</span>		
-		</div>
-	<?php } ?>
-	<?php if($quantity[$product["id"]] == 0) { ?>
-	<div class="product-btn"></div>
-	</div>
-	<div class="product-nonalichie">
-		<?php if($product["stock_status_id"]==0) { ?>
-		<span class="btn-nonalichie">Нет в наличии</span>
-		<?php } ?>
-		<?php if($product["stock_status_id"]==1) { ?>
-		<span class="btn-nonalichie">Нет в наличии</span>
-		<?php } ?>
-		<?php if($product["stock_status_id"]==2) { ?>
-		<span class="btn-nonalichie">Под заказ</span>
-		<?php } ?>
-		<?php if($product["stock_status_id"]==3) { ?>
-		<span class="btn-postuplenie">Ожидается поступление</span>
-		<?php } ?>
-	</div>
-	<?php } ?>
-	
-	</div>
+<?php
+$pid = (int)($product['id'] ?? $product->id ?? 0);
+$categoryId = (int)($product['category_id'] ?? $product->category_id ?? 0);
+
+static $categoryCache = [];
+static $productInseoCache = [];
+static $actionCache = [];
+static $wishlistCache = [];
+static $reviewCache = [];
+static $modificationCache = [];
+static $companyCache = [];
+static $companyTypeCache = [];
+
+$userId = (int)($_SESSION['user']['id'] ?? 0);
+$inCart = ($pid > 0) ? !empty($_SESSION['cart'][$pid]) : false;
+$inCompare = ($pid > 0) ? !empty($_SESSION['comparison'][$pid]) : false;
+
+// CATEGORY
+if (!empty($context['categoryById'][$categoryId])) {
+    $catData = $context['categoryById'][$categoryId];
+    $categoryName = (string)($catData['name'] ?? '');
+} else {
+    if (!array_key_exists($categoryId, $categoryCache)) {
+        $categoryCache[$categoryId] = $categoryId > 0
+            ? \R::getRow("SELECT id, name FROM category WHERE id = ? LIMIT 1", [$categoryId])
+            : [];
+    }
+    $catData = $categoryCache[$categoryId];
+    $categoryName = (string)($catData['name'] ?? '');
+}
+
+// INSEO / SEO NAME
+$seoName = '';
+if (!empty($context['seoNameByProductId'][$pid])) {
+    $seoName = (string)$context['seoNameByProductId'][$pid];
+} else {
+    $seoTpl = '';
+
+    if (!empty($context['productInseoByCategoryId'][$categoryId])) {
+        $seoTpl = (string)($context['productInseoByCategoryId'][$categoryId]['name'] ?? '');
+    } else {
+        if (!array_key_exists($categoryId, $productInseoCache)) {
+            $productInseoCache[$categoryId] = $categoryId > 0
+                ? \R::getRow(
+                    "SELECT name
+                     FROM plagins_inseo
+                     WHERE tip = 'product' AND category_id = ? AND hide = 'show'
+                     LIMIT 1",
+                    [$categoryId]
+                )
+                : [];
+        }
+        $seoTpl = (string)($productInseoCache[$categoryId]['name'] ?? '');
+    }
+
+    $seoName = $seoTpl !== ''
+        ? (string)\ishop\App::seoreplace($seoTpl, $pid)
+        : (string)($product['name'] ?? $product->name ?? '');
+}
+
+// CURRENCY
+$curr = $curr ?? ['symbol_left' => '', 'symbol_right' => '', 'value' => 1];
+$curr['value'] = (float)($curr['value'] ?? 1);
+
+// BASE PRICES
+$base = (float)($product['price'] ?? $product->price ?? 0);
+$rrs = (float)($product['price_rrs'] ?? $product->price_rrs ?? 0);
+$final = $base;
+$cross = null;
+
+// ACTION
+$action = null;
+if (!empty($context['actionByProductId'][$pid])) {
+    $action = $context['actionByProductId'][$pid];
+} else {
+    if (!array_key_exists($pid, $actionCache)) {
+        $actionCache[$pid] = \R::getRow(
+            "SELECT product_id, type_id, znachenie
+             FROM actions
+             WHERE product_id = ?
+               AND hide = 'show'
+               AND date_end > ?
+             LIMIT 1",
+            [$pid, date('Y-m-d H:i:s')]
+        );
+    }
+    $action = $actionCache[$pid];
+}
+
+if (!empty($action) && (int)($action['product_id'] ?? 0) === $pid) {
+    $typeId = (string)($action['type_id'] ?? '');
+    $zn = (float)($action['znachenie'] ?? 0);
+
+    if ($typeId === '1') {
+        $final = round($base * (1 - ($zn / 100)), -1);
+    } elseif ($typeId === '2') {
+        $final = $base - $zn;
+    }
+
+    $final = max(0.0, (float)$final);
+    $cross = $base;
+} elseif ($rrs > 0 && $rrs > $base) {
+    $final = $base;
+    $cross = $rrs;
+}
+
+$hasDiscountBadge = false;
+if (!empty($action) && (int)($action['product_id'] ?? 0) === $pid) {
+    $hasDiscountBadge = true;
+} elseif ($rrs > 0 && $rrs > $base) {
+    $hasDiscountBadge = true;
+}
+
+// WISHLIST
+$wishlisted = false;
+if ($userId > 0 && $pid > 0) {
+    if (isset($context['wishlistedByProductId'][$pid])) {
+        $wishlisted = true;
+    } else {
+        $wishKey = $userId . ':' . $pid;
+        if (!array_key_exists($wishKey, $wishlistCache)) {
+            $wishlistCache[$wishKey] = (int)\R::count(
+                'product_wishlists',
+                'product_id = ? AND user_id = ?',
+                [$pid, $userId]
+            ) > 0;
+        }
+        $wishlisted = $wishlistCache[$wishKey];
+    }
+}
+
+// REVIEW
+$rwcount = 0;
+$srew = 0.0;
+
+if (!empty($context['reviewByProductId'][$pid])) {
+    $rwcount = (int)($context['reviewByProductId'][$pid]['count'] ?? 0);
+    $srew = (float)($context['reviewByProductId'][$pid]['rating'] ?? 0);
+} else {
+    if (!array_key_exists($pid, $reviewCache)) {
+        $rwcountLocal = (int)\R::count('review_product', "product_id = ?", [$pid]);
+        $reviewProd = \R::getAll(
+            "SELECT SUM(review.point) as bal
+             FROM review_product
+             JOIN review ON review.id = review_product.review_id
+             WHERE review_product.product_id = ?",
+            [$pid]
+        );
+        $bal = (float)($reviewProd[0]['bal'] ?? 0);
+
+        $reviewCache[$pid] = [
+            'count' => $rwcountLocal,
+            'rating' => $rwcountLocal > 0 ? ($bal / $rwcountLocal) : 0.0,
+        ];
+    }
+
+    $rwcount = (int)$reviewCache[$pid]['count'];
+    $srew = (float)$reviewCache[$pid]['rating'];
+}
+
+$srewText = number_format($srew, 1, '.', '');
+
+// MODIFICATIONS
+$modification = [];
+if (isset($context['modificationsByProductId'][$pid])) {
+    $modification = $context['modificationsByProductId'][$pid];
+} else {
+    if (!array_key_exists($pid, $modificationCache)) {
+        $modificationCache[$pid] = \R::getAll(
+            "SELECT quantity, price
+             FROM modification
+             WHERE product_id = ?",
+            [$pid]
+        );
+    }
+    $modification = $modificationCache[$pid];
+}
+
+$productQuantity = (int)($product['quantity'] ?? $product->quantity ?? 0);
+$productReserve = (int)($product['reserve'] ?? $product->reserve ?? 0);
+
+$quantity = $productQuantity - $productReserve;
+$maxP = $final;
+
+if (!empty($modification)) {
+    $qtyMods = 0;
+    $prices = [$base];
+
+    foreach ($modification as $item) {
+        $qtyMods += (int)($item['quantity'] ?? 0);
+        $prices[] = (float)($item['price'] ?? 0);
+    }
+
+    $quantity = $qtyMods + $productQuantity - $productReserve;
+    $maxP = max($prices);
+}
+
+$itog_qty = max(0, (int)$quantity);
+
+// COMPANY
+$companyTip = $context['companyTip'] ?? null;
+$ucompanyZn = $context['companyTypepriceByCategoryId'][$categoryId]['znachenie'] ?? null;
+
+if ($companyTip === null && $userId > 0 && empty($modification)) {
+    if (!array_key_exists($userId, $companyCache)) {
+        $companyCache[$userId] = \R::getRow(
+            "SELECT tip, id
+             FROM company
+             WHERE user_id = ?
+             LIMIT 1",
+            [$userId]
+        );
+    }
+
+    $companyTip = $companyCache[$userId]['tip'] ?? null;
+    $companyId = (int)($companyCache[$userId]['id'] ?? 0);
+
+    if ($companyId > 0) {
+        $companyTypeKey = $companyId . ':' . $categoryId;
+
+        if (!array_key_exists($companyTypeKey, $companyTypeCache)) {
+            $companyTypeCache[$companyTypeKey] = \R::getRow(
+                "SELECT znachenie
+                 FROM company_typeprice
+                 WHERE company_id = ? AND category_id = ?
+                 LIMIT 1",
+                [$companyId, $categoryId]
+            );
+        }
+
+        $ucompanyZn = $companyTypeCache[$companyTypeKey]['znachenie'] ?? null;
+    }
+}
+
+$alias = htmlspecialchars((string)($product["alias"] ?? $product->alias ?? ''), ENT_QUOTES, 'UTF-8');
+$img = htmlspecialchars((string)($product['img'] ?? $product->img ?? ''), ENT_QUOTES, 'UTF-8');
+$sku = htmlspecialchars((string)($product["sku"] ?? $product->sku ?? ''), ENT_QUOTES, 'UTF-8');
+$stockStatusId = (int)($product['stock_status_id'] ?? $product->stock_status_id ?? 0);
+$productHit = !empty($product["hit"] ?? $product->hit ?? null);
+$productNew = !empty($product["new_product"] ?? $product->new_product ?? null);
+$categoryName = htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8');
+?>
+<div class="card product-card card-static">
+
+    <div class="pc-head">
+        <div class="pc-badges">
+            <?php if ($productHit): ?>
+                <span class="pc-badge pc-badge--hit">Хит</span>
+            <?php endif; ?>
+
+            <?php if ($productNew): ?>
+                <span class="pc-badge pc-badge--new">Новинка</span>
+            <?php endif; ?>
+
+            <?php if ($hasDiscountBadge): ?>
+                <span class="pc-badge pc-badge--sale">Скидка</span>
+            <?php endif; ?>
+        </div>
+
+        <div class="pc-actions">
+            <?php if ($userId > 0): ?>
+                <button
+                    id="wishlist-<?= (int)$pid ?>"
+                    class="pc-iconbtn js-wishlist <?= $wishlisted ? 'is-active' : '' ?>"
+                    type="button"
+                    data-id="<?= (int)$pid ?>"
+                    data-userid="<?= (int)$userId ?>"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="left"
+                    title="<?= $wishlisted ? 'В избранном' : 'Добавить в избранное' ?>"
+                    aria-label="Избранное">
+                    <i class="<?= $wishlisted ? 'fas fa-heart' : 'far fa-heart' ?>"></i>
+                </button>
+            <?php endif; ?>
+
+            <button
+                id="comparison-<?= (int)$pid ?>"
+                class="pc-iconbtn js-compare <?= $inCompare ? 'is-active' : '' ?>"
+                type="button"
+                data-id="<?= (int)$pid ?>"
+                data-categoryid="<?= (int)$categoryId ?>"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="<?= $inCompare ? 'В сравнении' : 'Добавить в сравнение' ?>"
+                aria-label="Сравнение">
+                <i class="far fa-chart-bar"></i>
+            </button>
+        </div>
+    </div>
+
+    <a class="pc-media" href="product/<?= $alias ?>">
+        <img itemprop="image"
+             loading="lazy"
+             src="images/product/mini/<?= $img ?>"
+             alt="<?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?>"
+             title="<?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?>">
+    </a>
+
+    <div class="pc-body">
+
+        <div class="pc-meta">
+            <?= $categoryName ?>
+        </div>
+
+        <div class="pc-title">
+            <a href="product/<?= $alias ?>">
+                <span itemprop="name"><?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?></span>
+                <span itemprop="description"></span>
+                <link itemprop="url" href="product/<?= $alias ?>">
+                <meta itemprop="priceCurrency" content="RUB">
+            </a>
+        </div>
+
+        <div class="pc-row pc-row--top">
+            <div class="pc-rating">
+                <i class="fas fa-star"></i>
+                <span class="pc-rating__score"><?= $srewText ?></span>
+                <span class="pc-rating__count">· <?= $rwcount ?> отзывов</span>
+            </div>
+
+            <div class="pc-sku">
+                Код: <?= $sku ?>
+            </div>
+        </div>
+
+        <div class="pc-row pc-row--price">
+            <div class="pc-price">
+                <?php if (!empty($modification)): ?>
+                    <div class="pc-price__main">
+                        <span class="item_price">
+                            <?= $curr['symbol_left']; ?> <?= ($maxP * $curr['value']); ?> <?= $curr['symbol_right']; ?>
+                        </span>
+                        <meta itemprop="price" content="<?= ($maxP * $curr['value']); ?>">
+                    </div>
+                <?php else: ?>
+                    <div class="pc-price__main">
+                        <span class="item_price">
+                            <?= $curr['symbol_left']; ?> <?= ($final * $curr['value']); ?> <?= $curr['symbol_right']; ?>
+                        </span>
+                        <meta itemprop="price" content="<?= ($final * $curr['value']); ?>">
+                    </div>
+
+                    <?php if ($cross !== null && ($companyTip != 2)): ?>
+                        <div class="pc-price__old">
+                            <?= $curr['symbol_left']; ?> <?= ($cross * $curr['value']); ?> <?= $curr['symbol_right']; ?>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($quantity > 0): ?>
+                <div class="pc-stock pc-stock--ok">В наличии: <?= (int)$quantity ?> шт.</div>
+            <?php else: ?>
+                <div class="pc-stock pc-stock--no">
+                    <?php
+                    if ($stockStatusId === 3) {
+                        echo 'Ожидается';
+                    } elseif ($stockStatusId === 2) {
+                        echo 'Под заказ';
+                    } else {
+                        echo 'Нет в наличии';
+                    }
+                    ?>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="pc-cta">
+            <?php if ($quantity > 0): ?>
+
+                <input class="form-control detail-quantity korzina-<?= $pid ?> clear-korzina"
+                       name="quantity"
+                       type="hidden"
+                       value="1"
+                       min="1"
+                       max="<?= $itog_qty ?>"
+                       data-max="<?= $itog_qty ?>"
+                       data-min="1"
+                       style="caret-color:transparent;">
+
+                <?php if (!$inCart): ?>
+                    <a data-id="<?= $pid ?>"
+                       class="btn btn-danger pc-buy <?= !empty($modification) ? 'add-to-cart-mod' : 'add-to-cart-link' ?> korzina-<?= $pid ?> clear-korzina"
+                       href="cart/add?id=<?= $pid ?>"
+                       data-max="<?= $quantity ?>"
+                       data-bs-toggle="modal"
+                       data-bs-target="#exampleModalLive"
+                       onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
+                        Купить
+                    </a>
+
+                    <button type="button"
+                            class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLive"
+                            style="display:none;">
+                        В корзине
+                    </button>
+                <?php else: ?>
+                    <a data-id="<?= $pid ?>"
+                       class="btn btn-danger pc-buy <?= !empty($modification) ? 'add-to-cart-mod' : 'add-to-cart-link' ?> korzina-<?= $pid ?> clear-korzina"
+                       href="cart/add?id=<?= $pid ?>"
+                       data-max="<?= $quantity ?>"
+                       data-bs-toggle="modal"
+                       data-bs-target="#exampleModalLive"
+                       onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
+                       style="display:none;">
+                        Купить
+                    </a>
+
+                    <button type="button"
+                            class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLive">
+                        В корзине
+                    </button>
+                <?php endif; ?>
+
+                <input type="hidden" class="modification" value="<?= $pid ?>" name="modification">
+                <link itemprop="availability" href="http://schema.org/InStock">
+
+            <?php else: ?>
+                <link itemprop="availability" href="http://schema.org/OutOfStock">
+                <button class="btn btn-outline-secondary pc-buy" type="button" disabled>Нет в наличии</button>
+            <?php endif; ?>
+        </div>
+
+    </div>
 </div>

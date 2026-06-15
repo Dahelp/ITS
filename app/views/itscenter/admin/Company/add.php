@@ -59,6 +59,7 @@
 									<option value="">Выберите тип</option>
 									<option value="1">Розничная торговля</option>
 									<option value="2">Оптовая торговля</option>
+                                    <option value="3">Спец. торговля</option>
 									<option value="0">Выставление счетов</option>
 								</select>
                             </div>
@@ -149,6 +150,25 @@
 								</select>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="dogovor_number">№ договора</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="dogovor_number" id="dogovor_number">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="data_dogovor">Дата договора</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="data_dogovor" id="data_dogovor" placeholder="2025-07-24">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="date_postponement">Отсрочка</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" name="date_postponement" id="date_postponement" value="<?= isset($_SESSION['form_data']['date_postponement']) ? $_SESSION['form_data']['date_postponement'] : '' ?>">
+                            </div>
+                        </div> 
+
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="hide">Статус</label>
 							<div class="col-sm-9">

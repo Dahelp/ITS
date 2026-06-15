@@ -36,12 +36,24 @@
                                 <th style="width: 10px">ID</th>
 								<th style="width: 60px;text-align:center">Фото</th>
                                 <th>Производитель</th>
+								<th style="width: 140px;text-align:center">Товары</th>
 								<th style="width: 80px;text-align:center">SEO</th>
                                 <th style="width: 100px">Действия</th>
                             </tr>
 					    </thead>
                         <tbody>
                             <?php foreach($brands as $brand): ?>
+                                <?php
+                                $brandPreviewUrl = '';
+                                if (!empty($brand['brand_attr_value_id'])) {
+                                    $brandPreviewUrl = \app\services\filters\FilterUrlHelper::buildBestCategoryFilterPath(
+                                        (int)$brand['brand_attr_value_id'],
+                                        (string)$brand['alias'],
+                                        'brand'
+                                    );
+                                }
+                                $brandPreviewUrl = $brandPreviewUrl ?: '/brand/' . rawurlencode((string)$brand['alias']);
+                                ?>
                                 <tr class="cont_td_znach">
                                     <td><?=$brand['id'];?></td>
 									<td style="text-align:center">
@@ -52,7 +64,16 @@
 										<?php } ?>
 									</td>
                                     <td><?=$brand['name'];?></td>
+									<td style="text-align:center">
+										<?php $productCount = (int)($brand['product_count'] ?? 0); ?>
+										<?php $activeProductCount = (int)($brand['active_product_count'] ?? 0); ?>
+										<span class="badge <?=$activeProductCount > 0 ? 'bg-success' : 'bg-secondary';?>" title="Активные товары"><?=$activeProductCount;?></span>
+										<?php if ($productCount !== $activeProductCount): ?>
+											<br><small title="Всего привязанных товаров">всего: <?=$productCount;?></small>
+										<?php endif; ?>
+									</td>
 									<td><?php 
+										$s1 = $s2 = $s3 = $s4 = $s5 = 0;
 										if(!empty($brand['title'])) { $s1 = 20; }
 										if(!empty($brand['description'])) { $s2 = 20; }
 										if(!empty($brand['keywords'])) { $s3 = 20; }
@@ -66,7 +87,7 @@
 									<?php if($seo == 80) { ?><span class="badge bg-warning">80%</span><?php } ?>
 									<?php if($seo == 100) { ?><span class="badge bg-success">100%</span><?php } ?>
 									</td>                                    
-                                    <td><a href="<?=ADMIN;?>/brand/edit?id=<?=$brand['id'];?>"><i class="fas fa-pencil-alt"></i></a> <a class="delete" href="<?=ADMIN;?>/brand/delete?id=<?=$brand['id'];?>"><i class="fas fa-times-circle text-danger"></i></a> <a target="_blank" href="/brand/<?=$brand['alias'];?>"><i class="fas fa-eye"></i></a></td>
+                                    <td><a href="<?=ADMIN;?>/brand/edit?id=<?=$brand['id'];?>"><i class="fas fa-pencil-alt"></i></a> <a class="delete" href="<?=ADMIN;?>/brand/delete?id=<?=$brand['id'];?>" onclick="return confirm('<?=$productCount > 0 ? 'У производителя есть товары: '.$productCount.'. Удалить производителя?' : 'Удалить производителя?';?>');"><i class="fas fa-times-circle text-danger"></i></a> <a target="_blank" href="<?=h($brandPreviewUrl);?>"><i class="fas fa-eye"></i></a></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>

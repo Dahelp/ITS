@@ -50,25 +50,39 @@ class CategoryController extends AppController {
         redirect();
     }
 
-    public function addAction(){
-        if(!empty($_POST)){
+    public function addAction() {
+        if (!empty($_POST)) {
             $category = new Category();
             $data = $_POST;
-            $category->load($data);			
-			$category->getImg();
-            if(!$category->validate($data) || !$category->checkUnique()){
+            $category->load($data);
+            $category->getImg();
+    
+            if (!$category->validate($data) || !$category->checkUnique()) {
                 $category->getErrors();
                 redirect();
             }
-            if($id = $category->save('category')){
-                $alias = AppModel::createAlias('category', 'alias', $data['name'], $id);
+    
+            if ($id = $category->save('category')) {
                 $cat = \R::load('category', $id);
+    
+                // Если alias задан вручную — используем его
+                if (!empty($data['alias'])) {
+                    $alias = AppModel::createAlias('category', 'alias', $data['alias'], $id);
+                } else {
+                    // Иначе создаём из name
+                    $alias = AppModel::createAlias('category', 'alias', $data['name'], $id);
+                }
+    
                 $cat->alias = $alias;
                 \R::store($cat);
+
+                $this->saveCategoryFaq((int)$id, $data['faq'] ?? []);
+
                 $_SESSION['success'] = 'Категория добавлена';
             }
             redirect();
         }
+    
         $this->setMeta('Новая категория');
     }
 
@@ -95,18 +109,35 @@ class CategoryController extends AppController {
             if($category->update('category', $id)){
                 $alias = AppModel::createAlias('category', 'alias', $data['name'], $id);
                 $category = \R::load('category', $id);
-				if($data['alias']!=""){ $category->alias = $data['alias'];}
-				else{$category->alias = $alias;}				
-                \R::store($category);				
+
+                if($data['alias'] != ""){
+                    $category->alias = $data['alias'];
+                } else {
+                    $category->alias = $alias;
+                }
+
+                \R::store($category);
+
+                $this->saveCategoryFaq((int)$id, $data['faq'] ?? []);
+
                 $_SESSION['success'] = 'Изменения сохранены';
-				redirect();
-            }            
+                redirect();
+            }           
         }
         $id = $this->getRequestID();
         $category = \R::load('category', $id);
+
+        $faqRows = \R::getAll(
+            "SELECT id, question, answer, sort, hide
+            FROM category_faq
+            WHERE category_id = ?
+            ORDER BY sort, id",
+            [(int)$id]
+        );
+
         App::$app->setProperty('parent_id', $category->parent_id);
         $this->setMeta("Редактирование категории {$category->name}");
-        $this->set(compact('category'));
+        $this->set(compact('category', 'faqRows'));
     }
 	
 	public function deleteBaseimgAction(){
@@ -120,5 +151,50 @@ class CategoryController extends AppController {
             exit('1');
         }
         return;
+    }
+
+    protected function saveCategoryFaq(int $categoryId, array $faqRows): void
+    {
+        if ($categoryId <= 0) {
+            return;
+        }
+
+        /*
+        * Работает без RedBean dispense(), потому что category_faq
+        * с подчёркиванием даёт Invalid bean type.
+        */
+        \R::exec(
+            "DELETE FROM category_faq WHERE category_id = ?",
+            [$categoryId]
+        );
+
+        foreach ($faqRows as $row) {
+            $question = trim((string)($row['question'] ?? ''));
+            $answer = trim((string)($row['answer'] ?? ''));
+            $sort = isset($row['sort']) ? (int)$row['sort'] : 0;
+            $hide = (($row['hide'] ?? 'show') === 'hide') ? 'hide' : 'show';
+
+            if ($question === '' && $answer === '') {
+                continue;
+            }
+
+            if ($question === '' || $answer === '') {
+                continue;
+            }
+
+            \R::exec(
+                "INSERT INTO category_faq 
+                    (category_id, question, answer, sort, hide)
+                VALUES 
+                    (?, ?, ?, ?, ?)",
+                [
+                    $categoryId,
+                    $question,
+                    $answer,
+                    $sort,
+                    $hide,
+                ]
+            );
+        }
     }
 }

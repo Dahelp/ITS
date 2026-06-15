@@ -2,7 +2,7 @@
     <div class="container">
 		<nav class="mb-4 breadcrumb-blok" aria-label="breadcrumb">
 			<ol class="breadcrumb flex-lg-nowrap">
-                <li class="breadcrumb-item"><a href="<?= PATH ?>"><i class="fas fa-home"></i></a></li>				
+                <li class="breadcrumb-item"><a href="<?= PATH ?>"><i class="fas fa-home"></i></a><span class="visually-hidden">Главная</span></li>				
                 <li class="breadcrumb-item active">Карта сайта</li>
             </ol>
 		</nav>
@@ -12,7 +12,7 @@
     <div class="container">
 		<div class="row">		
 			<div class="col-md-12">
-				<div class="bg-light rounded-3">
+				<div class="bg-light rounded-3 p-lg-5">
 					<div class="register-top heading">
 						<h1>Карта сайта</h1>
 					</div>
@@ -33,29 +33,43 @@
 							</ul>
 							<?php if($sm_category){ ?>
 								<ul>
-							<?php foreach($sm_category as $smc) { 
-									echo "<li><a href=\"".PATH."/category/".$smc['alias']."\">".$smc['name']."</a>
-									<ul>";
-									$sm_category_parent = \R::getAll("SELECT alias, name, parent_id FROM `category` WHERE hide='show' AND parent_id = '".$smc["id"]."'");
-									foreach($sm_category_parent as $par) {
-										echo "<li><a href=\"".PATH."/category/".$par['alias']."\" title=\"".$par['name']."\">".$par['name']."</a></li>";
-									}
-									echo "</ul>
-									</li>";    
-							} ?> 
+							<?php foreach($sm_category as $smc) { ?>
+									<li>
+										<a href="<?= PATH ?>/category/<?= h($smc['alias']) ?>"><?= h($smc['name']) ?></a>
+										<ul>
+											<?php foreach (($sm_category_children[(int)$smc['id']] ?? []) as $par): ?>
+												<li><a href="<?= PATH ?>/category/<?= h($par['alias']) ?>" title="<?= h($par['name']) ?>"><?= h($par['name']) ?></a></li>
+											<?php endforeach; ?>
+										</ul>
+									</li>
+							<?php } ?> 
 								</ul>
 							<?php }	?>
 							<?php if($sm_category){ ?>
-								<ul>
-							<?php if($sm_atgroup){
-								foreach($sm_atgroup as $smatg) {  
 								
-									echo "<li><a href=\"".PATH."/".$smatg["url_params"]."\" title=\"".$smatg["title"]."\">".$smatg["title"]."</a></li>";
-									       
-								}	 
-							} ?> 
-								</ul>
 							<?php }	?>	
+							<?php if (!empty($sm_filter_landings) && is_array($sm_filter_landings)): ?>
+								<ul>
+									<?php foreach ($sm_filter_landings as $landing): ?>
+										<?php
+										$categoryAlias = trim((string)($landing['category_alias'] ?? ''), '/');
+										$valueAlias = trim((string)($landing['value_alias'] ?? ''), '/');
+
+										if ($categoryAlias === '' || $valueAlias === '') {
+											continue;
+										}
+
+										$url = \app\services\filters\FilterUrlHelper::buildCategoryFilterUrl($categoryAlias, $valueAlias);
+										$title = trim((string)($landing['category_name'] ?? '') . ' - ' . (string)($landing['value_name'] ?? ''));
+										?>
+										<li>
+											<a href="<?= h($url) ?>" title="<?= h($title) ?>">
+												<?= h($title) ?>
+											</a>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endif; ?>
 						</div>
 					</div>
 				</div>					

@@ -32,7 +32,7 @@ $fd = fopen("cron/".$viewcrons["url_download"]."", 'w+') or die("не удало
 	$offers = \R::getAll("SELECT product.*, product.id AS prod_id, brand.name as vendor FROM product
 	JOIN brand ON brand.id = product.brand_id
 	JOIN category ON product.category_id = category.id
-	AND category.id = '2' AND product.hide ='show' AND product.article != '' AND product.img != '' AND product.price !='0' AND product.stock_status_id ='1'");
+	AND category.id = '2' AND product.hide ='show' AND product.sku != '' AND product.img != '' AND product.price !='0' AND product.stock_status_id ='1'");
 	foreach($offers as $offer) {
 		
 		if($offer["quantity"]==0){ $available = "false"; }
@@ -40,7 +40,7 @@ $fd = fopen("cron/".$viewcrons["url_download"]."", 'w+') or die("не удало
 		if($offer["img"] != "") { $img = "".PATH."/images/product/unload/".$offer["unload_img"].""; }
         else { $img = ""; }
 		  
-			$text.= "<offer id=\"".$offer["article"]."\" available=\"".$available."\">
+			$text.= "<offer id=\"".$offer["sku"]."\" available=\"".$available."\">
                       <url>".PATH."/product/".$offer["alias"]."</url>
                       <price>".$offer["price"]."</price>					  				  
                       <currencyId>RUR</currencyId>

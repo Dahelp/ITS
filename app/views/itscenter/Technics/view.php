@@ -1,344 +1,646 @@
+<?php
+$typeAlias = h($type->alias ?? '');
+$typeSeoName1 = h($type->seoname_1 ?? '');
+$typeSeoName2 = h($type->seoname_2 ?? '');
+$typeSeoName3 = h($type->seoname_3 ?? '');
+$typeName = h($type->name ?? '');
+
+$manufacturerAlias = h($manufacturer->alias ?? '');
+$manufacturerName = h($manufacturer->name ?? '');
+
+$technicsAlias = h($technics->alias ?? '');
+$technicsModel = h($technics->model ?? '');
+$technicsContent = $technics->content ?? '';
+
+$isKvadr = (($type->name ?? '') === 'Квадроцикл');
+$techGenitive = $isKvadr ? 'квадроцикла' : 'спецтехники';
+
+$curr = \ishop\App::$app->getProperty('currency');
+
+$frontFactory = $groupedSizes['1'] ?? [];
+$rearFactory  = $groupedSizes['2'] ?? [];
+$frontAlt     = $groupedSizes['3'] ?? [];
+$rearAlt      = $groupedSizes['4'] ?? [];
+
+$allTechnicsSizes = array_merge($frontFactory, $rearFactory, $frontAlt, $rearAlt);
+$sizes_vse = $allTechnicsSizes;
+
+$vsesizeParts = [];
+foreach ($sizes_vse as $vse) {
+    $sizeValue = h($vse['value']);
+    $sizeValueId = (int)$vse['value_id'];
+    $linkData = $sizeLinksMap[$sizeValueId] ?? null;
+
+    if ($linkData && !empty($linkData['clickable']) && !empty($linkData['url'])) {
+        $vsesizeParts[] = '<a href="' . h($linkData['url']) . '" title="Все шины размера ' . $sizeValue . '">' . $sizeValue . '</a>';
+    } else {
+        $vsesizeParts[] = $sizeValue;
+    }
+}
+$vsesize = implode(', ', $vsesizeParts);
+
+$plainSizeParts = [];
+foreach ($sizes_vse as $vse) {
+    if (!empty($vse['value'])) {
+        $plainSizeParts[] = trim((string)$vse['value']);
+    }
+}
+$plainSizeParts = array_values(array_unique($plainSizeParts));
+$vsesizeText = h(implode(', ', $plainSizeParts));
+
+if (!function_exists('renderTechnicsSizeLinks')) {
+    function renderTechnicsSizeLinks(array $items, array $sizeLinksMap): string
+    {
+        $out = [];
+
+        foreach ($items as $item) {
+            $sizeValueId = (int)$item['value_id'];
+            $sizeValue = htmlspecialchars((string)$item['value'], ENT_QUOTES, 'UTF-8');
+            $linkData = $sizeLinksMap[$sizeValueId] ?? null;
+
+            if ($linkData && !empty($linkData['clickable']) && !empty($linkData['url'])) {
+                $url = htmlspecialchars((string)$linkData['url'], ENT_QUOTES, 'UTF-8');
+                $out[] = '<a href="' . $url . '" title="Все шины размера ' . $sizeValue . '">' . $sizeValue . '</a>';
+            } else {
+                $out[] = '<span class="size-disabled">' . $sizeValue . '</span>';
+            }
+        }
+
+        return implode(', ', $out);
+    }
+}
+
+$schemaName = 'Шины на ' . trim(($type->name ?? '') . ' ' . ($manufacturer->name ?? '') . ' ' . ($technics->model ?? ''));
+$schemaDescription = 'Подбор и продажа шин на ' . trim(($type->name ?? '') . ' ' . ($manufacturer->name ?? '') . ' ' . ($technics->model ?? '')) . '. Подходящие размеры, совместимые товары и комплекты шин.';
+
+$schemaImage = !empty($technics->img)
+    ? PATH . '/images/technics/baseimg/' . ltrim((string)$technics->img, '/')
+    : PATH . '/images/' . \ishop\App::$app->getProperty('og_logo');
+
+$breadcrumbSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Главная',
+            'item' => PATH,
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Каталог техники',
+            'item' => PATH . '/technics',
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => 'Производители ' . trim((string)($type->seoname_1 ?? '')),
+            'item' => PATH . '/technics/type/' . ltrim((string)($type->alias ?? ''), '/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 4,
+            'name' => trim(\ishop\App::upFirstLetter((string)($type->seoname_3 ?? '')) . ' ' . ($manufacturer->name ?? '')),
+            'item' => PATH . '/technics/' . ltrim((string)($type->alias ?? ''), '/') . '/' . ltrim((string)($manufacturer->alias ?? ''), '/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 5,
+            'name' => $schemaName,
+            'item' => PATH . '/technics/' . ltrim((string)($technics->alias ?? ''), '/'),
+        ],
+    ],
+];
+
+$collectionSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'CollectionPage',
+    'name' => $schemaName,
+    'description' => $schemaDescription,
+    'url' => PATH . '/technics/' . ltrim((string)($technics->alias ?? ''), '/'),
+    'image' => $schemaImage,
+    'mainEntity' => [
+        '@type' => 'ItemList',
+        'name' => 'Подходящие шины для ' . trim(($type->name ?? '') . ' ' . ($manufacturer->name ?? '') . ' ' . ($technics->model ?? '')),
+        'numberOfItems' => !empty($products) ? count($products) : 0,
+        'itemListElement' => [],
+    ],
+];
+
+if (!empty($products)) {
+    $pos = 1;
+    foreach ($products as $product) {
+        $collectionSchema['mainEntity']['itemListElement'][] = [
+            '@type' => 'ListItem',
+            'position' => $pos++,
+            'url' => PATH . '/product/' . ltrim((string)($product->alias ?? ''), '/'),
+            'name' => (string)($product->name ?? ''),
+        ];
+    }
+}
+
+$completeSchema = null;
+if (!empty($complete)) {
+    $completeSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'ItemList',
+        'name' => 'Комплекты шин для ' . trim(($type->name ?? '') . ' ' . ($manufacturer->name ?? '') . ' ' . ($technics->model ?? '')),
+        'numberOfItems' => count($complete),
+        'itemListElement' => [],
+    ];
+
+    $pos = 1;
+    foreach ($complete as $cpl) {
+        $completeSchema['itemListElement'][] = [
+            '@type' => 'ListItem',
+            'position' => $pos++,
+            'url' => PATH . '/complete/' . ltrim((string)($cpl['alias'] ?? ''), '/'),
+            'name' => (string)($cpl['name'] ?? ''),
+        ];
+    }
+}
+?>
+
+<script type="application/ld+json"><?= json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?></script>
+<script type="application/ld+json"><?= json_encode($collectionSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?></script>
+<?php if (!empty($completeSchema)): ?>
+<script type="application/ld+json"><?= json_encode($completeSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?></script>
+<?php endif; ?>
+
 <!--start-breadcrumbs-->
 <div class="breadcrumbs">
     <div class="container">
-        <!--start-breadcrumbs-->
-		<nav class="mb-4 breadcrumb-blok" aria-label="breadcrumb">
-			<ol class="breadcrumb flex-lg-nowrap">
-                <li class="breadcrumb-item"><a href="<?= PATH ?>"><i class="fas fa-home"></i></a></li>
-				<li class="breadcrumb-item"><a href="technics">Каталог техники</a></li>
-				<li class="breadcrumb-item"><a href="technics/type/<?=$type["alias"]?>">Производители <?=$type["seoname_1"]?></a></li>
-				<li class="breadcrumb-item"><a href="technics/<?=$type["alias"]?>/<?=$manufacturer["alias"]?>"><?php echo \ishop\App::upFirstLetter($type["seoname_3"]);?> <?=$manufacturer["name"]?></a></li>
-				<li class="breadcrumb-item active"><?=$type->name?> <?=$manufacturer->name?> <?=$technics->model?></li>
+        <nav class="mb-4 breadcrumb-blok" aria-label="breadcrumb">
+            <ol class="breadcrumb flex-lg-nowrap">
+                <li class="breadcrumb-item">
+                    <a href="<?= PATH ?>"><i class="fas fa-home"></i><span class="visually-hidden">Главная</span></a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="<?= PATH ?>/technics">Каталог техники</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="<?= PATH ?>/technics/type/<?= $typeAlias ?>">Производители <?= $typeSeoName1 ?></a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="<?= PATH ?>/technics/<?= $typeAlias ?>/<?= $manufacturerAlias ?>">
+                        <?= \ishop\App::upFirstLetter($type->seoname_3 ?? ''); ?> <?= $manufacturerName ?>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">Шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?></li>
             </ol>
-		</nav>
+        </nav>
     </div>
 </div>
 <!--end-breadcrumbs-->
-<?php
-    $curr = \ishop\App::$app->getProperty('currency');
-    $cats = \ishop\App::$app->getProperty('cats');
-?>
+
 <!--start-single-->
 <div class="single contact">
     <div class="container">
-        <section>
-          <!-- Content-->
-          <!-- Product Gallery + description-->
-          <section class="row g-0 mx-n2">
-            <div class="col-xl-6 byp-rght-pdd-15 mb-3 byp-float-lft">
-              	<section class="slider">			
-				<?php if($gallery): ?>		
-				
-					<div id="slider" class="flexslider">
-					  <ul class="slides">						
-						<li><img itemprop="image" src="images/technics/baseimg/<?=$technics->img;?>" alt=""></li>
-						<?php foreach($gallery as $item): ?>
-						<li>
-							<img itemprop="image" src="images/technics/gallery/<?=$item->img;?>" />
-						</li>
-						<?php endforeach; ?>						
-					  </ul>
-					</div>
-					<div id="carousel" class="flexslider">
-					  <ul class="slides">
-						<li><img itemprop="image" src="images/technics/baseimg/<?=$technics->img;?>" alt=""></li>
-						<?php foreach($gallery as $item): ?>
-						<li>
-							<img itemprop="image" src="images/technics/gallery/<?=$item->img;?>" />
-						</li>
-						<?php endforeach; ?>
-					  </ul>
-					</div>
-				
-				<?php else: ?>
-                    <div id="slider" class="flexslider">
-					  <ul class="slides">
-						<?php if($technics->img) { ?>
-						<li><img itemprop="image" src="images/technics/baseimg/<?=$technics->img;?>" alt=""></li>
-						<?php }else{ ?>
-						<li>
-							<img itemprop="image" src="images/no_image.jpg" style="width:250px" />
-						</li>
-						<?php } ?>
-						</ul>
-					</div>
-				<?php endif; ?>
-				</section>
+        <section class="product-hero-its technics-hero-its">
+            <div class="product-hero-grid technics-hero-grid technics-hero-grid--2">
+
+                <aside class="product-col product-col--gallery technics-col technics-col--gallery">
+                    <div class="product-sticky-wrap">
+                        <div class="product-card product-gallery-card technics-gallery-card h-100">
+                            <section class="slider">
+                                <div class="flexslider product-flexslider-main technics-flexslider-main">
+                                    <ul class="slides">
+                                        <?php if (!empty($technics->img)): ?>
+                                            <li>
+                                                <img itemprop="image"
+                                                     src="<?= PATH ?>/images/technics/baseimg/<?= h($technics->img); ?>"
+                                                     alt="Шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>">
+                                            </li>
+                                        <?php else: ?>
+                                            <li>
+                                                <img itemprop="image"
+                                                     src="<?= PATH ?>/images/no_image.jpg"
+                                                     alt="Изображение отсутствует">
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </aside>
+
+                <main class="product-col product-col--main technics-col technics-col--main">
+                    <div class="product-sticky-wrap">
+                        <div class="product-card product-main-card technics-main-card h-100">
+
+                            <div class="product-main-topline">
+                                <div class="product-main-topline__left">
+                                    <a class="product-meta"
+                                       href="<?= PATH ?>/technics/type/<?= $typeAlias ?>"
+                                       title="Производители <?= $typeSeoName1 ?>">
+                                        <?= $typeName ?>
+                                    </a>
+
+                                    <div class="product-brand-chip">
+                                        Бренд: <span><?= $manufacturerName ?></span>
+                                    </div>
+                                </div>
+
+                                <?php if (!empty($_SESSION['user']['id']) && $administr && $administr['groups'] == '1'): ?>
+                                    <div class="edit_prod product-edit-link">
+                                        <a target="_blank" href="<?= ADMIN ?>/plagins/technics-edit?id=<?= (int)$technics->id ?>">
+                                            <i class="far fa-edit"></i> Редактировать
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <h1 class="product-title">
+                                Шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>
+                            </h1>
+
+                            <div class="technics-info-scroll">
+                                <div class="product-quick-props technics-props-box">
+                                    <div class="product-block-title">Характеристики техники</div>
+                                    <ul class="product-props-list">
+                                        <li>
+                                            <span class="prop-name">Тип техники</span>
+                                            <span class="prop-value"><?= $typeName ?></span>
+                                        </li>
+                                        <li>
+                                            <span class="prop-name">Производитель</span>
+                                            <span class="prop-value"><?= $manufacturerName ?></span>
+                                        </li>
+                                        <li>
+                                            <span class="prop-name">Модель</span>
+                                            <span class="prop-value"><?= $technicsModel ?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <?php if ($frontFactory || $rearFactory || $frontAlt || $rearAlt): ?>
+
+                                    <?php if ($frontFactory || $rearFactory): ?>
+                                        <div class="product-quick-props technics-props-box mt-3">
+                                            <div class="product-block-title">Заводские размеры шин</div>
+                                            <ul class="product-props-list">
+                                                <?php if ($frontFactory && $rearFactory): ?>
+                                                    <li>
+                                                        <span class="prop-name">Передние</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($frontFactory, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="prop-name">Задние</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($rearFactory, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                <?php elseif ($frontFactory): ?>
+                                                    <li>
+                                                        <span class="prop-name">Размер</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($frontFactory, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                <?php elseif ($rearFactory): ?>
+                                                    <li>
+                                                        <span class="prop-name">Размер</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($rearFactory, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($frontAlt || $rearAlt): ?>
+                                        <div class="product-quick-props technics-props-box mt-3">
+                                            <div class="product-block-title">Альтернативные размеры шин</div>
+                                            <ul class="product-props-list">
+                                                <?php if ($frontAlt && $rearAlt): ?>
+                                                    <li>
+                                                        <span class="prop-name">Передние</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($frontAlt, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="prop-name">Задние</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($rearAlt, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                <?php elseif ($frontAlt): ?>
+                                                    <li>
+                                                        <span class="prop-name">Размер</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($frontAlt, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                <?php elseif ($rearAlt): ?>
+                                                    <li>
+                                                        <span class="prop-name">Размер</span>
+                                                        <span class="prop-value"><?= renderTechnicsSizeLinks($rearAlt, $sizeLinksMap); ?></span>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
             </div>
-            <div class="col-xl-6 mb-3 byp-float-rght shadow" style="position: relative;">
-              <div class="h-100 bg-light rounded-3 p-4">
-				<?php $administr = \R::findOne('user', 'id = ?', [$_SESSION['user']['id']]); ?>
-				<?php if($administr['groups'] == "1") { ?>
-					<div class="edit_prod"><a target="_blank" href="<?= ADMIN ?>/plagins/technics-edit?id=<?=$technics->id?>"><i class="far fa-edit"></i> Редактировать</a></div>
-				<?php } ?>
-							
-                <h1 class="h3">
-					<?=$type->name?> <?=$manufacturer->name?> <?=$technics->model?>
-				</h1>
-			
-                <div class="fw-normal">											
-						<table class="table table-bordered table-striped">						
-							<thead>
-                                <tr>
-                                    <td colspan="2" class="hide_td">
-										<div class="hide_td_1"><strong>Характеристики:</strong></div>											    
-									</td>
-                                </tr>
-                            </thead>
-							<tbody>
-								<tr><td>Тип техники:</td><td><?=$type->name?></td></tr>
-								<tr><td>Производитель:</td><td><?=$manufacturer->name?></td></tr>
-								<tr><td>Модель техники:</td><td><?=$technics->model?></td></tr>								
-							</tbody>
-							<?php	
-									$prodsizes = \R::getAll("SELECT * FROM technics_tiposize, attribute_value WHERE technics_tiposize.value_id = attribute_value.id AND technics_tiposize.technics_id = '".$technics->id."'");
-									foreach($prodsizes as $prodsize) {										
-										$psize .= "'".$prodsize["value"]."', ";										
-									}									
-									$psize = rtrim($psize, ", ");
-									
-									$sizes = \R::getAll("SELECT * FROM technics_tiposize, attribute_value WHERE technics_tiposize.value_id = attribute_value.id AND technics_tiposize.technics_id = '".$technics->id."' AND tip_size = '1'");
-									$sizes_back = \R::getAll("SELECT * FROM technics_tiposize, attribute_value WHERE technics_tiposize.value_id = attribute_value.id AND technics_tiposize.technics_id = '".$technics->id."' AND tip_size = '2'");
-									$sizes_alt = \R::getAll("SELECT * FROM technics_tiposize, attribute_value WHERE technics_tiposize.value_id = attribute_value.id AND technics_tiposize.technics_id = '".$technics->id."' AND tip_size = '3'");
-									$sizes_alt_back = \R::getAll("SELECT * FROM technics_tiposize, attribute_value WHERE technics_tiposize.value_id = attribute_value.id AND technics_tiposize.technics_id = '".$technics->id."' AND tip_size = '4'");
-									$sizes_vse = \R::getAll("SELECT * FROM technics_tiposize, attribute_value WHERE technics_tiposize.value_id = attribute_value.id AND technics_tiposize.technics_id = '".$technics->id."'");
-									if($sizes or $sizes_back or $sizes_alt or $sizes_alt_back) {
-										
-							?>
-							<thead>
-                                <tr>
-                                    <td colspan="2" class="hide_td">
-										<div class="hide_td_1"><strong>Заводские размеры шин:</strong></div>											    
-									</td>
-                                </tr>
-                            </thead>
-							<tbody>
-								<?php if($sizes AND $sizes_back) { ?>
-								<tr><td>Размер передних:</td><td>
-								<?php
-									 
-									foreach($sizes as $size) {
-										$vsize .= "<a href=\"size/".$size["alias"]."\" title=\"Все шины размера ".$size["value"]."\">".$size["value"]."</a>, ";																			
-									} 
-									echo $vsize = rtrim($vsize, ", ");								
-								 ?>
-								</td></tr>
-								<tr><td>Размер задних:</td><td>
-								<?php
-									 
-									foreach($sizes_back as $back) {
-										$bsize .= "<a href=\"size/".$back["alias"]."\" title=\"Все шины размера ".$back["value"]."\">".$back["value"]."</a>, ";																			
-									} 
-									echo $bsize = rtrim($bsize, ", ");									
-								 ?>
-								</td></tr>
-								<?php }else{ ?>
-								<tr><td>Размер:</td><td>
-								<?php
-									 
-									foreach($sizes as $size) {
-										$vsize .= "<a href=\"size/".$size["alias"]."\" title=\"Все шины размера ".$size["value"]."\">".$size["value"]."</a>, ";																		
-									} 
-									echo $vsize = rtrim($vsize, ", ");									
-								 ?>
-								</td></tr>
-								<?php } ?>
-							</tbody>
-							
-							<?php if($sizes_alt or $sizes_alt_back) { ?>
-							<thead>
-                                <tr>
-                                    <td colspan="2" class="hide_td">
-										<div class="hide_td_1"><strong>Альтернативные размеры шин:</strong></div>											    
-									</td>
-                                </tr>
-                            </thead>
-							<tbody>
-							<?php if($sizes_alt AND $sizes_alt_back) { ?>
-								<tr><td>Размер передних:</td><td>
-								<?php
-									 
-									foreach($sizes_alt as $asize) {
-										$vasize .= "<a href=\"size/".$asize["alias"]."\" title=\"Все шины размера ".$asize["value"]."\">".$asize["value"]."</a>, ";																			
-									} 
-									echo $vasize = rtrim($vasize, ", ");								
-								 ?>
-								</td></tr>
-								<tr><td>Размер задних:</td><td>
-								<?php
-									 
-									foreach($sizes_alt_back as $aback) {
-										$basize .= "<a href=\"size/".$aback["alias"]."\" title=\"Все шины размера ".$aback["value"]."\">".$aback["value"]."</a>, ";																			
-									} 
-									echo $basize = rtrim($basize, ", ");									
-								 ?>
-								</td></tr>
-								<?php }else{ 
-								if($sizes_alt) {
-								?>
-								<tr><td>Размер:</td><td>
-								<?php
-									 
-									foreach($sizes_alt as $asize) {
-										$vasize .= "<a href=\"size/".$asize["alias"]."\" title=\"Все шины размера ".$asize["value"]."\">".$asize["value"]."</a>, ";																		
-									} 
-									echo $vasize = rtrim($vasize, ", ");
-									
-								 ?>
-								</td></tr>
-								<?php } 
-								if($sizes_alt_back) {
-								?>
-								<tr><td>Размер:</td><td>
-								<?php
-									 
-									foreach($sizes_alt_back as $aback) {
-										$basize .= "<a href=\"size/".$aback["alias"]."\" title=\"Все шины размера ".$aback["value"]."\">".$aback["value"]."</a>, ";																			
-									} 
-									echo $basize = rtrim($basize, ", ");									
-								 ?>
-								</td></tr>
-								<?php } } ?>
-							</tbody>
-							<?php } ?>
-							
-							<?php } ?>
-						</table>					
-				</div>
-								
-				
-              </div>
-            </div>
-          </section>
-		  
-		  <?php
-				$values = \R::getAll("SELECT * FROM attribute_value WHERE value IN ($psize)");
-				
-				foreach($values as $v) {
-								
-					$ids = \R::getAll("SELECT product_id FROM attribute_product, product WHERE attribute_product.product_id = product.id AND attribute_product.attr_id = '".$v["id"]."'");
-					if($ids){
-						foreach($ids as $ds){
-							$prid .= "".$ds["product_id"].",";
-						}
-						$ids = rtrim($prid, ',');
-						
-						$products = \R::find('product', "hide = 'show' AND id IN ($ids)");
-					}
-				}
-		  
-				if($ids){
-		  
-				$complete = \R::getAll("SELECT*FROM `plagins_complete_product`, `plagins_complete` WHERE plagins_complete_product.complete_id = plagins_complete.id AND plagins_complete_product.product_id IN (".$ids.") GROUP BY plagins_complete.id");
-				if($complete) {				
-			?>			
-			<section>
-				<div class="complete-inner">
-						
-					<h2>Купить комплект шин</h2>
-					<div class="complete-block bg-light shadow">
-					
-					<?php 
-						foreach($complete as $cpl) { ?>
-						<?php			
-							$prods = \R::getAll("SELECT product.name, product.price as price, product.quantity, plagins_complete_product.product_id, plagins_complete_product.qty, plagins_complete_product.price as price_complete, plagins_complete_product.discount FROM plagins_complete_product, product WHERE plagins_complete_product.product_id = product.id AND plagins_complete_product.complete_id = ?", [$cpl["id"]]);
-							$prod_id = '';
-							$prod_qty = '';
-							$prodid = '';
-							foreach($prods as $prod) {
-								$price_complete[$cpl["id"]] += $prod["price_complete"]*$prod["qty"];
-								$discount_complete[$cpl["id"]] += $prod["discount"]*$prod["qty"];
-								$prod_id .= "".$prod["product_id"].","; $prod_qty .= "".$prod["qty"].",";
-								if($prod["quantity"]>=$prod["qty"]) {
-									$quantity = 1;							
-									$prodid .= "".$prod["product_id"]."-";
-								}elseif($prod["quantity"]>0 && $prod["quantity"]<$prod["qty"]){
-									$quantity = 0;
-									$prodid .= "".$prod["product_id"]."-";
-								}else{
-									$quantity = 0;							
-								}
-								$itg_qty[$cpl["id"]] += $quantity;
-								$vcomplecte[$cpl["id"]] += $prod["qty"];
-							}
-							$prod_id = rtrim($prod_id, ',');
-							$prod_qty = rtrim($prod_qty, ',');
-							$itog_price_complete[$cpl["id"]] = $price_complete[$cpl["id"]]-$discount_complete[$cpl["id"]];
-							$prodid = rtrim($prodid, '-');
-						?>
-						<div class="complete-main-prod bg-grad-4">
-							<div class="col-md-4 cmp-1"><img src="../images/complete/mini/<?=$cpl["img"]?>" alt="<?=$cpl["name"]?>" title="<?=$cpl["name"]?>" /></div>
-							<div class="col-md-4 cmp-2"><span><?=$cpl["name"]?></span><br />В комплекте <?=$vcomplecte[$cpl["id"]]?> шт.</div>
-							<div class="col-md-4 cmp-3 quantity-complete">
-								<div class="complete_price">Цена за комплект<br><span><?=$itog_price_complete[$cpl["id"]]?> <?=$curr['symbol_right'];?><span></div>
-								
-								<?php if($itg_qty[$cpl["id"]] == count($prods)) { ?>				
-									<input class="form-control" style="display:none;" name="quantity" type="number" value="<?=$cpl["qty"]?>" min="1" data-min="1">
-									<a data-id="<?=$prodid;?>" data-complete="1" data-set="<?=$cpl["id"];?>" class="btn btn-success me-2 add-to-cart-complete korzina-<?=$complete->id;?> clear-korzina" href="cart/addcomplete?id=<?=$prodid;?>" data-toggle="modal" data-target="#exampleModalLive" onclick="ym(87229051,'reachGoal','VKORZINU'); return true;"><i class="fas fa-cart-plus"></i> Купить комплект</a>					
-								<?php } if($itg_qty[$cpl["id"]] > 0 && $itg_qty[$cpl["id"]] < count($prods)) { ?>
-									<input class="form-control" style="display:none;" name="quantity" type="number" value="<?=$cpl["qty"]?>" min="1" data-min="1">
-									<a data-id="<?=$prodid;?>" data-complete="0" class="btn btn-success me-2 add-to-cart-complete korzina-<?=$cpl["id"];?> clear-korzina" href="cart/addcomplete?id=<?=$prodid;?>" data-toggle="modal" data-target="#exampleModalLive" onclick="ym(87229051,'reachGoal','VKORZINU'); return true;"><i class="fas fa-cart-plus"></i> Купить не полный комплект</a>				
-								<?php } if($itg_qty[$cpl["id"]] == 0){ ?>
-									<button class="btn btn-success me-2">Нет в наличии</button>
-								<?php } ?>
-								<a class="btn btn-danger" href="complete/<?=$cpl["alias"]?>">Подробнее</a>
-							</div>
-							
-						</div>								
-					<?php } ?>
-					</div>
-				</div>
-			</section>
-				<?php } } ?>		  
-		 
-		  <?php 
-		  if($psize) {
-		   ?>
-		  <div class="desc-prod-inner row g-0 mx-n2 product-one">
-			<?php 
-				if($values) {			
-				
-				foreach($products as $product){ ?>
-					<?php $curr = \ishop\App::$app->getProperty('currency'); ?>
-					<div class="col-xl-3 col-lg-6 col-md-4 col-sm-6 mb-3">
-					    <?php new \app\widgets\product\Product($product, $curr, 'product_tpl.php'); ?>
-				    </div>
+        </section>
 
-				<?php } ?>
-		  </div>
-		  <?php } }?>
-		  <div class="catalog_text">
-			<?=$technics->content?>
-			<?php 
-				foreach($sizes_vse as $vse) {
-					$vsesize .= "<a href=\"size/".$vse["alias"]."\" title=\"Все шины размера ".$vse["value"]."\">".$vse["value"]."</a>, ";																			
-				}
-				$vsesize = rtrim($vsesize, ", ");
-			?>
-			<p>Шины для <?=$type["seoname_2"]?> занимают не последнее место в перечне запчастей к <?php if($type->name != "Квадроцикл") { ?>спецтехнике<?php }else{ ?>колёсной мототехнике<?php } ?>. Основное предназначение покрышек демпфирование ударов, передаваемых подвеске и мосту от покрытия и обеспечение достаточного сцепления колес с грунтом. От конструкции и качества шин для <?php if($type->name != "Квадроцикл") { ?>специализированной <?php }else{ ?>мото<?php } ?>техники зависят коэффициент сцепления, расход топлива, проходимость в целом эффективность работы транспортного средства.</p>
-			<p><?php if($type->name != "Квадроцикл") { ?>Спецтехника<?php }else{ ?>Квадроцикл<?php } ?>, которая интенсивно эксплуатируется с большими нагрузками, требует регулярной замены резины. При этом шины для <?=$type["seoname_1"]?> должны быть качественными, прочными и износостойкими. Всем этим критериям отвечает резина от различных производителей, которые предлагает ООО ИТС-Центр.</p>
-			<p>На данный тип <?php if($type->name != "Квадроцикл") { ?>спецтехники<?php }else{ ?>техники<?php } ?> <?=$type->name?> <?=$manufacturer->name?> <?=$technics->model?> ООО ИТС-Центр предлагает резину размеры наружного и посадочного диаметра <?=$vsesize?>, которые реализуются нашей компанией. Шины отличаются по материалу и способу изготовления и делятся на два типа: <?php if($type->name != "Квадроцикл") { ?>цельнолитые и диагональные<?php }else{ ?>направленый и ненаправленный рисунок протектора<?php } ?>.</p>
-			<p>Именно такие шины, которые соответствуют самым строгим требованиям нормативов и стандартов, и реализует наша компания.</p>
+        <?php if (!empty($complete)): ?>
+            <section class="complete-premium">
+                <div class="complete-premium__head">
+                    <div>
+                        <h2>Купить комплект шин</h2>
+                        <p>
+                            Готовые комплекты шин для <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?> с понятной ценой,
+                            быстрым оформлением и проверкой наличия по каждой позиции.
+                        </p>
+                    </div>
+                </div>
 
-			<h2>Преимущества шин для <?=$type["seoname_1"]?> от нашей компании</h2>
-			<ul>
-				<li>Мы поставляем сверхпрочные шины, которые характеризуются следующими качествами</li>
-				<li>повышенная износостойкость</li>
-				<li>длительный срок эксплуатации</li>
-				<li>улучшенное сцепление и управляемость <?=$type["seoname_2"]?></li>
-				<li>надежная посадка на обод колеса</li>
-				<li>стойкость к повреждениям шин</li>
-				<li>легкость монтажа на <?php echo \ishop\App::downFirstLetter($type->name);?></li>
-				<li>отличная амортизация ударов</li>
-			</ul>
-			<p>Продукция, представленная в каталоге, имеется в наличии на нашем складе. Вы сможете самостоятельно подобрать шины для <?=$type["seoname_2"]?> <?=$manufacturer->name?> <?=$technics->model?> в размере <?=$vsesize?> либо воспользоваться консультацией наших специалистов. У нас можно приобрести резину по минимальным ценам. На крупные заказы и для постоянных клиентов имеется система скидок.</p>
-			<p>Купить шины для <?php if($type->name != "Квадроцикл") { ?>погрузчика<?php }else{ ?>техники<?php } ?> можно, найдя их в каталоге различных брендов на сайте its-center.ru. Наш интернет-магазин предоставляет широкий ассортимент товаров. Найти нужный товар можно по указанному артикулу. Если вы решили купить шины на <?php echo \ishop\App::downFirstLetter($type->name);?> <?=$manufacturer->name?> <?=$technics->model?> в размере <?=$vsesize?> ждем ваших звонков.</p>
-			<p>Наши консультанты знают все о продукции и предоставят квалифицированную помощь при выборе шин на <?php if($type->name != "Квадроцикл") { ?>спецтехнику<?php }else{ ?>квадроцикл<?php } ?>. Они подберут резину нужного размера, с подходящим рисунком протектора и оптимальной нормой слойности. У нас вы найдете шины проверенных торговых марок, поэтому можете быть уверены в их качестве и долговечности.</p>
+                <div class="complete-premium__list">
+                    <?php foreach ($complete as $cpl): ?>
+                        <?php
+                        $prods = $completeItemsById[(int)$cpl['id']] ?? [];
 
-		  </div>
-      </section>
+                        $prodid = '';
+                        $price_complete = 0;
+                        $discount_complete = 0;
+                        $itg_qty = 0;
+                        $vcomplecte = 0;
+
+                        foreach ($prods as $prod) {
+                            $price_complete += ((float)$prod['price_complete'] * (int)$prod['qty']);
+                            $discount_complete += ((float)$prod['discount'] * (int)$prod['qty']);
+
+                            if ((int)$prod['quantity'] >= (int)$prod['qty']) {
+                                $quantity_ok = 1;
+                                $prodid .= $prod['product_id'] . '-';
+                            } elseif ((int)$prod['quantity'] > 0) {
+                                $quantity_ok = 0;
+                                $prodid .= $prod['product_id'] . '-';
+                            } else {
+                                $quantity_ok = 0;
+                            }
+
+                            $itg_qty += $quantity_ok;
+                            $vcomplecte += (int)$prod['qty'];
+                        }
+
+                        $prodid = rtrim($prodid, '-');
+
+                        $isFullAvailable = ($itg_qty == count($prods));
+                        $isPartialAvailable = ($itg_qty > 0 && $itg_qty < count($prods));
+
+                        $effective_discount_complete = ($isFullAvailable && $discount_complete > 0) ? $discount_complete : 0;
+                        $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
+                        $discountLabel = ($effective_discount_complete > 0)
+                            ? number_format($effective_discount_complete, 0, '.', ' ') . ' ' . $curr['symbol_right']
+                            : '';
+
+                        $nm = htmlspecialchars((string)$cpl['name'], ENT_QUOTES, 'UTF-8');
+                        ?>
+                        <article class="complete-premium__card">
+                            <div class="complete-premium__main">
+
+                                <div class="complete-premium__visual">
+                                    <div class="complete-premium__image">
+                                        <img
+                                            class="complete-premium__img"
+                                            src="<?= PATH ?>/images/complete/mini/<?= h($cpl['img']) ?>"
+                                            alt="<?= $nm ?>"
+                                            title="<?= $nm ?>"
+                                            loading="lazy"
+                                        >
+                                    </div>
+
+                                    <div class="complete-premium__meta">
+                                        <div class="complete-premium__badges">
+                                            <span class="complete-badge complete-badge--dark">Готовый комплект</span>
+                                            <span class="complete-badge complete-badge--light">В комплекте <?= (int)$vcomplecte ?> шт.</span>
+
+                                            <?php if ($isFullAvailable): ?>
+                                                <span class="complete-badge complete-badge--ok">Все позиции в наличии</span>
+                                            <?php elseif ($isPartialAvailable): ?>
+                                                <span class="complete-badge complete-badge--warn">Частично в наличии</span>
+                                            <?php else: ?>
+                                                <span class="complete-badge complete-badge--empty">Нет в наличии</span>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <h3><?= h($cpl['name']) ?></h3>
+
+                                        <?php if (!empty($cpl['description'])): ?>
+                                            <div class="complete-premium__desc"><?= $cpl['description'] ?></div>
+                                        <?php else: ?>
+                                            <div class="complete-premium__desc">
+                                                Комплект шин, подобранный для <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>.
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <div class="complete-premium__composition">
+                                    <button
+                                        class="complete-premium__toggle"
+                                        type="button"
+                                        aria-expanded="false"
+                                        aria-controls="complete-composition-<?= (int)$cpl['id'] ?>"
+                                    >
+                                        <span class="complete-premium__composition-title">Состав комплекта</span>
+                                        <span class="complete-premium__toggle-icon" aria-hidden="true">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </span>
+                                    </button>
+
+                                    <div class="complete-premium__composition-drop" id="complete-composition-<?= (int)$cpl['id'] ?>" hidden>
+                                        <div class="complete-premium__composition-list">
+                                            <?php foreach ($prods as $prod): ?>
+                                                <div class="complete-comp-item">
+                                                    <div class="complete-comp-item__name"><?= h($prod['name']) ?></div>
+                                                    <div class="complete-comp-item__meta">
+                                                        <span><?= (int)$prod['qty'] ?> шт.</span>
+                                                        <span><?= number_format((float)$prod['price_complete'], 0, '.', ' ') ?> <?= h($curr['symbol_right']) ?> / шт.</span>
+
+                                                        <?php if ((int)$prod['quantity'] >= (int)$prod['qty']): ?>
+                                                            <span class="is-ok">Достаточно</span>
+                                                        <?php elseif ((int)$prod['quantity'] > 0): ?>
+                                                            <span class="is-warn">Частично</span>
+                                                        <?php else: ?>
+                                                            <span class="is-empty">Нет</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <aside class="complete-premium__aside">
+                                <div class="complete-summary">
+                                    <div class="complete-summary__title">Итого по комплекту</div>
+
+                                    <?php if ($effective_discount_complete > 0): ?>
+                                        <div class="complete-summary__old">
+                                            <?= number_format($price_complete, 0, '.', ' ') ?> <?= h($curr['symbol_right']) ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="complete-summary__price">
+                                        <?= number_format($itog_price_complete, 0, '.', ' ') ?> <?= h($curr['symbol_right']) ?>
+                                    </div>
+
+                                    <?php if ($effective_discount_complete > 0): ?>
+                                        <div class="complete-summary__save">
+                                            Экономия: <?= $discountLabel ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="complete-summary__status">
+                                        <?php if ($isFullAvailable): ?>
+                                            <span class="status-ok">Комплект доступен полностью</span>
+                                        <?php elseif ($isPartialAvailable): ?>
+                                            <span class="status-warn">Доступен не в полном составе</span>
+                                        <?php else: ?>
+                                            <span class="status-empty">Комплект недоступен</span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="complete-summary__actions">
+                                        <?php if ($isFullAvailable): ?>
+                                            <input class="form-control" style="display:none;" name="quantity" type="number" value="1" min="1" data-min="1">
+                                            <a
+                                                data-id="<?= h($prodid) ?>"
+                                                data-complete="1"
+                                                data-complete-id="<?= (int)$cpl['id'] ?>"
+                                                data-set="<?= (int)$cpl['id'] ?>"
+                                                class="btn btn-danger add-to-cart-complete korzina-<?= (int)$cpl['id'] ?> clear-korzina"
+                                                href="<?= PATH ?>/cart/addcomplete?id=<?= h($prodid) ?>"
+                                                data-toggle="modal"
+                                                data-target="#exampleModalLive"
+                                                onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
+                                            >
+                                                <i class="fas fa-cart-plus"></i> Купить комплект
+                                            </a>
+                                        <?php elseif ($isPartialAvailable): ?>
+                                            <input class="form-control" style="display:none;" name="quantity" type="number" value="1" min="1" data-min="1">
+                                            <a
+                                                data-id="<?= h($prodid) ?>"
+                                                data-complete="0"
+                                                data-complete-id="<?= (int)$cpl['id'] ?>"
+                                                data-set="<?= (int)$cpl['id'] ?>"
+                                                class="btn btn-warning add-to-cart-complete korzina-<?= (int)$cpl['id'] ?> clear-korzina"
+                                                href="<?= PATH ?>/cart/addcomplete?id=<?= h($prodid) ?>"
+                                                data-toggle="modal"
+                                                data-target="#exampleModalLive"
+                                                onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
+                                            >
+                                                <i class="fas fa-cart-plus"></i> Купить неполный комплект
+                                            </a>
+                                        <?php else: ?>
+                                            <button class="btn btn-secondary" type="button" disabled>Нет в наличии</button>
+                                        <?php endif; ?>
+
+                                        <a class="btn btn-outline-dark" href="<?= PATH ?>/complete/<?= h($cpl['alias']) ?>">Подробнее о комплекте</a>
+                                    </div>
+                                </div>
+                            </aside>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+
+        <?php if (!empty($products)): ?>
+            <section class="technics-related-products">
+                <div class="product-block-title section-title--products">
+                    Подходящие шины для <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>
+                </div>
+
+                <div class="row gx-3 gy-3 product-one">
+                    <?php foreach ($products as $product): ?>
+                        <div class="col-xl-3 col-lg-6 col-md-4 col-sm-6">
+                            <?php new \app\widgets\product\Product($product, $curr, 'product_tpl.php', $productWidgetContext ?? []); ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+
+        <div class="catalog_text">
+            <?= $technicsContent ?>
+
+            <h2>Шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?> — подбор и покупка</h2>
+
+            <p>
+                В интернет-магазине ИТС-Центр вы можете подобрать и купить шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?> с учетом рекомендуемых параметров эксплуатации. Для данной модели техники особенно важно использовать резину подходящего типоразмера: от этого зависят устойчивость, проходимость, управляемость, ресурс ходовой части и комфорт работы на разных типах покрытия.
+            </p>
+
+            <p>
+                На этой странице собраны подходящие шины для <?= $typeSeoName2 ?> <?= $manufacturerName ?> <?= $technicsModel ?>. Мы ориентируемся именно на продажу шин для конкретной техники, поэтому пользователь сразу видит заводские и альтернативные размеры, совместимые товары и готовые комплекты. Такой формат помогает быстрее выбрать нужную резину и сократить время на поиск.
+            </p>
+
+            <?php if (!empty($vsesizeText)): ?>
+                <p>
+                    Для <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?> могут применяться размеры: <?= $vsesize ?>. Переходя по размерам, вы можете открыть подборки товаров и посмотреть доступные модели шин, которые подходят для этой техники.
+                </p>
+            <?php endif; ?>
+
+            <h2>Какие шины подходят для <?= $typeSeoName1 ?></h2>
+
+            <p>
+                При выборе шин для <?= $techGenitive ?> важно учитывать не только посадочный диаметр и ширину, но и условия работы: тип покрытия, нагрузку на ось, интенсивность эксплуатации, сезонность и требования к рисунку протектора. Для складской, строительной, коммунальной, сельскохозяйственной и другой техники параметры резины напрямую влияют на эффективность работы и безопасность.
+            </p>
+
+            <p>
+                Если техника используется на асфальте, бетоне, грунте, щебне или смешанных покрытиях, шины должны обеспечивать надежное сцепление, устойчивость к износу и стабильную работу под нагрузкой. Для <?= $typeSeoName2 ?> <?= $manufacturerName ?> <?= $technicsModel ?> в каталоге можно подобрать решения под разные задачи: от повседневной эксплуатации до интенсивной профессиональной работы.
+            </p>
+
+            <h2>Почему стоит купить шины у нас</h2>
+
+            <ul>
+                <li>Подбор шин под конкретную модель техники и нужный размер.</li>
+                <li>Наличие популярных размеров и совместимых товаров в одном разделе.</li>
+                <li>Удобный переход из карточки техники сразу в каталог подходящих шин.</li>
+                <li>Возможность купить как отдельные позиции, так и комплект шин.</li>
+                <li>Консультация по подбору, рисунку протектора, нагрузке и применению.</li>
+                <li>Помощь в выборе шин для склада, стройплощадки, производства и других задач.</li>
+            </ul>
+
+            <h2>Подбор шин по размерам и эксплуатации</h2>
+
+            <p>
+                Правильно подобранные шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?> позволяют снизить риск неравномерного износа, повысить устойчивость техники и сохранить рабочие характеристики на длительный срок. Если для модели предусмотрены альтернативные размеры, их также стоит учитывать при подборе — особенно когда требуется адаптация техники под конкретные условия эксплуатации.
+            </p>
+
+            <p>
+                В каталоге ИТС-Центр вы можете выбрать шины для <?= $techGenitive ?> по производителю, размеру и назначению. Мы стараемся формировать понятные страницы под каждую единицу техники, чтобы клиенту было проще найти нужную резину, сравнить варианты и перейти к покупке без лишних шагов.
+            </p>
+
+            <h2>Заказать шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?></h2>
+
+            <p>
+                Если вам нужны шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>, используйте блоки с подходящими товарами и размерами на этой странице. Вы можете выбрать нужную модель самостоятельно или обратиться к нашим специалистам за помощью. Мы поможем подобрать шины под условия эксплуатации, нагрузку, тип покрытия и требуемый размер.
+            </p>
+
+            <p>
+                ИТС-Центр предлагает шины для <?= $techGenitive ?> с удобным подбором по параметрам. На сайте можно быстро найти совместимые размеры, открыть карточки товаров, уточнить наличие и оформить заказ. Если нужен точный подбор шин на <?= \ishop\App::downFirstLetter($type->name ?? '') ?> <?= $manufacturerName ?> <?= $technicsModel ?>, свяжитесь с нами — подскажем оптимальный вариант под вашу задачу.
+            </p>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.complete-premium__toggle');
+    if (!btn) return;
+
+    var targetId = btn.getAttribute('aria-controls');
+    var panel = document.getElementById(targetId);
+    if (!panel) return;
+
+    var expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    panel.hidden = expanded;
+});
+</script>
 <!--end-single-->
-
-

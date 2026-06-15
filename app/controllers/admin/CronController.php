@@ -72,4 +72,6 @@ class CronController extends AppController {
         $_SESSION['success'] = 'Задание удалено';
         redirect();
     }
+	
+	
 }

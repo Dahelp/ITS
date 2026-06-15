@@ -21,8 +21,11 @@ class Company extends AppModel {
         'korschet' => '',        
         'bank' => '',      
         'dir_name' => '',
-		'nds' => '',        
-        'dogovor' => '',        
+		'nds' => '',
+        'date_postponement' => '',    
+        'dogovor' => '',
+        'dogovor_number' => '',
+        'data_dogovor' => '',
         'hide' => 'show',
     ];
 

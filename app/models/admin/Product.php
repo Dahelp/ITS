@@ -9,6 +9,8 @@ class Product extends AppModel {
     public $attributes = [
 		'name' => '',
 		'article' => '',
+        'sku' => '',
+        'seo_h1' => '',
         'title' => '',
         'category_id' => '',
         'keywords' => '',
@@ -27,6 +29,7 @@ class Product extends AppModel {
 		'brand_id' => '',
 		'model' => '',
 		'opt_price' => '',
+        'spec_price' => '',
 		'stock_status_id' => '',
 		'quantity' => '',
 		'url_video' => '',
@@ -264,7 +267,7 @@ class Product extends AppModel {
 
     public function uploadImg($name, $wmax, $hmax, $wmaxmini, $hmaxmini){		
         $ext = strtolower(preg_replace("#.+\.([a-z]+)$#i", "$1", $_FILES[$name]['name'])); // расширение картинки
-        $types = array("image/gif", "image/png", "image/jpeg", "image/pjpeg", "image/x-png"); // массив допустимых расширений
+        $types = array("image/gif", "image/png", "image/jpeg", "image/pjpeg", "image/x-png", "image/webp"); // массив допустимых расширений
 		$size = \R::findOne('options', 'alt_name = ?', [option_size_product]);
 		$size_product = $size->znachenie * 1048576;
         if($_FILES[$name]['size'] > $size_product){
@@ -281,7 +284,9 @@ class Product extends AppModel {
         }
         $tmp_name = md5(time()).".$ext";
 		$new_name = md5(time()).".webp";
-		
+
+		$opts = ['webp_quality'=>85, 'jpeg_quality'=>85, 'png_compress'=>6, 'no_upscale'=>true];
+
 		$tmpdir = WWW . '/images/product/tmp/'.$tmp_name.'';
         $basedir = WWW . '/images/product/baseimg/'.$new_name.'';
 		$galdir = WWW . '/images/product/gallery/'.$new_name.'';
@@ -292,8 +297,8 @@ class Product extends AppModel {
             
                 $_SESSION['single'] = $new_name;
             
-				self::resize($tmpdir, $basedir, $wmax, $hmax, 'webp');
-				self::resize($tmpdir, $minidir, $wmaxmini, $hmaxmini, 'webp');
+				self::resize($tmpdir, $basedir, $wmax, $hmax, 'webp', $opts);
+				self::resize($tmpdir, $minidir, $wmaxmini, $hmaxmini, 'webp', $opts);
 				@unlink($tmpdir);
 				$res = array("file" => $new_name);
 				exit(json_encode($res));
@@ -303,7 +308,7 @@ class Product extends AppModel {
 			if(@move_uploaded_file($_FILES[$name]['tmp_name'], $tmpdir)){
                 $_SESSION['multi'][] = $new_name;
 				
-				self::resize($tmpdir, $galdir, $wmax, $hmax, $ext);
+				self::resize($tmpdir, $galdir, $wmax, $hmax, 'webp', $opts);
 				$res = array("file" => $new_name);
 				exit(json_encode($res));
 			}
@@ -313,7 +318,7 @@ class Product extends AppModel {
             
                 $_SESSION['unload'] = $new_name;
             
-				self::resize($tmpdir, $unldir, $wmax, $hmax, $ext);
+				self::resize($tmpdir, $unldir, $wmax, $hmax, 'webp', $opts);
 				@unlink($tmpdir);
 				$res = array("file" => $new_name);
 				exit(json_encode($res));

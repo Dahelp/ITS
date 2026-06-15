@@ -113,6 +113,43 @@
 												<input type="text" name="notproduct" class="form-control" id="notproduct" placeholder="Товары отсутствуют">
 											</div>
 										</div>
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="page_mode">Режим страницы</label>
+											<div class="col-sm-9">
+												<select name="page_mode" id="page_mode" class="form-control">
+													<option value="standalone" selected>standalone — отдельная страница фильтра</option>
+													<option value="category_filter_only">category_filter_only — SEO-фильтр только внутри категории</option>
+												</select>
+												<small class="form-text text-muted">
+													Для типоразмеров лучше использовать category_filter_only.
+												</small>
+											</div>
+										</div>
+
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="canonical_source">Источник канонической категории</label>
+											<div class="col-sm-9">
+												<select name="canonical_source" id="canonical_source" class="form-control">
+													<option value="none" selected>none — без канонической категории</option>
+													<option value="manual_map">manual_map — вручную через таблицу canonical map</option>
+												</select>
+												<small class="form-text text-muted">
+													Для размера лучше manual_map.
+												</small>
+											</div>
+										</div>
+
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="redirect_to_category">301 на category-страницу</label>
+											<div class="col-sm-9">
+												<div class="custom-control custom-checkbox">
+													<input class="custom-control-input" type="checkbox" id="redirect_to_category" name="redirect_to_category" value="1">
+													<label class="custom-control-label" for="redirect_to_category">
+														Включить 301-редирект со standalone URL на каноническую category-страницу
+													</label>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
                   				<!-- /.tab-pane -->

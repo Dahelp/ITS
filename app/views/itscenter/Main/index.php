@@ -2,6 +2,9 @@
 <div class="category-inner">
 	<div class="container">
 		<h1>Интернет-магазин резины, дисков и фильтров для спецтехники</h1>
+
+	
+
 		<div class="container-grid">
 			<div class="item item-0">
 				<a class="category category-0" href="category/gruzovye-shiny" title="Грузовые шины">
@@ -96,7 +99,7 @@
 		</div>
 	</div>
 </div>
-<div class="clearfix"></div>
+
 <div class="uslugi-inner">
 	<div class="container">
 		<div class="row">
@@ -133,7 +136,6 @@
 		</div>
 	</div>
 </div>
-<div class="clearfix"></div>
 <div class="advantages-inner">
 	<div class="container">
 		<div class="pch_name"><h3>Почему клиенты выбирают ИТС-ЦЕНТР?</h3></div>
@@ -170,64 +172,59 @@
 <div class="hit-inner">
     <div class="container">
         <div class="related_prod">
-          <section class="pb-5 mb-2 mb-xl-4 recomend-1">
-			<div class="product-name"><h3>Хиты продаж</h3></div>
-			<div class="review-wrap">
+            <section class="mb-2 recomend-1">
+                <div class="product-name"><h3>Хиты продаж</h3></div>
 
-			<div class="wrap-container">
-			<div class="inner-container">				
+                <div class="swiper-container swiper1 hits-swiper">
+                    <div class="swiper-wrapper">
+                        <?php foreach($hits as $product): ?>
+                            <div class="swiper-slide">
+                                <?php new \app\widgets\product\Product($product, $curr, 'product_tpl.php', $hitsWidgetContext ?? []); ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
-			<div class="swiper-container swiper1">
-				<div class="swiper-wrapper">
-            <?php foreach($hits as $product): ?>
-				<div class="swiper-slide">
-					
-					<?php new \app\widgets\product\Product($product, $curr, 'product_tpl.php'); ?>	
-					
-				</div>
-            <?php endforeach; ?>
-			</div>
-						
-				</div>
-					
-				</div>
-					
-				</div>
-				
-			</div>
-			<div class="swiper-button-inner">
-				<div class="swiper-button-next swiper-button-next-1"></div>
-				<div class="swiper-button-prev swiper-button-prev-1"></div>
-			</div>
-            <div class="clearfix"></div>            
+                <div class="swiper-button-inner">
+                    <div class="swiper-button-next swiper-button-next-1"></div>
+                    <div class="swiper-button-prev swiper-button-prev-1"></div>
+                </div>
+            </section>
         </div>
-	</div>
+    </div>
 </div>
 <?php endif; ?>
-<div class="clearfix"></div>
 <div class="main-articles">
 	<div class="container">
 		<h3>Статьи</h3>
+
 		<div class="cont-blok">
 			<?php foreach($articles as $articl): ?>
-			<div class="col-md-3 cont-one">
-				<div class="cont_ht border border-grey">
-					<div class="cont_blok_img">
+			<div class="cont-one">
+				<div class="cont_ht">
+					<a class="cont_blok_img" href="articles/<?=$articl["alias"]?>">
+						<span class="cont_badge">Статья</span>
 						<img src="images/contents/baseimg/<?=$articl["img"]?>" alt="<?=$articl["name"]?>" title="<?=$articl["name"]?>">
-					</div>
+					</a>
+
 					<div class="cont_info">
 						<div class="cont_info_data"><?php echo \ishop\App::contdate($articl["date_post"]); ?></div>
+
 						<div class="cont_info_name">
 							<a href="articles/<?=$articl["alias"]?>"><?=$articl["name"]?></a>
 						</div>
+
 						<div class="cont_info_anons">
-							<p><?=$articl["anons"]?></p>
+							<?=$articl["anons"]?>
+						</div>
+
+						<div class="cont_info_bottom">
+							<a class="cont_read_btn" href="articles/<?=$articl["alias"]?>">Читать статью</a>
 						</div>
 					</div>
 				</div>
 			</div>
-			<?php endforeach; ?>			
-		</div>	
+			<?php endforeach; ?>
+		</div>
 	</div>
 </div>
-<div class="clearfix"></div>

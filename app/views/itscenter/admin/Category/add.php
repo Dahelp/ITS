@@ -27,8 +27,9 @@
               <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3">Добавить категорию</h3>
 				<ul class="nav nav-pills ml-auto p-2">
-                  <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>                  
-                  <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">SEO</a></li>				  				  
+                    <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">SEO</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">FAQ</a></li>
                 </ul>
 				</div><!-- /.card-header -->
                         <div class="card-body">
@@ -58,10 +59,20 @@
                                 ]) ?>
                             </div>
                         </div>
+                        <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="top_content">Верхний текст категории</label>
+                        <div class="col-sm-9">
+                        <textarea
+                            name="top_content"
+                            id="editor2"
+                            class="form-control" cols="80" rows="10"                       
+                            placeholder="Текст выводится под H1, перед фильтрами и товарами"><?= isset($_SESSION['form_data']['top_content']) ? h($_SESSION['form_data']['top_content']) : '' ?></textarea>
+                        </div>    
+                        </div>
 						<div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="content">Подробное описание</label>
+                            <label class="col-sm-3 col-form-label" for="content">Основной текст</label>
 							<div class="col-sm-9">
-								<textarea class="form-control" name="content" id="editor1" cols="80" rows="10"><?php isset($_SESSION['form_data']['content']) ? $_SESSION['form_data']['content'] : null; ?></textarea>
+								<textarea class="form-control" name="content" id="editor1" cols="80" rows="10"><?=isset($_SESSION['form_data']['content']) ? $_SESSION['form_data']['content'] : '';?></textarea>
 							</div>
                         </div>
 						<div class="form-group row">
@@ -120,9 +131,15 @@
 						<div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="alias">Ссылка страницы</label>
 							<div class="col-sm-9">
-                                <input type="text" name="alias" class="form-control" id="alias" placeholder="Если пусто, создается автоматически" value="<?php isset($_SESSION['form_data']['alias']) ? h($_SESSION['form_data']['alias']) : null; ?>">
+                                <input type="text" name="alias" class="form-control" id="alias" placeholder="Если пусто, создается автоматически" value="<?=isset($_SESSION['form_data']['alias']) ? h($_SESSION['form_data']['alias']) : '';?>">
 							</div>
                         </div>
+                        <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="h1">SEO H1</label>
+								<div class="col-sm-9">
+                                <input type="text" name="h1" class="form-control" id="h1" value="<?= isset($_SESSION['form_data']['h1']) ? h($_SESSION['form_data']['h1']) : '' ?>" placeholder="H1 на странице категории">
+                            </div>
+                        </div>	
 						<div class="form-group row">
                                 <label class="col-sm-3 col-form-label" for="title">Заголовок (Title)</label>
 								<div class="col-sm-9">
@@ -144,6 +161,99 @@
 					</div>
                   </div>
                   <!-- /.tab-pane -->
+
+                    <div class="tab-pane" id="tab_3">
+                        <div class="box-body">
+
+                            <div class="alert alert-info">
+                            FAQ будет выводиться на странице категории и использоваться для JSON-LD микроразметки FAQPage.
+                            </div>
+
+                            <div id="category-faq-list">
+                            <?php
+                            $faqFormRows = $_SESSION['form_data']['faq'] ?? [];
+
+                            if (empty($faqFormRows)) {
+                                $faqFormRows = [
+                                    [
+                                        'question' => '',
+                                        'answer' => '',
+                                        'sort' => 1,
+                                        'hide' => 'show',
+                                    ],
+                                ];
+                            }
+
+                            foreach ($faqFormRows as $i => $faq):
+                                $question = $faq['question'] ?? '';
+                                $answer = $faq['answer'] ?? '';
+                                $sort = $faq['sort'] ?? ($i + 1);
+                                $hide = $faq['hide'] ?? 'show';
+                            ?>
+                                <div class="card mb-3 category-faq-item">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <strong>Вопрос</strong>
+                                    <button type="button" class="btn btn-danger btn-sm js-remove-category-faq ml-auto">Удалить</button>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Вопрос</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                        type="text"
+                                        name="faq[<?=$i;?>][question]"
+                                        class="form-control js-faq-question"
+                                        value="<?=h($question);?>"
+                                        placeholder="Например: Какие шины выбрать для вилочного погрузчика?"
+                                        >
+                                    </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Ответ</label>
+                                    <div class="col-sm-9">
+                                        <textarea
+                                        name="faq[<?=$i;?>][answer]"
+                                        class="form-control js-faq-answer"
+                                        rows="4"
+                                        placeholder="Краткий полезный ответ для пользователя"
+                                        ><?=h($answer);?></textarea>
+                                    </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Позиция</label>
+                                    <div class="col-sm-3">
+                                        <input
+                                        type="number"
+                                        name="faq[<?=$i;?>][sort]"
+                                        class="form-control js-faq-sort"
+                                        value="<?=h($sort);?>"
+                                        >
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label">Статус</label>
+                                    <div class="col-sm-4">
+                                        <select name="faq[<?=$i;?>][hide]" class="form-control js-faq-hide">
+                                        <option value="show" <?=$hide === 'show' ? 'selected' : '';?>>Показывать</option>
+                                        <option value="hide" <?=$hide === 'hide' ? 'selected' : '';?>>Скрыть</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            <?php endforeach; ?>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" id="add-category-faq">
+                            Добавить вопрос
+                            </button>
+
+                        </div>
+                        </div>
+                        <!-- /.tab-pane -->
+
                 </div>
                 <!-- /.tab-content -->
 				
@@ -164,3 +274,123 @@
 		
 </section>
 <!-- /.content -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var faqList = document.getElementById('category-faq-list');
+    var addBtn = document.getElementById('add-category-faq');
+
+    if (!faqList || !addBtn) {
+        return;
+    }
+
+    function reindexFaqItems() {
+        var items = faqList.querySelectorAll('.category-faq-item');
+
+        items.forEach(function (item, index) {
+            var question = item.querySelector('.js-faq-question');
+            var answer = item.querySelector('.js-faq-answer');
+            var sort = item.querySelector('.js-faq-sort');
+            var hide = item.querySelector('.js-faq-hide');
+
+            if (question) {
+                question.name = 'faq[' + index + '][question]';
+            }
+
+            if (answer) {
+                answer.name = 'faq[' + index + '][answer]';
+            }
+
+            if (sort) {
+                sort.name = 'faq[' + index + '][sort]';
+
+                if (!sort.value) {
+                    sort.value = index + 1;
+                }
+            }
+
+            if (hide) {
+                hide.name = 'faq[' + index + '][hide]';
+            }
+        });
+    }
+
+    addBtn.addEventListener('click', function () {
+        var index = faqList.querySelectorAll('.category-faq-item').length;
+
+        var html = `
+            <div class="card mb-3 category-faq-item">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Вопрос</strong>
+                    <button type="button" class="btn btn-danger btn-sm js-remove-category-faq ml-auto">Удалить</button>
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Вопрос</label>
+                        <div class="col-sm-9">
+                            <input
+                                type="text"
+                                name="faq[${index}][question]"
+                                class="form-control js-faq-question"
+                                value=""
+                                placeholder="Например: Какие шины выбрать для вилочного погрузчика?"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Ответ</label>
+                        <div class="col-sm-9">
+                            <textarea
+                                name="faq[${index}][answer]"
+                                class="form-control js-faq-answer"
+                                rows="4"
+                                placeholder="Краткий полезный ответ для пользователя"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Позиция</label>
+                        <div class="col-sm-3">
+                            <input
+                                type="number"
+                                name="faq[${index}][sort]"
+                                class="form-control js-faq-sort"
+                                value="${index + 1}"
+                            >
+                        </div>
+
+                        <label class="col-sm-2 col-form-label">Статус</label>
+                        <div class="col-sm-4">
+                            <select name="faq[${index}][hide]" class="form-control js-faq-hide">
+                                <option value="show" selected>Показывать</option>
+                                <option value="hide">Скрыть</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        faqList.insertAdjacentHTML('beforeend', html);
+        reindexFaqItems();
+    });
+
+    faqList.addEventListener('click', function (e) {
+        if (!e.target.classList.contains('js-remove-category-faq')) {
+            return;
+        }
+
+        var item = e.target.closest('.category-faq-item');
+
+        if (item) {
+            item.remove();
+            reindexFaqItems();
+        }
+    });
+
+    reindexFaqItems();
+});
+</script>

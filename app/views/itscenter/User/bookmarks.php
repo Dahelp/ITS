@@ -47,8 +47,9 @@
 										<td style="display: table-cell;"><?=$item["name"]?></td>
 										<td style="display: table-cell;"><?=$item["quantity"]?></td>
 										<td style="display: table-cell;">
+											<?php $comp_priceopt = \R::getRow('SELECT tip FROM company WHERE company.user_id = ?', [$_SESSION['user']['id']]); ?>
 											<?php $prod_priceopt = \R::getRow('SELECT company.tip, company_typeprice.znachenie FROM company, company_typeprice WHERE company.id = company_typeprice.company_id AND company.user_id = ? AND company_typeprice.category_id = ?', [$_SESSION['user']['id'], $item["category_id"]]); ?>
-											<?php if($prod_priceopt["tip"]!=2):	?>
+											<?php if($comp_priceopt["tip"]!=2):	?>
 												<?=$curr['symbol_left'];?> <?=$item["price"] * $curr['value'];?> <?=$curr['symbol_right'];?>
 											<?php else: ?>
 												<?=$curr['symbol_left'];?> <?=$item["price"] * $curr['value'];?> <?=$curr['symbol_right'];?>

@@ -24,7 +24,7 @@
 						<h5 class="mb-0 h6">Договор</h5>
 					</div>
 					<div class="card-body">
-					<?php if($dogovor): ?>
+					<?php if(!empty($dogovor)): ?>
 						<div class="table-responsive">
 							
 						</div>

@@ -1,74 +1,60 @@
-<div style="display:flex">
-	<a href="<?=ADMIN?>/mailbox/compose" class="btn btn-primary btn-block mb-3" style="width:85%;margin: 0 10px 0 0;">Написать письмо</a>
-	<a href="<?=ADMIN?>/mailbox" class="btn btn-primary btn-block mb-3"style="width:15%;margin:0"><i class="fas fa-sync-alt"></i></a>
+<?php
+$folderStats = $folderStats ?? [];
+$currentFolder = $currentFolder ?? 'inbox';
+$folderUrl = static fn(string $folder) => $folder === 'inbox' ? ADMIN . '/mailbox' : ADMIN . '/mailbox?folder=' . rawurlencode($folder);
+$folderCount = static fn(string $folder, string $key = 'total') => (int)($folderStats[$folder][$key] ?? 0);
+$active = static fn(string $folder) => $currentFolder === $folder ? ' active' : '';
+?>
+<div class="d-flex mb-3">
+    <a href="<?= ADMIN ?>/mailbox/compose" class="btn btn-primary btn-block mr-2 mb-0">Написать</a>
+    <a href="<?= ADMIN ?>/mailbox" class="btn btn-primary mb-0" title="Обновить список">
+        <i class="fas fa-sync-alt"></i>
+    </a>
 </div>
 <div class="card">
-	<div class="card-header">
-		<h3 class="card-title">Папки</h3>
-		<div class="card-tools">
-			<button type="button" class="btn btn-tool" data-card-widget="collapse">
-				<i class="fas fa-minus"></i>
-			</button>
-		</div>
-	</div>
-	<div class="card-body p-0">
-		<ul class="nav nav-pills flex-column">
-			<li class="nav-item active">
-				<a href="<?=ADMIN?>/mailbox" class="nav-link">
-					<i class="fas fa-inbox"></i> Входящие 
-					<span class="badge bg-primary float-right mt-1 ml-1"><?=$msg_num_recent;?></span> <span class="float-right"><?=$msg_num;?></span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a href="<?=ADMIN?>/mailbox?folder=Sent" class="nav-link">
-					<i class="far fa-envelope"></i> Отправленные
-				</a>
-			</li>
-			<li class="nav-item">
-				<a href="<?=ADMIN?>/mailbox?folder=Drafts" class="nav-link">
-					<i class="far fa-file-alt"></i> Черновики
-				</a>
-			</li>
-			<li class="nav-item">
-				<a href="<?=ADMIN?>/mailbox?folder=Junk" class="nav-link">
-					<i class="fas fa-filter"></i> Спам
-					<span class="badge bg-warning float-right">65</span>
-				</a>
-			</li>
-			<li class="nav-item">
-				<a href="<?=ADMIN?>/mailbox?folder=Trash" class="nav-link">
-					<i class="far fa-trash-alt"></i> Удалённые
-				</a>
-			</li>
-		</ul>
-	</div>
-</div>
-<div class="card">
-	<div class="card-header">
-		<h3 class="card-title">Labels</h3>
-		<div class="card-tools">
-			<button type="button" class="btn btn-tool" data-card-widget="collapse">
-				<i class="fas fa-minus"></i>
-			</button>
-		</div>
-	</div>
-	<div class="card-body p-0">
-		<ul class="nav nav-pills flex-column">
-			<li class="nav-item">
-				<a href="#" class="nav-link">
-					<i class="far fa-circle text-danger"></i> Important
-				</a>
-			</li>
-			<li class="nav-item">
-				<a href="#" class="nav-link">
-					<i class="far fa-circle text-warning"></i> Promotions
-				</a>
-			</li>
-			<li class="nav-item">
-				<a href="#" class="nav-link">
-					<i class="far fa-circle text-primary"></i> Social
-				</a>
-			</li>
-		</ul>
-	</div>
+    <div class="card-header">
+        <h3 class="card-title">Папки</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a href="<?= $folderUrl('inbox') ?>" class="nav-link<?= $active('inbox') ?>">
+                    <i class="fas fa-inbox"></i> Входящие
+                    <?php if ($folderCount('inbox', 'unseen') > 0): ?>
+                        <span class="badge bg-primary float-right"><?= $folderCount('inbox', 'unseen') ?></span>
+                    <?php endif; ?>
+                    <span class="float-right mr-2"><?= $folderCount('inbox') ?></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= $folderUrl('Sent') ?>" class="nav-link<?= $active('Sent') ?>">
+                    <i class="far fa-envelope"></i> Отправленные
+                    <span class="float-right"><?= $folderCount('Sent') ?></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= $folderUrl('Drafts') ?>" class="nav-link<?= $active('Drafts') ?>">
+                    <i class="far fa-file-alt"></i> Черновики
+                    <span class="float-right"><?= $folderCount('Drafts') ?></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= $folderUrl('Junk') ?>" class="nav-link<?= $active('Junk') ?>">
+                    <i class="fas fa-filter"></i> Спам
+                    <span class="float-right"><?= $folderCount('Junk') ?></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?= $folderUrl('Trash') ?>" class="nav-link<?= $active('Trash') ?>">
+                    <i class="far fa-trash-alt"></i> Удалённые
+                    <span class="float-right"><?= $folderCount('Trash') ?></span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>

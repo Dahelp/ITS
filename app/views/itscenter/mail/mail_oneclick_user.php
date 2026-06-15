@@ -22,25 +22,27 @@
 						<table cellspacing="0" cellpadding="0" style="width:660px;padding:20px;font-family:Tahoma, Helvetica, sans-serif;color:#212529;font-size:13px" align="center">
 							<tr>
 								<td colspan="4" style="padding:20px 0 20px 0">
-									<?php $date = date("Y-m-j H:i:s")
-										$dayofweek = date('w', strtotime($date));
-										if($dayofweek > 0 && $dayofweek < 6){
-									?>	
-										Ваш заказ в 1 клик на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в рабочее время ПН-ПТ с 09:00 до 17:00	
-									<?php } ?>
-									<?php if($dayofweek > 5 && $dayofweek < 8){ ?>
-										Ваш заказ в 1 клик на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в понедельник в рабочее время с 09:00 до 17:00		
-									<?php } ?>
-									<br><br>
-									<b>Название товара:</b> <?=$name_tovar?><br>
-									<b>Ф.И.О.:</b> <?=$fio_click?><br>
-									<b>Номер телефона:</b> <?=$tell_click?><br>
-									<b>E-mail:</b> <?=$email_click?><br>
-									<b>Комментарий:</b> <?=$prim_click?><br>
-									<b>Время заказа:</b> <?=date("Y-m-j H:i:s")?><br><br><br>
-										С уважением, <?=$namecomp?> <br>
-									<b>Телефон:</b> <?=$tell_site?>
-								</td>
+								<?php
+								$date = date('Y-m-d H:i:s');
+								$dayofweek = (int) date('w', strtotime($date));
+								?>
+
+								<?php if ($dayofweek >= 1 && $dayofweek <= 5): ?>
+									Ваш заказ в 1 клик на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в рабочее время ПН-ПТ с 09:00 до 17:00.
+								<?php else: ?>
+									Ваш заказ в 1 клик на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в понедельник в рабочее время с 09:00 до 17:00.
+								<?php endif; ?>
+
+								<br><br>
+								<b>Название товара:</b> <?=$name_tovar?><br>
+								<b>Ф.И.О.:</b> <?=$fio_click?><br>
+								<b>Номер телефона:</b> <?=$tell_click?><br>
+								<b>E-mail:</b> <?=$email_click?><br>
+								<b>Комментарий:</b> <?=$prim_click?><br>
+								<b>Время заказа:</b> <?=date('Y-m-d H:i:s')?><br><br><br>
+								С уважением, <?=$namecomp?> <br>
+								<b>Телефон:</b> <?=$tell_site?>
+							</td>
 							</tr>
 						</table>
 					</td>

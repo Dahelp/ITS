@@ -121,6 +121,58 @@
 												<input type="text" name="notproduct" class="form-control" id="notproduct" placeholder="Товары отсутствуют" value="<?=h($group->notproduct);?>">
 											</div>
 										</div>
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="page_mode">Режим страницы</label>
+											<div class="col-sm-9">
+												<select name="page_mode" id="page_mode" class="form-control">
+													<option value="standalone" <?php if (($group->page_mode ?? 'standalone') === 'standalone') echo 'selected'; ?>>
+														standalone — отдельная страница фильтра
+													</option>
+													<option value="category_filter_only" <?php if (($group->page_mode ?? '') === 'category_filter_only') echo 'selected'; ?>>
+														category_filter_only — SEO-фильтр только внутри категории
+													</option>
+												</select>
+												<small class="form-text text-muted">
+													Для типоразмеров лучше использовать category_filter_only.
+												</small>
+											</div>
+										</div>
+
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="canonical_source">Источник канонической категории</label>
+											<div class="col-sm-9">
+												<select name="canonical_source" id="canonical_source" class="form-control">
+													<option value="none" <?php if (($group->canonical_source ?? 'none') === 'none') echo 'selected'; ?>>
+														none — без канонической категории
+													</option>
+													<option value="manual_map" <?php if (($group->canonical_source ?? '') === 'manual_map') echo 'selected'; ?>>
+														manual_map — вручную через таблицу canonical map
+													</option>
+												</select>
+												<small class="form-text text-muted">
+													Для размера лучше manual_map.
+												</small>
+											</div>
+										</div>
+
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="redirect_to_category">301 на category-страницу</label>
+											<div class="col-sm-9">
+												<div class="custom-control custom-checkbox">
+													<input
+														class="custom-control-input"
+														type="checkbox"
+														id="redirect_to_category"
+														name="redirect_to_category"
+														value="1"
+														<?php if ((int)($group->redirect_to_category ?? 0) === 1) echo 'checked'; ?>
+													>
+													<label class="custom-control-label" for="redirect_to_category">
+														Включить 301-редирект со standalone URL на каноническую category-страницу
+													</label>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
                   				<!-- /.tab-pane -->

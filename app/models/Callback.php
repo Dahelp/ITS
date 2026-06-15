@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\services\admin\AdminActivityLogger;
 use ishop\App;
 use Swift_Mailer;
 use Swift_Message;
@@ -9,12 +10,17 @@ use Swift_SmtpTransport;
 
 class Callback extends AppModel {
 
-    public function addCallback($phone, $user_id = "", $title){
-        $res = \R::exec("INSERT INTO `callback` (`user_id`, `topic`, `phone`, `date_create`, `date_modified`, `user_modified`, `status`, `hide`) VALUES ('".$user_id."', '".$title."', '".$phone."', '".date('Y-m-d H:i:s')."', '', '', '0', 'show')");		
+    public function addCallback($phone, $user_id = "", $title = ''){
+        $res = \R::exec(
+            "INSERT INTO `callback`
+                (`user_id`, `topic`, `phone`, `date_create`, `date_modified`, `user_modified`, `status`, `hide`)
+             VALUES (?, ?, ?, ?, '', '', '0', 'show')",
+            [(int)$user_id, $title, $phone, date('Y-m-d H:i:s')]
+        );
 				if($res){
 					
-					$last = \R::findLast('callback');				
-					\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('1','2','callback','".$last->id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+					$callbackId = (int)\R::getCell('SELECT LAST_INSERT_ID()');				
+					AdminActivityLogger::incoming(AdminActivityLogger::ACTION_CALLBACK, 'callback', $callbackId, (int)$user_id);
 					setcookie("request-mig", "1house", time()+3600);
 					
 					// Create the Transport

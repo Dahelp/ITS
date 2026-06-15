@@ -7,57 +7,127 @@ use ishop\App;
 
 class CatalogController extends AppController {
 
-	public function indexAction(){
-		$alias = $this->route['alias'];
-		$up_registr = App::upRegistrLetter($alias);
-		if($alias) {
-			$cats = \R::findOne('category', 'alias = ?', [$alias]);
-			$category = \R::find('category', 'parent_id = ?', [$cats["id"]]);
-		}else{
-			$category = \R::find('category', 'parent_id = ?', [0]);
-		}
-        if(!$category){
-            throw new \Exception('Страница не найдена', 404);
-        }
+	public function indexAction()
+	{
+		$alias = $this->route['alias'] ?? '';
+		$cats = null;
 
-        $breadcrumbs = Breadcrumbs::getBreadcrumbs($cats->id, NULL, $alias, mb_strtolower($this->route["controller"]));
+		// Условие активной категории:
+		// show — активная
+		// '' или NULL — старые категории без заполненного статуса
+		$activeWhere = "(hide = 'show' OR hide = '' OR hide IS NULL)";
 
-		
-		/*SEO*/
-		//InSEO
-		$inseo = \R::findOne('plagins_inseo', "tip = ? AND category_id = ? AND hide = 'show'", ['category', $cats->id]);
-		if(!empty($inseo->title)) {
-			$title = \ishop\App::seoreplace($inseo->title, $cats->id);
-		}else{ 
-			if($this->route["controller"] == "category"){
-				$title = $cats->title;
-			}else{
-				$title = "Каталог ".\ishop\App::downFirstLetter($cats->name)." в интернет-магазине ИТС-Центр";
+		if ($alias) {
+			$cats = \R::findOne(
+				'category',
+				"alias = ? AND {$activeWhere}",
+				[$alias]
+			);
+
+			if (!$cats) {
+				throw new \Exception('Страница не найдена', 404);
 			}
-		}
-		if(!empty($inseo->description)) {
-			$description = \ishop\App::seoreplace($inseo->description, $cats->id);
-		}else{ 
-			if($this->route["controller"] == "category"){
-				$description = $cats->description;
-			}else{
-				$description = "В каталоге ".\ishop\App::downFirstLetter($cats->name)." в интернет магазине ИТС-Центр можно подобрать и купить товары с доставкой до транспортной компании.";
+
+			$category = \R::find(
+				'category',
+				"parent_id = ? AND {$activeWhere} ORDER BY position, id",
+				[$cats->id]
+			);
+
+			$breadcrumbs = Breadcrumbs::getBreadcrumbs(
+				$cats->id,
+				null,
+				$alias,
+				mb_strtolower($this->route["controller"])
+			);
+
+			// H1 для вложенной страницы каталога
+			if (!empty($cats->name)) {
+				$h1 = $cats->name;
+			} elseif (!empty($cats->title)) {
+				$h1 = $cats->title;
+			} else {
+				$h1 = 'Каталог';
 			}
-		}
-		if(!empty($inseo->keywords)) {
-			$keywords = \ishop\App::seoreplace($inseo->keywords, $cats->id);
-		}else{ 
-			if($this->route["controller"] == "category"){
-				$keywords = $cats->keywords;
-			}else{
-				$keywords = "".\ishop\App::downFirstLetter($cats->name)." для спецтехники, ".\ishop\App::downFirstLetter($cats->name)." для погрузчиков";
+
+			/* SEO для категории каталога */
+			$inseo = \R::findOne(
+				'plagins_inseo',
+				"tip = ? AND category_id = ? AND hide = 'show'",
+				['category', $cats->id]
+			);
+
+			if (!empty($inseo->title)) {
+				$title = App::seoreplace($inseo->title, $cats->id);
+			} else {
+				$title = !empty($cats->title)
+					? $cats->title
+					: "Каталог " . App::downFirstLetter($cats->name) . " в интернет-магазине ИТС-Центр";
 			}
+
+			if (!empty($inseo->description)) {
+				$description = App::seoreplace($inseo->description, $cats->id);
+			} else {
+				$description = !empty($cats->description)
+					? $cats->description
+					: "В каталоге " . App::downFirstLetter($cats->name) . " в интернет магазине ИТС-Центр можно подобрать и купить товары с доставкой до транспортной компании.";
+			}
+
+			if (!empty($inseo->keywords)) {
+				$keywords = App::seoreplace($inseo->keywords, $cats->id);
+			} else {
+				$keywords = !empty($cats->keywords)
+					? $cats->keywords
+					: App::downFirstLetter($cats->name) . " для спецтехники, " . App::downFirstLetter($cats->name) . " для погрузчиков";
+			}
+
+		} else {
+			// Главная страница каталога: /catalog
+			$category = \R::find(
+				'category',
+				"parent_id = ? AND {$activeWhere} ORDER BY position, id",
+				[0]
+			);
+
+			$breadcrumbs = [
+				[
+					'title' => 'Главная',
+					'link'  => PATH,
+				],
+				[
+					'title' => 'Каталог',
+					'link'  => '',
+				],
+			];
+
+			$h1 = 'Каталог';
+
+			$title = 'Каталог товаров ИТС-Центр';
+			$description = 'Каталог товаров для спецтехники в интернет-магазине ИТС-Центр.';
+			$keywords = '';
 		}
 
-		if($this->route["controller"]){ $path_controller = "/".mb_strtolower($this->route["controller"]).""; }else{ $path_controller = ""; }
-		if($this->route["alias"]){ $path_alias = "/".$this->route["alias"].""; }else{ $path_alias = ""; }
-		$this->setMeta(''.$title.'', ''.$description.'', ''.$keywords.'', '' . App::$app->getProperty('shop_name') . '', ''.PATH.'/images/' . App::$app->getProperty('og_logo') . '', ''.PATH.''.$path_controller.''.$path_alias.'');
-		/*SEO*/
-        $this->set(compact('category', 'breadcrumbs', 'cats'));
-    }
+		if (!$category) {
+			throw new \Exception('Страница не найдена', 404);
+		}
+
+		$path_controller = !empty($this->route["controller"])
+			? "/" . mb_strtolower($this->route["controller"])
+			: "";
+
+		$path_alias = !empty($this->route["alias"])
+			? "/" . $this->route["alias"]
+			: "";
+
+		$this->setMeta(
+			$title,
+			$description,
+			$keywords,
+			App::$app->getProperty('shop_name'),
+			PATH . '/images/' . App::$app->getProperty('og_logo'),
+			PATH . $path_controller . $path_alias
+		);
+
+		$this->set(compact('category', 'breadcrumbs', 'cats', 'h1'));
+	}
 }

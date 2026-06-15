@@ -49,7 +49,7 @@ $fd = fopen("cron/".$viewcrons["url_download"]."", 'w+') or die("не удало
 		$desc = "Компания ИТС-Центр предлагает купить аналог фильтра ".$vendor." ".$offer["cross_name"]." по низким ценам. Наименование аналога: ".$brand." ".$offer["model"]." ".$offer["brand_name"].". Доставка по всей России транспортными компаниями. До транспортной компании довозим бесплатно, вам останеться только получить заказ в своём городе.";
 		  
 			$text.= "<offer id=\"".$offer["article"]."\" available=\"".$available."\">
-                      <url>".PATH."/cross/".$offer["cross_abbreviated_name"]."</url>
+                      <url>".PATH."/cross/".rawurlencode((string)$offer["cross_abbreviated_name"])."</url>
                       <price>".$offer["price"]."</price>
 					  <oldprice>".$offer["price_rrs"]."</oldprice>
                       <currencyId>RUR</currencyId>

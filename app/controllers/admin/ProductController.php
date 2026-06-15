@@ -3,13 +3,15 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Product;
+use app\services\admin\AdminActivityLogger;
 use app\models\admin\SSP;
 use app\models\AppModel;
 use ishop\App;
 use ishop\libs\Pagination;
 use DataTables\Database;
 use app\models\admin\PlaginsIndexnow;
-	
+use app\helpers\TireSize;
+
 class ProductController extends AppController {
 
     public function indexAction(){
@@ -32,10 +34,80 @@ class ProductController extends AppController {
 
 		$columns = array(
 			array( 'db' => 'id', 'dt' => 0 ),
-			array( 'db' => 'img',  'dt' => 1,
-				   'formatter' => function( $d, $row ) {
-						return '<img src="/images/product/mini/'.$d.'" alt="" style="max-height: 70px">';
-					} ),
+			array('db' => 'img', 'dt' => 1,
+				'formatter' => function($d, $row) {
+					// $d = a.img; id возьмём из строки
+					$pid = (int)($row['id'] ?? $row[0] ?? 0);
+
+					// ---- 1) Основная картинка
+					$mainExt = '';
+					if (!empty($d) && $d !== 'no_image.jpg') {
+						$mainExt = strtolower(pathinfo($d, PATHINFO_EXTENSION));
+					}
+
+					// ---- 2) Галерея: количество и список расширений
+					// Одним запросом получим и count, и список уникальных расширений
+					$gal = \R::getRow("
+						SELECT 
+							COUNT(*) AS cnt,
+							GROUP_CONCAT(DISTINCT LOWER(SUBSTRING_INDEX(img,'.',-1)) ORDER BY NULL SEPARATOR ',') AS exts
+						FROM gallery
+						WHERE product_id = ?
+					", [$pid]);
+					$galCnt  = (int)($gal['cnt'] ?? 0);
+					$galExts = trim((string)($gal['exts'] ?? ''), ',');
+
+					// ---- 3) unload_img
+					$unloadImg = \R::getCell("SELECT unload_img FROM product WHERE id = ? LIMIT 1", [$pid]);
+					$unloadExt = '';
+					if (!empty($unloadImg)) {
+						$unloadExt = strtolower(pathinfo($unloadImg, PATHINFO_EXTENSION));
+					}
+
+					// ---- helper для цвета бэйджа по расширению
+					$extBadge = function($ext) {
+						if (!$ext) return "<span class='badge bg-danger'>нет</span>";
+						switch ($ext) {
+							case 'webp': return "<span class='badge bg-success'>webp</span>";
+							case 'jpg':
+							case 'jpeg': return "<span class='badge bg-primary'>jpg</span>";
+							case 'png':  return "<span class='badge bg-info'>png</span>";
+							case 'gif':  return "<span class='badge bg-warning text-dark'>gif</span>";
+							default:     return "<span class='badge bg-secondary'>".$ext."</span>";
+						}
+					};
+
+					// ---- badge для основной
+					$badgeMain = $extBadge($mainExt);
+
+					// ---- badge для галереи
+					// если нет — красная «нет»; если есть — показываем количество и список форматов
+					if ($galCnt > 0) {
+						// распарсим exts и превратим в компактные бэйджи
+						$parts = array_values(array_filter(array_unique(array_map('trim', explode(',', $galExts)))));
+						$extBadges = [];
+						foreach ($parts as $e) $extBadges[] = $extBadge($e);
+						$badgeGallery = "<span class='badge bg-success me-1'>галерея: {$galCnt}</span> " . implode(' ', $extBadges);
+					} else {
+						$badgeGallery = "<span class='badge bg-danger'>галерея: нет</span>";
+					}
+
+					// ---- badge для unload_img
+					$badgeUnload = $unloadExt ? $extBadge($unloadExt) : "<span class='badge bg-danger'>unload: нет</span>";
+
+					// ---- верстка
+					$imgHtml = $d ? '<img src="/images/product/mini/'.$d.'" alt="" style="max-height:70px">' : '';
+					return '
+					<div class="d-flex align-items-start">
+						<div>'.$imgHtml.'</div>
+						<div class="small" style="line-height:1.35; margin-left:10px">
+						<div>основная: '.$badgeMain.'</div>
+						<div>'.$badgeGallery.'</div>
+						<div>unload: '.$badgeUnload.'</div>
+						</div>
+					</div>';
+				}
+			),
 			array( 'db' => 'article',   'dt' => 2 ),
 			array( 'db' => 'cat', 'dt' => 3,
 				'formatter' => function( $d, $row ) {
@@ -57,12 +129,15 @@ class ProductController extends AppController {
 						$product = \R::findOne('product', 'id=?', [$d]);
 						$curr = \R::findOne('currency');
 						if($product['quantity']>0){ $itog_nalichie = "<span class='text-success'>В наличии: ".$product['quantity']." ".$product['unit']."</span>"; }
-						if($product['quantity']==0){
-							$instok = \R::findOne('in_stock', 'product_id=?', [$d]);							
-							if($instok['date_scheduling'] != '0000-00-00'){
+						if($product['quantity']==0){														
+							if($product['stock_status_id'] == 3){
 								$itog_nalichie = "<span class='text-primary'>Ожидается поступление</span>";
-							}else{
+							}
+							if($product['stock_status_id'] == 0){
 								$itog_nalichie = "<span class='text-danger'>Нет в наличии</span>";
+							}
+							if($product['stock_status_id'] == 2){
+								$itog_nalichie = "<span class='text-primary'>Под заказ</span>";
 							}
 						}
 						return ''.$curr['symbol_left'].''.$product['price'].' '.$curr['symbol_right'].'<br />'.$itog_nalichie.'';
@@ -140,7 +215,11 @@ class ProductController extends AppController {
 			array( 'db' => 'id',   'dt' => 10, 
 					'formatter' => function( $d, $row ) {
 						$product = \R::findOne('product', 'id=?', [$d]);
-						return '<a href="'.ADMIN.'/product/edit?id='.$d.'"><i class="fas fa-pencil-alt"></i></a> <a class="delete" href="'.ADMIN.'/product/delete?id='.$d.'"><i class="fas fa-times-circle text-danger"></i></a> <a target="_blank" href="/product/'.$product['alias'].'"><i class="fas fa-eye"></i></a> <a target="_blank" href="'.ADMIN.'/product/copy?id='.$d.'"><i class="fas fa-copy"></i></a>'; 
+						return '<a href="'.ADMIN.'/product/edit?id='.$d.'"><i class="fas fa-pencil-alt"></i></a> <a class="delete" href="'.ADMIN.'/product/delete?id='.$d.'"><i class="fas fa-times-circle text-danger"></i></a> <a target="_blank" href="/product/'.$product['alias'].'"><i class="fas fa-eye"></i></a> <a target="_blank" href="'.ADMIN.'/product/copy?id='.$d.'"><i class="fas fa-copy"></i></a><a 
+						href="'.ADMIN.'/media/convert?section=product&id='.(int)$product['id'].'&back='.ADMIN.'/product" alt="Конвертировать все изображения товара в WebP"
+						onclick="return confirm("Конвертировать все изображения товара в WebP?")">
+						<i class="fas fa-recycle"></i>
+					</a>'; 
 					}
 			)
 		);
@@ -161,6 +240,30 @@ class ProductController extends AppController {
 	
 	public function categoryAction(){
 		$price = $this->getPrices();
+
+		$rows = \R::getAll("SELECT id, name FROM product");
+		$ok=0; $skip=0;
+
+		foreach ($rows as $r){
+			$id = (int)$r['id'];
+			$sz = TireSize::extract($r['name']);
+			if ($sz) {
+				\R::exec(
+					"UPDATE product SET size_norm_digits=?, size_tokens=? WHERE id=?",
+					[$sz['digits'], implode(' ', $sz['tokens']), $id]
+				);
+				$ok++;
+			} else {
+				// если парсер не узнал — обнулим поля явно
+				\R::exec(
+					"UPDATE product SET size_norm_digits='', size_tokens='' WHERE id=?",
+					[$id]
+				);
+				$skip++;
+			}
+		}
+
+		echo "Updated: $ok, cleared: $skip\n";
 			
         $this->setMeta('Список товаров по категориям');
         $this->set(compact('price'));
@@ -360,7 +463,7 @@ class ProductController extends AppController {
 		}
 		
 		//сохранение истории
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','12','product','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(12, 'product', (int)$id);
         
 		// API IndexNow
 		$indexnow = new PlaginsIndexnow();
@@ -378,6 +481,17 @@ class ProductController extends AppController {
             $id = $this->getRequestID(false);
             $product = new Product();
             $data = $_POST;
+            $data['seo_h1'] = trim((string)($data['seo_h1'] ?? ''));
+
+			$sz = TireSize::extract($data['name'] ?? '');
+			if ($sz) {
+				$data['size_norm_digits'] = $sz['digits'];
+				$data['size_tokens']      = implode(' ', $sz['tokens']);
+			} else {
+				$data['size_norm_digits'] = '';
+				$data['size_tokens']      = '';
+			}
+
             $product->load($data);
             $product->attributes['new_product'] = $product->attributes['new_product'] ? '1' : '0';
             $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
@@ -403,16 +517,19 @@ class ProductController extends AppController {
                 $product = \R::load('product', $id);
 				if($data['alias']!=""){ $product->alias = $data['alias'];}
 				else{$product->alias = $alias;}
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','5','product','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(5, 'product', (int)$id);
                 \R::store($product);
 				
 				// API IndexNow
-				$indexnow = new PlaginsIndexnow();
-				$inw = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
-				foreach($inw as $in){					
-					$search_engine .= $indexnow->indexNowEngine($in->url, 'product', $product->alias, $in->verification);
-				}				
-				
+				if (!App::$app->getProperty('indexnow_enabled')) {
+					// скип без каких-либо вызовов
+				} else {
+					$indexnow = new PlaginsIndexnow();
+					$inw = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
+					foreach($inw as $in){					
+						$search_engine .= $indexnow->indexNowEngine($in->url, 'product', $product->alias, $in->verification);
+					}				
+				}
                 $_SESSION['success'] = 'Изменения сохранены.'.$search_engine.'';
                 redirect();
             }
@@ -439,69 +556,112 @@ class ProductController extends AppController {
     }
 	
 	public function copyAction(){
-        if(!empty($_POST)){
-            $product = new Product();
-            $data = $_POST;
-            $product->load($data);
-            $product->attributes['new_product'] = $product->attributes['new_product'] ? '1' : '0';
-            $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
-			$product->attributes['sale'] = $product->attributes['sale'] ? '1' : '0';
-            $product->getImg();
+		if(!empty($_POST)){
+			$product = new Product();
+			$data = $_POST;
+			$data['seo_h1'] = trim((string)($data['seo_h1'] ?? ''));
 
-            if(!$product->validate($data) || !$product->checkUniqueArticle()){
-                $product->getErrors();
-                $_SESSION['form_data'] = $data;
-                redirect();
-            }
+			$sz = TireSize::extract($data['name'] ?? '');
+			if ($sz) {
+				$data['size_norm_digits'] = $sz['digits'];
+				$data['size_tokens']      = implode(' ', $sz['tokens']);
+			} else {
+				$data['size_norm_digits'] = '';
+				$data['size_tokens']      = '';
+			}
 
-            if($id = $product->save('product')){
-                $product->saveGallery($id);
-                $alias = AppModel::createAlias('product', 'alias', $data['name'], $id);
-                $p = \R::load('product', $id);
-                $p->alias = $alias;
-                \R::store($p);
-                $isNonEmptyArray = $product->traverseArray($data['attrs']);
-				if($isNonEmptyArray){ $product->editFilter($id, $data); }
-                $product->editRelatedProduct($id, $data);
+			$product->load($data);
+			$product->attributes['new_product'] = !empty($product->attributes['new_product']) ? '1' : '0';
+			$product->attributes['hit'] = !empty($product->attributes['hit']) ? '1' : '0';
+			$product->attributes['sale'] = !empty($product->attributes['sale']) ? '1' : '0';
+			$product->getImg();
+			$product->getUnloadImg();
+
+			if(!$product->validate($data) || !$product->checkUniqueArticle()){
+				$product->getErrors();
+				$_SESSION['form_data'] = $data;
+				redirect();
+			}
+
+			if($id = $product->save('product')){
+				$product->saveGallery($id);
+				$alias = AppModel::createAlias('product', 'alias', $data['name'], $id);
+				$p = \R::load('product', $id);
+				$p->alias = $alias;
+				\R::store($p);
+
+				$isNonEmptyArray = $product->traverseArray($data['attrs'] ?? []);
+				if($isNonEmptyArray){ 
+					$product->editFilter($id, $data); 
+				}
+
+				$product->editRelatedProduct($id, $data);
 				$product->editSimilarProduct($id, $data);
 				$product->editServiceProduct($id, $data);
 				$product->editAttributeProduct($id, $data);
 				$product->editModificationProduct($id, $data);
 				$product->editTagsProduct($id, $data);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','4','product','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
-				
-				// API IndexNow
+
+				AdminActivityLogger::admin(4, 'product', (int)$id);
+
+				$search_engine = '';
 				$indexnow = new PlaginsIndexnow();
 				$inw = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
-				foreach($inw as $in){					
+				foreach($inw as $in){                    
 					$search_engine .= $indexnow->indexNowEngine($in->url, 'product', $p->alias, $in->verification);
 				}
-		
-                $_SESSION['success'] = 'Товар добавлен.'.$search_engine.'';
-            }
-            redirect();
-        }
 
-        $id = $this->getRequestID();
-        $product = \R::load('product', $id);
-        App::$app->setProperty('parent_id', $product->category_id);
-        $filter = \R::getCol('SELECT attr_id FROM attribute_product WHERE product_id = ?', [$id]);
+				$_SESSION['success'] = 'Товар добавлен.'.$search_engine;
+			}
+			redirect();
+		}
+
+		$id = $this->getRequestID();
+		$product = \R::load('product', $id);
+		App::$app->setProperty('parent_id', $product->category_id);
+
+		$filter = \R::getCol('SELECT attr_id FROM attribute_product WHERE product_id = ?', [$id]);
 		$att_product = \R::getAll('SELECT * FROM product_attribute, attribute WHERE attribute.id = product_attribute.attribute_id AND product_attribute.product_id = ?', [$id]);
-        $related_product = \R::getAll('SELECT related_product.related_id, product.name FROM related_product JOIN product ON product.id = related_product.related_id WHERE related_product.product_id = ?', [$id]);
+		$related_product = \R::getAll('SELECT related_product.related_id, product.name FROM related_product JOIN product ON product.id = related_product.related_id WHERE related_product.product_id = ?', [$id]);
 		$similar_product = \R::getAll('SELECT similar_product.similar_id, product.name FROM similar_product JOIN product ON product.id = similar_product.similar_id WHERE similar_product.product_id = ?', [$id]);
-		$service_product = \R::getAll('SELECT service_product.service_id, product.name FROM service_product JOIN product ON product.id = service_product.service_id WHERE service_product.product_id = ?', [$id]);		
+		$service_product = \R::getAll('SELECT service_product.service_id, product.name FROM service_product JOIN product ON product.id = service_product.service_id WHERE service_product.product_id = ?', [$id]);
 		$tags_product = \R::getAll('SELECT name FROM product_tags WHERE product_id = ?', [$id]);
-        $gallery = \R::getCol('SELECT img FROM gallery WHERE product_id = ?', [$id]);
+		$gallery = \R::getCol('SELECT img FROM gallery WHERE product_id = ?', [$id]);
 		$attrs = $this->getAttrs();
 		$groups = $this->getGroups($product->category_id);
-        $this->setMeta("Копирование товара {$product->name}");
-        $this->set(compact('product', 'filter', 'related_product', 'similar_product', 'service_product', 'gallery', 'att_product', 'tags_product', 'attrs', 'groups'));
-    }
+		$mods = \R::getAll('SELECT * FROM modification WHERE product_id = ?', [$id]);
+
+		$this->setMeta("Копирование товара {$product->name}");
+		$this->set(compact(
+			'product',
+			'filter',
+			'related_product',
+			'similar_product',
+			'service_product',
+			'gallery',
+			'att_product',
+			'tags_product',
+			'attrs',
+			'groups',
+			'mods'
+		));
+	}
 
     public function addAction(){
         if(!empty($_POST)){
             $product = new Product();
             $data = $_POST;
+            $data['seo_h1'] = trim((string)($data['seo_h1'] ?? ''));
+
+			$sz = TireSize::extract($data['name'] ?? '');
+			if ($sz) {
+				$data['size_norm_digits'] = $sz['digits'];
+				$data['size_tokens']      = implode(' ', $sz['tokens']);
+			} else {
+				$data['size_norm_digits'] = '';
+				$data['size_tokens']      = '';
+			}
+
             $product->load($data);
             $product->attributes['new_product'] = $product->attributes['new_product'] ? '1' : '0';
             $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
@@ -528,7 +688,7 @@ class ProductController extends AppController {
 				$product->editAttributeProduct($id, $data);
 				$product->editModificationProduct($id, $data);
 				$product->editTagsProduct($id, $data);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','4','product','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(4, 'product', (int)$id);
 				
 				// API IndexNow
 				$indexnow = new PlaginsIndexnow();
@@ -665,7 +825,6 @@ class ProductController extends AppController {
 			}
 		}
     return $price;
-	}
-
+	}	
 
 }

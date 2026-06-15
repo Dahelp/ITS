@@ -5,31 +5,36 @@ namespace ishop\base;
 use ishop\Db;
 use Valitron\Validator;
 
-abstract class Model{
+abstract class Model {
 
     public $attributes = [];
     public $errors = [];
     public $rules = [];
+
+    /**
+     * Список полей, которые нельзя перезаписывать пустыми значениями
+     */
+    protected $preventOverwriteIfEmpty = ['password'];
 
     public function __construct(){
         Db::instance();
     }
 
     public function load($data){
-        foreach($this->attributes as $name => $value){
-            if(isset($data[$name])){
+        foreach ($this->attributes as $name => $value) {
+            if (array_key_exists($name, $data)) {
+                // ❗ Защита от обнуления для важных полей
+                if (in_array($name, $this->preventOverwriteIfEmpty, true) && trim($data[$name]) === '') {
+                    continue;
+                }
                 $this->attributes[$name] = $data[$name];
             }
         }
     }
 
     public function save($table, $valid = true){
-        if($valid){
-            $tbl = \R::dispense($table);
-        }else{
-            $tbl = \R::xdispense($table);
-        }
-        foreach($this->attributes as $name => $value){
+        $tbl = $valid ? \R::dispense($table) : \R::xdispense($table);
+        foreach ($this->attributes as $name => $value) {
             $tbl->$name = $value;
         }
         return \R::store($tbl);
@@ -37,7 +42,11 @@ abstract class Model{
 
     public function update($table, $id){
         $bean = \R::load($table, $id);
-        foreach($this->attributes as $name => $value){
+        foreach ($this->attributes as $name => $value) {
+            // ❗ Защита от пустого перезаписывания
+            if (in_array($name, $this->preventOverwriteIfEmpty, true) && trim($value) === '') {
+                continue;
+            }
             $bean->$name = $value;
         }
         return \R::store($bean);
@@ -65,5 +74,4 @@ abstract class Model{
         $errors .= '</ul>';
         $_SESSION['error'] = $errors;
     }
-
 }

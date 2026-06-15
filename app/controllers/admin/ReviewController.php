@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Review;
+use app\services\admin\AdminActivityLogger;
 use app\models\AppModel;
 use ishop\App;
 use DataTables\Database;
@@ -50,7 +51,7 @@ class ReviewController extends AppController {
         $del_gallery = \R::load('review_gallery', $gallery["id"]);
 		\R::trash($del_gallery);
 		
-		\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','65','review','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+		AdminActivityLogger::admin(65, 'review', (int)$id);
 		
 		$product = \R::findOne('product', 'id=?', [$review["product_id"]]);
 		
@@ -82,18 +83,35 @@ class ReviewController extends AppController {
 				$review->editReviewProduct($id, $data);
 				$review->saveGallery($id);
 				$r = \R::load('review', $id);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','63','review','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(63, 'review', (int)$id);
 				
-				$product = \R::findOne('product', 'id=?', [$r["product_id"]]);
-				
-				// API IndexNow
-				$indexnow = new PlaginsIndexnow();
-				$inw = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
-				foreach($inw as $in){					
-					$search_engine .= $indexnow->indexNowEngine($in->url, 'product', $product->alias, $in->verification);
-				}
-				
-                $_SESSION['success'] = 'Отзыв добавлен.'.$search_engine.'';
+				$product = null;
+                $search_engine = '';
+
+                // аккуратно читаем продукт по product_id из отзыва
+                if (!empty($r->product_id)) {
+                    $product = \R::load('product', (int)$r->product_id);
+                }
+
+                // API IndexNow
+                if ($product && isset($product->alias)) {
+                    $indexnow = new PlaginsIndexnow();
+                    $inw      = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
+
+                    foreach ($inw as $in) {
+                        $search_engine .= $indexnow->indexNowEngine(
+                            (string)$in->url,
+                            'product',
+                            (string)$product->alias,   // сюда теперь можно передать и null, мы уже обработали в indexNowEngine
+                            (string)$in->verification
+                        );
+                    }
+                } else {
+                    $search_engine = '<br>IndexNow: SKIP (нет связанного товара или alias)';
+                }
+
+                $_SESSION['success'] = 'Отзыв добавлен.' . $search_engine;
+
             }
             redirect();
         }
@@ -116,18 +134,32 @@ class ReviewController extends AppController {
 				$review->saveGallery($id);
 				
 				$r = \R::load('review', $id);
-				\R::exec("INSERT INTO `admin_last_history`(`gh_id`, `ah_id`, `name_tbl`, `id_tbl`, `date_modified`, `customer_id`) VALUES ('2','64','review','".$id."','".date('Y-m-d H:i:s')."','".$_SESSION['user']['id']."')");
+				AdminActivityLogger::admin(64, 'review', (int)$id);
 				
-				$product = \R::findOne('product', 'id=?', [$r["product_id"]]);
+				$product = null;
+                $search_engine = '';
 
-				// API IndexNow
-				$indexnow = new PlaginsIndexnow();
-				$inw = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
-				foreach($inw as $in){					
-					$search_engine .= $indexnow->indexNowEngine($in->url, 'product', $product->alias, $in->verification);
-				}
-				
-                $_SESSION['success'] = 'Изменения сохранены.'.$search_engine.'';
+                if (!empty($r->product_id)) {
+                    $product = \R::load('product', (int)$r->product_id);
+                }
+
+                if ($product && isset($product->alias)) {
+                    $indexnow = new PlaginsIndexnow();
+                    $inw      = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
+
+                    foreach ($inw as $in) {
+                        $search_engine .= $indexnow->indexNowEngine(
+                            (string)$in->url,
+                            'product',
+                            (string)$product->alias,
+                            (string)$in->verification
+                        );
+                    }
+                } else {
+                    $search_engine = '<br>IndexNow: SKIP (нет связанного товара или alias)';
+                }
+
+                $_SESSION['success'] = 'Изменения сохранены.' . $search_engine;
                 redirect();
             }
         }

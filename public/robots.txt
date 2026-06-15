@@ -1,11 +1,22 @@
 User-agent: *
+
 Disallow: /admin/
 Disallow: /user/
 Disallow: /cart/
-Disallow: /*.pdf$
-Disallow: /comparison
 Disallow: /crm/
-Disallow: *?,&*
+Disallow: /comparison
+Disallow: /home/
+Disallow: /technics/cart/add?id=*
+
+Disallow: /*.pdf$
+
+Disallow: *sort=
+Disallow: *filter=
+Disallow: *s=
+Disallow: *add-to-cart=
+Disallow: *page=
+
+Sitemap: https://its-center.ru/cron/sitemap.xml
 
 Clean-param: erid
 Clean-param: etext

@@ -40,25 +40,30 @@ class User extends AppModel {
     public function login($isAdmin = false){
         $email = !empty(trim($_POST['email'])) ? trim($_POST['email']) : null;
         $password = !empty(trim($_POST['password'])) ? trim($_POST['password']) : null;
+
         if($email && $password){
-            if($isAdmin){
-                $user = \R::findOne('user', "email = ? AND role = 'admin'", [$email]);
-            }else{
-                $user = \R::findOne('user', "email = ?", [$email]);
-            }
-            if($user){
-                if(password_verify($password, $user->password)){
-                    foreach($user as $k => $v){
-                        if($k != 'password') $_SESSION['user'][$k] = $v;
-                    }
-					$res = \R::exec("UPDATE user SET date_last_visit = '".date('Y-m-d H:i:s')."' WHERE email = '".$email."'");
-					
-                    return true;					
+            $user = $isAdmin
+                ? \R::findOne('user', "email = ? AND role = 'admin'", [$email])
+                : \R::findOne('user', "email = ?", [$email]);
+
+            if($user && password_verify($password, $user->password)){
+                foreach($user as $k => $v){
+                    if($k != 'password') $_SESSION['user'][$k] = $v;
                 }
+
+                \R::exec("UPDATE user SET date_last_visit = ? WHERE email = ?", [date('Y-m-d H:i:s'), $email]);
+
+                // Восстанавливаем cookie-согласие
+                if ($user->cookie_accepted) {
+                    setcookie('cookie_accepted', 'true', time() + 3600 * 24 * 365, '/');
+                }
+
+                return true;
             }
         }
         return false;
     }
+
 	
 	public function generate_code() {
                 

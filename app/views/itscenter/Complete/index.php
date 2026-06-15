@@ -6,7 +6,7 @@
 			<ol class="breadcrumb flex-lg-nowrap" itemscope="" itemtype="http://schema.org/BreadcrumbList">
 				<li class="breadcrumb-item">
 					<span itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
-						<a itemprop="item" class="text-nowrap" href="https://its-center.ru"><meta itemprop="name" content="Главная"><i class="fas fa-home"></i><meta itemprop="position" content="1"></a>
+						<a itemprop="item" class="text-nowrap" href="https://its-center.ru"><meta itemprop="name" content="Главная"><i class="fas fa-home"></i><span class="visually-hidden">Главная</span><meta itemprop="position" content="1"></a>
 					</span>
 				</li>
 				<li class="breadcrumb-item text-nowrap active" data-id="2">
