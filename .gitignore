@@ -28,6 +28,8 @@ node_modules/
 .env
 *.key
 *.pem
+/config/config_db.php
+/config/params.php
 
 # Local archives and backups
 /archive/
