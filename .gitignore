@@ -28,6 +28,7 @@ node_modules/
 .env
 *.key
 *.pem
+/config/api.php
 /config/config_db.php
 /config/config_db_tamozh.php
 /config/params.php
