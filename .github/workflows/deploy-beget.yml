@@ -1,0 +1,55 @@
+name: Deploy to Beget
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.BEGET_SSH_KEY }}" > ~/.ssh/beget_deploy_key
+          chmod 600 ~/.ssh/beget_deploy_key
+          ssh-keyscan -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Check SSH connection
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key \
+            -p "${{ secrets.BEGET_PORT }}" \
+            "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "mkdir -p '${{ secrets.BEGET_PATH }}' && echo 'Beget SSH connection OK'"
+
+      - name: Deploy files
+        shell: bash
+        run: |
+          rsync -rlgoDzvc \
+            -e "ssh -i ~/.ssh/beget_deploy_key -p ${{ secrets.BEGET_PORT }}" \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.gitignore' \
+            --exclude='.git.corrupt-*' \
+            --exclude='.idea/' \
+            --exclude='archive/' \
+            --exclude='tmp/' \
+            --exclude='public/cron/' \
+            --exclude='public/xls/' \
+            --exclude='public/xml/' \
+            --exclude='public/storage/' \
+            --exclude='public/uploads/' \
+            --exclude='config/api.php' \
+            --exclude='config/config_db.php' \
+            --exclude='config/config_db_tamozh.php' \
+            --exclude='config/params.php' \
+            ./ "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:${{ secrets.BEGET_PATH }}/"
