@@ -1,9 +1,20 @@
 ﻿$('.sidebar-menu a').each(function(){
-    var location = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    var location = window.location.protocol + '//' + window.location.host + window.location.pathname.replace(/\/$/, '');
     var link = this.href;
     if(link == location){
         $(this).parent().addClass('active');
         $(this).closest('.treeview').addClass('active');
+    }
+});
+
+$('.nav-sidebar a.nav-link').each(function(){
+    var location = window.location.protocol + '//' + window.location.host + window.location.pathname.replace(/\/$/, '');
+    var link = this.href.replace(/\/$/, '');
+    if(link === location){
+        $(this).addClass('active');
+        $(this).parents('.nav-treeview').addClass('menu-open').show();
+        $(this).parents('.nav-item').addClass('menu-open');
+        $(this).parents('.nav-item').children('a.nav-link').first().addClass('active');
     }
 });
 

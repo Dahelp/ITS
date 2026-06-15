@@ -91,6 +91,69 @@ div.dataTables_wrapper div.dataTables_filter{float: right;width: 50%;padding:1.2
 /*Header*/
 .main-header .dropdown-item {display: flow-root !important;}
 
+/* Admin sidebar */
+.admin-sidebar-nav {
+    padding-bottom: 24px;
+}
+.admin-sidebar-nav .nav-header {
+    margin: 14px 8px 6px;
+    padding: 0;
+    color: #8fa1b3;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+.admin-sidebar-nav .nav-sidebar > .nav-item {
+    margin: 1px 8px;
+}
+.admin-sidebar-nav .nav-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    border-radius: 6px;
+}
+.admin-sidebar-nav .nav-sidebar .nav-link p {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.admin-sidebar-nav .nav-sidebar .nav-link > .right {
+    top: auto;
+    margin-left: auto;
+}
+.admin-sidebar-nav .nav-sidebar > .nav-item > .nav-link.active,
+.admin-sidebar-nav .nav-sidebar > .nav-item.menu-open > .nav-link {
+    background: rgba(255,255,255,.12);
+    color: #fff;
+}
+.admin-sidebar-nav .nav-treeview {
+    margin: 2px 0 8px;
+    padding: 4px 0 4px 8px;
+    border-left: 1px solid rgba(255,255,255,.1);
+}
+.admin-sidebar-nav .nav-treeview .nav-item {
+    margin: 1px 0;
+}
+.admin-sidebar-nav .nav-treeview .nav-link {
+    min-height: 34px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    color: #c9d3de;
+}
+.admin-sidebar-nav .nav-treeview .nav-link.active {
+    background: rgba(0,123,255,.22);
+    color: #fff;
+}
+.admin-sidebar-nav .nav-treeview .nav-icon {
+    width: 1.35rem;
+    font-size: .82rem;
+    opacity: .9;
+}
+.sidebar-collapse .admin-sidebar-nav .nav-header {
+    display: none;
+}
+
 /*ORDER*/
 .order-content{float:left;width:100%}
 .order-container{float:right;width:25%;padding: 20px 20px 20px 0;}

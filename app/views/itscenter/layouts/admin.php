@@ -174,116 +174,121 @@
       </div>
  		
       <!-- Sidebar Menu -->
-      <nav class="mt-2">
-          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-header">Панель управления</li>
+      <nav class="mt-2 admin-sidebar-nav">
+          <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">Быстрый доступ</li>
                 <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/"><i class="nav-icon fas fa-home"></i> <p>Главная</p></a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/manager-sales"><i class="nav-icon fas fa-chart-line"></i> <p>Продажи менеджеров</p></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/search"><i class="nav-icon fas fa-search"></i> <p>Поиск по админке</p></a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/notifications"><i class="nav-icon far fa-bell"></i> <p>Уведомления</p></a></li>
+
+                <li class="nav-header">Работа с клиентами</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fas fa-cash-register"></i>
+                        <p>Продажи <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/order"><i class="fas fa-shopping-cart nav-icon"></i><p>Заказы</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/oneclick"><i class="fas fa-bolt nav-icon"></i><p>Заказы в 1 клик</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/request"><i class="fas fa-inbox nav-icon"></i><p>Заявки</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/callback"><i class="fas fa-phone-alt nav-icon"></i><p>Обратные звонки</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/availability"><i class="fas fa-clipboard-check nav-icon"></i><p>Запросы наличия</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/leads"><i class="fas fa-tty nav-icon"></i><p>Лиды</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/manager-sales"><i class="fas fa-chart-line nav-icon"></i><p>Продажи менеджеров</p></a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Клиенты и доступы <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/company"><i class="far fa-building nav-icon"></i><p>Компании</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user"><i class="far fa-address-book nav-icon"></i><p>Клиенты</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user/customers"><i class="far fa-user nav-icon"></i><p>Пользователи</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user/groups"><i class="fas fa-users-cog nav-icon"></i><p>Группы</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user/roles"><i class="fas fa-user-shield nav-icon"></i><p>Роли</p></a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-header">Каталог и склад</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fas fa-box-open"></i>
+                        <p>Товары <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/product"><i class="fas fa-cubes nav-icon"></i><p>Список товаров</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/product/category"><i class="fas fa-sitemap nav-icon"></i><p>Товары по категориям</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/stock"><i class="fas fa-boxes nav-icon"></i><p>Наличие товаров</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/review"><i class="far fa-comment-dots nav-icon"></i><p>Отзывы</p></a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fas fa-layer-group"></i>
+                        <p>Структура каталога <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/category"><i class="fas fa-folder-tree nav-icon"></i><p>Категории</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/brand"><i class="fas fa-copyright nav-icon"></i><p>Производители</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/attribute"><i class="fas fa-sliders-h nav-icon"></i><p>Атрибуты</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/filtrs/attribute-group"><i class="fas fa-filter nav-icon"></i><p>Группы фильтров</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/filtrs/attribute"><i class="fas fa-tasks nav-icon"></i><p>Фильтры</p></a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon fas fa-exchange-alt"></i>
+                        <p>Обмен данными <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/import"><i class="fas fa-file-import nav-icon"></i><p>Импорт</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/export"><i class="fas fa-file-export nav-icon"></i><p>Экспорт</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/avito"><i class="fas fa-bullhorn nav-icon"></i><p>Авито</p></a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-header">Сайт и коммуникации</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon far fa-file-alt"></i>
+                        <p>Контент <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/contents/pages"><i class="far fa-file-alt nav-icon"></i><p>Страницы и материалы</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/contents/type-content"><i class="fas fa-tags nav-icon"></i><p>Типы контента</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/action"><i class="fas fa-percent nav-icon"></i><p>Акции</p></a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="nav-icon far fa-envelope"></i>
+                        <p>Почта и рассылки <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/mailbox"><i class="fas fa-inbox nav-icon"></i><p>Входящие</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/mailbox/compose"><i class="far fa-edit nav-icon"></i><p>Написать письмо</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/newsletter"><i class="fas fa-paper-plane nav-icon"></i><p>Рассылки</p></a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-header">Администрирование</li>
+                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/plagins"><i class="nav-icon fas fa-th-large"></i> <p>Компоненты</p></a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/activity"><i class="nav-icon fas fa-history"></i> <p>Журнал действий</p></a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/stock"><i class="nav-icon fas fa-boxes"></i> <p>Наличие товаров</p></a></li>
-
-                <li class="nav-header">Продажи и заявки</li>
- 				<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/leads"><i class="nav-icon fa fa-tty menu-icon"></i> <p>Лиды</p></a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/order"><i class="nav-icon fas fa-shopping-cart"></i> <p>Заказы</p></a></li>
-
-                <li class="nav-header">Каталог товаров</li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
- 						<i class="nav-icon fas fa-cubes"></i>
- 						<p>Товары
- 							<i class="fas fa-angle-left right"></i>
- 						</p>
+                        <i class="nav-icon fas fa-cog"></i>
+                        <p>Система <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/product"><i class="far fa-circle nav-icon"></i><p>Список товаров</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/category"><i class="far fa-circle nav-icon"></i><p>Категории</p></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/attribute"><i class="far fa-circle nav-icon"></i><p>Атрибуты</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/brand"><i class="far fa-circle nav-icon"></i><p>Производители</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="#">
- 								<i class="far fa-circle nav-icon"></i>
- 								<p>Фильтры
- 									<i class="fas fa-angle-left right"></i>
- 								</p>
- 							</a>
- 							<ul class="nav nav-treeview">
- 								<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/filtrs/attribute-group"><i class="far fa-dot-circle nav-icon"></i><p>Группы фильтров</p></a></li>
- 								<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/filtrs/attribute"><i class="far fa-dot-circle nav-icon"></i><p>Фильтры</p></a></li>
- 							</ul>
- 						</li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/import"><i class="far fa-circle nav-icon"></i><p>Импорт</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/export"><i class="far fa-circle nav-icon"></i><p>Экспорт</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/options"><i class="fas fa-tools nav-icon"></i><p>Основные настройки</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/cache"><i class="fas fa-database nav-icon"></i><p>Кэширование</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/currency"><i class="fas fa-ruble-sign nav-icon"></i><p>Валюты</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/cron"><i class="far fa-clock nav-icon"></i><p>CRON задания</p></a></li>
                     </ul>
                 </li>
-
-                <li class="nav-header">Контент и SEO</li>
- 				<li class="nav-item">
-                    <a class="nav-link" href="#">
- 						<i class="nav-icon far fa-file-alt"></i>
- 						<p>Контент
- 							<i class="fas fa-angle-left right"></i>
- 						</p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/contents/pages"><i class="far fa-circle nav-icon"></i><p>Список контента</p></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/contents/type-content"><i class="far fa-circle nav-icon"></i><p>Типы контента</p></a></li>
-                    </ul>
-                </li>
- 				<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/action"><i class="nav-icon fas fa-percentage"></i> <p>Акции</p></a></li>
- 				<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/review"><i class="nav-icon far fa-comments"></i> <p>Отзывы</p></a></li>
-
-                <li class="nav-header">Клиенты и доступ</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
- 						<i class="nav-icon fas fa-users"></i>
- 						<p>Пользователи
- 							<i class="fas fa-angle-left right"></i>
- 						</p>
-                    </a>
-                    <ul class="nav nav-treeview">
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/company"><i class="far fa-circle nav-icon"></i><p>Компании</p></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user"><i class="far fa-circle nav-icon"></i><p>Клиенты</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user/customers"><i class="far fa-circle nav-icon"></i><p>Пользователи</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user/groups"><i class="far fa-circle nav-icon"></i><p>Группы</p></a></li>                        
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/user/roles"><i class="far fa-circle nav-icon"></i><p>Роли</p></a></li>
- 						
-                    </ul>
-                </li>
-
-                <li class="nav-header">Коммуникации</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
- 						<i class="nav-icon far fa-envelope"></i>
- 						<p>Почта
- 							<i class="fas fa-angle-left right"></i>
- 						</p>
-                    </a>
-                    <ul class="nav nav-treeview">
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/mailbox"><i class="far fa-circle nav-icon"></i><p>Входящие</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/mailbox/compose"><i class="far fa-circle nav-icon"></i><p>Написать</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/newsletter"><i class="far fa-circle nav-icon"></i><p>Рассылки</p></a></li>
- 						
-                    </ul>
-                </li>
-
-                <li class="nav-header">Инструменты</li>
- 				<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/plagins"><i class="nav-icon fas fa-th"></i> <p>Компоненты</p></a></li>
-
-                <li class="nav-header">Система</li>
- 				<li class="nav-item">
-                    <a class="nav-link" href="#">
- 						<i class="nav-icon fas fa-cog"></i>
- 						<p>Настройки
- 							<i class="fas fa-angle-left right"></i>
- 						</p>
-                    </a>
-                    <ul class="nav nav-treeview">
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/options"><i class="far fa-circle nav-icon"></i><p>Основные настройки</p></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/cache"><i class="far fa-circle nav-icon"></i><p>Кэширование</p></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/currency"><i class="far fa-circle nav-icon"></i><p>Валюты</p></a></li>
- 						<li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/cron"><i class="far fa-circle nav-icon"></i><p>CRON задания</p></a></li>
-                    </ul>
-                </li>
- 				
             </ul>
       </nav>
       <!-- /.sidebar-menu -->
