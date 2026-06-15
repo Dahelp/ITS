@@ -29,6 +29,7 @@ node_modules/
 *.key
 *.pem
 /config/config_db.php
+/config/config_db_tamozh.php
 /config/params.php
 
 # Local archives and backups
