@@ -848,10 +848,10 @@ class CategoryController extends AppController
             return [];
         }
 
-        return $this->getRelatedProductsFromCategoryProducts($category, $targetCategoryIds, 5);
+        return $this->getRelatedProductsFromCategoryProducts($category, $targetCategoryIds, 5, $selectedAttrId);
     }
 
-    protected function getRelatedProductsFromCategoryProducts($category, array $targetCategoryIds, int $limit): array
+    protected function getRelatedProductsFromCategoryProducts($category, array $targetCategoryIds, int $limit, ?int $selectedAttrId = null): array
     {
         $sourceIds = $this->getCategoryIdsSql((int)($category->id ?? 0));
         $targetIds = implode(',', array_map('intval', $targetCategoryIds));
@@ -859,13 +859,24 @@ class CategoryController extends AppController
             return [];
         }
 
+        $sourceAttrJoin = '';
+        $sourceAttrWhere = '';
+        $params = [];
+        if (!empty($selectedAttrId)) {
+            $sourceAttrJoin = 'JOIN attribute_product src_ap ON src_ap.product_id = src.id';
+            $sourceAttrWhere = 'AND src_ap.attr_id = ?';
+            $params[] = (int)$selectedAttrId;
+        }
+
         return \R::getAll(
             "SELECT p.*, COUNT(*) AS rel_score
             FROM related_product rp
             JOIN product src ON src.id = rp.product_id
+            $sourceAttrJoin
             JOIN product p ON p.id = rp.related_id
             WHERE src.hide = 'show'
             AND src.category_id IN ($sourceIds)
+            $sourceAttrWhere
             AND p.hide = 'show'
             AND p.price > 0
             AND p.stock_status_id = 1
@@ -876,7 +887,8 @@ class CategoryController extends AppController
             AND p.category_id IN ($targetIds)
             GROUP BY p.id
             ORDER BY rel_score DESC, p.quantity DESC, p.id DESC
-            LIMIT $limit"
+            LIMIT $limit",
+            $params
         );
     }
 
