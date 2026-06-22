@@ -119,9 +119,6 @@
 							<a href="https://vk.com/itscenterru" target="_blank" rel="noopener noreferrer" class="social-link social-link--vk" title="ВКонтакте">
 								<i class="fab fa-vk"></i>
 							</a>
-							<a href="https://ok.ru/group/54227545423872" target="_blank" rel="noopener noreferrer" class="social-link social-link--ok" title="Одноклассники">
-								<i class="fab fa-odnoklassniki"></i>
-							</a>
 							<a href="https://www.youtube.com/channel/UC3GcfXpBiS51zYyRXCbAaoA" target="_blank" rel="noopener noreferrer" class="social-link social-link--youtube" title="YouTube">
 								<i class="fab fa-youtube"></i>
 							</a>
