@@ -158,6 +158,36 @@ $breadcrumbSchema = [
                             <?=$find->content;?>
                         </div>
 
+                        <?php if (($find->alias ?? '') === 'privacy'): ?>
+                            <section class="privacy-operator mt-4 pt-4 border-top">
+                                <h2>Сведения об операторе персональных данных</h2>
+                                <p>
+                                    Оператором персональных данных является
+                                    <strong>Общество с ограниченной ответственностью "ИТС-Центр"</strong>.
+                                </p>
+
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-4 col-lg-3">ОГРН</dt>
+                                    <dd class="col-sm-8 col-lg-9">1105074000096</dd>
+
+                                    <dt class="col-sm-4 col-lg-3">ИНН / КПП</dt>
+                                    <dd class="col-sm-8 col-lg-9">5036103305 / 503601001</dd>
+
+                                    <dt class="col-sm-4 col-lg-3">Место нахождения</dt>
+                                    <dd class="col-sm-8 col-lg-9">
+                                        142117, Московская область, г. Подольск, деревня Коледино,
+                                        ул. Троицкая, д. 1Г, стр. 1, помещение В-348/49
+                                    </dd>
+
+                                    <dt class="col-sm-4 col-lg-3">Почтовый адрес</dt>
+                                    <dd class="col-sm-8 col-lg-9">
+                                        142117, Московская область, г. Подольск, деревня Коледино,
+                                        ул. Троицкая, д. 1Г, стр. 1, помещение В-348/49
+                                    </dd>
+                                </dl>
+                            </section>
+                        <?php endif; ?>
+
                         <div class="share mt-4 pt-3 border-top">
                             <div class="share-text mb-2">Поделиться:</div>
                             <div class="share-ya">
