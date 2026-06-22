@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\PrivacyPolicyContent;
 use ishop\App;
 use ishop\libs\Pagination;
 
@@ -34,6 +35,17 @@ class PagesController extends AppController
 
         if (!$find) {
             throw new \Exception("Страница не найдена", 404);
+        }
+
+        if ($alias === 'privacy') {
+            $privacyPolicyContent = PrivacyPolicyContent::html();
+
+            if ($privacyPolicyContent !== '') {
+                $find->content = $privacyPolicyContent;
+                $find->title = 'Политика конфиденциальности';
+                $find->description = 'Политика конфиденциальности и обработки персональных данных ООО «ИТС-Центр» на сайте its-center.ru.';
+                $find->keywords = 'политика конфиденциальности, персональные данные, cookie, Яндекс.Метрика, ИТС-Центр';
+            }
         }
 
         $related = \R::getAll("
