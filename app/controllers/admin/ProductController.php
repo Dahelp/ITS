@@ -204,7 +204,10 @@ class ProductController extends AppController {
 						else { $count_related = "<span class='badge bg-danger'>".$count_related."</span>"; }
 						if($count_similar > 0) { $count_similar = "<span class='badge bg-success'>".$count_similar."</span>"; }
 						else { $count_similar = "<span class='badge bg-danger'>".$count_similar."</span>"; }
-						$ssilki = "".$count_related." Связанные<br>".$count_similar." Похожие<br>".$perelink." Ссылки";
+						$linksUrl = ADMIN.'/product/links?id='.(int)$d;
+						$ssilki = "<a href='".$linksUrl."#related'>".$count_related." Связанные</a><br>"
+							."<a href='".$linksUrl."#similar'>".$count_similar." Похожие</a><br>"
+							."<a href='".$linksUrl."#incoming'>".$perelink." Ссылки</a>";
 						
 						return ''.$ssilki.''; 
 					} ),
@@ -277,6 +280,80 @@ class ProductController extends AppController {
 		AdminActivityLogger::admin(5, 'product', $id);
 		echo json_encode(['success' => true, 'value' => $value]);
 		die;
+	}
+
+	public function linksAction(){
+		$id = $this->getRequestID();
+		$product = \R::load('product', $id);
+		if(!$product->id){
+			throw new \Exception('Страница не найдена', 404);
+		}
+
+		$outRelated = $this->getProductLinkRows('related_product', 'related_id', 'product_id = ?', [$id]);
+		$outSimilar = $this->getProductLinkRows('similar_product', 'similar_id', 'product_id = ?', [$id]);
+		$inRelated = $this->getProductLinkRows('related_product', 'product_id', 'related_id = ?', [$id]);
+		$inSimilar = $this->getProductLinkRows('similar_product', 'product_id', 'similar_id = ?', [$id]);
+		$contentLinks = \R::getAll("
+			SELECT cr.id AS link_id, c.id AS content_id, c.name, c.alias, c.hide, ct.name AS type_name, ct.param_url
+			FROM content_related cr
+			JOIN contents c ON c.id = cr.content_id
+			LEFT JOIN content_type ct ON ct.id = c.type_id
+			WHERE cr.related_id = ?
+			ORDER BY c.name
+		", [$id]);
+
+		$this->setMeta("Перелинковка товара {$product->name}");
+		$this->set(compact('product', 'outRelated', 'outSimilar', 'inRelated', 'inSimilar', 'contentLinks'));
+	}
+
+	public function linkAddAction(){
+		if(empty($_POST)){
+			redirect(ADMIN.'/product');
+		}
+		$id = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
+		$type = isset($_POST['type']) ? (string)$_POST['type'] : '';
+		$direction = isset($_POST['direction']) ? (string)$_POST['direction'] : 'out';
+		$items = isset($_POST['items']) && is_array($_POST['items']) ? $_POST['items'] : [];
+		if(!$id || !in_array($type, ['related', 'similar'], true) || !in_array($direction, ['out', 'in'], true)){
+			$_SESSION['error'] = 'Некорректные параметры перелинковки';
+			redirect();
+		}
+		$table = $type === 'related' ? 'related_product' : 'similar_product';
+		$targetField = $type === 'related' ? 'related_id' : 'similar_id';
+		$added = 0;
+		foreach($items as $itemId){
+			$itemId = (int)$itemId;
+			if(!$itemId || $itemId === $id){ continue; }
+			$productId = $direction === 'out' ? $id : $itemId;
+			$targetId = $direction === 'out' ? $itemId : $id;
+			$exists = \R::getCell("SELECT id FROM {$table} WHERE product_id = ? AND {$targetField} = ? LIMIT 1", [$productId, $targetId]);
+			if(!$exists){
+				\R::exec("INSERT INTO {$table} (product_id, {$targetField}) VALUES (?, ?)", [$productId, $targetId]);
+				$added++;
+			}
+		}
+		AdminActivityLogger::admin(5, 'product', $id);
+		$_SESSION['success'] = 'Добавлено связей: '.$added;
+		redirect(ADMIN.'/product/links?id='.$id);
+	}
+
+	public function linkDeleteAction(){
+		$id = isset($_GET['product_id']) ? (int)$_GET['product_id'] : 0;
+		$linkId = isset($_GET['link_id']) ? (int)$_GET['link_id'] : 0;
+		$type = isset($_GET['type']) ? (string)$_GET['type'] : '';
+		if(!$id || !$linkId || !in_array($type, ['related', 'similar', 'content'], true)){
+			$_SESSION['error'] = 'Некорректные параметры удаления связи';
+			redirect();
+		}
+		if($type === 'content'){
+			\R::exec("DELETE FROM content_related WHERE id = ? AND related_id = ?", [$linkId, $id]);
+		}else{
+			$table = $type === 'related' ? 'related_product' : 'similar_product';
+			\R::exec("DELETE FROM {$table} WHERE id = ?", [$linkId]);
+		}
+		AdminActivityLogger::admin(5, 'product', $id);
+		$_SESSION['success'] = 'Связь удалена';
+		redirect(ADMIN.'/product/links?id='.$id);
 	}
 	
 	public function categoryAction(){
@@ -761,18 +838,29 @@ class ProductController extends AppController {
         ];*/
         $q = isset($_GET['q']) ? $_GET['q'] : '';
         $data['items'] = [];
-        $products = \R::getAssoc('SELECT id, name FROM product WHERE name LIKE ? LIMIT 15', ["%{$q}%"]);
+        $products = \R::getAll('SELECT id, article, name FROM product WHERE name LIKE ? OR article LIKE ? ORDER BY name LIMIT 20', ["%{$q}%", "%{$q}%"]);
         if($products){
             $i = 0;
-            foreach($products as $id => $name){
-                $data['items'][$i]['id'] = $id;
-                $data['items'][$i]['text'] = $name;
+            foreach($products as $product){
+                $data['items'][$i]['id'] = $product['id'];
+                $data['items'][$i]['text'] = ($product['article'] ? $product['article'].' - ' : '').$product['name'];
                 $i++;
             }
         }
         echo json_encode($data);
         die;
     }
+
+	private function getProductLinkRows($table, $productField, $where, $params){
+		$targetField = $table === 'related_product' ? 'related_id' : 'similar_id';
+		return \R::getAll("
+			SELECT l.id AS link_id, l.product_id, l.{$targetField}, p.id, p.article, p.name, p.alias, p.price, p.quantity, p.hide
+			FROM {$table} l
+			JOIN product p ON p.id = l.{$productField}
+			WHERE {$where}
+			ORDER BY p.name
+		", $params);
+	}
 	
 	public function filtersAction(){
 		$groups = \R::getAssoc('SELECT attribute_group.id, attribute_group.title FROM attribute_group, attribute_category WHERE attribute_category.group_id = attribute_group.id AND attribute_category.category_id = "'.$_POST['id'].'"');
