@@ -137,8 +137,8 @@ div.dataTables_wrapper div.dataTables_filter{float: right;width: 50%;padding:1.2
 }
 .admin-sidebar-nav .nav-treeview .nav-link {
     min-height: 34px;
-    width: 100%;
-    max-width: 100%;
+    width: calc(100% - 8px) !important;
+    max-width: calc(100% - 8px);
     box-sizing: border-box;
     padding-top: 6px;
     padding-bottom: 6px;
@@ -194,8 +194,8 @@ body.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover):not(.sidebar-focuse
 }
 body.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover .admin-sidebar-nav .nav-sidebar.nav-child-indent .nav-treeview .nav-link,
 body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .admin-sidebar-nav .nav-sidebar.nav-child-indent .nav-treeview .nav-link {
-    width: 100% !important;
-    max-width: 100%;
+    width: calc(100% - 8px) !important;
+    max-width: calc(100% - 8px);
 }
 
 /*ORDER*/
