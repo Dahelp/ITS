@@ -1,3 +1,26 @@
+<?php
+$categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
+if(!isset($_GET['category_id'])){ $_GET['category_id'] = ''; }
+if(empty($category)){ $category = []; }
+if(!isset($category['name'])){ $category['name'] = ''; }
+$activeBadge = isset($badge) ? $badge : (isset($_GET['badge']) ? $_GET['badge'] : '');
+$badgeLinks = [
+	'' => 'Все товары',
+	'new_product' => 'Новинки',
+	'hit' => 'Лидеры продаж',
+	'sale' => 'Распродажа',
+];
+$productUrl = function($badgeValue) use ($categoryId) {
+	$params = [];
+	if($categoryId){ $params['category_id'] = $categoryId; }
+	if($badgeValue !== ''){ $params['badge'] = $badgeValue; }
+	return ADMIN.'/product'.($params ? '?'.http_build_query($params) : '');
+};
+$ajaxParams = [];
+if($categoryId){ $ajaxParams['category_id'] = $categoryId; }
+if($activeBadge !== ''){ $ajaxParams['badge'] = $activeBadge; }
+$ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
+?>
 <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
@@ -33,6 +56,13 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
+					<div class="mb-3">
+						<div class="btn-group flex-wrap" role="group" aria-label="Фильтр по отметкам товаров">
+							<?php foreach($badgeLinks as $badgeValue => $badgeTitle): ?>
+								<a class="btn btn-sm <?= $activeBadge === $badgeValue ? 'btn-primary' : 'btn-default'; ?>" href="<?= $productUrl($badgeValue); ?>"><?= $badgeTitle; ?></a>
+							<?php endforeach; ?>
+						</div>
+					</div>
 					<div class="table-responsive">
 						<table id="example" class="table table-bordered display" width="100%">
 							<thead>
@@ -63,17 +93,23 @@
 ?>
 <script>
 $(document).ready(function () {
-	var hideFromExport = [1, 6, 7, 8, 9, 10];
+	$('#example thead tr th').eq(8).after('<th>Отметки</th>');
+	var hideFromExport = [1, 6, 7, 8, 9, 10, 11];
 	var table = $('#example').DataTable({		
 		"processing": true,
 		"serverSide": true,
 		"stateSave": true,
+		"stateLoadParams": function (settings, data) {
+			if (!data.columns || data.columns.length !== 12) {
+				return false;
+			}
+		},
 		"lengthChange": true,
 		"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "Все"]],
-		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 1, 4, 6, 7, 8, 10 ] }],
+		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 1, 4, 6, 7, 8, 11 ] }],
 		dom: '<"blok-bottoms"B><"blok-table"lfrtip>',
 		"ajax": {
-            url: adminpath + '/product/server-processing<?php if($_GET["category_id"]) { echo "?category_id=".$_GET["category_id"].""; } ?>',		
+            url: adminpath + '/product/server-processing<?= $ajaxQuery; ?>',		
         },
         buttons: [ 
 			{
@@ -143,6 +179,41 @@ $(document).ready(function () {
                 $(row).css('background-color', '#d7d6d6');
             } 
 		}
+	});
+	table.on('draw', function () {
+		$('#example tbody tr').each(function () {
+			var status = $(this).find('td').eq(10).text();
+			if (status === 'Не активный') {
+				$(this).css('background-color', '#fed8d8');
+			}
+			if (status === 'Закрыт от индексации') {
+				$(this).css('background-color', '#d7d6d6');
+			}
+		});
+	});
+	$('#example').on('change', '.product-badge-toggle', function () {
+		var input = this;
+		input.disabled = true;
+		$.ajax({
+			url: adminpath + '/product/badge-toggle',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				id: input.getAttribute('data-id'),
+				field: input.getAttribute('data-field'),
+				value: input.checked ? 1 : 0
+			}
+		}).done(function (res) {
+			if (!res || !res.success) {
+				input.checked = !input.checked;
+				alert('Не удалось сохранить отметку товара');
+			}
+		}).fail(function () {
+			input.checked = !input.checked;
+			alert('Не удалось сохранить отметку товара');
+		}).always(function () {
+			input.disabled = false;
+		});
 	});
 })
 </script>

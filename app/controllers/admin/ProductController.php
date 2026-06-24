@@ -15,19 +15,24 @@ use app\helpers\TireSize;
 class ProductController extends AppController {
 
     public function indexAction(){
-		$category_id = $_GET["category_id"];
-		$category = \R::findOne('category', 'id = ?', [$category_id]);
+		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
+		$category = $category_id ? \R::findOne('category', 'id = ?', [$category_id]) : null;
+		$badge = isset($_GET['badge']) ? $_GET['badge'] : '';
         $this->setMeta('Список товаров');
-		$this->set(compact('category'));
+		$this->set(compact('category', 'badge'));
     }
 	
 	public function serverProcessingAction(){		
 		//datatables server-side
-		$category_id = $_GET["category_id"];
-		if($_GET["category_id"]){ $where = " WHERE a.category_id = '".$category_id."'"; }
+		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
+		$badge = isset($_GET['badge']) ? $_GET['badge'] : '';
+		$whereParts = [];
+		if($category_id){ $whereParts[] = "a.category_id = '".$category_id."'"; }
+		if(in_array($badge, ['new_product', 'hit', 'sale'], true)){ $whereParts[] = "a.".$badge." = '1'"; }
+		$where = $whereParts ? " WHERE ".implode(' AND ', $whereParts) : '';
 		$table = <<<EOT
 		 (
-			SELECT a.id, a.img, a.article, a.name as cat, a.price, a.hide, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where 
+			SELECT a.id, a.img, a.article, a.name as cat, a.price, a.hide, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where 
 		 ) temp
 		EOT;
 		$primaryKey = 'id';	 
@@ -203,7 +208,26 @@ class ProductController extends AppController {
 						
 						return ''.$ssilki.''; 
 					} ),
-			array( 'db' => 'hide',   'dt' => 9, 
+			array( 'db' => 'badges',   'dt' => 9,
+					'formatter' => function( $d, $row ) {
+						$id = (int)$row['id'];
+						$parts = explode('|', (string)$d);
+						$newProduct = !empty($parts[0]);
+						$hit = !empty($parts[1]);
+						$sale = !empty($parts[2]);
+						$toggle = function($field, $label, $checked) use ($id) {
+							$inputId = 'product-badge-'.$field.'-'.$id;
+							return '<div class="custom-control custom-switch custom-switch-off-secondary custom-switch-on-success mb-1">'
+								.'<input type="checkbox" class="custom-control-input product-badge-toggle" id="'.$inputId.'" data-id="'.$id.'" data-field="'.$field.'" '.($checked ? 'checked' : '').'>'
+								.'<label class="custom-control-label" style="font-weight:400" for="'.$inputId.'">'.$label.'</label>'
+								.'</div>';
+						};
+						return $toggle('new_product', 'Новинка', $newProduct)
+							.$toggle('hit', 'Лидер продаж', $hit)
+							.$toggle('sale', 'Распродажа', $sale);
+					}
+			),
+			array( 'db' => 'hide',   'dt' => 10, 
 					'formatter' => function( $d, $row ) { 
 						if($d == 'show'){ $hide = 'Активный'; }
 						if($d == 'hide'){ $hide = 'Не активный'; }
@@ -212,7 +236,7 @@ class ProductController extends AppController {
 						return $hide;
 					}
 			),
-			array( 'db' => 'id',   'dt' => 10, 
+			array( 'db' => 'id',   'dt' => 11, 
 					'formatter' => function( $d, $row ) {
 						$product = \R::findOne('product', 'id=?', [$d]);
 						return '<a href="'.ADMIN.'/product/edit?id='.$d.'"><i class="fas fa-pencil-alt"></i></a> <a class="delete" href="'.ADMIN.'/product/delete?id='.$d.'"><i class="fas fa-times-circle text-danger"></i></a> <a target="_blank" href="/product/'.$product['alias'].'"><i class="fas fa-eye"></i></a> <a target="_blank" href="'.ADMIN.'/product/copy?id='.$d.'"><i class="fas fa-copy"></i></a><a 
@@ -235,6 +259,23 @@ class ProductController extends AppController {
 		echo json_encode(
 			$spp::simple( $_GET, $sql_details, $table, $primaryKey, $columns, null, "" )
 		);
+		die;
+	}
+
+	public function badgeToggleAction(){
+		if(!$this->isAjax()){
+			throw new \Exception('Страница не найдена', 404);
+		}
+		$id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+		$field = isset($_POST['field']) ? (string)$_POST['field'] : '';
+		$value = !empty($_POST['value']) ? '1' : '0';
+		if(!$id || !in_array($field, ['new_product', 'hit', 'sale'], true)){
+			echo json_encode(['success' => false]);
+			die;
+		}
+		\R::exec("UPDATE product SET {$field} = ? WHERE id = ?", [$value, $id]);
+		AdminActivityLogger::admin(5, 'product', $id);
+		echo json_encode(['success' => true, 'value' => $value]);
 		die;
 	}
 	
