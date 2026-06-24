@@ -640,7 +640,7 @@ if (property_exists($product, 'reserve')) {
 				</div>
             </div>
             <div class="modal-footer">
-                <table class="zayvka_1click"><tbody><tr><td><input type="checkbox" name="politika" value="pk" required></td><td style="font-size:14px;padding:0 0 0 20px">Я соглашаюсь с<br><a href="/pages/privacy">политикой конфиденциальности.</a></td></tr></tbody></table>
+                <table class="zayvka_1click"><tbody><tr><td><input type="checkbox" name="politika" value="pk" required></td><td style="font-size:14px;padding:0 0 0 20px">Я принимаю <a href="/pages/privacy" target="_blank" rel="noopener">Политику конфиденциальности</a> и даю <a href="/pages/personal-data-consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a>.</td></tr></tbody></table>
 				<button type="submit" name="oneclick" value="<?php echo md5(date('Y-m-d')); ?>" class="btn btn-danger">Отправить</button>
             </div>
         </div>

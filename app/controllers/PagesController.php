@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\helpers\PrivacyPolicyContent;
+use app\helpers\LegalPageContent;
 use ishop\App;
 use ishop\libs\Pagination;
 
@@ -33,28 +33,42 @@ class PagesController extends AppController
             [$alias, (int)$type->id]
         );
 
-        if (!$find) {
+        $legalPage = LegalPageContent::page($alias);
+
+        if (!$find && !$legalPage) {
             throw new \Exception("Страница не найдена", 404);
         }
 
-        if ($alias === 'privacy') {
-            $privacyPolicyContent = PrivacyPolicyContent::html();
-
-            if ($privacyPolicyContent !== '') {
-                $find->content = $privacyPolicyContent;
-                $find->title = 'Политика конфиденциальности';
-                $find->description = 'Политика конфиденциальности и обработки персональных данных ООО «ИТС-Центр» на сайте its-center.ru.';
-                $find->keywords = 'политика конфиденциальности, персональные данные, cookie, Яндекс.Метрика, ИТС-Центр';
-            }
+        if (!$find && $legalPage) {
+            $find = (object)[
+                'id' => 0,
+                'alias' => $alias,
+                'name' => $legalPage['name'],
+                'title' => $legalPage['title'],
+                'description' => $legalPage['description'],
+                'keywords' => $legalPage['keywords'],
+                'content' => $legalPage['content'],
+                'anons' => '',
+                'img' => '',
+                'img_hide' => 'hide',
+                'date_post' => '',
+                'date_last_modified' => '',
+            ];
+        } elseif ($legalPage) {
+            $find->name = $legalPage['name'];
+            $find->title = $legalPage['title'];
+            $find->description = $legalPage['description'];
+            $find->keywords = $legalPage['keywords'];
+            $find->content = $legalPage['content'];
         }
 
-        $related = \R::getAll("
+        $related = ((int)$find->id > 0) ? \R::getAll("
             SELECT product.*
             FROM content_related
             JOIN product ON product.id = content_related.related_id
             WHERE content_related.content_id = ?
               AND product.hide = 'show'
-        ", [(int)$find->id]);
+        ", [(int)$find->id]) : [];
 
         if ($find->img) {
             $find_img = PATH . "/images/contents/baseimg/" . $find->img;

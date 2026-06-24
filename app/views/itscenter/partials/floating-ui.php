@@ -26,10 +26,11 @@
 
 <div id="cookie-bar" class="cookie-bar" style="display:none;">
     <div class="cookie-bar__text">
-        Продолжая использовать сайт ООО ИТС-Центр, Вы
-        <a href="/pages/privacy" target="_blank">соглашаетесь</a>
-        на обработку персональных данных, использование файлов cookie и сервиса веб-аналитики Яндекс.Метрика.
-        Подтвердите ознакомление с рекомендациями по защите информации и политикой обработки персональных данных.
+        Продолжая использовать сайт ООО ИТС-Центр, Вы соглашаетесь с использованием файлов cookie
+        и сервиса веб-аналитики Яндекс.Метрика в соответствии с
+        <a href="/pages/cookie-policy" target="_blank" rel="noopener">Политикой использования cookies</a>
+        и
+        <a href="/pages/privacy" target="_blank" rel="noopener">Политикой конфиденциальности</a>.
     </div>
     <div class="cookie-bar__actions">
         <button id="accept-cookies" type="button" class="cookie-bar__btn">Подтвердить</button>

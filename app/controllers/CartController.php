@@ -711,6 +711,14 @@ class CartController extends AppController {
         redirect();
     }
 
+    if (empty($_POST['checkout_legal_agree'])) {
+        $_SESSION['error'] = 'Вы должны принять условия и дать согласие на обработку персональных данных.';
+        $_SESSION['form_data'] = $_POST;
+        $_SESSION['checkout_token'] = bin2hex(random_bytes(32));
+        session_write_close();
+        redirect();
+    }
+
     // ========= Проверка корзины =========
     if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
         $_SESSION['error']     = 'Корзина пуста. Добавьте товары и оформите заказ заново.';

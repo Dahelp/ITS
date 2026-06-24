@@ -1491,11 +1491,14 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         >
 
                         <label class="form-check-label" for="oneclick-agree-<?= (int)$product->id ?>">
-                            Я согласен(на) с
+                            Я принимаю
                             <a href="<?= PATH ?>/pages/privacy" target="_blank" rel="noopener">
-                                Политикой конфиденциальности
+                                Политику конфиденциальности
                             </a>
-                            и даю согласие на обработку персональных данных
+                            и даю
+                            <a href="<?= PATH ?>/pages/personal-data-consent" target="_blank" rel="noopener">
+                                согласие на обработку персональных данных
+                            </a>
                         </label>
 
                         <div class="invalid-feedback d-block">Нужно подтвердить согласие.</div>
@@ -1616,11 +1619,14 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         >
 
                         <label class="form-check-label" for="request-agree-<?= (int)$product->id ?>">
-                            Я согласен(на) с
+                            Я принимаю
                             <a href="<?= PATH ?>/pages/privacy" target="_blank" rel="noopener">
-                                Политикой конфиденциальности
+                                Политику конфиденциальности
                             </a>
-                            и даю согласие на обработку персональных данных
+                            и даю
+                            <a href="<?= PATH ?>/pages/personal-data-consent" target="_blank" rel="noopener">
+                                согласие на обработку персональных данных
+                            </a>
                         </label>
 
                         <div class="invalid-feedback d-block">Нужно подтвердить согласие.</div>
@@ -1692,11 +1698,14 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         >
 
                         <label class="form-check-label" for="availability-agree-<?= (int)$product->id ?>">
-                            Я согласен(на) с
+                            Я принимаю
                             <a href="<?= PATH ?>/pages/privacy" target="_blank" rel="noopener">
-                                Политикой конфиденциальности
+                                Политику конфиденциальности
                             </a>
-                            и даю согласие на обработку персональных данных
+                            и даю
+                            <a href="<?= PATH ?>/pages/personal-data-consent" target="_blank" rel="noopener">
+                                согласие на обработку персональных данных
+                            </a>
                         </label>
 
                         <div class="invalid-feedback d-block">Нужно подтвердить согласие.</div>

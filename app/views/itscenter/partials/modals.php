@@ -104,11 +104,14 @@ defined('WWW') or die('Access denied');
                                required>
 
                         <label class="form-check-label" for="catalog-agree">
-                            Я согласен(на) с
+                            Я принимаю
                             <a href="<?= PATH ?>/pages/privacy" target="_blank" rel="noopener">
-                                Политикой конфиденциальности
+                                Политику конфиденциальности
                             </a>
-                            и даю согласие на обработку персональных данных
+                            и даю
+                            <a href="<?= PATH ?>/pages/personal-data-consent" target="_blank" rel="noopener">
+                                согласие на обработку персональных данных
+                            </a>
                         </label>
 
                         <div class="invalid-feedback d-block">Нужно подтвердить согласие.</div>
@@ -193,11 +196,14 @@ defined('WWW') or die('Access denied');
                                required>
 
                         <label class="form-check-label" for="callback-agree">
-                            Я согласен(на) с
+                            Я принимаю
                             <a href="<?= PATH ?>/pages/privacy" target="_blank" rel="noopener">
-                                Политикой конфиденциальности
+                                Политику конфиденциальности
                             </a>
-                            и даю согласие на обработку персональных данных
+                            и даю
+                            <a href="<?= PATH ?>/pages/personal-data-consent" target="_blank" rel="noopener">
+                                согласие на обработку персональных данных
+                            </a>
                         </label>
 
                         <div class="invalid-feedback d-block">Нужно подтвердить согласие.</div>

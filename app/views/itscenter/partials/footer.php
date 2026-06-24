@@ -37,7 +37,10 @@
 						<li><a href="services/dostavka">Доставка</a></li>
 						<li><a href="services">Услуги</a></li>
 						<li><a href="pages/sotrudnichestvo">Сотрудничество</a></li>
-						<li><a href="pages/privacy">Политика</a></li>
+						<li><a href="pages/privacy">Политика конфиденциальности</a></li>
+						<li><a href="pages/personal-data-consent">Согласие на обработку ПД</a></li>
+						<li><a href="pages/cookie-policy">Политика cookies</a></li>
+						<li><a href="pages/terms">Пользовательское соглашение</a></li>
 					</ul>
 				</div>
 

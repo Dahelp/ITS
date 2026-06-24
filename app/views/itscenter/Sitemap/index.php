@@ -29,6 +29,9 @@
 								<li><a href="pages/about-us" title="О компании">О компании</a></li>
 								<li><a href="news" title="Новости">Новости</a></li>
 								<li><a href="pages/privacy" title="Политика конфиденциальности">Политика конфиденциальности</a></li>
+								<li><a href="pages/personal-data-consent" title="Согласие на обработку персональных данных">Согласие на обработку персональных данных</a></li>
+								<li><a href="pages/cookie-policy" title="Политика использования cookies">Политика использования cookies</a></li>
+								<li><a href="pages/terms" title="Пользовательское соглашение">Пользовательское соглашение</a></li>
 								<li><a href="pages/contacts" title="Контакты">Контакты</a></li>								
 							</ul>
 							<?php if($sm_category){ ?>

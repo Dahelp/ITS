@@ -207,11 +207,14 @@ $emailValue = isset($formData['email']) ? h($formData['email']) : '';
                                 required
                             >
                             <label class="form-check-label register-agree" for="agree_personal_data">
-                                Я согласен(на) с
+                                Я принимаю
                                 <a href="<?= PATH ?>/pages/privacy" target="_blank" rel="noopener noreferrer">
-                                    Политикой конфиденциальности
+                                    Политику конфиденциальности
                                 </a>
-                                и даю согласие на обработку персональных данных
+                                и даю
+                                <a href="<?= PATH ?>/pages/personal-data-consent" target="_blank" rel="noopener noreferrer">
+                                    согласие на обработку персональных данных
+                                </a>
                             </label>
                         </div>
                     </div>

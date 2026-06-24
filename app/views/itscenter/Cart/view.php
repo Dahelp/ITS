@@ -436,11 +436,16 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
           </div>
 
           <div class="col-sm-12">
-            <div class="small text-muted" style="margin-top:8px;">
-              Нажимая кнопку «Подтвердить заказ», вы соглашаетесь с
-              <a href="/pages/privacy" target="_blank" rel="noopener">условиями обработки персональных данных</a>
-              и
-              <a href="/pages/terms" target="_blank" rel="noopener">условиями продажи</a>.
+            <div class="form-check" style="margin-top:8px;">
+              <input class="form-check-input" type="checkbox" id="checkout_legal_agree" name="checkout_legal_agree" value="1" required data-step-field="3">
+              <label class="form-check-label small text-muted" for="checkout_legal_agree">
+                Я принимаю
+                <a href="/pages/terms" target="_blank" rel="noopener">условия продажи</a>,
+                <a href="/pages/privacy" target="_blank" rel="noopener">Политику конфиденциальности</a>
+                и даю
+                <a href="/pages/personal-data-consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a>.
+              </label>
+              <div class="invalid-feedback">Нужно подтвердить согласие.</div>
             </div>
           </div>
 
