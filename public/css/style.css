@@ -3856,6 +3856,14 @@ body.catalog-open {
 	color: rgba(255,255,255,.78);
 }
 
+.site-footer__disclaimer {
+	margin-top: 6px;
+	max-width: 620px;
+	font-size: 12px;
+	line-height: 1.5;
+	color: rgba(255,255,255,.42);
+}
+
 .site-footer__payments {
 	display: flex;
 	align-items: center;

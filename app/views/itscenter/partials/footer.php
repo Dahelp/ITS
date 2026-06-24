@@ -91,6 +91,7 @@
 				<div class="site-footer__bottom-inner">
 					<div class="site-footer__copy">
 						ИТС-Центр © 2007–<?php echo date("Y"); ?> <span>Шины · Диски · Фильтры</span>
+						<div class="site-footer__disclaimer">Вся представленная на сайте информация носит справочный характер и не является публичной офертой</div>
 					</div>
 
 					<div class="site-footer__bottom-right">
