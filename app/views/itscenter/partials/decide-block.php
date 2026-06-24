@@ -142,6 +142,7 @@ if (empty($_SESSION['callback_token'])) {
 
                             <form action="/callback" class="form decide-right-form" method="post" data-toggle="validator" novalidate="true">
                                 <input type="hidden" name="title" value="Заказать звонок">
+                                <input type="hidden" name="agree" value="1">
 
                                 <input type="hidden" name="callback_token"
                                     value="<?= htmlspecialchars($_SESSION['callback_token'], ENT_QUOTES, 'UTF-8') ?>">
@@ -169,7 +170,10 @@ if (empty($_SESSION['callback_token'])) {
                                 </button>
 
                                 <div class="decide-form-note">
-                                    Нажимая кнопку, Вы соглашаетесь на обработку персональных данных
+                                    Нажимая кнопку, Вы принимаете
+                                    <a href="/pages/privacy" target="_blank" rel="noopener">Политику конфиденциальности</a>
+                                    и даёте
+                                    <a href="/pages/personal-data-consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a>.
                                 </div>
                             </form>
                         </div>

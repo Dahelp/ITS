@@ -44,6 +44,12 @@ class CallbackController extends AppController
         // === Телефон ===
         $phone = isset($data['phone']) ? trim((string)$data['phone']) : '';
         $title = isset($data['title']) ? trim((string)$data['title']) : 'Заказать звонок';
+        $agree = !empty($data['agree']);
+
+        if (!$agree) {
+            $_SESSION['error'] = 'Необходимо согласие на обработку персональных данных.';
+            redirect();
+        }
 
         // Нормализация/проверка телефона (как в других местах)
         $normalizeDigits = static function (string $raw): string {
