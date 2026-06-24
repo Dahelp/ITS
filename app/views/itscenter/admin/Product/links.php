@@ -66,9 +66,9 @@ $addForm = function($type, $direction, $placeholder) use ($productId) {
 		<input type="hidden" name="product_id" value="<?= $productId; ?>">
 		<input type="hidden" name="type" value="<?= $type; ?>">
 		<input type="hidden" name="direction" value="<?= $direction; ?>">
-		<div class="input-group">
+		<div class="product-link-row">
 			<select name="items[]" class="form-control product-link-select" multiple data-placeholder="<?= htmlspecialchars($placeholder, ENT_QUOTES, 'UTF-8'); ?>"></select>
-			<div class="input-group-append">
+			<div class="product-link-actions">
 				<button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Добавить</button>
 			</div>
 		</div>
@@ -78,23 +78,37 @@ $addForm = function($type, $direction, $placeholder) use ($productId) {
 };
 ?>
 <style>
-.product-link-form .input-group {
+.product-link-row {
 	display: flex;
 	flex-wrap: nowrap;
 	align-items: flex-start;
+	gap: 8px;
+	width: 100%;
 }
 .product-link-form .select2-container {
 	flex: 1 1 auto;
-	width: 1% !important;
+	width: calc(100% - 112px) !important;
 	min-width: 0;
 }
-.product-link-form .input-group-append {
-	flex: 0 0 auto;
+.product-link-actions {
+	flex: 0 0 104px;
+	width: 104px;
 }
-.product-link-form .btn {
+.product-link-actions .btn {
+	width: 100%;
 	height: 38px;
 	padding: .25rem .65rem;
 	white-space: nowrap;
+}
+@media (max-width: 575.98px) {
+	.product-link-row {
+		flex-wrap: wrap;
+	}
+	.product-link-form .select2-container,
+	.product-link-actions {
+		flex-basis: 100%;
+		width: 100% !important;
+	}
 }
 </style>
 
