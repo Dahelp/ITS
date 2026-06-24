@@ -133,7 +133,7 @@ div.dataTables_wrapper div.dataTables_filter{float: right;width: 50%;padding:1.2
     border-left: 0;
 }
 .admin-sidebar-nav .nav-treeview .nav-item {
-    margin: 1px 0 1px 18px;
+    margin: 1px 8px 1px 18px;
 }
 .admin-sidebar-nav .nav-treeview .nav-link {
     min-height: 34px;
