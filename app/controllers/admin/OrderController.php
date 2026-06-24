@@ -41,7 +41,7 @@ class OrderController extends AppController {
 		$curr = \R::findOne('currency');
 
 		$orders = \R::getAll("
-			SELECT 
+			SELECT
 				o.id,
 				o.inv,
 				o.user_id,
@@ -51,8 +51,8 @@ class OrderController extends AppController {
 				os.status_name,
 				o.date,
 
-				ROUND(SUM(op.price * op.qty), 2) AS order_sum,
-				SUM(CASE WHEN op.product_id = ? THEN op.qty ELSE 0 END) AS qty_item,
+				item.qty_item,
+				totals.order_sum,
 
 				u.name  AS user_name,
 				u.email AS user_email,
@@ -62,16 +62,22 @@ class OrderController extends AppController {
 				c.inn,
 
 				ua.name AS manager_name
-			FROM `order` o
-			JOIN `order_product` op ON o.id = op.order_id
+			FROM (
+				SELECT order_id, SUM(qty) AS qty_item
+				FROM `order_product`
+				WHERE product_id = ?
+				GROUP BY order_id
+			) item
+			JOIN `order` o ON o.id = item.order_id
+			JOIN (
+				SELECT order_id, ROUND(SUM(price * qty), 2) AS order_sum
+				FROM `order_product`
+				GROUP BY order_id
+			) totals ON totals.order_id = o.id
 			JOIN `order_status` os ON o.status = os.id
 			JOIN `user` u ON o.user_id = u.id
-
 			LEFT JOIN `company` c ON o.comp_id = c.id
 			LEFT JOIN `user` ua ON o.admin_id = ua.id
-
-			GROUP BY o.id
-			HAVING qty_item > 0
 			ORDER BY o.id DESC
 		", [$productId]);
 
@@ -91,7 +97,9 @@ class OrderController extends AppController {
 		}
 		unset($row);
 
-		$count_sales = count($orders);
+		$count_sales = array_sum(array_map(static function($row) {
+			return (int)($row['qty_item'] ?? 0);
+		}, $orders));
 
 		$this->setMeta('Продажи по позиции: ' . ($product['title'] ?? ''));
 		$this->set(compact('orders', 'product', 'productId', 'count_sales', 'curr'));

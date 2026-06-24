@@ -119,7 +119,7 @@ class ProductController extends AppController {
 					return '<div class="table_product_name">'.$product["name"].'</div>
 							<div class="table_product_count_info">
 								<a target="_blank" href="'.ADMIN.'/review/product?id='.$product["id"].'" class="btn btn-secondary" title="Всего отзывов: '.$count_review.'"><i class="fas fa-star-half-alt"></i> '.$count_review.'</a>
-								<a target="_blank" href="'.ADMIN.'/order/stat_product?id='.$product["id"].'" class="btn btn-purple" title="Покупок было: '.$count_order.'"><i class="fad fa-cart-plus"></i> '.$count_order.'</a>
+								<a target="_blank" href="'.ADMIN.'/order/stat-product?id='.$product["id"].'" class="btn btn-purple" title="Покупок было: '.$count_order.'"><i class="fad fa-cart-plus"></i> '.$count_order.'</a>
 								<a target="_blank" href="'.ADMIN.'/bookmarks/product?id='.$product["id"].'" class="btn btn-cyan" title="В закладках: '.$count_bookmarks.'"><i class="fad fa-bookmark"></i> '.$count_bookmarks.'</a>
 							</div>';
 				} ),
