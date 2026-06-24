@@ -9,7 +9,23 @@ class MainController extends AppController
     public function indexAction()
     {
         $brands = \R::find('brand', 'LIMIT 3');
-        $hits = \R::find('product', "hit = '1' AND hide = 'show' LIMIT 10");
+        $hits = \R::getAll("
+            SELECT p.*
+            FROM product p
+            LEFT JOIN (
+                SELECT product_id, SUM(quantity) AS modification_quantity
+                FROM modification
+                GROUP BY product_id
+            ) m ON m.product_id = p.id
+            WHERE p.hit = '1'
+              AND p.hide = 'show'
+              AND (
+                  COALESCE(p.quantity, 0)
+                  + COALESCE(m.modification_quantity, 0)
+                  - COALESCE(p.reserve, 0)
+              ) > 0
+            LIMIT 10
+        ");
         $articles = \R::find('contents', "type_id = '9' AND hide = 'show' ORDER BY id DESC LIMIT 4");
 
         $hitsWidgetContext = \app\widgets\product\Product::buildContext($hits);
