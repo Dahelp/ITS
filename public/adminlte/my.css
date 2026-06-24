@@ -153,6 +153,24 @@ div.dataTables_wrapper div.dataTables_filter{float: right;width: 50%;padding:1.2
 .sidebar-collapse .admin-sidebar-nav .nav-header {
     display: none;
 }
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover .admin-sidebar-nav .nav-header,
+body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .admin-sidebar-nav .nav-header {
+    display: block;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover .admin-sidebar-nav .nav-sidebar .nav-link p,
+body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .admin-sidebar-nav .nav-sidebar .nav-link p {
+    display: inline-block !important;
+    width: auto !important;
+    margin-left: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover .admin-sidebar-nav .nav-sidebar .nav-link > .right,
+body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .admin-sidebar-nav .nav-sidebar .nav-link > .right {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
 
 /*ORDER*/
 .order-content{float:left;width:100%}
