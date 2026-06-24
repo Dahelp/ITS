@@ -54,7 +54,7 @@ class MainController extends AppController
                 review_count DESC,
                 available_quantity DESC,
                 p.id DESC
-            LIMIT 30
+            LIMIT 80
         ");
         $hits = $this->diversifyHits($hitCandidates, 10);
         $articles = \R::find('contents', "type_id = '9' AND hide = 'show' ORDER BY id DESC LIMIT 4");
@@ -96,58 +96,87 @@ class MainController extends AppController
 
     private function diversifyHits(array $products, int $limit): array
     {
-        $buckets = [];
+        $categoryBuckets = [];
+        $categoryOrder = [];
+        $categoryUseCount = [];
 
         foreach ($products as $product) {
-            $key = $this->hitDiversityKey($product);
-            $buckets[$key][] = $product;
+            $meta = $this->hitDiversityMeta($product);
+            $categoryKey = (string)$meta['category_id'];
+
+            if (!isset($categoryBuckets[$categoryKey])) {
+                $categoryBuckets[$categoryKey] = [];
+                $categoryOrder[$categoryKey] = count($categoryOrder);
+                $categoryUseCount[$categoryKey] = 0;
+            }
+
+            $categoryBuckets[$categoryKey][] = $product;
         }
 
         $result = [];
-        $lastKey = null;
         $lastMeta = null;
 
-        while (count($result) < $limit && !empty($buckets)) {
-            $selectedKey = null;
-            $selectedSize = -1;
+        while (count($result) < $limit && !empty($categoryBuckets)) {
+            $selectedCategory = null;
+            $selectedUseCount = PHP_INT_MAX;
             $selectedPenalty = PHP_INT_MAX;
+            $selectedOrder = PHP_INT_MAX;
 
-            foreach ($buckets as $key => $items) {
-                if ($key === $lastKey && count($buckets) > 1) {
+            foreach ($categoryBuckets as $categoryKey => $items) {
+                if (empty($items)) {
                     continue;
                 }
 
-                $penalty = $this->hitDiversityPenalty($items[0], $lastMeta);
-                $size = count($items);
-                if ($penalty < $selectedPenalty || ($penalty === $selectedPenalty && $size > $selectedSize)) {
-                    $selectedKey = $key;
-                    $selectedSize = $size;
+                $penalty = $this->hitCategoryPenalty($items[0], $lastMeta, count($categoryBuckets));
+                $useCount = $categoryUseCount[$categoryKey] ?? 0;
+                $order = $categoryOrder[$categoryKey] ?? PHP_INT_MAX;
+
+                if (
+                    $useCount < $selectedUseCount
+                    || ($useCount === $selectedUseCount && $penalty < $selectedPenalty)
+                    || ($useCount === $selectedUseCount && $penalty === $selectedPenalty && $order < $selectedOrder)
+                ) {
+                    $selectedCategory = $categoryKey;
+                    $selectedUseCount = $useCount;
                     $selectedPenalty = $penalty;
+                    $selectedOrder = $order;
                 }
             }
 
-            if ($selectedKey === null) {
-                $selectedKey = array_key_first($buckets);
+            if ($selectedCategory === null) {
+                $selectedCategory = array_key_first($categoryBuckets);
             }
 
-            $selectedProduct = array_shift($buckets[$selectedKey]);
+            $selectedProduct = $this->takeBestHitFromCategory($categoryBuckets[$selectedCategory], $lastMeta);
             $result[] = $selectedProduct;
-            $lastKey = $selectedKey;
             $lastMeta = $this->hitDiversityMeta($selectedProduct);
+            $categoryUseCount[$selectedCategory] = ($categoryUseCount[$selectedCategory] ?? 0) + 1;
 
-            if (empty($buckets[$selectedKey])) {
-                unset($buckets[$selectedKey]);
+            if (empty($categoryBuckets[$selectedCategory])) {
+                unset($categoryBuckets[$selectedCategory]);
             }
         }
 
         return $result;
     }
 
-    private function hitDiversityKey(array $product): string
+    private function takeBestHitFromCategory(array &$products, ?array $lastMeta): array
     {
-        $meta = $this->hitDiversityMeta($product);
+        $selectedIndex = 0;
+        $selectedPenalty = PHP_INT_MAX;
 
-        return $meta['category_id'] . ':' . $meta['brand_id'] . ':' . $meta['model'];
+        foreach ($products as $index => $product) {
+            $penalty = $this->hitBrandModelPenalty($product, $lastMeta);
+            if ($penalty < $selectedPenalty) {
+                $selectedIndex = $index;
+                $selectedPenalty = $penalty;
+            }
+        }
+
+        $selected = $products[$selectedIndex];
+        array_splice($products, $selectedIndex, 1);
+
+        return $selected;
     }
 
     private function hitDiversityMeta(array $product): array
@@ -171,7 +200,18 @@ class MainController extends AppController
         ];
     }
 
-    private function hitDiversityPenalty(array $product, ?array $lastMeta): int
+    private function hitCategoryPenalty(array $product, ?array $lastMeta, int $categoryCount): int
+    {
+        if ($lastMeta === null || $categoryCount <= 1) {
+            return 0;
+        }
+
+        $meta = $this->hitDiversityMeta($product);
+
+        return $meta['category_id'] === $lastMeta['category_id'] ? 100 : 0;
+    }
+
+    private function hitBrandModelPenalty(array $product, ?array $lastMeta): int
     {
         if ($lastMeta === null) {
             return 0;
@@ -180,9 +220,6 @@ class MainController extends AppController
         $meta = $this->hitDiversityMeta($product);
         $penalty = 0;
 
-        if ($meta['category_id'] === $lastMeta['category_id']) {
-            $penalty += 100;
-        }
         if ($meta['brand_id'] === $lastMeta['brand_id']) {
             $penalty += 30;
         }
