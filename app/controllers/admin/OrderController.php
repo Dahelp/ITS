@@ -315,12 +315,12 @@ class OrderController extends AppController {
 		if($request == 1){
 			$q = isset($_GET['q']) ? $_GET['q'] : '';
 			$data['items'] = [];
-			$searchproduct = \R::getAssoc('SELECT id, name FROM product WHERE name LIKE ? LIMIT 10', ["%{$q}%"]);
+			$searchproduct = \R::getAll('SELECT id, article, name FROM product WHERE name LIKE ? OR article LIKE ? ORDER BY name LIMIT 20', ["%{$q}%", "%{$q}%"]);
 			if($searchproduct){
 				$i = 0;
-				foreach($searchproduct as $id => $name){
-					$data['items'][$i]['id'] = $id;
-					$data['items'][$i]['text'] = $name;					
+				foreach($searchproduct as $product){
+					$data['items'][$i]['id'] = $product['id'];
+					$data['items'][$i]['text'] = ($product['article'] ? $product['article'].' - ' : '').$product['name'];					
 					$i++;
 				}
 			}

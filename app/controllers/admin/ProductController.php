@@ -195,9 +195,7 @@ class ProductController extends AppController {
 						$content_related = \R::count('content_related', "related_id = ?", [$d]);
 						$count_related = \R::count('related_product', "product_id = ?", [$d]);
 						$count_similar = \R::count('similar_product', "product_id = ?", [$d]);
-						$related = \R::count('related_product', "related_id = ?", [$d]);
-						$similar = \R::count('similar_product', "similar_id = ?", [$d]);
-						$perelink = $related + $similar + $content_related;
+						$perelink = $content_related;
 						if($perelink > 0) { $perelink = "<span class='badge bg-success'>".$perelink."</span>"; }
 						else { $perelink = "<span class='badge bg-danger'>".$perelink."</span>"; }
 						if($count_related > 0) { $count_related = "<span class='badge bg-success'>".$count_related."</span>"; }
@@ -207,7 +205,7 @@ class ProductController extends AppController {
 						$linksUrl = ADMIN.'/product/links?id='.(int)$d;
 						$ssilki = "<a href='".$linksUrl."#related'>".$count_related." Связанные</a><br>"
 							."<a href='".$linksUrl."#similar'>".$count_similar." Похожие</a><br>"
-							."<a href='".$linksUrl."#incoming'>".$perelink." Ссылки</a>";
+							."<a href='".$linksUrl."#content-links'>".$perelink." Ссылки</a>";
 						
 						return ''.$ssilki.''; 
 					} ),
@@ -291,8 +289,6 @@ class ProductController extends AppController {
 
 		$outRelated = $this->getProductLinkRows('related_product', 'related_id', 'product_id = ?', [$id]);
 		$outSimilar = $this->getProductLinkRows('similar_product', 'similar_id', 'product_id = ?', [$id]);
-		$inRelated = $this->getProductLinkRows('related_product', 'product_id', 'related_id = ?', [$id]);
-		$inSimilar = $this->getProductLinkRows('similar_product', 'product_id', 'similar_id = ?', [$id]);
 		$contentLinks = \R::getAll("
 			SELECT cr.id AS link_id, c.id AS content_id, c.name, c.alias, c.hide, ct.name AS type_name, ct.param_url
 			FROM content_related cr
@@ -303,7 +299,7 @@ class ProductController extends AppController {
 		", [$id]);
 
 		$this->setMeta("Перелинковка товара {$product->name}");
-		$this->set(compact('product', 'outRelated', 'outSimilar', 'inRelated', 'inSimilar', 'contentLinks'));
+		$this->set(compact('product', 'outRelated', 'outSimilar', 'contentLinks'));
 	}
 
 	public function linkAddAction(){

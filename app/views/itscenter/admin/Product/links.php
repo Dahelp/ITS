@@ -1,5 +1,7 @@
 <?php
 $productId = (int)$product->id;
+$inRelated = [];
+$inSimilar = [];
 $e = function($value) {
 	return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 };
@@ -60,7 +62,7 @@ $renderProductTable = function($rows, $type, $emptyText) use ($e, $productId, $p
 $addForm = function($type, $direction, $placeholder) use ($productId) {
 	ob_start();
 	?>
-	<form action="<?= ADMIN; ?>/product/link-add" method="post" class="mb-3">
+	<form action="<?= ADMIN; ?>/product/link-add" method="post" class="mb-3 product-link-form">
 		<input type="hidden" name="product_id" value="<?= $productId; ?>">
 		<input type="hidden" name="type" value="<?= $type; ?>">
 		<input type="hidden" name="direction" value="<?= $direction; ?>">
@@ -75,6 +77,26 @@ $addForm = function($type, $direction, $placeholder) use ($productId) {
 	return ob_get_clean();
 };
 ?>
+<style>
+.product-link-form .input-group {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: flex-start;
+}
+.product-link-form .select2-container {
+	flex: 1 1 auto;
+	width: 1% !important;
+	min-width: 0;
+}
+.product-link-form .input-group-append {
+	flex: 0 0 auto;
+}
+.product-link-form .btn {
+	height: 38px;
+	padding: .25rem .65rem;
+	white-space: nowrap;
+}
+</style>
 
 <div class="content-header">
 	<div class="container-fluid">
@@ -126,7 +148,7 @@ $addForm = function($type, $direction, $placeholder) use ($productId) {
 				</div>
 			</div>
 
-			<div class="row" id="incoming">
+			<div class="row d-none" id="incoming">
 				<div class="col-lg-6">
 					<div class="card">
 						<div class="card-header"><h3 class="card-title">Кто ссылается как связанный</h3></div>
