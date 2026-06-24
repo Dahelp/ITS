@@ -137,7 +137,9 @@ div.dataTables_wrapper div.dataTables_filter{float: right;width: 50%;padding:1.2
 }
 .admin-sidebar-nav .nav-treeview .nav-link {
     min-height: 34px;
-    width: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     padding-top: 6px;
     padding-bottom: 6px;
     color: #c9d3de;
@@ -171,6 +173,29 @@ body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .admin-sidebar-
     display: inline-block !important;
     opacity: 1 !important;
     visibility: visible !important;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover):not(.sidebar-focused) .admin-sidebar-nav .nav-treeview {
+    display: none !important;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover):not(.sidebar-focused) .admin-sidebar-nav .nav-sidebar > .nav-item > .nav-link {
+    justify-content: center;
+    width: auto !important;
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover):not(.sidebar-focused) .admin-sidebar-nav .nav-sidebar > .nav-item > .nav-link > .nav-icon {
+    width: 1.6rem;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover):not(.sidebar-focused) .admin-sidebar-nav .nav-sidebar .nav-link > .right {
+    display: none !important;
+}
+body.sidebar-mini.sidebar-collapse .main-sidebar:not(.sidebar-no-expand):hover .admin-sidebar-nav .nav-sidebar.nav-child-indent .nav-treeview .nav-link,
+body.sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused .admin-sidebar-nav .nav-sidebar.nav-child-indent .nav-treeview .nav-link {
+    width: 100% !important;
+    max-width: 100%;
 }
 
 /*ORDER*/

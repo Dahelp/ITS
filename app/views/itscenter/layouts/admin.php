@@ -51,7 +51,7 @@
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap5.min.css">
 
   <!-- bypstyle-->
-  <link rel="stylesheet" href="my.css">
+  <link rel="stylesheet" href="my.css?v=<?= @filemtime(WWW . '/adminlte/my.css') ?: time(); ?>">
   <!-- jQuery 3 -->
   <script src="plugins/jquery/jquery.min.js"></script>
   
