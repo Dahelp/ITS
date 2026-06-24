@@ -129,14 +129,15 @@ div.dataTables_wrapper div.dataTables_filter{float: right;width: 50%;padding:1.2
 }
 .admin-sidebar-nav .nav-treeview {
     margin: 2px 0 8px;
-    padding: 4px 0 4px 8px;
-    border-left: 1px solid rgba(255,255,255,.1);
+    padding: 4px 0;
+    border-left: 0;
 }
 .admin-sidebar-nav .nav-treeview .nav-item {
-    margin: 1px 0;
+    margin: 1px 0 1px 18px;
 }
 .admin-sidebar-nav .nav-treeview .nav-link {
     min-height: 34px;
+    width: auto;
     padding-top: 6px;
     padding-bottom: 6px;
     color: #c9d3de;
