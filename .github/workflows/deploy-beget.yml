@@ -65,3 +65,11 @@ jobs:
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && composer-php7.4 install --no-dev --no-interaction --optimize-autoloader"
+
+      - name: Add tire wear article
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key \
+            -p "${{ secrets.BEGET_PORT }}" \
+            "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && php scripts/add_tire_wear_article.php"

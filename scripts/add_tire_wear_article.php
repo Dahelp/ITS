@@ -1,6 +1,8 @@
 <?php
 
-$pdo = new PDO('mysql:host=localhost;dbname=shinaspec_its;charset=utf8', 'root', '');
+$db = require __DIR__ . '/../config/config_db.php';
+
+$pdo = new PDO($db['dsn'], $db['user'], $db['pass']);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $alias = 'pochemu-shiny-spectehniki-bystro-iznashivayutsya';
