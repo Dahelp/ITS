@@ -157,14 +157,6 @@ $breadcrumbSchema = [
                         <div class="cont-desc">
                             <?=$find->content;?>
                         </div>
-
-                        <div class="share mt-4 pt-3 border-top">
-                            <div class="share-text mb-2">Поделиться:</div>
-                            <div class="share-ya">
-                                <script src="https://yastatic.net/share2/share.js"></script>
-                                <div class="ya-share2" data-curtain data-services="vkontakte,odnoklassniki,telegram,whatsapp"></div>
-                            </div>
-                        </div>
                     </article>
                 </div>
 
@@ -174,7 +166,7 @@ $breadcrumbSchema = [
                 ?>
 
                 <?php if($related): ?>
-                    <div class="related_prod">
+                    <div class="related_prod article-related-products">
                         <section class="pb-5 mb-2 mb-xl-4 recomend-1">
                             <h2 class="h3 pb-2 mb-grid-gutter text-center">Связанные товары</h2>
 

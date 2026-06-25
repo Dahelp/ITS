@@ -137,6 +137,7 @@ HTML,
     'keywords' => 'износ шин спецтехники, быстро стираются шины погрузчика, причины износа шин, подбор шин для спецтехники, шины для вилочного погрузчика, цельнолитые шины, давление в шинах спецтехники',
     'img' => $image,
     'img_hide' => 'show',
+    'img_source' => 'ai',
     'hide' => 'show',
 ];
 
@@ -156,6 +157,7 @@ if ($contentId > 0) {
         keywords = :keywords,
         img = :img,
         img_hide = :img_hide,
+        img_source = :img_source,
         date_last_modified = NOW()
         WHERE id = :id";
     $updateData = $article;
@@ -164,9 +166,9 @@ if ($contentId > 0) {
     $stmt->execute($updateData + ['id' => $contentId]);
 } else {
     $sql = "INSERT INTO contents
-        (type_id, name, anons, content, date_post, alias, hide, title, description, keywords, img, img_hide, clicks)
+        (type_id, name, anons, content, date_post, alias, hide, title, description, keywords, img, img_hide, img_source, clicks)
         VALUES
-        (:type_id, :name, :anons, :content, NOW(), :alias, :hide, :title, :description, :keywords, :img, :img_hide, 0)";
+        (:type_id, :name, :anons, :content, NOW(), :alias, :hide, :title, :description, :keywords, :img, :img_hide, :img_source, 0)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute($article);
     $contentId = (int)$pdo->lastInsertId();

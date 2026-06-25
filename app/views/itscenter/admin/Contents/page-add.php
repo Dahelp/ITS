@@ -97,6 +97,17 @@
 											</select>
 										</div>
 									</div>
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label" for="img_source">Источник изображения</label>
+										<div class="col-sm-9">
+											<select name="img_source" class="form-control" style="width: 100%;">
+												<option value="internet" selected="selected">Интернет</option>
+												<option value="ai">ИИ</option>
+												<option value="original">Оригинальное</option>
+												<option value="editor">Редактор</option>
+											</select>
+										</div>
+									</div>
 								</div>
 							</div>
 							<!-- /.tab-pane -->

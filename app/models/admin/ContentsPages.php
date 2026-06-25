@@ -18,6 +18,7 @@ class ContentsPages extends AppModel{
 		'description' => '',
 		'keywords' => '',
 		'img_hide' => '',
+		'img_source' => 'internet',
     ];
 
     public $rules = [

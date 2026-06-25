@@ -6541,6 +6541,54 @@ body.catalog-open {
 .table-striped img{width:70px}
 .bg-light {background-color: #fff !important;padding: 10px 0;}
 .contents article{padding:30px}
+.contents .cont-desc{
+  font-size: 17px;
+  line-height: 1.75;
+  color: #111827;
+  overflow-x: auto;
+}
+.contents .cont-desc p,
+.contents .cont-desc ul,
+.contents .cont-desc ol,
+.contents .cont-desc table{
+  margin: 0 0 20px;
+}
+.contents .cont-desc h2,
+.contents .cont-desc h3{
+  margin: 34px 0 16px;
+  line-height: 1.25;
+}
+.contents .cont-desc h2:first-child,
+.contents .cont-desc h3:first-child{
+  margin-top: 0;
+}
+.contents .cont-desc ul,
+.contents .cont-desc ol{
+  padding-left: 28px;
+}
+.contents .cont-desc li{
+  margin-bottom: 8px;
+}
+.contents .cont-desc table{
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d7dde5;
+  background: #fff;
+}
+.contents .cont-desc th,
+.contents .cont-desc td{
+  border: 1px solid #d7dde5;
+  padding: 12px 14px;
+  vertical-align: top;
+}
+.contents .cont-desc th{
+  background: #f3f6f8;
+  font-weight: 700;
+}
+.contents .article-related-products{
+  margin-top: 36px;
+  padding-top: 8px;
+}
 .nav-item .active .badge {background-color: #fff !important;color:var(--footer) !important}
 .nav-item .badge {background-color: var(--footer) !important;color:#fff !important}
 .desc-prod-inner{margin: 20px 0}
