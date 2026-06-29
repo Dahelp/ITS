@@ -1,8 +1,16 @@
 <?php
 
 if (PHP_SAPI !== 'cli') {
-    fwrite(STDERR, "This script can be run only from CLI." . PHP_EOL);
-    exit(1);
+    $expectedToken = defined('H2_CONTENT_TEXTS_WEB_TOKEN') ? (string)H2_CONTENT_TEXTS_WEB_TOKEN : '';
+    $givenToken = isset($_GET['token']) ? (string)$_GET['token'] : '';
+
+    header('Content-Type: text/plain; charset=utf-8');
+
+    if ($expectedToken === '' || !hash_equals($expectedToken, $givenToken)) {
+        http_response_code(403);
+        echo 'Forbidden' . PHP_EOL;
+        exit(1);
+    }
 }
 
 $db = require __DIR__ . '/../config/config_db.php';
@@ -12,7 +20,9 @@ $pdo = new PDO($db['dsn'], $db['user'], $db['pass'], [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);
 
-$dryRun = in_array('--dry-run', $argv, true);
+$dryRun = PHP_SAPI === 'cli'
+    ? in_array('--dry-run', $argv, true)
+    : (($_GET['apply'] ?? '') !== '1');
 $sourceFile = __DIR__ . '/h2_content_texts_2026-06-29.json';
 $rows = json_decode((string)file_get_contents($sourceFile), true);
 
