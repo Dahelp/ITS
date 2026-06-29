@@ -255,7 +255,7 @@ class SeoH2Helper
         $intro = self::INTRO_BY_PATH[$path] ?? '';
 
         if ($intro !== '') {
-            $parts[] = '<div class="seo-intro-text"><p>' . htmlspecialchars($intro, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p></div>';
+            $parts[] = '<p class="seo-intro-text">' . htmlspecialchars($intro, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
         }
 
         $parts[] = '<h2 class="seo-h2">' . htmlspecialchars($h2, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h2>';
@@ -272,7 +272,7 @@ class SeoH2Helper
 
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $content)) {
-                return preg_replace($pattern, $html . PHP_EOL . '$0', $content, 1);
+                return preg_replace($pattern, '$0' . PHP_EOL . $html, $content, 1);
             }
         }
 
