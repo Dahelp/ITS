@@ -59,7 +59,7 @@
 				<div class="col-lg-3 col-md-12 site-footer__col">
 					<div class="site-footer__title">Подбор</div>
 					<ul class="site-footer__menu list-unstyled">
-						<li><a href="technics">Подбор по технике</a></li>
+						<li><a href="/technics">Подбор по технике</a></li>
 						<li><a href="podbor/shiny">Подбор по размеру шины</a></li>
 						<li><a href="/">Подбор фильтров</a></li>
 						<li><a href="podbor/diski">Подбор дисков</a></li>

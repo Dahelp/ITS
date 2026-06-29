@@ -62,6 +62,7 @@ class View {
             ob_start();
             require $viewFile;
             $content = ob_get_clean();
+            $content = \app\helpers\SeoH2Helper::injectIntoContent((string)$content);
         } else {
             // Диагностика на случай, если view/controller пришли не теми типами
             $dbg = [

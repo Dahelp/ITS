@@ -515,7 +515,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                         <tr>
                                             <td><?=htmlspecialchars($tech["name"] ?? '', ENT_QUOTES)?></td>
                                             <td>
-                                                <a href="technics/<?=htmlspecialchars($tech["alias"] ?? '', ENT_QUOTES)?>" title="Посмотреть все шины для <?=htmlspecialchars(($tech["name"] ?? '') . ' ' . ($tech["model"] ?? ''), ENT_QUOTES)?>">
+                                                <a href="<?=PATH?>/technics/<?=htmlspecialchars($tech["alias"] ?? '', ENT_QUOTES)?>" title="Посмотреть все шины для <?=htmlspecialchars(($tech["name"] ?? '') . ' ' . ($tech["model"] ?? ''), ENT_QUOTES)?>">
                                                     <?=htmlspecialchars($tech["model"] ?? '', ENT_QUOTES)?>
                                                 </a>
                                             </td>

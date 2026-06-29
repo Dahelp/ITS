@@ -212,9 +212,6 @@ class TechnicsController extends AppController
         $title = 'Подбор шин, дисков, камер и фильтров по типу техники';
         $description = 'Выберите тип техники — перейдите к каталогу шин, дисков, камер и фильтров, подходящих для вашей машины. Для погрузчиков, экскаваторов, грейдеров, катков, квадроциклов и другой спецтехники';
 
-        $path_controller = $this->buildPathPart($this->route['controller'] ?? '', true);
-        $path_alias = $this->buildPathPart($this->route['alias'] ?? '');
-
         $technics_img = PATH . '/images/' . App::$app->getProperty('og_logo');
 
         $this->setMeta(
@@ -223,7 +220,7 @@ class TechnicsController extends AppController
             $keywords,
             App::$app->getProperty('shop_name'),
             $technics_img,
-            PATH . $path_controller . $path_alias
+            PATH . '/technics'
         );
 
         $this->set(compact('technics'));
@@ -258,9 +255,6 @@ class TechnicsController extends AppController
         $description = "Подобрать шины для {$type->seoname_2} по производителю техники, модели. Купить шины в ИТС-Центр с доставкой по всей России";
         $keywords = 'Подбор шин, шины по производителю, каталог производителей техники';
 
-        $path_controller = $this->buildPathPart($this->route['controller'] ?? '', true);
-        $path_alias = $this->buildPathPart($this->route['alias'] ?? '');
-
         $technics_img = PATH . '/images/' . App::$app->getProperty('og_logo');
 
         $this->setMeta(
@@ -269,7 +263,7 @@ class TechnicsController extends AppController
             $keywords,
             App::$app->getProperty('shop_name'),
             $technics_img,
-            PATH . $path_controller . $path_alias
+            PATH . '/technics/type/' . trim((string)$type->alias, '/')
         );
 
         $this->set(compact('type', 'manufacturers'));

@@ -141,7 +141,7 @@ class Cron extends AppModel
      */
     public static function buildProductUrl(string $alias): string
     {
-        $alias = ltrim(trim($alias), '/');
+        $alias = strtolower(ltrim(trim($alias), '/'));
         return 'https://its-center.ru/product/' . $alias;
     }
 
@@ -173,6 +173,21 @@ class Cron extends AppModel
         $now = date('Y-m-d H:i:s');
 
         try {
+            $existingId = (int)\R::getCell(
+                "SELECT id FROM indexnow_queue WHERE url = ? ORDER BY id DESC LIMIT 1",
+                [$url]
+            );
+
+            if ($existingId > 0) {
+                \R::exec(
+                    "UPDATE indexnow_queue
+                     SET updated_at = ?, status = 0, attempts = 0, sent_at = NULL, last_error = NULL
+                     WHERE id = ?",
+                    [$now, $existingId]
+                );
+                return;
+            }
+
             \R::exec(
                 "INSERT INTO indexnow_queue (url, created_at, updated_at, status, attempts, sent_at, last_error)
                 VALUES (?, ?, ?, 0, 0, NULL, NULL)

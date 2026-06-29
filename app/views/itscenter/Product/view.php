@@ -975,7 +975,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
               <div class="tab-pane fade" id="pills-primenenie" role="tabpanel" aria-labelledby="pills-primenenie-tab">
                 <table class="table table-bordered table-striped">
                   <?php foreach($technics as $tech): ?>
-                    <tr><td><?=$tech["name"]?></td><td><a href="technics/<?=$tech["alias"]?>" title="Посмотреть все шины для <?=$tech["name"]?> <?=$tech["model"]?>"><?=$tech["model"]?></a></td></tr>
+                    <tr><td><?=$tech["name"]?></td><td><a href="<?=PATH?>/technics/<?=h($tech["alias"])?>" title="Посмотреть все шины для <?=$tech["name"]?> <?=$tech["model"]?>"><?=$tech["model"]?></a></td></tr>
                   <?php endforeach; ?>
                 </table>
               </div>

@@ -40,6 +40,16 @@ $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $pathOnly   = parse_url($requestUri, PHP_URL_PATH) ?: '/';
 $method     = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+if (($method === 'GET' || $method === 'HEAD') && preg_match('~[A-Z]~', $pathOnly)) {
+    $lowerPath = strtolower($pathOnly);
+
+    if ($lowerPath !== $pathOnly) {
+        $query = parse_url($requestUri, PHP_URL_QUERY);
+        header('Location: https://' . $_SERVER['SERVER_NAME'] . $lowerPath . ($query ? '?' . $query : ''), true, 301);
+        exit();
+    }
+}
+
 $needSession = false;
 
 $sessionPrefixes = [
