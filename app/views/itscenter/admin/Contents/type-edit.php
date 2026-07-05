@@ -121,15 +121,15 @@
 								<div class="tab-pane" id="tab_3">
 									<div class="box-body">
 										<div class="form-group row">
-											<label class="col-sm-3 col-form-label" for="top_text">Верхний текст</label>
+											<label class="col-sm-3 col-form-label" for="editor1">Верхний текст</label>
 											<div class="col-sm-9">
-												<textarea name="top_text" class="form-control" id="top_text" rows="8" placeholder="HTML над списком материалов"><?=h($type->top_text ?? '');?></textarea>
+												<textarea name="top_text" class="form-control" id="editor1" rows="8" placeholder="HTML над списком материалов"><?=h($type->top_text ?? '');?></textarea>
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-sm-3 col-form-label" for="bottom_text">Нижний текст</label>
+											<label class="col-sm-3 col-form-label" for="editor2">Нижний текст</label>
 											<div class="col-sm-9">
-												<textarea name="bottom_text" class="form-control" id="bottom_text" rows="8" placeholder="HTML под списком материалов"><?=h($type->bottom_text ?? '');?></textarea>
+												<textarea name="bottom_text" class="form-control" id="editor2" rows="8" placeholder="HTML под списком материалов"><?=h($type->bottom_text ?? '');?></textarea>
 											</div>
 										</div>
 									</div>
