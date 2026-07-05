@@ -28,6 +28,7 @@
 							<ul class="nav nav-pills ml-auto p-2">
 								<li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>								
 								<li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">SEO</a></li>								
+								<li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Тексты</a></li>								
 							</ul>
 						</div><!-- /.card-header -->
 						<div class="card-body">							
@@ -115,6 +116,22 @@
 												<input type="text" name="keywords" class="form-control" id="keywords" placeholder="Заполняются через запятую (4-6 фраз)" value="<?=$type->keywords;?>">
 											</div>
 										</div>								
+									</div>
+								</div><!-- /.tab-pane -->
+								<div class="tab-pane" id="tab_3">
+									<div class="box-body">
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="top_text">Верхний текст</label>
+											<div class="col-sm-9">
+												<textarea name="top_text" class="form-control" id="top_text" rows="8" placeholder="HTML над списком материалов"><?=h($type->top_text ?? '');?></textarea>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="bottom_text">Нижний текст</label>
+											<div class="col-sm-9">
+												<textarea name="bottom_text" class="form-control" id="bottom_text" rows="8" placeholder="HTML под списком материалов"><?=h($type->bottom_text ?? '');?></textarea>
+											</div>
+										</div>
 									</div>
 								</div><!-- /.tab-pane -->
 							</div><!-- /.tab-content -->							

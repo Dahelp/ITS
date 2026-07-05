@@ -18,6 +18,8 @@ class ContentsType extends AppModel
         'title' => '',
         'description' => '',
         'keywords' => '',
+        'top_text' => '',
+        'bottom_text' => '',
     ];
 
     public $rules = [
@@ -60,6 +62,8 @@ $typeName = trim((string)($type->name ?? ''));
 $typeTitle = trim((string)($type->title ?? ''));
 $pageTitle = $typeTitle !== '' ? $typeTitle : $typeName;
 $typeUrl = rtrim(PATH, '/') . '/' . trim((string)$type->param_url, '/');
+$topText = trim((string)($type->top_text ?? ''));
+$bottomText = trim((string)($type->bottom_text ?? ''));
 
 $itemList = [];
 $position = 1;
@@ -113,6 +117,12 @@ $breadcrumbSchema = [
 <section class="main-articles content-type-archive py-4 py-md-5">
     <div class="container">
         <h1 class="mb-4"><?=htmlspecialchars($type->name, ENT_QUOTES, 'UTF-8');?></h1>
+
+        <?php if ($topText !== ''): ?>
+            <div class="content-type-text content-type-text-top mb-4">
+                <?=$topText;?>
+            </div>
+        <?php endif; ?>
 
         <?php if (!empty($conts)): ?>
             <div class="cont-blok">
@@ -171,6 +181,12 @@ $breadcrumbSchema = [
         <?php else: ?>
             <div class="alert alert-light border rounded-3">
                 Материалы пока не добавлены.
+            </div>
+        <?php endif; ?>
+
+        <?php if ($bottomText !== ''): ?>
+            <div class="content-type-text content-type-text-bottom mt-4">
+                <?=$bottomText;?>
             </div>
         <?php endif; ?>
     </div>
@@ -544,5 +560,22 @@ Router::add('^" . $data['param_url'] . "/(?P<alias>[a-z0-9-]+)/?$', ['controller
             return false;
         }
         return true;
+    }
+
+    public static function ensureTextColumns()
+    {
+        foreach (['top_text', 'bottom_text'] as $column) {
+            $exists = \R::getCell(
+                "SELECT COUNT(*) FROM information_schema.COLUMNS
+                 WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'content_type'
+                   AND COLUMN_NAME = ?",
+                [$column]
+            );
+
+            if (!$exists) {
+                \R::exec("ALTER TABLE content_type ADD COLUMN `$column` MEDIUMTEXT NULL");
+            }
+        }
     }
 }

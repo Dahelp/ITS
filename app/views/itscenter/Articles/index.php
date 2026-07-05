@@ -16,6 +16,8 @@ $typeName = trim((string)($type->name ?? ''));
 $typeTitle = trim((string)($type->title ?? ''));
 $pageTitle = $typeTitle !== '' ? $typeTitle : $typeName;
 $typeUrl = rtrim(PATH, '/') . '/' . trim((string)$type->param_url, '/');
+$topText = trim((string)($type->top_text ?? ''));
+$bottomText = trim((string)($type->bottom_text ?? ''));
 
 $itemList = [];
 $position = 1;
@@ -69,6 +71,12 @@ $breadcrumbSchema = [
 <section class="main-articles content-type-archive py-4 py-md-5">
     <div class="container">
         <h1 class="mb-4"><?=htmlspecialchars($type->name, ENT_QUOTES, 'UTF-8');?></h1>
+
+        <?php if ($topText !== ''): ?>
+            <div class="content-type-text content-type-text-top mb-4">
+                <?=$topText;?>
+            </div>
+        <?php endif; ?>
 
         <?php if (!empty($conts)): ?>
             <div class="cont-blok">
@@ -127,6 +135,12 @@ $breadcrumbSchema = [
         <?php else: ?>
             <div class="alert alert-light border rounded-3">
                 Материалы пока не добавлены.
+            </div>
+        <?php endif; ?>
+
+        <?php if ($bottomText !== ''): ?>
+            <div class="content-type-text content-type-text-bottom mt-4">
+                <?=$bottomText;?>
             </div>
         <?php endif; ?>
     </div>

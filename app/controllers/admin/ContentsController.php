@@ -27,12 +27,14 @@ class ContentsController extends AppController{
     }
 
     public function typeContentAction(){
+        ContentsType::ensureTextColumns();
         $type_content = \R::findAll('content_type');
         $this->setMeta('Типы контента');
         $this->set(compact('type_content'));
     }
 	
 	public function typeAddAction(){
+        ContentsType::ensureTextColumns();
         if(!empty($_POST)){
             $type = new ContentsType();
             $data = $_POST;
@@ -52,6 +54,7 @@ class ContentsController extends AppController{
     }
 	
 	public function typeEditAction(){		
+        ContentsType::ensureTextColumns();
 		if(!empty($_POST)){
             $id = $this->getRequestID(false);
             $type = new ContentsType();
