@@ -61,7 +61,7 @@ $tellSiteSafe = htmlspecialchars($tell_site ?? '', ENT_QUOTES, 'UTF-8');
                                         </tr>
 
                                         <tr>
-                                            <td style="border:1px solid #e9ecef;background:#f8f9fa;"><b>Email:</b></td>
+                                            <td style="border:1px solid #e9ecef;background:#f8f9fa;"><b>Электронная почта:</b></td>
                                             <td style="border:1px solid #e9ecef;"><?= $emailSafe ?></td>
                                         </tr>
 

@@ -24,7 +24,7 @@
 					<ul class="bnr-info">
 						<li class="bnr-inner"><i class="far fa-credit-card"></i><span>Оплачивайте заказы переводом с расчётного счёта или банковской картой</span></li>
 						<li class="bnr-inner"><i class="far fa-badge-percent"></i><span>Возмещайте НДС до 22%</span></li>
-						<li class="bnr-inner"><i class="far fa-receipt"></i><span>Получайте комплект документов в ЭДО, на email или в бумажном виде</span></li>
+						<li class="bnr-inner"><i class="far fa-receipt"></i><span>Получайте комплект документов в ЭДО, на электронную почту или в бумажном виде</span></li>
 					</ul>
 					</div>
 

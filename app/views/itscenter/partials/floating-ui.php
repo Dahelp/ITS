@@ -26,9 +26,9 @@
 
 <div id="cookie-bar" class="cookie-bar" style="display:none;">
     <div class="cookie-bar__text">
-        Продолжая использовать сайт ООО ИТС-Центр, Вы соглашаетесь с использованием файлов cookie
+        Продолжая использовать сайт ООО ИТС-Центр, Вы соглашаетесь с использованием файлов куки
         и сервиса веб-аналитики Яндекс.Метрика в соответствии с
-        <a href="/pages/cookie-policy" target="_blank" rel="noopener">Политикой использования cookies</a>
+        <a href="/pages/cookie-policy" target="_blank" rel="noopener">Политикой использования файлов куки</a>
         и
         <a href="/pages/privacy" target="_blank" rel="noopener">Политикой конфиденциальности</a>.
     </div>

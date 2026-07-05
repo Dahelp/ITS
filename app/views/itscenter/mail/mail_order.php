@@ -78,7 +78,7 @@
 									<?=$dogovor?>
 									<b>Имя:</b> <?=$uname?><br>
 									<b>Номер телефона:</b> <?=$telefon?><br>
-									<b>E-mail:</b> <a href="mailto:<?=$user_email?>" target="_blank"><?=$user_email?></a><br>
+									<b>Электронная почта:</b> <a href="mailto:<?=$user_email?>" target="_blank"><?=$user_email?></a><br>
 									<b>Способ обратной связи:</b> <?=$formCallback?><br>
 									<b>Комментарий:</b> <?=$note?><br>
 									<b>Время заказа:</b> <?=$date?><br><br><br>

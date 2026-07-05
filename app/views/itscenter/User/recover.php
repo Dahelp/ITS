@@ -23,8 +23,8 @@ if (empty($_SESSION['recover_token'])) {
                     </div>
 
                     <div class="form-group has-feedback mb-3">
-                        <label class="form-label" for="email">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                        <label class="form-label" for="email">Электронная почта</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Электронная почта" required>
                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
                     <button type="submit" class="btn btn-primary mb-3">Отправить</button>

@@ -23,7 +23,7 @@
 								<td colspan="4" style="padding:20px 0 20px 0">
 									<p>Здравствуйте <?=$user["name"]?>.<br><br>
 										Благодарим Вас за заказ!<br>
-										Ваш заказ на сайте <?=$namecomp?> оформлен. В ближайшее время с вами свяжутся для подтверждения заказа по email.<br><br>
+										Ваш заказ на сайте <?=$namecomp?> оформлен. В ближайшее время с вами свяжутся для подтверждения заказа по электронной почте.<br><br>
 										<strong>Ваш заказ: № <?=$order["inv"]?> от <?=$order["date"]?>
 									</p>
 									<table style="border: 1px solid #ddd; border-collapse: collapse; width: 100%;">
@@ -65,7 +65,7 @@
 									<?=$dogovor?>
 									<b>Имя:</b> <?=$user["name"]?><br>
 									<b>Номер телефона:</b> <?=$user["telefon"]?><br>
-									<b>E-mail:</b> <a href="mailto:<?=$user["email"]?>" target="_blank"><?=$user["email"]?></a><br>
+									<b>Электронная почта:</b> <a href="mailto:<?=$user["email"]?>" target="_blank"><?=$user["email"]?></a><br>
 									<b>Комментарий:</b> <?=$order["note"]?><br>
 									<b>Время заказа:</b> <?=$order["date"]?><br><br><br>
 										С уважением, <?=$namecomp?> <br>

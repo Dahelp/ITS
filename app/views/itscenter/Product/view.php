@@ -458,7 +458,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                         </button>
                                     <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $quantity > 0)): ?>
                                         <button class="btn btn-success" type="submit" data-bs-toggle="modal" data-bs-target="#ModalAvailability">
-                                            Сообщить о поступлении на email
+                                            Сообщить о поступлении на электронную почту
                                         </button>
                                     <?php endif; ?>
                                 <?php endif; ?>
@@ -606,7 +606,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                         </button>
                                     <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $quantity > 0)): ?>
                                         <button class="btn btn-success" type="submit" data-bs-toggle="modal" data-bs-target="#ModalAvailability">
-                                            Сообщить о поступлении на email
+                                            Сообщить о поступлении на электронную почту
                                         </button>
                                     <?php endif; ?>
                                 </div>
@@ -1451,7 +1451,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                     <div class="mb-3">
                         <label for="oneclick-email-<?= (int)$product->id ?>" class="form-label">
-                            Эл. почта <span class="text-danger">*</span>
+                            Электронная почта <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -1459,11 +1459,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             name="email_modal"
                             id="oneclick-email-<?= (int)$product->id ?>"
                             class="form-control"
-                            placeholder="Укажите ваш e-mail"
+                            placeholder="Укажите адрес электронной почты"
                             required
                         >
 
-                        <div class="invalid-feedback">Укажите корректный email.</div>
+                        <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
                     </div>
 
                     <div class="mb-3">
@@ -1579,7 +1579,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                     <div class="mb-3">
                         <label for="request-email-<?= (int)$product->id ?>" class="form-label">
-                            Эл. почта <span class="text-danger">*</span>
+                            Электронная почта <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -1587,11 +1587,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             name="email_modal"
                             id="request-email-<?= (int)$product->id ?>"
                             class="form-control"
-                            placeholder="Укажите ваш e-mail"
+                            placeholder="Укажите адрес электронной почты"
                             required
                         >
 
-                        <div class="invalid-feedback">Укажите корректный email.</div>
+                        <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
                     </div>
 
                     <div class="mb-3">
@@ -1651,7 +1651,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content callback-modal">
             <div class="modal-header">
-                <div class="modal-title" id="ModalAvailabilityLabel">Сообщить о поступлении товара на email</div>
+                <div class="modal-title" id="ModalAvailabilityLabel">Сообщить о поступлении товара на электронную почту</div>
 
                 <button type="button"
                         class="btn-close"
@@ -1672,7 +1672,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                     <div class="mb-3">
                         <label for="availability-email-<?= (int)$product->id ?>" class="form-label">
-                            Эл. почта <span class="text-danger">*</span>
+                            Электронная почта <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -1681,10 +1681,10 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             id="availability-email-<?= (int)$product->id ?>"
                             class="form-control"
                             required
-                            placeholder="Укажите ваш e-mail"
+                            placeholder="Укажите адрес электронной почты"
                         >
 
-                        <div class="invalid-feedback">Укажите корректный email.</div>
+                        <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
                     </div>
 
                     <div class="form-check callback-agree">

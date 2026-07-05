@@ -18,8 +18,8 @@
                         <div class="col-md-6 account-left">
 							<form method="post" action="user/login" id="email" role="form" data-toggle="validator">
                                 <div class="form-group has-feedback mb-3">
-                                    <label class="form-label" for="email">E-mail</label>
-                                    <input type="text" name="email" class="form-control" id="email" placeholder="E-mail" required>
+                                    <label class="form-label" for="email">Электронная почта</label>
+                                    <input type="text" name="email" class="form-control" id="email" placeholder="Электронная почта" required>
                                     <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 </div>
                                 <div class="form-group has-feedback mb-3">

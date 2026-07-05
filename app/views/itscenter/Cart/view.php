@@ -402,8 +402,8 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
             </div>
 
             <div class="col-sm-6">
-              <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
-              <input type="email" name="email" class="form-control" id="email" placeholder="Email"
+              <label class="form-label" for="email">Электронная почта <span class="text-danger">*</span></label>
+              <input type="email" name="email" class="form-control" id="email" placeholder="Электронная почта"
                      value="<?= htmlspecialchars((string)($_SESSION['form_data']['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                      data-step-field="3">
             </div>
@@ -423,7 +423,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 				<?php $cb = (string)($_SESSION['form_data']['form_callback'] ?? ''); ?>
 
 				<option value="MAX" <?= $cb==='MAX'?'selected':'' ?>>MAX</option>
-				<option value="E-mail" <?= $cb==='E-mail'?'selected':'' ?>>E-mail</option>
+				<option value="E-mail" <?= $cb==='E-mail'?'selected':'' ?>>Электронная почта</option>
 				<option value="Обратный звонок" <?= $cb==='Обратный звонок'?'selected':'' ?>>Обратный звонок</option>
 			</select>
 

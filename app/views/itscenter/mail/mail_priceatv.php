@@ -25,7 +25,7 @@
 									<b>Отправить на:</b> <?=$contact?><br>
 									<b>Номер телефона:</b> <?=$phone?><br>
 									<?php if($email){ ?>
-									<b>Email:</b> <?=$email?><br>
+									<b>Электронная почта:</b> <?=$email?><br>
 									<?php } ?>
 									<b>Время заказа:</b> <?=date("Y-m-j H:i:s")?><br><br><br>
 										С уважением, <?=$namecomp?> <br>

@@ -40,7 +40,7 @@
 									<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								</div>
 								<div class="form-group has-feedback mb-3">
-									<label for="email">Email</label>
+									<label for="email">Электронная почта</label>
 									<input type="email" class="form-control" name="email" id="email" value="<?=$user->email?>" required>
 									<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 								</div>

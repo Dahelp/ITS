@@ -631,8 +631,8 @@ if (property_exists($product, 'reserve')) {
 					<div class="fc_input"><input type="tel" name="tell_click" id="phone-input2" required></div>
 				</div>
 				<div class="fc-1">
-					<div class="fc_name">E-Mail <span>*</span></div>
-					<div class="fc_input"><input type="text" name="email_click" placeholder="Укажите ваш e-mail" required></div>
+					<div class="fc_name">Электронная почта <span>*</span></div>
+					<div class="fc_input"><input type="text" name="email_click" placeholder="Укажите адрес электронной почты" required></div>
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Комментарий к заказу</div>

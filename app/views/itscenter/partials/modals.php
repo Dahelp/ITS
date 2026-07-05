@@ -76,14 +76,14 @@ defined('WWW') or die('Access denied');
 
                     <div class="mb-3">
                         <label for="catalog-email" class="form-label">
-                            Эл. почта <span class="text-danger">*</span>
+                            Электронная почта <span class="text-danger">*</span>
                         </label>
                         <input type="email"
                                name="email"
                                id="catalog-email"
                                class="form-control"
                                required>
-                        <div class="invalid-feedback">Укажите корректный email.</div>
+                        <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
                     </div>
 
                     <div class="mb-3">
@@ -169,13 +169,13 @@ defined('WWW') or die('Access denied');
                     </div>
 
                     <div class="mb-3">
-                        <label for="callback-email" class="form-label">Эл. почта</label>
+                        <label for="callback-email" class="form-label">Электронная почта</label>
                         <input type="email"
                                name="email"
                                id="callback-email"
                                class="form-control"
                                value="">
-                        <div class="invalid-feedback">Укажите корректный email.</div>
+                        <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
                     </div>
 
                     <div class="mb-3">
@@ -251,15 +251,15 @@ defined('WWW') or die('Access denied');
 
                     <div class="mb-3">
                         <label for="login-email" class="form-label">
-                            E-Mail <span class="text-danger">*</span>
+                            Электронная почта <span class="text-danger">*</span>
                         </label>
                         <input type="email"
                                name="email"
                                id="login-email"
                                class="form-control"
-                               placeholder="Укажите ваш e-mail"
+                               placeholder="Укажите адрес электронной почты"
                                required>
-                        <div class="invalid-feedback">Укажите корректный email.</div>
+                        <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
                     </div>
 
                     <div class="mb-3">

@@ -165,13 +165,13 @@ $emailValue = isset($formData['email']) ? h($formData['email']) : '';
                     </div>
 
                     <div class="form-group mb-4">
-                        <label class="form-label" for="email">Email</label>
+                        <label class="form-label" for="email">Электронная почта</label>
                         <input
                             type="email"
                             name="email"
                             class="form-control"
                             id="email"
-                            placeholder="Введите email"
+                            placeholder="Введите адрес электронной почты"
                             value="<?= $emailValue ?>"
                             maxlength="150"
                             autocomplete="email"

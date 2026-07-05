@@ -64,7 +64,7 @@ $(document).ready(function() {
             { title: "ID" },
 			{ title: "Имя1" },
 			{ title: "Компания" },
-            { title: "Эл. почта" },
+            { title: "Электронная почта" },
 			{ title: "Телефон" },
 			{ title: "Значение лида" },
 			{ title: "Теги" },

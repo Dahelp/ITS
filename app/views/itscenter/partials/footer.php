@@ -21,7 +21,7 @@
 					<div class="site-footer__title">Каталог</div>
 					<ul class="site-footer__menu list-unstyled">
 						<li><a href="category/industrialnye-shiny">Индустриальные шины</a></li>
-						<li><a href="category/atv">Шины ATV</a></li>
+						<li><a href="category/atv">Шины для квадроциклов (ATV)</a></li>
 						<li><a href="category/diski">Диски</a></li>
 						<li><a href="category/filtry">Фильтры</a></li>
 						<li><a href="category/kamery-i-obodnye-lenty">Камеры и ободные ленты</a></li>
@@ -39,7 +39,7 @@
 						<li><a href="pages/sotrudnichestvo">Сотрудничество</a></li>
 						<li><a href="pages/privacy">Политика конфиденциальности</a></li>
 						<li><a href="pages/personal-data-consent">Согласие на обработку ПД</a></li>
-						<li><a href="pages/cookie-policy">Политика cookies</a></li>
+						<li><a href="pages/cookie-policy">Политика файлов куки</a></li>
 						<li><a href="pages/terms">Пользовательское соглашение</a></li>
 					</ul>
 				</div>
@@ -75,7 +75,7 @@
 				</div>
 
 				<div class="site-footer__contact-item">
-					<div class="site-footer__contact-label">Email</div>
+					<div class="site-footer__contact-label">Электронная почта</div>
 					<a href="mailto:info@its-center.ru" class="site-footer__contact-text">info@its-center.ru</a>
 				</div>
 

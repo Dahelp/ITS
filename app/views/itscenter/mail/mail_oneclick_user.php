@@ -37,7 +37,7 @@
 								<b>Название товара:</b> <?=$name_tovar?><br>
 								<b>Ф.И.О.:</b> <?=$fio_click?><br>
 								<b>Номер телефона:</b> <?=$tell_click?><br>
-								<b>E-mail:</b> <?=$email_click?><br>
+								<b>Электронная почта:</b> <?=$email_click?><br>
 								<b>Комментарий:</b> <?=$prim_click?><br>
 								<b>Время заказа:</b> <?=date('Y-m-d H:i:s')?><br><br><br>
 								С уважением, <?=$namecomp?> <br>
