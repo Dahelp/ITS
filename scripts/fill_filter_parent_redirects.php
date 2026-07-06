@@ -13,8 +13,8 @@
  *   --sources=shiny,industrialnye-shiny,diski,kamery-i-obodnye-lenty,filtry
  *
  * Logic:
- * - For each parent category with children, find filters that are selectable
- *   through visible products inside that parent tree.
+ * - For each non-catalog parent category with children, find filters that are
+ *   selectable through visible products inside that parent tree.
  * - If /category/{parent}/{filter} has a single safe target category, create
  *   or update an active redirect rule to /category/{target}/{filter}.
  * - If target is ambiguous, do not change DB; write it to ambiguous.json.
@@ -40,7 +40,7 @@ $categories = [];
 $categoryIdByAlias = [];
 $childrenByParent = [];
 
-foreach (\R::getAll("SELECT id, parent_id, name, alias FROM category WHERE alias <> ''") as $row) {
+foreach (\R::getAll("SELECT id, parent_id, type_id, name, alias FROM category WHERE alias <> ''") as $row) {
     $id = (int)$row['id'];
     $parentId = (int)$row['parent_id'];
     $alias = (string)$row['alias'];
@@ -55,7 +55,10 @@ $sourceCategoryIds = [];
 if ($sourceAliases) {
     foreach ($sourceAliases as $alias) {
         if (!empty($categoryIdByAlias[$alias])) {
-            $sourceCategoryIds[] = (int)$categoryIdByAlias[$alias];
+            $sourceCategoryId = (int)$categoryIdByAlias[$alias];
+            if ((int)($categories[$sourceCategoryId]['type_id'] ?? 0) !== 1) {
+                $sourceCategoryIds[] = $sourceCategoryId;
+            }
         }
     }
 } else {
@@ -65,7 +68,10 @@ if ($sourceAliases) {
         }
 
         $alias = (string)$categories[$parentId]['alias'];
-        if (in_array($alias, $excludedSourceAliases, true)) {
+        if (
+            in_array($alias, $excludedSourceAliases, true)
+            || (int)($categories[$parentId]['type_id'] ?? 0) === 1
+        ) {
             continue;
         }
 
