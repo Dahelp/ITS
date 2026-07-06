@@ -94,13 +94,28 @@ function h2_override(string $instruction, string $fallback): string
     return $fallback;
 }
 
+function h2_bad_intro(string $intro, string $h2): bool
+{
+    $introText = h2_text($intro);
+    $h2Text = h2_text($h2);
+
+    if ($introText === '' || $h2Text === '') {
+        return false;
+    }
+
+    return str_starts_with($introText, 'диск ' . $h2Text)
+        || str_starts_with($introText, 'камера ' . $h2Text)
+        || str_starts_with($introText, 'фильтр ' . $h2Text)
+        || str_starts_with($introText, 'грузовая шина ' . $h2Text);
+}
+
 function h2_snippet(string $h2, string $intro): string
 {
     $parts = [];
+    $parts[] = '<h2>' . htmlspecialchars($h2, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h2>';
     if ($intro !== '') {
         $parts[] = '<p>' . htmlspecialchars($intro, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
     }
-    $parts[] = '<h2>' . htmlspecialchars($h2, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h2>';
     return implode(PHP_EOL, $parts);
 }
 
@@ -268,6 +283,9 @@ foreach ($rows as $row) {
     $h2 = h2_override($instruction, $originalH2);
     $removeH2 = $h2 !== $originalH2 ? $originalH2 : null;
     $intro = h2_is_directive($instruction) ? '' : $instruction;
+    if (h2_bad_intro($intro, $h2)) {
+        $intro = '';
+    }
     $target = $intro !== '' ? 'top_content' : 'content';
     $label = $path . ' -> ' . $h2;
 
