@@ -283,7 +283,9 @@ class CategoryController extends AppController
     if (!empty($inseo->title)) {
         $title = \ishop\App::seoreplace($inseo->title, $category->id);
     } else {
-        $title = $category->title;
+        $title = !empty($category->title)
+            ? (string)$category->title
+            : (string)($category->name ?? '');
     }
 
     if (!empty($inseo->description)) {

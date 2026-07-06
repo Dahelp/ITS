@@ -76,6 +76,19 @@
             <div class="col-md-12">                
 				<div class="row menu-cat">
 					<?php foreach($category as $cat): ?>
+						<?php
+						$catImg = trim((string)($cat["img"] ?? ''));
+						$catImgSrc = '/images/no_image.jpg';
+
+						if ($catImg !== '') {
+							$catImgRel = 'images/category/baseimg/' . $catImg;
+							$catImgAbs = WWW . '/' . $catImgRel;
+
+							if (is_file($catImgAbs)) {
+								$catImgSrc = '/' . $catImgRel;
+							}
+						}
+						?>
 						<a href="<?php							
 							if($cat->type_id == 1) { 
 								$parent = \R::findOne('category', 'parent_id = ?', [$cat["id"]]);
@@ -83,7 +96,7 @@
 							}else{ echo "category/".$cat["alias"].""; } ?>" title="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" class="col-md-3">
 							<div class="p_cat">
 								<div class="cb-img">
-									<img src="/images/category/baseimg/<?= htmlspecialchars($cat["img"], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" title="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>">
+									<img src="<?= htmlspecialchars($catImgSrc, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" title="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>">
 								</div>
 								<div class="cb-span">
 									<h2><?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?></h2>
