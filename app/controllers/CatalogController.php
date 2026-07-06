@@ -42,7 +42,9 @@ class CatalogController extends AppController {
 			);
 
 			// H1 для вложенной страницы каталога
-			if (!empty($cats->name)) {
+			if (!empty($cats->h1)) {
+				$h1 = $cats->h1;
+			} elseif (!empty($cats->name)) {
 				$h1 = $cats->name;
 			} elseif (!empty($cats->title)) {
 				$h1 = $cats->title;
