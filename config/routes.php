@@ -28,6 +28,7 @@ Router::add('^technics/(?P<type>[a-z0-9-]+)/(?P<alias>[a-z0-9-]+)/?$', ['control
 Router::add('^cron/refresh-tovars-server$', ['controller' => 'Cron', 'action' => 'refreshTovarsServer']);
 Router::add('^cron/refresh-tovars-from-file', ['controller' => 'Cron', 'action' => 'refreshTovarsFromFile']);
 Router::add('^cron/download-tovars-file$', ['controller' => 'Cron', 'action' => 'downloadTovarsFile']);
+Router::add('^cron/cleanup-bad-h2-intros$', ['controller' => 'Cron', 'action' => 'cleanupBadH2Intros']);
 Router::add('^size/(?P<alias>[a-z0-9\.\-_]+(?:/[a-z0-9\.\-_]+)*)/?$', ['controller' => 'Size', 'action' => 'view']);
 
 
