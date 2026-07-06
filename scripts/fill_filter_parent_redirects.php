@@ -13,6 +13,9 @@
  *   php scripts/fill_filter_parent_redirects.php --cleanup-catalog-source-redirects
  *   php scripts/fill_filter_parent_redirects.php --cleanup-catalog-source-redirects --apply
  *
+ * Audit existing redirects:
+ *   php scripts/fill_filter_parent_redirects.php --audit-redirects
+ *
  * Optional:
  *   --sources=shiny,industrialnye-shiny,diski,kamery-i-obodnye-lenty,filtry
  *
@@ -32,6 +35,7 @@ require __DIR__ . '/../config/db_bootstrap.php';
 
 $apply = in_array('--apply', $argv, true);
 $cleanupCatalogSourceRedirects = in_array('--cleanup-catalog-source-redirects', $argv, true);
+$auditRedirects = in_array('--audit-redirects', $argv, true);
 $sourceAliases = cliListOption($argv, '--sources=');
 $excludedSourceAliases = ['uslugi'];
 $now = date('Y-m-d H:i:s');
@@ -81,6 +85,26 @@ if ($cleanupCatalogSourceRedirects) {
         'out_dir' => $outDir,
         'catalog_source_redirects' => count($obsoleteRedirects),
         'by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $obsoleteRedirects)),
+    ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
+    exit;
+}
+
+if ($auditRedirects) {
+    $redirectAudit = auditExistingRedirects($categories, $childrenByParent);
+
+    file_put_contents($outDir . '/redirect_audit.json', json_encode($redirectAudit, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+    echo json_encode([
+        'mode' => 'audit',
+        'out_dir' => $outDir,
+        'total_redirects' => count($redirectAudit['all_redirects']),
+        'ok' => count($redirectAudit['ok']),
+        'obsolete_catalog_source' => count($redirectAudit['obsolete_catalog_source']),
+        'target_not_descendant' => count($redirectAudit['target_not_descendant']),
+        'target_has_no_products' => count($redirectAudit['target_has_no_products']),
+        'target_is_catalog_source' => count($redirectAudit['target_is_catalog_source']),
+        'redirect_to_self' => count($redirectAudit['redirect_to_self']),
+        'by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $redirectAudit['all_redirects'])),
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
     exit;
 }
@@ -312,6 +336,120 @@ function findCatalogSourceRedirects(array $categories, array $childrenByParent):
     );
 }
 
+function auditExistingRedirects(array $categories, array $childrenByParent): array
+{
+    $rows = \R::getAll(
+        "SELECT
+            avcc.id,
+            avcc.attr_value_id,
+            avcc.category_id AS source_category_id,
+            avcc.redirect_category_id AS target_category_id,
+            source.alias AS source_category_alias,
+            source.name AS source_category_name,
+            source.type_id AS source_type_id,
+            target.alias AS target_category_alias,
+            target.name AS target_category_name,
+            target.type_id AS target_type_id,
+            av.alias AS attr_alias,
+            av.value AS attr_value,
+            CONCAT('/category/', source.alias, '/', av.alias) AS source_url,
+            CONCAT('/category/', target.alias, '/', av.alias) AS target_url
+        FROM attribute_value_category_canonical avcc
+        JOIN category source ON source.id = avcc.category_id
+        LEFT JOIN category target ON target.id = avcc.redirect_category_id
+        JOIN attribute_value av ON av.id = avcc.attr_value_id
+        WHERE avcc.is_active = 1
+          AND avcc.mode = 'redirect'
+        ORDER BY source.alias, av.alias, avcc.id"
+    );
+
+    $audit = [
+        'all_redirects' => [],
+        'ok' => [],
+        'obsolete_catalog_source' => [],
+        'target_not_descendant' => [],
+        'target_has_no_products' => [],
+        'target_is_catalog_source' => [],
+        'redirect_to_self' => [],
+    ];
+
+    foreach ($rows as $row) {
+        $sourceId = (int)$row['source_category_id'];
+        $targetId = (int)$row['target_category_id'];
+        $attrId = (int)$row['attr_value_id'];
+
+        $problems = [];
+
+        if ($targetId <= 0 || empty($categories[$targetId])) {
+            $problems[] = 'missing_target';
+        }
+
+        if ($targetId === $sourceId) {
+            $problems[] = 'redirect_to_self';
+            $audit['redirect_to_self'][] = $row;
+        }
+
+        if (
+            (int)($categories[$sourceId]['type_id'] ?? 0) === 1
+            && !empty($childrenByParent[$sourceId])
+        ) {
+            $problems[] = 'obsolete_catalog_source';
+            $audit['obsolete_catalog_source'][] = $row;
+        }
+
+        if (
+            $targetId > 0
+            && (int)($categories[$targetId]['type_id'] ?? 0) === 1
+            && !empty($childrenByParent[$targetId])
+        ) {
+            $problems[] = 'target_is_catalog_source';
+            $audit['target_is_catalog_source'][] = $row;
+        }
+
+        if (
+            $targetId > 0
+            && $sourceId > 0
+            && $targetId !== $sourceId
+            && !isDescendantOf($targetId, $sourceId, $categories)
+        ) {
+            $problems[] = 'target_not_descendant';
+            $audit['target_not_descendant'][] = $row;
+        }
+
+        if ($targetId > 0 && !targetHasProductsForAttr($targetId, $attrId, $childrenByParent)) {
+            $problems[] = 'target_has_no_products';
+            $audit['target_has_no_products'][] = $row;
+        }
+
+        $row['problems'] = $problems;
+        $audit['all_redirects'][] = $row;
+
+        if (!$problems) {
+            $audit['ok'][] = $row;
+        }
+    }
+
+    return $audit;
+}
+
+function targetHasProductsForAttr(int $targetCategoryId, int $attrId, array $childrenByParent): bool
+{
+    $targetIds = descendantIds($targetCategoryId, $childrenByParent, true);
+    if (!$targetIds) {
+        return false;
+    }
+
+    return (int)\R::getCell(
+        "SELECT COUNT(DISTINCT p.id)
+        FROM product p
+        JOIN attribute_product ap ON ap.product_id = p.id
+        WHERE p.hide = 'show'
+          AND ap.attr_id = ?
+          AND p.category_id IN (" . implode(',', array_map('intval', $targetIds)) . ")",
+        [$attrId]
+    ) > 0;
+}
+
 function deleteRowsById(string $table, array $ids): void
 {
     $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
@@ -340,11 +478,21 @@ function chooseTargetCategory(int $attrId, int $sourceCategoryId, array $categor
     );
 
     $landingDescendants = [];
+    $sourceLanding = null;
     foreach ($landingRows as $row) {
         $cid = (int)$row['category_id'];
-        if ($cid !== $sourceCategoryId && isDescendantOf($cid, $sourceCategoryId, $categories)) {
+        if ($cid === $sourceCategoryId) {
+            $sourceLanding = $row;
+        } elseif (isDescendantOf($cid, $sourceCategoryId, $categories)) {
             $landingDescendants[$cid] = $row;
         }
+    }
+
+    if ($sourceLanding) {
+        return [
+            'target_id' => $sourceCategoryId,
+            'reason' => 'source_existing_landing',
+        ];
     }
 
     if (count($landingDescendants) === 1) {
