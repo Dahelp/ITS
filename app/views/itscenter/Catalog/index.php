@@ -78,16 +78,9 @@
 					<?php foreach($category as $cat): ?>
 						<?php
 						$catImg = trim((string)($cat["img"] ?? ''));
-						$catImgSrc = '/images/no_image.jpg';
-
-						if ($catImg !== '') {
-							$catImgRel = 'images/category/baseimg/' . $catImg;
-							$catImgAbs = WWW . '/' . $catImgRel;
-
-							if (is_file($catImgAbs)) {
-								$catImgSrc = '/' . $catImgRel;
-							}
-						}
+						$catImgSrc = $catImg !== ''
+							? '/images/category/baseimg/' . $catImg
+							: '/images/no_image.jpg';
 						?>
 						<a href="<?php							
 							if($cat->type_id == 1) { 
