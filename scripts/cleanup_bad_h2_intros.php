@@ -1,5 +1,18 @@
 <?php
 
+if (PHP_SAPI !== 'cli') {
+    $expectedToken = defined('H2_CONTENT_TEXTS_WEB_TOKEN') ? (string)H2_CONTENT_TEXTS_WEB_TOKEN : '';
+    $givenToken = isset($_GET['token']) ? (string)$_GET['token'] : '';
+
+    header('Content-Type: text/plain; charset=utf-8');
+
+    if ($expectedToken === '' || !hash_equals($expectedToken, $givenToken)) {
+        http_response_code(403);
+        echo 'Forbidden' . PHP_EOL;
+        exit(1);
+    }
+}
+
 $db = require __DIR__ . '/../config/config_db.php';
 
 $pdo = new PDO($db['dsn'], $db['user'], $db['pass'], [
@@ -7,7 +20,9 @@ $pdo = new PDO($db['dsn'], $db['user'], $db['pass'], [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);
 
-$dryRun = !in_array('--apply', $argv, true);
+$dryRun = PHP_SAPI === 'cli'
+    ? !in_array('--apply', $argv, true)
+    : (($_GET['apply'] ?? '') !== '1');
 
 function cleanup_h2_text(string $text): string
 {
