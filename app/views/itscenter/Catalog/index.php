@@ -63,6 +63,14 @@
 				<?= htmlspecialchars($pageH1, ENT_QUOTES, 'UTF-8') ?>
 			</h1>
         </section>
+
+		<?php if (!empty($cats) && !empty($cats->top_content)): ?>
+			<div class="catalog-top-block mb-4">
+				<div class="catalog-top-text">
+					<?= $cats->top_content; ?>
+				</div>
+			</div>
+		<?php endif; ?>
  
         <div class="prdt-top">
             <div class="col-md-12">                
@@ -87,6 +95,12 @@
             </div>
             <div class="clearfix"></div>
         </div>
+
+		<?php if (!empty($cats) && !empty($cats->content)): ?>
+			<div class="catalog_text">
+				<?= $cats->content; ?>
+			</div>
+		<?php endif; ?>
     </div>
 </div>
 <!--product-end-->
