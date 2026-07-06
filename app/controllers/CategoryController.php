@@ -20,6 +20,18 @@ class CategoryController extends AppController
         throw new \Exception('Страница не найдена', 404);
     }
 
+    if (empty($filterAlias) && (int)($category->type_id ?? 0) === 1) {
+        $hasChildren = \R::count(
+            'category',
+            "parent_id = ? AND (hide = 'show' OR hide = '' OR hide IS NULL)",
+            [(int)$category->id]
+        ) > 0;
+
+        if ($hasChildren) {
+            $this->redirectPermanent(rtrim(PATH, '/') . '/catalog/' . trim((string)$category->alias, '/'));
+        }
+    }
+
     if (!empty($filterAlias)) {
         $childCategory = \R::findOne(
             'category',
