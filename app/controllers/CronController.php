@@ -47,16 +47,6 @@ class CronController extends AppController {
     public function refreshAtvServerAction() { return "Задание выполнено!"; }
     public function mailAvailabilityAction() { return "Задание выполнено!"; }
 
-    public function cleanupBadH2IntrosAction()
-    {
-        if (!defined('H2_CONTENT_TEXTS_WEB_TOKEN')) {
-            define('H2_CONTENT_TEXTS_WEB_TOKEN', '3b42653a74bb417ea9aae617092652b5');
-        }
-
-        require dirname(__DIR__, 2) . '/scripts/cleanup_bad_h2_intros.php';
-        exit;
-    }
-
 	public function refreshTovarsServerAction()
     {
         http_response_code(410);
