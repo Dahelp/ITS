@@ -589,6 +589,7 @@ class App
             $vars['category_title'] = $categorySeoTitle;
             $vars['category_primenenie'] = self::getInseoPrimenenieByCategory($category);
             $vars['primenenie_category'] = $vars['category_primenenie'];
+            $vars['primenenie'] = $vars['category_primenenie'];
         }
 
         $filter = $context['filter'] ?? null;
