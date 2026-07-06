@@ -76,6 +76,7 @@ if ($sourceAliases) {
 $sourceCategoryIds = array_values(array_unique($sourceCategoryIds));
 
 $planned = [];
+$alreadyRedirected = [];
 $ambiguous = [];
 $backup = [];
 $seen = [];
@@ -146,6 +147,20 @@ foreach ($sourceCategoryIds as $sourceCategoryId) {
             && (int)$existingSourceRule['redirect_category_id'] === $targetCategoryId;
 
         if ($already) {
+            $alreadyRedirected[] = [
+                'source_category_id' => $sourceCategoryId,
+                'source_category_alias' => $source['alias'],
+                'source_category_name' => $source['name'],
+                'target_category_id' => $targetCategoryId,
+                'target_category_alias' => $target['alias'],
+                'target_category_name' => $target['name'],
+                'attr_id' => $attrId,
+                'attr_alias' => $attr['alias'],
+                'attr_value' => $attr['value'],
+                'source_url' => '/category/' . $source['alias'] . '/' . $attr['alias'],
+                'target_url' => '/category/' . $target['alias'] . '/' . $attr['alias'],
+                'decision' => $chosen['reason'],
+            ];
             continue;
         }
 
@@ -176,6 +191,7 @@ foreach ($sourceCategoryIds as $sourceCategoryId) {
 }
 
 file_put_contents($outDir . '/planned.json', json_encode($planned, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+file_put_contents($outDir . '/already_redirected.json', json_encode($alreadyRedirected, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 file_put_contents($outDir . '/ambiguous.json', json_encode($ambiguous, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 file_put_contents($outDir . '/backup.json', json_encode(array_values(uniqueRowsById($backup)), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
@@ -199,8 +215,11 @@ echo json_encode([
     'out_dir' => $outDir,
     'sources' => array_values(array_map(static fn($id) => $categories[$id]['alias'] ?? $id, $sourceCategoryIds)),
     'planned' => count($planned),
+    'already_redirected' => count($alreadyRedirected),
     'ambiguous' => count($ambiguous),
-    'by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $planned)),
+    'planned_by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $planned)),
+    'already_redirected_by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $alreadyRedirected)),
+    'ambiguous_by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $ambiguous)),
 ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
 
 function cliListOption(array $argv, string $prefix): array
