@@ -38,6 +38,7 @@ node_modules/
 /backup_from_server/
 
 # Generated exports and feeds
+/outputs/
 /public/cron/
 /public/xls/
 /public/xml/
