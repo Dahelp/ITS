@@ -409,7 +409,7 @@ class CategoryController extends AppController
 
         // 2. INSEO группы фильтра
         // Используется только если нет ручного SEO для связки категория + фильтр.
-        if ($filterInseo) {
+        if ($filterInseo && !$this->shouldSkipFilterInseo($category, $selectedAttrGroup)) {
             if (empty($filterTitle) && !empty($filterInseo->title)) {
                 $filterTitle = \ishop\App::renderInseo(
                     (string)$filterInseo->title,
@@ -445,14 +445,7 @@ class CategoryController extends AppController
         }
 
         if (empty($filterH1)) {
-            $categoryName = trim((string)($category->name ?? ''));
-            $filterValue = trim((string)($selectedAttr->value ?? ''));
-
-            if ($categoryName === '') {
-                $categoryName = $this->mbUcfirst($this->getCategoryItemWord($category));
-            }
-
-            $filterH1 = trim($categoryName . ' ' . $filterValue);
+            $filterH1 = $this->buildCategoryFilterHeading($category, $selectedAttr);
         }
 
         if (empty($filterDescription)) {
@@ -1047,6 +1040,13 @@ class CategoryController extends AppController
         return $id === 25 || $parentId === 25;
     }
 
+    protected function shouldSkipFilterInseo($category, $selectedAttrGroup = null): bool
+    {
+        $groupUrl = trim((string)($selectedAttrGroup->url_params ?? ''));
+
+        return $this->isDiskCategory($category) && $groupUrl === 'size';
+    }
+
     protected function getCategoryItemWord($category): string
     {
         $alias = trim((string)($category->alias ?? ''), '/');
@@ -1137,6 +1137,38 @@ class CategoryController extends AppController
         return $text;
     }
 
+    protected function buildCategoryFilterHeading($category, $selectedAttr): string
+    {
+        $categoryName = trim((string)($category->name ?? ''));
+        $filterValue = trim((string)($selectedAttr->value ?? ''));
+
+        if ($categoryName === '') {
+            $categoryName = $this->mbUcfirst($this->getCategoryItemWord($category));
+        }
+
+        if ($filterValue === '') {
+            return $categoryName;
+        }
+
+        if ($this->isDiskCategory($category)) {
+            $diskPhrase = $this->buildDiskFilterPhrase($categoryName, $filterValue);
+            if ($diskPhrase !== '') {
+                return $diskPhrase;
+            }
+        }
+
+        return trim($categoryName . ' ' . $filterValue);
+    }
+
+    protected function buildDiskFilterPhrase(string $categoryName, string $filterValue): string
+    {
+        if (preg_match('/^Диски\s+для\s+(.+)$/ui', $categoryName, $matches)) {
+            return 'Диски ' . $filterValue . ' для ' . trim($matches[1]);
+        }
+
+        return '';
+    }
+
     protected function findApplicableFilterValue(string $filterAlias, string $categoryIds)
     {
         $filterAlias = trim($filterAlias);
@@ -1217,7 +1249,7 @@ class CategoryController extends AppController
 
     protected function buildCategoryFilterTitle($category, $selectedAttr): string
     {
-        $categoryName = trim((string)($category->name ?? ''));
+        $categoryName = $this->buildCategoryFilterHeading($category, $selectedAttr);
         $filterValue = trim((string)($selectedAttr->value ?? ''));
 
         if ($categoryName === '') {
@@ -1228,7 +1260,7 @@ class CategoryController extends AppController
             return $categoryName . ' купить в ИТС-Центре';
         }
 
-        return $categoryName . ' ' . $filterValue . ' купить в ИТС-Центре';
+        return $categoryName . ' купить в ИТС-Центре';
     }
 
     protected function buildCategoryFilterDescription($category, $selectedAttr, $selectedAttrGroup = null): string
@@ -1250,6 +1282,11 @@ class CategoryController extends AppController
 
         if ($filterValue === '') {
             $filterValue = $filterAlias;
+        }
+
+        $heading = $this->buildCategoryFilterHeading($category, $selectedAttr);
+        if ($heading === '') {
+            $heading = $categoryName;
         }
 
         $lowerCategoryName = mb_strtolower($categoryName, 'UTF-8');
@@ -1274,6 +1311,10 @@ class CategoryController extends AppController
             mb_stripos($groupName, 'типоразмер') !== false ||
             mb_stripos($groupName, 'size') !== false
         ) {
+            if ($this->isDiskCategory($category)) {
+                return $heading . ' купить в ИТС-Центре. Подбор дисков по размеру, PCD, HUB, ET, наличию и цене. Доставка по России.';
+            }
+
             return $categoryName . ' размера ' . $filterValue . ' купить в ИТС-Центре. Подбор по типоразмеру, рисунку протектора, наличию и цене. Доставка по России.';
         }
 
@@ -1289,6 +1330,10 @@ class CategoryController extends AppController
         $type = $this->detectFilterValueType($filterValue, $filterAlias);
 
         if ($type === 'size') {
+            if ($this->isDiskCategory($category)) {
+                return $heading . ' купить в ИТС-Центре. Подбор дисков по размеру, PCD, HUB, ET, наличию и цене. Доставка по России.';
+            }
+
             return $categoryName . ' размера ' . $filterValue . ' купить в ИТС-Центре. Подбор по типоразмеру, рисунку протектора, наличию и цене. Доставка по России.';
         }
 
