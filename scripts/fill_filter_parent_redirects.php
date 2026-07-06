@@ -488,7 +488,7 @@ function chooseTargetCategory(int $attrId, int $sourceCategoryId, array $categor
         }
     }
 
-    if ($sourceLanding) {
+    if ($sourceLanding && empty($childrenByParent[$sourceCategoryId])) {
         return [
             'target_id' => $sourceCategoryId,
             'reason' => 'source_existing_landing',
