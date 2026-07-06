@@ -9,6 +9,10 @@
  * Apply:
  *   php scripts/fill_filter_parent_redirects.php --apply
  *
+ * Cleanup obsolete redirects from catalog source categories:
+ *   php scripts/fill_filter_parent_redirects.php --cleanup-catalog-source-redirects
+ *   php scripts/fill_filter_parent_redirects.php --cleanup-catalog-source-redirects --apply
+ *
  * Optional:
  *   --sources=shiny,industrialnye-shiny,diski,kamery-i-obodnye-lenty,filtry
  *
@@ -27,6 +31,7 @@ require __DIR__ . '/../config/init.php';
 require __DIR__ . '/../config/db_bootstrap.php';
 
 $apply = in_array('--apply', $argv, true);
+$cleanupCatalogSourceRedirects = in_array('--cleanup-catalog-source-redirects', $argv, true);
 $sourceAliases = cliListOption($argv, '--sources=');
 $excludedSourceAliases = ['uslugi'];
 $now = date('Y-m-d H:i:s');
@@ -48,6 +53,36 @@ foreach (\R::getAll("SELECT id, parent_id, type_id, name, alias FROM category WH
     $categories[$id] = $row;
     $categoryIdByAlias[$alias] = $id;
     $childrenByParent[$parentId][] = $id;
+}
+
+if ($cleanupCatalogSourceRedirects) {
+    $obsoleteRedirects = findCatalogSourceRedirects($categories, $childrenByParent);
+
+    file_put_contents($outDir . '/catalog_source_redirects.json', json_encode($obsoleteRedirects, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    file_put_contents($outDir . '/catalog_source_redirects_backup.json', json_encode($obsoleteRedirects, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+    if ($apply && $obsoleteRedirects) {
+        \R::begin();
+        try {
+            deleteRowsById(
+                'attribute_value_category_canonical',
+                array_map(static fn($row) => (int)$row['id'], $obsoleteRedirects)
+            );
+            \R::commit();
+        } catch (\Throwable $e) {
+            \R::rollback();
+            fwrite(STDERR, $e->getMessage() . PHP_EOL);
+            exit(1);
+        }
+    }
+
+    echo json_encode([
+        'mode' => $apply ? 'cleanup-apply' : 'cleanup-plan',
+        'out_dir' => $outDir,
+        'catalog_source_redirects' => count($obsoleteRedirects),
+        'by_source' => array_count_values(array_map(static fn($i) => $i['source_category_alias'], $obsoleteRedirects)),
+    ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
+    exit;
 }
 
 $sourceCategoryIds = [];
@@ -237,6 +272,58 @@ function cliListOption(array $argv, string $prefix): array
     }
 
     return [];
+}
+
+function findCatalogSourceRedirects(array $categories, array $childrenByParent): array
+{
+    $catalogSourceIds = [];
+
+    foreach ($categories as $categoryId => $category) {
+        if (
+            (int)($category['type_id'] ?? 0) === 1
+            && !empty($childrenByParent[(int)$categoryId])
+        ) {
+            $catalogSourceIds[] = (int)$categoryId;
+        }
+    }
+
+    if (!$catalogSourceIds) {
+        return [];
+    }
+
+    return \R::getAll(
+        "SELECT
+            avcc.*,
+            source.alias AS source_category_alias,
+            source.name AS source_category_name,
+            target.alias AS target_category_alias,
+            target.name AS target_category_name,
+            av.alias AS attr_alias,
+            av.value AS attr_value,
+            CONCAT('/category/', source.alias, '/', av.alias) AS source_url,
+            CONCAT('/category/', target.alias, '/', av.alias) AS target_url
+        FROM attribute_value_category_canonical avcc
+        JOIN category source ON source.id = avcc.category_id
+        LEFT JOIN category target ON target.id = avcc.redirect_category_id
+        JOIN attribute_value av ON av.id = avcc.attr_value_id
+        WHERE avcc.category_id IN (" . implode(',', array_map('intval', $catalogSourceIds)) . ")
+          AND avcc.mode = 'redirect'
+        ORDER BY source.alias, av.alias, avcc.id"
+    );
+}
+
+function deleteRowsById(string $table, array $ids): void
+{
+    $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+    if (!$ids) {
+        return;
+    }
+
+    foreach (array_chunk($ids, 500) as $chunk) {
+        \R::exec(
+            "DELETE FROM {$table} WHERE id IN (" . implode(',', $chunk) . ")"
+        );
+    }
 }
 
 function chooseTargetCategory(int $attrId, int $sourceCategoryId, array $categories, array $childrenByParent): array
