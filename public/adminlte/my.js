@@ -412,18 +412,22 @@ $('#typeahead').closest('form').on('submit', function() {
           // URL превью
           var url = buildUrl(section, mode, data);
 
-          // HTML превью с классом удаления и нужными data-*
+          // HTML превью и отдельная кнопка удаления с нужными data-*
           var html = '';
           if (mode === 'single') {
             // Базовое — одно изображение, перезаписываем контейнер
             html = '<img src="'+url+'" ' +
-                   'class="del-base" style="max-height:150px;cursor:pointer" ' +
-                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
+                   'style="max-height:150px" alt="">' +
+                   '<div><button type="button" class="btn btn-danger btn-sm mt-2 del-base" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">' +
+                   'Удалить изображение</button></div>';
             $preview.html(html);
           } else if (mode === 'unload') {
             html = '<img src="'+url+'" ' +
-                   'class="del-unload" style="max-height:150px;cursor:pointer" ' +
-                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
+                   'style="max-height:150px" alt="">' +
+                   '<div><button type="button" class="btn btn-danger btn-sm mt-2 del-unload" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">' +
+                   'Удалить изображение</button></div>';
             $preview.html(html);
           } else {
             // Галерея — добавляем
@@ -469,6 +473,12 @@ $('#typeahead').closest('form').on('submit', function() {
 
     // удаление превью из DOM
     function removePreviewNode(imgEl) {
+        var previewWrap = imgEl.closest ? imgEl.closest('.single, .unload') : null;
+        if (previewWrap) {
+            previewWrap.innerHTML = '';
+            return;
+        }
+
         // если это базовая/выгрузочная — обычно она одна: очищаем контейнер
         var parent = imgEl.parentElement;
         if (parent) {

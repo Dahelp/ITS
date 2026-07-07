@@ -89,6 +89,7 @@ class CategoryController extends AppController {
     public function editAction(){
         if(!empty($_POST)){
             $id = $this->getRequestID(false);
+            $currentCategory = \R::load('category', $id);
             $category = new Category();
             $data = $_POST;
             $category->load($data);
@@ -102,6 +103,9 @@ class CategoryController extends AppController {
 				}
 			}
 			$category->getImg();
+            if (!array_key_exists('img', $category->attributes) && !empty($currentCategory->img)) {
+                $category->attributes['img'] = (string)$currentCategory->img;
+            }
             if(!$category->validate($data)){
                 $category->getErrors();
                 redirect();

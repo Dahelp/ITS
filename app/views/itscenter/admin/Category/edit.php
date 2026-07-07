@@ -21,7 +21,7 @@
 <section class="content">
 	<div class="row">
         <div class="col-12">
-            <form action="<?=ADMIN;?>/category/edit" method="post" data-toggle="validator">
+            <form action="<?=ADMIN;?>/category/edit" method="post" data-toggle="validator" enctype="multipart/form-data">
                 <!-- Custom Tabs -->
 				<div class="card">
 					<div class="card-header d-flex p-0">
@@ -115,7 +115,12 @@
                                        			<div id="single" class="btn btn-success" data-url="category/add-image" data-name="single" data-razdel="category">Выбрать файл</div>
 												<p><small>Рекомендуемые размеры: 600х450</small></p>
 												<div class="single">
-													<img src="/images/category/baseimg/<?=$category->img;?>" alt="" style="max-height: 150px; cursor: pointer;" data-id="<?=$category->id;?>" data-src="<?=$category->img;?>" data-razdel="category" class="del-base">
+													<?php if (!empty($category->img)): ?>
+														<img src="/images/category/baseimg/<?=h($category->img);?>" alt="" style="max-height: 150px;">
+														<div>
+															<button type="button" class="btn btn-danger btn-sm mt-2 del-base" data-id="<?=$category->id;?>" data-src="<?=h($category->img);?>" data-razdel="category">Удалить изображение</button>
+														</div>
+													<?php endif; ?>
 												</div>
                                     
 												<div class="overlay">

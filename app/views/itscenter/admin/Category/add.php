@@ -21,7 +21,7 @@
 <section class="content">
 <div class="row">
           <div class="col-12">
-			<form action="<?=ADMIN;?>/category/add" method="post" data-toggle="validator">
+			<form action="<?=ADMIN;?>/category/add" method="post" data-toggle="validator" enctype="multipart/form-data">
 			<!-- Custom Tabs -->
             <div class="card">
               <div class="card-header d-flex p-0">

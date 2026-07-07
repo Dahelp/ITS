@@ -1,4 +1,16 @@
 <!--prdt-starts-->
+<?php
+$renderCategoryText = static function ($content) {
+	$content = trim((string)$content);
+	if ($content === '') {
+		return '';
+	}
+
+	return $content === strip_tags($content)
+		? nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'))
+		: $content;
+};
+?>
 <div class="prdt">
     <div class="container">
 		<!--start-breadcrumbs-->
@@ -67,7 +79,7 @@
 		<?php if (!empty($cats) && !empty($cats->top_content)): ?>
 			<div class="catalog-top-block mb-4">
 				<div class="catalog-top-text">
-					<?= $cats->top_content; ?>
+					<?= $renderCategoryText($cats->top_content); ?>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -104,7 +116,7 @@
 
 		<?php if (!empty($cats) && !empty($cats->content)): ?>
 			<div class="catalog_text">
-				<?= $cats->content; ?>
+				<?= $renderCategoryText($cats->content); ?>
 			</div>
 		<?php endif; ?>
     </div>

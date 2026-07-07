@@ -1,4 +1,15 @@
 <?php
+$renderCategoryText = static function ($content) {
+    $content = trim((string)$content);
+    if ($content === '') {
+        return '';
+    }
+
+    return $content === strip_tags($content)
+        ? nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'))
+        : $content;
+};
+
 $isFilterLanding = !empty($selectedAttr) && !empty($selectedAttr->id) && !empty($selectedAttrAlias);
 
 $filterAttr = $filterLanding['attr'] ?? null;
@@ -106,7 +117,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
         ?>
         <div class="catalog-top-block mb-4">
           <div class="catalog-top-text">
-            <?=$categoryTopContent;?>
+            <?=$renderCategoryText($categoryTopContent);?>
           </div>
         </div>
       <?php endif; ?>     
@@ -128,7 +139,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
         <?php endif; ?>
 
         <div class="catalog-top-text">
-          <?=$filterTopContent;?>
+          <?=$renderCategoryText($filterTopContent);?>
         </div>
       </div>
     <?php endif; ?>
@@ -222,11 +233,11 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
 
           <?php if ($isFilterLanding && !empty($filterBottomContent)): ?>
             <div class="catalog_text">
-              <?=$filterBottomContent;?>
+              <?=$renderCategoryText($filterBottomContent);?>
             </div>
           <?php elseif (!$isFilterLanding && !empty($category->content)): ?>
             <div class="catalog_text">
-              <?=$category->content;?>
+              <?=$renderCategoryText($category->content);?>
             </div>
           <?php endif; ?>
 
