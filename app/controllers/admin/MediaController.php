@@ -261,9 +261,16 @@ class MediaController extends AppController
                 if (!empty($p['gallery'])) $this->rm($p['gallery'].$src);
                 break;
 
+            case 'category':
+                if ($id > 0) {
+                    \R::exec('UPDATE category SET img=NULL WHERE id=? AND img=?', [$id, $src]);
+                }
+                if (!empty($p['mini']))    $this->rm($p['mini'].$src);
+                if (!empty($p['baseimg'])) $this->rm($p['baseimg'].$src);
+                break;
+
             case 'contents':
             case 'technics':
-            case 'category':
             case 'brand':
             case 'technics_type':
             case 'technics_manufacturer':

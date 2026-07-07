@@ -22,6 +22,7 @@
 	<div class="row">
         <div class="col-12">
             <form action="<?=ADMIN;?>/category/edit" method="post" data-toggle="validator" enctype="multipart/form-data">
+				<input type="hidden" name="id" value="<?=$category->id;?>">
                 <!-- Custom Tabs -->
 				<div class="card">
 					<div class="card-header d-flex p-0">
@@ -116,10 +117,7 @@
 												<p><small>Рекомендуемые размеры: 600х450</small></p>
 												<div class="single">
 													<?php if (!empty($category->img)): ?>
-														<img src="/images/category/baseimg/<?=h($category->img);?>" alt="" style="max-height: 150px;">
-														<div>
-															<button type="button" class="btn btn-danger btn-sm mt-2 del-base" data-id="<?=$category->id;?>" data-src="<?=h($category->img);?>" data-razdel="category">Удалить изображение</button>
-														</div>
+														<img src="/images/category/baseimg/<?=h($category->img);?>" alt="" style="max-height: 150px; cursor: pointer;" data-id="<?=$category->id;?>" data-src="<?=h($category->img);?>" data-razdel="category" class="del-base">
 													<?php endif; ?>
 												</div>
                                     

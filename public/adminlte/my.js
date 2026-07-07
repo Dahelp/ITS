@@ -412,22 +412,18 @@ $('#typeahead').closest('form').on('submit', function() {
           // URL превью
           var url = buildUrl(section, mode, data);
 
-          // HTML превью и отдельная кнопка удаления с нужными data-*
+          // HTML превью с классом удаления и нужными data-*
           var html = '';
           if (mode === 'single') {
             // Базовое — одно изображение, перезаписываем контейнер
             html = '<img src="'+url+'" ' +
-                   'style="max-height:150px" alt="">' +
-                   '<div><button type="button" class="btn btn-danger btn-sm mt-2 del-base" ' +
-                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">' +
-                   'Удалить изображение</button></div>';
+                   'class="del-base" style="max-height:150px;cursor:pointer" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
             $preview.html(html);
           } else if (mode === 'unload') {
             html = '<img src="'+url+'" ' +
-                   'style="max-height:150px" alt="">' +
-                   '<div><button type="button" class="btn btn-danger btn-sm mt-2 del-unload" ' +
-                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">' +
-                   'Удалить изображение</button></div>';
+                   'class="del-unload" style="max-height:150px;cursor:pointer" ' +
+                   'data-id="0" data-src="'+(data.file || '')+'" data-section="'+section+'">';
             $preview.html(html);
           } else {
             // Галерея — добавляем
