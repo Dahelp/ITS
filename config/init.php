@@ -11,16 +11,20 @@ define("CONF", ROOT . '/config');
 define("LAYOUT", 'watches');
 define("TEMPLATE", 'itscenter');
 
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$app_path = $scheme . "://{$_SERVER['HTTP_HOST']}{$_SERVER['PHP_SELF']}";
+$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'its-center.ru';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : ($_SERVER['REQUEST_SCHEME'] ?? 'http');
+$site = $scheme . '://' . $host;
+$app_path = $site . ($_SERVER['PHP_SELF'] ?? '/index.php');
 
 $app_path = preg_replace("#[^/]+$#", '', $app_path);
 $app_path = str_replace('/public/', '', $app_path);
 $app_path = rtrim($app_path, '/');
+if (PHP_SAPI === 'cli') {
+    $app_path = $site;
+}
 define("PATH", $app_path);
 
 // Новый define: SITE без путей
-$site = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
 define("SITE", $site);
 
 define("ADMIN", PATH . '/admin');
