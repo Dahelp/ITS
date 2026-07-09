@@ -14,12 +14,18 @@ define("TEMPLATE", 'itscenter');
 $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'its-center.ru';
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : ($_SERVER['REQUEST_SCHEME'] ?? 'http');
 $site = $scheme . '://' . $host;
-$app_path = $site . ($_SERVER['PHP_SELF'] ?? '/index.php');
+$phpSelf = $_SERVER['PHP_SELF'] ?? '/index.php';
+$app_path = $site . $phpSelf;
 
 $app_path = preg_replace("#[^/]+$#", '', $app_path);
 $app_path = str_replace('/public/', '', $app_path);
 $app_path = rtrim($app_path, '/');
-if (PHP_SAPI === 'cli') {
+if (
+    PHP_SAPI === 'cli'
+    || strpos($phpSelf, '/home/') !== false
+    || strpos($phpSelf, 'public_html') !== false
+    || strpos($phpSelf, '\\') !== false
+) {
     $app_path = $site;
 }
 define("PATH", $app_path);
