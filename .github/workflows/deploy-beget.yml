@@ -73,3 +73,18 @@ jobs:
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_content_image_source.php || php8.1 scripts/add_content_image_source.php || php7.4 scripts/add_content_image_source.php || php scripts/add_content_image_source.php) && (php8.2 scripts/add_tire_wear_article.php || php8.1 scripts/add_tire_wear_article.php || php7.4 scripts/add_tire_wear_article.php || php scripts/add_tire_wear_article.php)"
+
+      - name: Regenerate Direct YML feeds
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key \
+            -p "${{ secrets.BEGET_PORT }}" \
+            "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=10-16.5 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=10-16.5 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=10-16.5 || php public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=10-16.5) && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=12-16.5 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=12-16.5 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=12-16.5 || php public/cron/run_task_cli.php --id=34 --cat_id=9 --tiposize=12-16.5) && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=12.5/80-18 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=12.5/80-18 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=12.5/80-18 || php public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=12.5/80-18) && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-24 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-24 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-24 || php public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-24) && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-28 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-28 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-28 || php public/cron/run_task_cli.php --id=34 --cat_id=19 --tiposize=16.9-28) && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=17.5-25 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=17.5-25 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=17.5-25 || php public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=17.5-25) && \
+            (php8.2 public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=23.5-25 || php8.1 public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=23.5-25 || php7.4 public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=23.5-25 || php public/cron/run_task_cli.php --id=34 --cat_id=20 --tiposize=23.5-25)"
