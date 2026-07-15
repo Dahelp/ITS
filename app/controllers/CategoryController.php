@@ -1046,7 +1046,8 @@ class CategoryController extends AppController
     {
         $groupUrl = trim((string)($selectedAttrGroup->url_params ?? ''));
 
-        return $this->isDiskCategory($category) && $groupUrl === 'size';
+        return $groupUrl === 'size'
+            && ($this->isDiskCategory($category) || $this->isCameraCategory($category));
     }
 
     protected function getCategoryItemWord($category): string
@@ -1317,6 +1318,10 @@ class CategoryController extends AppController
                 return $heading . ' купить в ИТС-Центре. Подбор дисков по размеру, PCD, HUB, ET, наличию и цене. Доставка по России.';
             }
 
+            if ($this->isCameraCategory($category)) {
+                return $categoryName . ' размера ' . $filterValue . ' купить в ИТС-Центре. Подбор по типоразмеру, наличию и цене. Доставка по России.';
+            }
+
             return $categoryName . ' размера ' . $filterValue . ' купить в ИТС-Центре. Подбор по типоразмеру, рисунку протектора, наличию и цене. Доставка по России.';
         }
 
@@ -1334,6 +1339,10 @@ class CategoryController extends AppController
         if ($type === 'size') {
             if ($this->isDiskCategory($category)) {
                 return $heading . ' купить в ИТС-Центре. Подбор дисков по размеру, PCD, HUB, ET, наличию и цене. Доставка по России.';
+            }
+
+            if ($this->isCameraCategory($category)) {
+                return $categoryName . ' размера ' . $filterValue . ' купить в ИТС-Центре. Подбор по типоразмеру, наличию и цене. Доставка по России.';
             }
 
             return $categoryName . ' размера ' . $filterValue . ' купить в ИТС-Центре. Подбор по типоразмеру, рисунку протектора, наличию и цене. Доставка по России.';
