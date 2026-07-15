@@ -162,14 +162,14 @@ $getBrandCountsByCategoryIds = static function (array $brandAliases, array $cate
  * alias поправил: solid-star вместо "solid star"
  */
 $industrialBrandMap = [
-	'ekka'        => ['title' => 'EKKA',        'class' => 'ekka'],
-	'superguider' => ['title' => 'Superguider', 'class' => 'superguider'],
-	'halitrax'    => ['title' => 'HALITRAX',    'class' => 'halitrax'],
-	'hengruida'   => ['title' => 'Hengruida',   'class' => 'hengruida'],
-	'herade'      => ['title' => 'HERADE',      'class' => 'herade'],
-	'huiton'      => ['title' => 'HUITON',      'class' => 'huiton'],
-	'ist'         => ['title' => 'IST',         'class' => 'ist'],
-	'solid-star'  => ['title' => 'SOLID STAR',  'class' => 'solid-star'],
+	'ekka'        => ['title' => 'EKKA',        'class' => 'ekka',        'category' => 'shiny-dlya-ekskavatorov-pogruzchikov'],
+	'superguider' => ['title' => 'Superguider', 'class' => 'superguider', 'category' => 'shiny-dlya-ekskavatorov-pogruzchikov'],
+	'halitrax'    => ['title' => 'HALITRAX',    'class' => 'halitrax',    'category' => 'shiny-dlya-frontalnyh-pogruzchikov'],
+	'hengruida'   => ['title' => 'Hengruida',   'class' => 'hengruida',   'category' => 'shiny-dlya-frontalnyh-pogruzchikov'],
+	'herade'      => ['title' => 'HERADE',      'class' => 'herade',      'category' => 'shiny-dlya-vilochnyh-pogruzchikov'],
+	'huiton'      => ['title' => 'HUITON',      'class' => 'huiton',      'category' => 'shiny-dlya-vilochnyh-pogruzchikov'],
+	'ist'         => ['title' => 'IST',         'class' => 'ist',         'category' => 'shiny-dlya-vilochnyh-pogruzchikov'],
+	'solid-star'  => ['title' => 'SOLID STAR',  'class' => 'solid-star',  'category' => 'shiny-dlya-vilochnyh-pogruzchikov'],
 ];
 
 $industrialCategoryIds = $getCategoryIds($menuCategoryGroups['industrialnye-shiny'] ?? []);
@@ -346,7 +346,7 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 									continue;
 								}
 							?>
-							<a href="<?= cm_h($menuFilterUrl('industrialnye-shiny', $brandAlias)) ?>"
+							<a href="<?= cm_h($menuFilterUrl($brandData['category'] ?? 'industrialnye-shiny', $brandAlias)) ?>"
 							class="brands-logo__el <?= cm_h($brandData['class']) ?>">
 								<span><?= cm_h($brandData['title']) ?></span>
 								<div class="brands-logo__el-count"><?= $brandCount ?></div>
