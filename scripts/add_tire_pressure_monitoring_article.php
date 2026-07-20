@@ -181,7 +181,7 @@ if ($contentId > 0) {
     $contentId = (int)$pdo->lastInsertId();
 }
 
-$relatedIds = [430, 437, 413, 1194, 490, 528, 985];
+$relatedIds = [1184, 1208, 1194, 528, 709, 463, 979];
 $pdo->prepare('DELETE FROM content_related WHERE content_id = ?')->execute([$contentId]);
 $insertRelated = $pdo->prepare('INSERT INTO content_related (content_id, related_id) VALUES (?, ?)');
 foreach ($relatedIds as $productId) {

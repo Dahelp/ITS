@@ -270,6 +270,10 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             <li><a href="https://its-center.ru/articles/rukovodstvo-po-shinam-dlya-gruntovyh-katkov" title="Руководство по шинам для грунтовых катков">Руководство по шинам для грунтовых катков</a></li>
                           <?php } ?>
 
+                          <?php if ((int)$cat_prod->parent_id === 1 || (int)$cat_prod->id === 1) { ?>
+                            <li><a href="https://its-center.ru/articles/kontrol-davleniya-i-temperatury-shin-spectehniki" title="Контроль давления и температуры шин спецтехники">Контроль давления и температуры шин спецтехники</a></li>
+                          <?php } ?>
+
                           <?php if ($cat_prod->parent_id == 1 || $cat_prod->parent_id == 2) { ?>
                             <li><a href="https://its-center.ru/articles/rekomendacii-po-ekspluatacii-shin-bezopasnost-i-dolgovechnost" title="Общие рекомендации по эксплуатации шин">Общие рекомендации по эксплуатации шин</a></li>
                           <?php } ?>

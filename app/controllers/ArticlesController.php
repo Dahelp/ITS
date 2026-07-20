@@ -42,6 +42,8 @@ class ArticlesController extends AppController
             JOIN product ON product.id = content_related.related_id
             WHERE content_related.content_id = ?
               AND product.hide = 'show'
+              AND (product.quantity - COALESCE(product.reserve, 0)) > 0
+            ORDER BY (product.quantity - COALESCE(product.reserve, 0)) DESC, product.price DESC
         ", [(int)$find->id]);
 
         if ($find->img) {
