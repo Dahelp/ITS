@@ -16,7 +16,7 @@
 			</div>
 			<div class="item item-1">
 				<a class="category category-1" href="category/industrialnye-shiny" title="Индустриальные шины">
-					<img src="images/cat-1.jpg" alt="Индустриальные шины" title="Индустриальные шины" />
+					<img src="images/cat-1.webp" alt="Индустриальные шины" title="Индустриальные шины" />
 					<div class="cat-i"><i class="fad fa-tire-rugged"></i></div>
 					<div class="cat-name"><h2>Индустриальные шины</h2></div>
 					<div class="cat-span"><?php $count_inds = \R::getAll("SELECT * FROM product WHERE category_id IN ('9', '18', '19', '20', '21', '22', '23', '24')"); echo count($count_inds);?> товаров</div>
@@ -24,7 +24,7 @@
 			</div>
 			<div class="item item-2">
 				<a class="category category-2" href="category/atv" title="Шины для квадроциклов АТВ">
-					<img src="images/cat-2.jpg" alt="Шины АТВ" title="Шины АТВ" />
+					<img src="images/cat-2.webp" alt="Шины АТВ" title="Шины АТВ" />
 					<div class="cat-i"><i class="far fa-tire-rugged"></i></div>
 					<div class="cat-name"><h2>Шины АТВ</h2></div>
 					<div class="cat-span"><?php $count_atv = \R::getAll("SELECT * FROM product WHERE category_id = '2'"); echo count($count_atv);?> товаров</div>
@@ -32,7 +32,7 @@
 			</div>
 			<div class="item item-3">
 				<a class="category category-3" href="category/kamery-i-obodnye-lenty" title="Камеры и ободные ленты">
-					<img src="images/cat-5.jpg" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" />
+					<img src="images/cat-5.webp" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" />
 					<div class="cat-i"><img src="images/camera.png" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" /></div>
 					<div class="cat-name"><h2>Камеры и ободные ленты</h2></div>
 					<div class="cat-span"><?php $count_atv = \R::getAll("SELECT * FROM product WHERE category_id IN ('31', '32', '33')"); echo count($count_atv);?> товаров</div>
@@ -40,7 +40,7 @@
 			</div>
 			<div class="item item-4">
 				<a class="category category-4" href="category/diski" title="Диски для спецтехники">
-					<img src="images/cat-3.jpg" alt="Диски" title="Диски" />
+					<img src="images/cat-3.webp" alt="Диски" title="Диски" />
 					<div class="cat-i"><i class="fal fa-tire"></i></div>
 					<div class="cat-name"><h2>Диски</h2></div>
 					<div class="cat-span"><?php $count_inds = \R::getAll("SELECT * FROM product WHERE category_id IN ('26', '27', '28', '29', '30')"); echo count($count_inds);?> товаров</div>
@@ -131,7 +131,7 @@
 				<p>Сотрудники компании знают о предлагаемых шинах и прочих товарах всё. Поэтому предоставят вам подробную информацию о любом интересующем товаре – от масляного фильтра и диска до шин на садовую тачку и цельнолитых шин на фронтальный погрузчик весом в полторы тонны. Вы купите то, что подходит на вашу технику.</p>
 			</div>
 			<div class="col-md-3 ocomp_img">
-				<img src="images/companys.jpg" alt="Официальный сайт компании ИТС-ЦЕНТР" title="Официальный сайт компании ИТС-ЦЕНТР">
+				<img src="images/companys.webp" alt="Официальный сайт компании ИТС-ЦЕНТР" title="Официальный сайт компании ИТС-ЦЕНТР">
 			</div>
 		</div>
 	</div>
@@ -141,7 +141,7 @@
 		<div class="pch_name"><h3>Почему клиенты выбирают ИТС-ЦЕНТР?</h3></div>
 		<div class="pch_m">
 			<div class="col-md-4 pch_img">
-				<img src="images/advantages.jpg" alt="Почему клиенты выбирают ИТС-ЦЕНТР?" title="Почему клиенты выбирают ИТС-ЦЕНТР?">
+				<img src="images/advantages.webp" alt="Почему клиенты выбирают ИТС-ЦЕНТР?" title="Почему клиенты выбирают ИТС-ЦЕНТР?">
 			</div>
 			<div class="pch_b col-md-8">				
 				<div class="pch_info">				
