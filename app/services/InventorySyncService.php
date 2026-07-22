@@ -27,7 +27,12 @@ final class InventorySyncService
             $data = $result['data'];
             $apiQty = (int)$data['rest'] + (int)$data['reserve'];
             $dbQty = (int)$product['quantity'];
-            if ($apiQty !== $dbQty) $stats['changed']++;
+            $needsUpdate = $apiQty !== $dbQty
+                || (int)($data['rest'] ?? 0) !== (int)($product['rest'] ?? 0)
+                || (int)($data['reserve'] ?? 0) !== (int)($product['reserve'] ?? 0)
+                || abs((float)($data['price_rozn'] ?? 0) - (float)($product['price'] ?? 0)) > 0.009
+                || abs((float)($data['price_opt'] ?? 0) - (float)($product['opt_price'] ?? 0)) > 0.009;
+            if ($needsUpdate) $stats['changed']++;
             $canWrite = $mode === 'live' || ($mode === 'canary' && (abs(crc32($article)) % 100) < max(0, min(100, $canaryPercent)));
             $suspiciousZero = $apiQty === 0 && $dbQty > 0 && $result['source'] !== 'cache';
             if ($suspiciousZero && getenv('INVENTORY_ALLOW_ZERO_TRANSITIONS') !== '1') {
@@ -35,7 +40,7 @@ final class InventorySyncService
                 $this->client->log('zero_blocked', $article, ['db_quantity' => $dbQty]);
                 continue;
             }
-            if ($canWrite) { Cron::updateProduct($product, $data, $date, $dateTime); $stats['updated']++; }
+            if ($canWrite && $needsUpdate) { Cron::updateProduct($product, $data, $date, $dateTime); $stats['updated']++; }
         }
         $productIds = array_map('intval', array_column($products, 'id'));
         $mods = $productIds ? \R::getAll('SELECT * FROM modification WHERE product_id IN (' . implode(',', $productIds) . ') ORDER BY id') : [];
@@ -48,9 +53,13 @@ final class InventorySyncService
             $data = $result['data'];
             $apiQty = (int)$data['rest'] + (int)$data['reserve'];
             $dbQty = (int)$mod['quantity'];
+            $needsUpdate = $apiQty !== $dbQty
+                || abs((float)($data['price_rozn'] ?? 0) - (float)($mod['price'] ?? 0)) > 0.009
+                || abs((float)($data['price_spec'] ?? 0) - (float)($mod['spec_price'] ?? 0)) > 0.009
+                || abs((float)($data['price_opt'] ?? 0) - (float)($mod['opt_price'] ?? 0)) > 0.009;
             $canWrite = $mode === 'live' || ($mode === 'canary' && (abs(crc32($article)) % 100) < max(0, min(100, $canaryPercent)));
             if ($apiQty === 0 && $dbQty > 0 && $result['source'] !== 'cache' && getenv('INVENTORY_ALLOW_ZERO_TRANSITIONS') !== '1') { $stats['zero_blocked']++; continue; }
-            if ($canWrite) {
+            if ($canWrite && $needsUpdate) {
                 Cron::updateModification((string)$mod['article'], $apiQty, (float)$data['price_rozn'], (float)$data['price_spec'], (float)$data['price_opt'], $date);
                 $stats['modifications_updated']++;
             }
