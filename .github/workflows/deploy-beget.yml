@@ -80,4 +80,4 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
-            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=9,18,19 --mode=shadow --limit=100 --require-api=1 && php8.2 bin/compare_inventory_sources.php --file=public/cron/tovars.csv --limit=100 --require-api=1"
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=9,18,19 --mode=canary --canary-percent=5 --limit=100 --require-api=1 && php8.2 bin/compare_inventory_sources.php --file=public/cron/tovars.csv --limit=100 --require-api=1"
