@@ -47,7 +47,9 @@ jobs:
             --exclude='.idea/' \
             --exclude='archive/' \
             --exclude='tmp/' \
-            --exclude='public/cron/' \
+            --include='public/cron/' \
+            --include='public/cron/run_task_cli.php' \
+            --exclude='public/cron/***' \
             --exclude='public/xls/' \
             --exclude='public/xml/' \
             --exclude='public/storage/' \
@@ -80,4 +82,4 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
-            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=9,18,19 --mode=live --limit=100 --require-api=1 && php8.2 bin/compare_inventory_sources.php --file=public/cron/tovars.csv --limit=100 --require-api=1"
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=9,18,19 --mode=live --require-api=1 && php8.2 bin/compare_inventory_sources.php --file=public/cron/tovars.csv --limit=100 --require-api=1"
