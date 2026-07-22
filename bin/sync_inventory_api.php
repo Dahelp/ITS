@@ -9,6 +9,6 @@ $id = (int)($args['id'] ?? 0); $categories = (string)($args['categories'] ?? '')
 if ($id < 1 || $categories === '') { fwrite(STDERR, "Usage: php bin/sync_inventory_api.php --id=36 --categories=9,18 --mode=shadow|canary|live [--canary-percent=5] [--limit=100]\n"); exit(2); }
 $lock = fopen(sys_get_temp_dir() . '/its_inventory_api_' . $id . '.lock', 'c');
 if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) { fwrite(STDERR, "Already running\n"); exit(4); }
-try { $stats = (new \app\services\InventorySyncService())->run($id, $categories, $mode, (int)($args['canary-percent'] ?? 5), (int)($args['limit'] ?? 0)); echo json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL; }
+try { $stats = (new \app\services\InventorySyncService())->run($id, $categories, $mode, (int)($args['canary-percent'] ?? 5), (int)($args['limit'] ?? 0)); echo json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL; if (($args['require-api'] ?? '0') === '1' && (int)($stats['api'] ?? 0) === 0) exit(5); }
 catch (Throwable $e) { fwrite(STDERR, $e->getMessage() . PHP_EOL); exit(1); }
 finally { flock($lock, LOCK_UN); fclose($lock); }

@@ -73,3 +73,11 @@ jobs:
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_content_image_source.php || php8.1 scripts/add_content_image_source.php || php7.4 scripts/add_content_image_source.php || php scripts/add_content_image_source.php) && (php8.2 scripts/add_tire_wear_article.php || php8.1 scripts/add_tire_wear_article.php || php7.4 scripts/add_tire_wear_article.php || php scripts/add_tire_wear_article.php) && (php8.2 scripts/add_tire_pressure_monitoring_article.php || php8.1 scripts/add_tire_pressure_monitoring_article.php || php7.4 scripts/add_tire_pressure_monitoring_article.php || php scripts/add_tire_pressure_monitoring_article.php)"
+
+      - name: Inventory API production shadow smoke test
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key \
+            -p "${{ secrets.BEGET_PORT }}" \
+            "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=9,18,19 --mode=shadow --limit=3 --require-api=1 && php8.2 bin/compare_inventory_sources.php --file=public/cron/cache_file.csv --limit=3 --require-api=1"
