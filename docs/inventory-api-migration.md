@@ -10,7 +10,7 @@
 ## Включение
 
 1. Shadow: `php bin/sync_inventory_api.php --id=36 --categories=9,18,19 --mode=shadow`.
-2. Тройная сверка: `php bin/compare_inventory_sources.php --file=public/cron/cache_file.csv --limit=100`. Команда ничего не записывает в БД.
+2. Тройная сверка: `php bin/compare_inventory_sources.php --file=public/cron/tovars.csv --limit=100`. Команда ничего не записывает в БД. FTP-снимок от 8 июля является историческим и не используется как источник истины; актуальным источником считается API 1С.
 3. Сверить JSON-статистику и `storage/logs/inventory_api.jsonl`, повторить на полном наборе.
 4. Canary 5%: `--mode=canary --canary-percent=5`; затем 25%, 50% и 100%.
 5. Live: `--mode=live`. Только после успешного периода заменить production cron-команду. Старую файловую команду оставить выключенной как ручной rollback.
