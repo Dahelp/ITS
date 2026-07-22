@@ -99,10 +99,7 @@ fwrite(STDOUT, "START id={$id} task={$task}\n");
 
 try {
     if ($task === 'refresh-tovars-server') {
-        if ($categories === '') {
-            throw new RuntimeException('categories is empty');
-        }
-        $stats = (new \app\services\InventorySyncService())->run($id, $categories, 'live');
+        $stats = (new \app\services\InventorySyncService())->run($id, '*', 'live');
         $json = json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         fwrite(STDOUT, $json . PHP_EOL);
         cron_cli_log("DONE_API id={$id} stats={$json}");
