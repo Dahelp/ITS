@@ -16,6 +16,7 @@
 5. Live: `--mode=live`. Только после успешного периода заменить production cron-команду. Старую файловую команду оставить выключенной как ручной rollback.
 
 Production cutover выполнен в `public/cron/run_task_cli.php`: задача `refresh-tovars-server` вызывает API live-sync. `run_refresh_from_file_cli.php` сохранён только для ручного rollback и не должен запускаться по расписанию.
+Cron использует `categories=*`, чтобы остатки обновлялись для всех товарных категорий, включая ATV/квадроциклы (категория 2).
 
 По умолчанию переход положительного остатка в ноль блокируется. После подтверждения shadow-сравнением штатные нулевые переходы разрешаются переменной `INVENTORY_ALLOW_ZERO_TRANSITIONS=1`. При timeout/HTTP/JSON ошибке используется кеш до `INVENTORY_API_STALE_TTL`, затем данные БД не меняются.
 
