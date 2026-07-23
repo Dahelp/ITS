@@ -77,10 +77,9 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_content_image_source.php || php8.1 scripts/add_content_image_source.php || php7.4 scripts/add_content_image_source.php || php scripts/add_content_image_source.php) && (php8.2 scripts/add_tire_wear_article.php || php8.1 scripts/add_tire_wear_article.php || php7.4 scripts/add_tire_wear_article.php || php scripts/add_tire_wear_article.php) && (php8.2 scripts/add_tire_pressure_monitoring_article.php || php8.1 scripts/add_tire_pressure_monitoring_article.php || php7.4 scripts/add_tire_pressure_monitoring_article.php || php scripts/add_tire_pressure_monitoring_article.php)"
 
       - name: Inventory API production shadow smoke test
-        # The write is restricted to the explicitly named article; CSV export follows only after it succeeds.
         shell: bash
         run: |
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
-            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=* --mode=live --article=10431 --require-api=1 && php8.2 bin/export_inventory_csv.php --mirror-dir=/home/s/shinaspec/its50.ru/public_html/xls/nalichie"
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/sync_inventory_api.php --id=36 --categories=* --mode=shadow --limit=3 --require-api=1 && php8.2 bin/export_inventory_csv.php --mirror-dir=/home/s/shinaspec/its50.ru/public_html/xls/nalichie"
