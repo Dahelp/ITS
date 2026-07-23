@@ -49,11 +49,15 @@ $runner = $projectRoot . '/public/cron/run_task_cli.php';
               <tbody>
                 <?php foreach ($crons as $cron): ?>
                   <?php
-                    $command = $phpBin . ' ' . $runner . ' --id=' . (int)$cron['id'];
+                    $prefix = '';
                     if (($cron['url_params'] ?? '') === 'refresh-tovars-server') {
-                        $command .= ' --limit=20 --pause-ms=250';
+                        $prefix = 'INVENTORY_CSV_MIRROR_DIR=/home/s/shinaspec/its50.ru/public_html/xls/nalichie ';
                     }
-                    $command .= ' > ' . $projectRoot . '/public/cron/logs/cron_' . (int)$cron['id'] . '.log 2>&1';
+                    $command = $prefix . $phpBin . ' ' . $runner . ' --id=' . (int)$cron['id'];
+                    if (($cron['url_params'] ?? '') === 'ymlfid-direct') {
+                        $command .= ' --cat-id=ID --tiposize=SIZE';
+                    }
+                    $command .= ' >> ' . $projectRoot . '/public/cron/logs/cron_' . (int)$cron['id'] . '.log 2>&1';
                   ?>
                   <tr>
                     <td><?= (int)$cron['id']; ?></td>
