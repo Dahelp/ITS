@@ -278,7 +278,7 @@
 		</div>
 	<?php endif; ?>
     <?php if(!empty($main_title[2])) { echo "".$main_title[2].""; } ?>
-    <?php if(!empty($content)) { echo $content; } ?>
+    <?php if(!empty($content)) { echo \app\helpers\SeoStrong::apply($content); } ?>
 </div>
 
 <?php require __DIR__ . '/../partials/decide-block.php'; ?>
