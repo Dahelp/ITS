@@ -100,6 +100,10 @@ fwrite(STDOUT, "START id={$id} task={$task}\n");
 try {
     if ($task === 'refresh-tovars-server') {
         $stats = (new \app\services\InventorySyncService())->run($id, '*', 'live');
+        $exportDirectories = [ROOT . '/public/xls/nalichie'];
+        $mirrorDirectory = trim((string)getenv('INVENTORY_CSV_MIRROR_DIR'));
+        if ($mirrorDirectory !== '') $exportDirectories[] = $mirrorDirectory;
+        $stats['csv_exports'] = (new \app\services\InventoryCsvExportService())->export($exportDirectories);
         $json = json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         fwrite(STDOUT, $json . PHP_EOL);
         cron_cli_log("DONE_API id={$id} stats={$json}");

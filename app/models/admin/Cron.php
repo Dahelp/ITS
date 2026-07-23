@@ -506,6 +506,10 @@ class Cron extends AppModel
 
     public static function processFileBatch(int $id, string $categories, int $offset = 0, int $limit = 50): array
     {
+        if (getenv('INVENTORY_ALLOW_FILE_IMPORT') !== '1') {
+            self::logError("ID {$id} - [FILE] Import disabled; inventory is managed by 1C API", $id);
+            return ['done' => true, 'error' => 'file_import_disabled'];
+        }
         $offset = max(0, $offset);
         $limit  = max(1, min(500, $limit));
 

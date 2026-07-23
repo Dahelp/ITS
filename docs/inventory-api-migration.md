@@ -26,3 +26,27 @@ Cron использует `categories=*`, чтобы остатки обновл
 ## Production deploy
 
 Workflow `.github/workflows/deploy-beget.yml` доставляет код. Секреты API не менять в репозитории; на сервере задать config/env, выполнить shadow и canary вручную, затем изменить cron в панели Beget. Автоматический deploy/переключение не выполняется без production-доступа и подтверждённых результатов сравнения.
+
+## Совместимые CSV для других сайтов
+
+После успешного API-обновления `public/cron/run_task_cli.php --id=36` атомарно создаёт:
+
+- `/xls/nalichie/filtrs.csv` — категории 10–17;
+- `/xls/nalichie/kamery.csv` — категории 31–33;
+- `/xls/nalichie/tovars.csv` — ATV, шины и диски (категории 2, 9, 18–24, 26–30, 35).
+
+Формат сохранён совместимым со старыми файлами: Windows-1251 без BOM, разделитель `;`, 18 колонок. Остаток и цены берутся из БД после API-синхронизации. Складская детализация используется из последнего успешного API-кеша только при совпадении общего `rest` с БД. Публикация идёт через временный файл и `rename`, пустая выгрузка не заменяет рабочий файл.
+
+Основные URL:
+
+- `https://its-center.ru/xls/nalichie/filtrs.csv`
+- `https://its-center.ru/xls/nalichie/kamery.csv`
+- `https://its-center.ru/xls/nalichie/tovars.csv`
+
+Чтобы сохранить прежние URL на `its50.ru`, cron должен получить переменную:
+
+```bash
+INVENTORY_CSV_MIRROR_DIR=/home/s/shinaspec/its50.ru/public_html/xls/nalichie
+```
+
+Файловый импорт остатков заблокирован по умолчанию. Временный ручной rollback разрешается только явной переменной `INVENTORY_ALLOW_FILE_IMPORT=1`.
