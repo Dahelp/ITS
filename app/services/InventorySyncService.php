@@ -28,7 +28,7 @@ final class InventorySyncService
             if (empty($result['ok'])) { $stats['db_fallback']++; continue; }
             $stats[$result['source'] === 'api' ? 'api' : 'cache']++;
             $data = $result['data'];
-            $apiQty = (int)$data['rest'] + (int)$data['reserve'];
+            $apiQty = (int)$data['rest'];
             $dbQty = (int)$product['quantity'];
             $needsUpdate = $apiQty !== $dbQty
                 || (int)($data['rest'] ?? 0) !== (int)($product['rest'] ?? 0)
@@ -54,7 +54,7 @@ final class InventorySyncService
             $result = $this->client->fetch($article);
             if (empty($result['ok'])) { $stats['db_fallback']++; continue; }
             $data = $result['data'];
-            $apiQty = (int)$data['rest'] + (int)$data['reserve'];
+            $apiQty = (int)$data['rest'];
             $dbQty = (int)$mod['quantity'];
             $needsUpdate = $apiQty !== $dbQty
                 || abs((float)($data['price_rozn'] ?? 0) - (float)($mod['price'] ?? 0)) > 0.009
