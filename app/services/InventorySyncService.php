@@ -9,17 +9,25 @@ final class InventorySyncService
     private $client;
     public function __construct(?InventoryApiClient $client = null) { $this->client = $client ?: new InventoryApiClient(); }
 
-    public function run(int $cronId, string $categories, string $mode = 'shadow', int $canaryPercent = 5, int $limit = 0): array
+    public function run(int $cronId, string $categories, string $mode = 'shadow', int $canaryPercent = 5, int $limit = 0, string $onlyArticle = ''): array
     {
         if (!in_array($mode, ['shadow', 'canary', 'live'], true)) throw new \InvalidArgumentException('mode must be shadow, canary or live');
         $allCategories = trim($categories) === '*';
         $ids = $allCategories ? [] : array_values(array_filter(array_map('intval', explode(',', $categories))));
         if (!$allCategories && !$ids) throw new \InvalidArgumentException('categories is empty');
         $sql = 'SELECT * FROM product';
-        if (!$allCategories) $sql .= ' WHERE category_id IN (' . implode(',', $ids) . ')';
+        $conditions = [];
+        $params = [];
+        if (!$allCategories) $conditions[] = 'category_id IN (' . implode(',', $ids) . ')';
+        $onlyArticle = InventoryApiClient::normalizeArticle($onlyArticle);
+        if ($onlyArticle !== '') {
+            $conditions[] = 'article = ?';
+            $params[] = $onlyArticle;
+        }
+        if ($conditions) $sql .= ' WHERE ' . implode(' AND ', $conditions);
         $sql .= ' ORDER BY id';
         if ($limit > 0) $sql .= ' LIMIT ' . min(100000, $limit);
-        $products = \R::getAll($sql);
+        $products = \R::getAll($sql, $params);
         $stats = ['mode' => $mode, 'seen' => count($products), 'api' => 0, 'cache' => 0, 'db_fallback' => 0, 'changed' => 0, 'zero_blocked' => 0, 'updated' => 0];
         $date = date('Y-m-d'); $dateTime = date('Y-m-d H:i:s');
         foreach ($products as $product) {
