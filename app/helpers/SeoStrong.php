@@ -11,7 +11,7 @@ namespace app\helpers;
 final class SeoStrong
 {
     private const PHRASES = [
-        '/category/shiny-dlya-minipogruzchikov' => ['резину на мини погрузчик', 'шин для мини погрузчиков'],
+        '/category/shiny-dlya-minipogruzchikov' => ['резину на мини погрузчик', 'шин для мини погрузчиков', 'шины для минипогрузчиков'],
         '/category/shiny-dlya-frontalnyh-pogruzchikov' => ['шины для фронтальных погрузчиков'],
         '/category/shiny-dlya-shahtnoy-tehniki' => ['шины для шахтной техники'],
         '/technics' => ['шины для спецтехники', 'размеры шин на погрузчики'],
