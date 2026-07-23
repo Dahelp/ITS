@@ -260,7 +260,9 @@ class Cron extends AppModel
      */
     public static function updateProduct(array $product, array $res, string $date_price, string $date_update): void
     {
-        $quantity = $res["rest"] + $res["reserve"];
+        // API 1C: на витрине доступен только свободный остаток.
+        // Резерв сохраняем отдельно, но не прибавляем к quantity.
+        $quantity = max(0, (int)$res["rest"]);
         $stock_status_id = ($res["rest"] != "0") ? "1" : "0";
         $pssql_id = $product["id"];
 
