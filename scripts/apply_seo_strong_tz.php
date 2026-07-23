@@ -17,9 +17,10 @@ $content = (string)$category->content;
 $replacements = [
     'резину на мини погрузчик' => '<strong>резину на мини погрузчик</strong>',
     'шин для мини погрузчиков' => '<strong>шин для мини погрузчиков</strong>',
+    'Шины для минипогрузчиков' => '<strong>Шины для минипогрузчиков</strong>',
 ];
 
-if (preg_match('~<strong>\s*(?:резину на мини погрузчик|шин для мини погрузчиков)\s*</strong>~iu', $content)) {
+if (preg_match('~<strong>\s*(?:резину на мини погрузчик|шин для мини погрузчиков|шины для минипогрузчиков)\s*</strong>~iu', $content)) {
     echo "SEO strong already applied: {$alias}\n";
     exit(0);
 }
