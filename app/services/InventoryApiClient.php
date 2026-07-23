@@ -71,6 +71,14 @@ final class InventoryApiClient
         return ['ok' => true, 'source' => 'api', 'data' => $data];
     }
 
+    public function getLastSuccessfulData(string $article): ?array
+    {
+        $article = self::normalizeArticle($article);
+        if ($article === '') return null;
+        $cache = $this->readCache($this->cacheDir . '/' . hash('sha256', $article) . '.json');
+        return $cache['data'] ?? null;
+    }
+
     private function normalizeData(array $row): array
     {
         $row['rest'] = max(0, (int)($row['rest'] ?? 0));
