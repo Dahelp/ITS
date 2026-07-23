@@ -47,6 +47,7 @@ jobs:
             --exclude='.idea/' \
             --exclude='archive/' \
             --exclude='tmp/' \
+            --exclude='storage/' \
             --include='public/cron/' \
             --include='public/cron/run_task_cli.php' \
             --exclude='public/cron/***' \
@@ -82,4 +83,4 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
-            "cd '${{ secrets.BEGET_PATH }}' && echo CRONTAB_BEGIN && (crontab -l || true) && echo CRONTAB_END && php8.2 bin/audit_cron.php && php8.2 bin/sync_inventory_api.php --id=36 --categories=* --mode=shadow --limit=3 --require-api=1 && php8.2 bin/export_inventory_csv.php --mirror-dir=/home/s/shinaspec/its50.ru/public_html/xls/nalichie"
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/cleanup_inventory_cron_duplicates.php && php8.2 bin/audit_cron.php && php8.2 bin/sync_inventory_api.php --id=36 --categories=* --mode=shadow --limit=3 --require-api=1 && php8.2 bin/export_inventory_csv.php --mirror-dir=/home/s/shinaspec/its50.ru/public_html/xls/nalichie"

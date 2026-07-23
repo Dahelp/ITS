@@ -77,6 +77,10 @@ chdir($public);
 
 $cron = \R::getRow('SELECT * FROM cron WHERE id = ? LIMIT 1', [$id]);
 if (!$cron) {
+    if (in_array($id, [3, 5, 38, 39], true)) {
+        fwrite(STDOUT, "RETIRED id={$id}; use inventory API cron id=36\n");
+        exit(0);
+    }
     fwrite(STDERR, "Cron task not found: {$id}\n");
     exit(3);
 }
