@@ -9,11 +9,14 @@ $renderCategoryText = static function ($content) {
         ? nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'))
         : $content;
 };
-$renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
-    return \app\helpers\SeoStrong::apply($renderCategoryText($content));
-};
-
 $isFilterLanding = !empty($selectedAttr) && !empty($selectedAttr->id) && !empty($selectedAttrAlias);
+$renderSeoCategoryText = static function ($content) use ($renderCategoryText, $isFilterLanding) {
+    $rendered = $renderCategoryText($content);
+
+    return $isFilterLanding
+        ? \app\helpers\SeoStrong::apply($rendered)
+        : $rendered;
+};
 
 $filterAttr = $filterLanding['attr'] ?? null;
 $filterGroup = $filterLanding['group'] ?? null;
