@@ -31,4 +31,10 @@ foreach ($safeViews as $relativePath) {
     }
 }
 
+$categoryView = (string)file_get_contents($root . '/app/views/itscenter/Category/view.php');
+if (!preg_match('~return\s+\$isFilterLanding\s*\?\s*\\\\app\\\\helpers\\\\SeoStrong::apply\(\$rendered\)\s*:\s*\$rendered;~', $categoryView)) {
+    fwrite(STDERR, "FAILED: regular category DB content must not be changed at render time\n");
+    exit(1);
+}
+
 echo "SeoStrong placement tests passed\n";
