@@ -9,6 +9,9 @@ $renderCategoryText = static function ($content) {
         ? nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'))
         : $content;
 };
+$renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
+    return \app\helpers\SeoStrong::apply($renderCategoryText($content));
+};
 
 $isFilterLanding = !empty($selectedAttr) && !empty($selectedAttr->id) && !empty($selectedAttrAlias);
 
@@ -117,7 +120,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
         ?>
         <div class="catalog-top-block mb-4">
           <div class="catalog-top-text">
-            <?=$renderCategoryText($categoryTopContent);?>
+            <?=$renderSeoCategoryText($categoryTopContent);?>
           </div>
         </div>
       <?php endif; ?>     
@@ -139,7 +142,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
         <?php endif; ?>
 
         <div class="catalog-top-text">
-          <?=$renderCategoryText($filterTopContent);?>
+          <?=$renderSeoCategoryText($filterTopContent);?>
         </div>
       </div>
     <?php endif; ?>
@@ -233,11 +236,11 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
 
           <?php if ($isFilterLanding && !empty($filterBottomContent)): ?>
             <div class="catalog_text">
-              <?=$renderCategoryText($filterBottomContent);?>
+              <?=$renderSeoCategoryText($filterBottomContent);?>
             </div>
           <?php elseif (!$isFilterLanding && !empty($category->content)): ?>
             <div class="catalog_text">
-              <?=$renderCategoryText($category->content);?>
+              <?=$renderSeoCategoryText($category->content);?>
             </div>
           <?php endif; ?>
 

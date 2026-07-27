@@ -155,7 +155,7 @@ $breadcrumbSchema = [
                         <?php endif; ?>
 
                         <div class="cont-desc">
-                            <?=$find->content;?>
+                            <?=\app\helpers\SeoStrong::apply((string)$find->content);?>
                         </div>
 
                         <div class="share mt-4 pt-3 border-top">

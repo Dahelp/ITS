@@ -10,6 +10,9 @@ $renderCategoryText = static function ($content) {
 		? nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'))
 		: $content;
 };
+$renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
+	return \app\helpers\SeoStrong::apply($renderCategoryText($content));
+};
 ?>
 <div class="prdt">
     <div class="container">
@@ -79,7 +82,7 @@ $renderCategoryText = static function ($content) {
 		<?php if (!empty($cats) && !empty($cats->top_content)): ?>
 			<div class="catalog-top-block mb-4">
 				<div class="catalog-top-text">
-					<?= $renderCategoryText($cats->top_content); ?>
+					<?= $renderSeoCategoryText($cats->top_content); ?>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -116,7 +119,7 @@ $renderCategoryText = static function ($content) {
 
 		<?php if (!empty($cats) && !empty($cats->content)): ?>
 			<div class="catalog_text">
-				<?= $renderCategoryText($cats->content); ?>
+				<?= $renderSeoCategoryText($cats->content); ?>
 			</div>
 		<?php endif; ?>
     </div>
