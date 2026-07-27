@@ -70,6 +70,21 @@ $breadcrumbSchema = [
     <div class="container">
         <h1 class="mb-4"><?=htmlspecialchars($type->name, ENT_QUOTES, 'UTF-8');?></h1>
 
+        <div class="promo-description mb-5">
+            <h2 class="h3 mb-3">Акции и специальные предложения</h2>
+            <p>
+                В разделе <strong>«Акции»</strong> собраны текущие <strong>скидки</strong> и
+                <strong>спецпредложения</strong> на <strong>шины, диски, камеры, ободные ленты и фильтры</strong>
+                для спецтехники. Мы регулярно обновляем список, чтобы вы могли приобрести качественные
+                комплектующие по <strong>выгодным ценам</strong>.
+            </p>
+            <p>
+                Воспользуйтесь возможностью сэкономить на покупке <strong>индустриальных шин</strong>,
+                <strong>шин для квадроциклов</strong>, а также <strong>фильтров и дисков</strong>.
+                Следите за новыми акциями — выгодные предложения появляются каждый месяц.
+            </p>
+        </div>
+
         <?php if (!empty($conts)): ?>
             <div class="cont-blok">
                 <?php foreach($conts as $item): ?>
