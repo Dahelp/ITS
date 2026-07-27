@@ -49,7 +49,7 @@ if (!empty($category->id)) {
 
                 <?php if (!empty($inseo_prod) && !empty($inseo_prod->content)): ?>
                     <div class="catalog_text">
-                        <?= $inseo_prod->content; ?>
+                        <?= \app\helpers\SeoStrong::apply((string)$inseo_prod->content); ?>
                     </div>
                 <?php endif; ?>
             </div>

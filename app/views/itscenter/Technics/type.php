@@ -48,7 +48,7 @@
 
         <?php if (!empty($type['content'])): ?>
             <div class="catalog_text mt-4">
-                <?= $type['content'] ?>
+                <?= \app\helpers\SeoStrong::apply((string)$type['content']) ?>
             </div>
         <?php endif; ?>
     </div>

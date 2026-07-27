@@ -74,7 +74,7 @@ $breadcrumbSchema = [
 
         <?php if ($topText !== ''): ?>
             <div class="content-type-text content-type-text-top mb-4">
-                <?=$topText;?>
+                <?=\app\helpers\SeoStrong::apply($topText);?>
             </div>
         <?php endif; ?>
 
@@ -140,7 +140,7 @@ $breadcrumbSchema = [
 
         <?php if ($bottomText !== ''): ?>
             <div class="content-type-text content-type-text-bottom mt-4">
-                <?=$bottomText;?>
+                <?=\app\helpers\SeoStrong::apply($bottomText);?>
             </div>
         <?php endif; ?>
     </div>
