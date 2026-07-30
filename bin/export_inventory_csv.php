@@ -20,7 +20,7 @@ try {
     $stats = (new \app\services\InventoryCsvExportService())->export($directories);
     echo json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL;
 } catch (Throwable $e) {
-    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    fwrite(STDERR, 'Inventory CSV export failed: ' . $e->getMessage() . PHP_EOL);
     exit(1);
 } finally {
     flock($lock, LOCK_UN);
