@@ -54,17 +54,26 @@ foreach ($directories as $directory) {
     $result['directories'][] = $entry;
 }
 
-$log = $root . '/public/cron/logs/cron_36.log';
-$result['cron_log'] = [
-    'path' => $log,
-    'exists' => is_file($log),
-    'size' => is_file($log) ? filesize($log) : null,
-    'modified_at' => is_file($log) ? date('c', filemtime($log)) : null,
-    'tail' => [],
+$logs = [
+    $root . '/public/cron/logs/cron_36.log',
+    $root . '/public/cron/logs/cron_cli.log',
+    $root . '/public/cron/logs/cron_cli_fatal.log',
+    $root . '/storage/logs/inventory_csv_export.jsonl',
 ];
-if (is_file($log)) {
-    $lines = @file($log, FILE_IGNORE_NEW_LINES);
-    if (is_array($lines)) $result['cron_log']['tail'] = array_slice($lines, -80);
+$result['logs'] = [];
+foreach ($logs as $log) {
+    $entry = [
+        'path' => $log,
+        'exists' => is_file($log),
+        'size' => is_file($log) ? filesize($log) : null,
+        'modified_at' => is_file($log) ? date('c', filemtime($log)) : null,
+        'tail' => [],
+    ];
+    if (is_file($log)) {
+        $lines = @file($log, FILE_IGNORE_NEW_LINES);
+        if (is_array($lines)) $entry['tail'] = array_slice($lines, -80);
+    }
+    $result['logs'][] = $entry;
 }
 
 echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL;

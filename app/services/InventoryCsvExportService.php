@@ -4,6 +4,9 @@ namespace app\services;
 
 final class InventoryCsvExportService
 {
+    private const PUBLISH_ATTEMPTS = 3;
+    private const RETRY_DELAY_MICROSECONDS = 250000;
+
     private const HEADER = [
         'НоменклатураКод', 'ЦенаРозн', 'ЦенаОпт', 'Свободно', 'Резерв',
         'Климовск', 'КлимовскР', 'Краснодар', 'КраснодарР', 'Воронеж',
@@ -34,12 +37,26 @@ final class InventoryCsvExportService
         if (!$directories) throw new \InvalidArgumentException('At least one output directory is required');
 
         $stats = ['generated_at' => date('c'), 'directories' => array_keys($directories), 'files' => []];
-        foreach (self::EXPORTS as $fileName => $categories) {
-            $rows = $this->loadRows($categories);
-            if (!$rows) throw new \RuntimeException("Refusing to publish empty inventory export: {$fileName}");
-            foreach (array_keys($directories) as $directory) $this->writeAtomically($directory, $fileName, $rows);
-            $stats['files'][$fileName] = count($rows);
+        $this->log('START', ['directories' => array_keys($directories)]);
+        try {
+            foreach (self::EXPORTS as $fileName => $categories) {
+                $rows = $this->loadRows($categories);
+                if (!$rows) throw new \RuntimeException("Refusing to publish empty inventory export: {$fileName}");
+                foreach (array_keys($directories) as $directory) {
+                    $this->writeAtomically($directory, $fileName, $rows);
+                    $this->log('PUBLISHED', [
+                        'directory' => $directory,
+                        'file' => $fileName,
+                        'rows' => count($rows),
+                    ]);
+                }
+                $stats['files'][$fileName] = count($rows);
+            }
+        } catch (\Throwable $e) {
+            $this->log('ERROR', ['message' => $e->getMessage()]);
+            throw $e;
         }
+        $this->log('DONE', $stats);
         return $stats;
     }
 
@@ -121,11 +138,50 @@ final class InventoryCsvExportService
         } finally {
             fclose($handle);
         }
-        if (@filesize($temp) < 100 || !@rename($temp, $target)) {
+        if (@filesize($temp) < 100) {
             @unlink($temp);
-            throw new \RuntimeException("Cannot publish export atomically: {$target}");
+            throw new \RuntimeException("Generated export is unexpectedly small: {$temp}");
+        }
+
+        $published = false;
+        $lastError = null;
+        for ($attempt = 1; $attempt <= self::PUBLISH_ATTEMPTS; $attempt++) {
+            error_clear_last();
+            if (@rename($temp, $target)) {
+                $published = true;
+                break;
+            }
+            $lastError = error_get_last();
+            $this->log('PUBLISH_RETRY', [
+                'target' => $target,
+                'attempt' => $attempt,
+                'error' => $lastError['message'] ?? 'rename failed',
+            ]);
+            if ($attempt < self::PUBLISH_ATTEMPTS) usleep(self::RETRY_DELAY_MICROSECONDS);
+        }
+        if (!$published) {
+            @unlink($temp);
+            $detail = $lastError['message'] ?? 'rename failed without PHP error detail';
+            throw new \RuntimeException("Cannot publish export atomically: {$target}; {$detail}");
         }
         @chmod($target, 0644);
+    }
+
+    private function log(string $event, array $context = []): void
+    {
+        $root = defined('ROOT') ? ROOT : dirname(__DIR__, 2);
+        $directory = $root . '/storage/logs';
+        if (!is_dir($directory)) @mkdir($directory, 0755, true);
+        $record = array_merge([
+            'time' => date('c'),
+            'event' => $event,
+            'pid' => getmypid(),
+        ], $context);
+        @file_put_contents(
+            $directory . '/inventory_csv_export.jsonl',
+            json_encode($record, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
     }
 
     private function toWindows1251(array $row): array
