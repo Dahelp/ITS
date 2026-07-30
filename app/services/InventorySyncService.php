@@ -30,7 +30,8 @@ final class InventorySyncService
         $products = \R::getAll($sql, $params);
         $stats = ['mode' => $mode, 'seen' => count($products), 'api' => 0, 'cache' => 0, 'db_fallback' => 0, 'changed' => 0, 'updated' => 0];
         $date = date('Y-m-d'); $dateTime = date('Y-m-d H:i:s');
-        foreach ($products as $product) {
+        foreach ($products as $index => $product) {
+            $this->keepDatabaseConnectionAlive($index);
             $article = InventoryApiClient::normalizeArticle((string)$product['article']);
             $result = $this->client->fetch($article);
             if (empty($result['ok'])) { $stats['db_fallback']++; continue; }
@@ -52,7 +53,8 @@ final class InventorySyncService
         $mods = $productIds ? \R::getAll('SELECT * FROM modification WHERE product_id IN (' . implode(',', $productIds) . ') ORDER BY id') : [];
         $stats['modifications_seen'] = count($mods);
         $stats['modifications_updated'] = 0;
-        foreach ($mods as $mod) {
+        foreach ($mods as $index => $mod) {
+            $this->keepDatabaseConnectionAlive($index);
             $article = InventoryApiClient::normalizeArticle((string)$mod['article']);
             $result = $this->client->fetch($article);
             if (empty($result['ok'])) { $stats['db_fallback']++; continue; }
@@ -73,5 +75,10 @@ final class InventorySyncService
         Cron::writeLog('[INVENTORY_API] ' . json_encode($stats, JSON_UNESCAPED_UNICODE), $cronId);
         if ($mode !== 'shadow' && $stats['updated'] > 0) Cron::finalizeCronUpdate($cronId, $dateTime, $date);
         return $stats;
+    }
+
+    private function keepDatabaseConnectionAlive(int $index): void
+    {
+        if ($index % 20 === 0) \R::getCell('SELECT 1');
     }
 }
