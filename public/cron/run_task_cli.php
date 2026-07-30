@@ -106,6 +106,8 @@ try {
         $stats = (new \app\services\InventorySyncService())->run($id, '*', 'live');
         $exportDirectories = [ROOT . '/public/xls/nalichie'];
         $mirrorDirectory = trim((string)getenv('INVENTORY_CSV_MIRROR_DIR'));
+        $productionMirror = '/home/s/shinaspec/its50.ru/public_html/xls/nalichie';
+        if ($mirrorDirectory === '' && is_dir($productionMirror)) $mirrorDirectory = $productionMirror;
         if ($mirrorDirectory !== '') $exportDirectories[] = $mirrorDirectory;
         $stats['csv_exports'] = (new \app\services\InventoryCsvExportService())->export($exportDirectories);
         $json = json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
