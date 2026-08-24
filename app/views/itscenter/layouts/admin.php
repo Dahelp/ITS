@@ -1,5 +1,10 @@
 <?php 
-	$online = \ishop\App::on_line(); 
+	// Presence tracking is optional and must never abort rendering the admin UI.
+	try {
+		\ishop\App::on_line();
+	} catch (\Throwable $e) {
+		error_log('Admin presence tracking unavailable: ' . $e->getMessage());
+	}
 	$shop_name = \ishop\App::$app->getProperty('shop_name');
 	$today = date("Y-m-d");
 
