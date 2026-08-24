@@ -419,28 +419,28 @@ if (property_exists($product, 'reserve')) {
 			<section class="desc-prod-inner bg-light shadow">
 			<ul class="nav nav-pills p-3" id="pills-tab" role="tablist">
 				<li class="nav-item" role="presentation">
-					<a class="nav-link active" id="pills-harakteristics-tab" data-toggle="pill" href="#pills-harakteristics" role="tab" aria-controls="pills-harakteristics" aria-selected="false">Характеристики</a>
+					<button class="nav-link active" id="pills-harakteristics-tab" data-bs-toggle="pill" data-bs-target="#pills-harakteristics" type="button" role="tab" aria-controls="pills-harakteristics" aria-selected="true">Характеристики</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" id="pills-opisanie-tab" data-toggle="pill" href="#pills-opisanie" role="tab" aria-controls="pills-opisanie" aria-selected="true">Описание</a>
+					<button class="nav-link" id="pills-opisanie-tab" data-bs-toggle="pill" data-bs-target="#pills-opisanie" type="button" role="tab" aria-controls="pills-opisanie" aria-selected="false">Описание</button>
 				</li>
 			<?php if($cross) { ?>
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" id="pills-analog-tab" data-toggle="pill" href="#pills-analog" role="tab" aria-controls="pills-analog" aria-selected="false">Аналоги</a>
+					<button class="nav-link" id="pills-analog-tab" data-bs-toggle="pill" data-bs-target="#pills-analog" type="button" role="tab" aria-controls="pills-analog" aria-selected="false">Аналоги</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" id="pills-oem-tab" data-toggle="pill" href="#pills-oem" role="tab" aria-controls="pills-oem" aria-selected="false">OEM номера</a>
+					<button class="nav-link" id="pills-oem-tab" data-bs-toggle="pill" data-bs-target="#pills-oem" type="button" role="tab" aria-controls="pills-oem" aria-selected="false">OEM номера</button>
 				</li>
 			<?php } ?>
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" id="pills-delivery-tab" data-toggle="pill" href="#pills-delivery" role="tab" aria-controls="pills-delivery" aria-selected="false">Доставка</a>
+					<button class="nav-link" id="pills-delivery-tab" data-bs-toggle="pill" data-bs-target="#pills-delivery" type="button" role="tab" aria-controls="pills-delivery" aria-selected="false">Доставка</button>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" id="pills-pay-tab" data-toggle="pill" href="#pills-pay" role="tab" aria-controls="pills-pay" aria-selected="false">Оплата</a>
+					<button class="nav-link" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pills-pay" type="button" role="tab" aria-controls="pills-pay" aria-selected="false">Оплата</button>
 				</li>
 			<?php if($product->url_video) { ?>
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" id="pills-video-tab" data-toggle="pill" href="#pills-video" role="tab" aria-controls="pills-video" aria-selected="false">Видео</a>
+					<button class="nav-link" id="pills-video-tab" data-bs-toggle="pill" data-bs-target="#pills-video" type="button" role="tab" aria-controls="pills-video" aria-selected="false">Видео</button>
 				</li>
 			<?php } ?>
 			</ul>

@@ -443,21 +443,21 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                 <section class="desc-prod-inner bg-light shadow">
                     <ul class="nav nav-pills p-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="pills-harakteristics-tab" data-toggle="pill" href="#pills-harakteristics" role="tab" aria-controls="pills-harakteristics" aria-selected="false">Характеристики</a>
+                            <button class="nav-link active" id="pills-harakteristics-tab" data-bs-toggle="pill" data-bs-target="#pills-harakteristics" type="button" role="tab" aria-controls="pills-harakteristics" aria-selected="true">Характеристики</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-opisanie-tab" data-toggle="pill" href="#pills-opisanie" role="tab" aria-controls="pills-opisanie" aria-selected="true">Описание</a>
+                            <button class="nav-link" id="pills-opisanie-tab" data-bs-toggle="pill" data-bs-target="#pills-opisanie" type="button" role="tab" aria-controls="pills-opisanie" aria-selected="false">Описание</button>
                         </li>
                         <?php if (!empty($technics)): ?>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="pills-primenenie-tab" data-toggle="pill" href="#pills-primenenie" role="tab" aria-controls="pills-primenenie" aria-selected="true">Применяемость</a>
+                                <button class="nav-link" id="pills-primenenie-tab" data-bs-toggle="pill" data-bs-target="#pills-primenenie" type="button" role="tab" aria-controls="pills-primenenie" aria-selected="false">Применяемость</button>
                             </li>
                         <?php endif; ?>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-delivery-tab" data-toggle="pill" href="#pills-delivery" role="tab" aria-controls="pills-delivery" aria-selected="false">Доставка</a>
+                            <button class="nav-link" id="pills-delivery-tab" data-bs-toggle="pill" data-bs-target="#pills-delivery" type="button" role="tab" aria-controls="pills-delivery" aria-selected="false">Доставка</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-pay-tab" data-toggle="pill" href="#pills-pay" role="tab" aria-controls="pills-pay" aria-selected="false">Оплата</a>
+                            <button class="nav-link" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pills-pay" type="button" role="tab" aria-controls="pills-pay" aria-selected="false">Оплата</button>
                         </li>
                     </ul>
 
