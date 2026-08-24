@@ -815,8 +815,9 @@ class ProductController extends AppController {
             }
             redirect();
         }
+		$mods = [];
         $this->setMeta('Новый товар');
-		$this->set(compact('attrs', 'groups'));
+		$this->set(compact('mods'));
     }
 
     public function relatedProductAction(){
