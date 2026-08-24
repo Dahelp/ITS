@@ -444,7 +444,7 @@ $(document).ready(function() {
 });
 </script>
 <script type="text/javascript">
-var mtotal = <?=count($mods)?>;
+var mtotal = <?=count($mods ?? [])?>;
 function add_new_modification(){
     mtotal++;
     $('<tr>')
