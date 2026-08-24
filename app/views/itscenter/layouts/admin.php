@@ -3,8 +3,16 @@
 	$shop_name = \ishop\App::$app->getProperty('shop_name');
 	$today = date("Y-m-d");
 
-	$notificationItems = \app\services\admin\AdminDashboardService::notificationItems();
-	$notificationTotal = \app\services\admin\AdminDashboardService::notificationsCount();
+	// Notifications are supplementary UI. A missing mailbox/request table or a
+	// temporary database error must not prevent the admin layout from rendering.
+	$notificationItems = [];
+	$notificationTotal = 0;
+	try {
+		$notificationItems = \app\services\admin\AdminDashboardService::notificationItems();
+		$notificationTotal = array_sum(array_column($notificationItems, 'count'));
+	} catch (\Throwable $e) {
+		error_log('Admin notifications unavailable: ' . $e->getMessage());
+	}
 ?>
 <?php
     header("Content-Type: text/html; charset=utf-8");
