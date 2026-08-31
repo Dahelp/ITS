@@ -6,6 +6,10 @@ use app\models\admin\Cron;
 
 final class InventorySyncService
 {
+    private const FIXED_STOCK_CATEGORIES = [
+        'demontazh-montazh-shin' => 999,
+    ];
+
     private $client;
     public function __construct(?InventoryApiClient $client = null) { $this->client = $client ?: new InventoryApiClient(); }
 
@@ -28,7 +32,11 @@ final class InventorySyncService
         $sql .= ' ORDER BY id';
         if ($limit > 0) $sql .= ' LIMIT ' . min(100000, $limit);
         $products = \R::getAll($sql, $params);
-        $stats = ['mode' => $mode, 'seen' => count($products), 'api' => 0, 'cache' => 0, 'db_fallback' => 0, 'changed' => 0, 'updated' => 0];
+        $fixedStockByCategoryId = $this->fixedStockByCategoryId();
+        $stats = ['mode' => $mode, 'seen' => count($products), 'api' => 0, 'cache' => 0, 'db_fallback' => 0, 'changed' => 0, 'updated' => 0, 'fixed_stock_updated' => 0];
+        $stats['fixed_stock_enforced'] = $mode === 'live'
+            ? $this->enforceFixedStock($fixedStockByCategoryId)
+            : 0;
         $date = date('Y-m-d'); $dateTime = date('Y-m-d H:i:s');
         foreach ($products as $index => $product) {
             $this->keepDatabaseConnectionAlive($index);
@@ -38,6 +46,14 @@ final class InventorySyncService
             if (($result['source'] ?? '') === 'stale_cache') { $stats['db_fallback']++; continue; }
             $stats[$result['source'] === 'api' ? 'api' : 'cache']++;
             $data = $result['data'];
+            $fixedQuantity = $fixedStockByCategoryId[(int)$product['category_id']] ?? null;
+            if ($fixedQuantity !== null) {
+                // Services have no physical stock in 1C. Keep their virtual stock
+                // while still allowing prices and other product data to refresh.
+                $data['rest'] = $fixedQuantity;
+                $data['reserve'] = 0;
+                $stats['fixed_stock_updated']++;
+            }
             $apiQty = (int)$data['rest'];
             $dbQty = (int)$product['quantity'];
             $needsUpdate = $apiQty !== $dbQty
@@ -75,6 +91,35 @@ final class InventorySyncService
         Cron::writeLog('[INVENTORY_API] ' . json_encode($stats, JSON_UNESCAPED_UNICODE), $cronId);
         if ($mode !== 'shadow' && $stats['updated'] > 0) Cron::finalizeCronUpdate($cronId, $dateTime, $date);
         return $stats;
+    }
+
+    /** @return array<int, int> category ID => fixed quantity */
+    private function fixedStockByCategoryId(): array
+    {
+        $result = [];
+        foreach (self::FIXED_STOCK_CATEGORIES as $alias => $quantity) {
+            $categoryId = (int)\R::getCell('SELECT id FROM category WHERE alias = ? LIMIT 1', [$alias]);
+            if ($categoryId > 0) {
+                $result[$categoryId] = $quantity;
+            }
+        }
+
+        return $result;
+    }
+
+    /** @param array<int, int> $fixedStockByCategoryId */
+    private function enforceFixedStock(array $fixedStockByCategoryId): int
+    {
+        $updated = 0;
+        foreach ($fixedStockByCategoryId as $categoryId => $quantity) {
+            $updated += \R::exec(
+                'UPDATE product SET quantity = ?, rest = ?, reserve = 0, stock_status_id = 1 '
+                . 'WHERE category_id = ? AND (quantity <> ? OR rest <> ? OR reserve <> 0 OR stock_status_id <> 1)',
+                [$quantity, $quantity, $categoryId, $quantity, $quantity]
+            );
+        }
+
+        return $updated;
     }
 
     private function keepDatabaseConnectionAlive(int $index): void
