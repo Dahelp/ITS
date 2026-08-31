@@ -50,6 +50,20 @@ if (($method === 'GET' || $method === 'HEAD') && preg_match('~[A-Z]~', $pathOnly
     }
 }
 
+// Canonical cross-number redirects for legacy/incorrect aliases.
+// Keep these before session/bootstrap work so duplicate URLs are cheap and
+// always return the same permanent redirect, independently of database data.
+if ($method === 'GET' || $method === 'HEAD') {
+    $crossAliasRedirects = [
+        '/cross/4'        => '/cross/4s00484',
+        '/cross/24719401' => '/cross/24719401a',
+    ];
+
+    if (isset($crossAliasRedirects[$pathOnly])) {
+        header('Location: https://' . $_SERVER['SERVER_NAME'] . $crossAliasRedirects[$pathOnly], true, 301);
+        exit();
+    }
+}
 $needSession = false;
 
 $sessionPrefixes = [
