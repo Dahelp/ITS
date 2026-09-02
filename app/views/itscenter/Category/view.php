@@ -272,42 +272,6 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
             </section>
           <?php endif; ?>
 
-          <?php if (!empty($pageFaqRows)): ?>
-            <?php
-            $faqJsonItems = [];
-
-            foreach ($pageFaqRows as $f) {
-                $question = trim((string)($f['question'] ?? ''));
-                $answer = trim((string)($f['answer'] ?? ''));
-
-                if ($question === '' || $answer === '') {
-                    continue;
-                }
-
-                $faqJsonItems[] = [
-                    '@type' => 'Question',
-                    'name' => $question,
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => trim(strip_tags($answer)),
-                    ],
-                ];
-            }
-            ?>
-
-            <?php if (!empty($faqJsonItems)): ?>
-              <!-- JSON-LD: FAQPage -->
-              <script type="application/ld+json">
-<?= json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'FAQPage',
-    'mainEntity' => $faqJsonItems,
-], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
-              </script>
-              <!-- /JSON-LD -->
-            <?php endif; ?>
-          <?php endif; ?>
-
           <?php if (!empty($relatedCategories)): ?>
             <section class="related-sizes mb-4">
               <div class="h4">Смежные категории</div>

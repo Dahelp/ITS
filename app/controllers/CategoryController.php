@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Breadcrumbs;
 use app\models\Category;
+use app\helpers\SchemaHelper;
 use app\widgets\filter\Filter;
 use ishop\App;
 use ishop\libs\Pagination;
@@ -617,6 +618,9 @@ class CategoryController extends AppController
         [(int)$category->id]
     );
 
+    $pageFaqRows = !empty($selectedAttrId) ? $faqRows : $categoryFaqRows;
+    $jsonLdFaq = SchemaHelper::renderFaqPageJsonLd($pageFaqRows);
+
     $relatedCategories = [];
     $categoryAlsoViewed = [];
     $categoryAlsoViewedWidgetContext = [];
@@ -685,6 +689,7 @@ class CategoryController extends AppController
         'quantity',
         'productWidgetContext',
         'categoryFaqRows',
+        'jsonLdFaq',
         'metaRobots',
         'relatedCategories',
         'categoryAlsoViewed',
