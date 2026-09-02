@@ -536,10 +536,10 @@ class SchemaHelper
 
             $main[] = [
                 '@type' => 'Question',
-                'name'  => self::htmlToPlain($q, 300),
+                'name'  => self::htmlToPlain($q, PHP_INT_MAX),
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => self::htmlToPlain($a, 2000),
+                    'text'  => self::htmlToPlain($a, PHP_INT_MAX),
                 ],
             ];
             if (count($main) >= 20) break;
