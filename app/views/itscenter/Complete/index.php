@@ -3,18 +3,14 @@
     <div class="container">
 		<!--start-breadcrumbs-->
 		<nav class="pt-4 breadcrumb-blok" aria-label="breadcrumb">
-			<ol class="breadcrumb flex-lg-nowrap" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+			<ol class="breadcrumb flex-lg-nowrap">
 				<li class="breadcrumb-item">
-					<span itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
-						<a itemprop="item" class="text-nowrap" href="https://its-center.ru"><meta itemprop="name" content="Главная"><i class="fas fa-home"></i><span class="visually-hidden">Главная</span><meta itemprop="position" content="1"></a>
+					<span>
+						<a class="text-nowrap" href="<?=h(rtrim(PATH, '/') . '/');?>"><i class="fas fa-home"></i><span class="visually-hidden">Главная</span></a>
 					</span>
 				</li>
 				<li class="breadcrumb-item text-nowrap active" data-id="2">
-					<span itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">Комплекты товаров
-						<meta itemprop="name" content="Комплекты товаров">
-						<link itemprop="item" href="https://its-center.ru/complete">
-						<meta itemprop="position" content="2">
-					</span>
+					<span>Комплекты товаров</span>
 				</li>
 			</ol>
 		</nav>

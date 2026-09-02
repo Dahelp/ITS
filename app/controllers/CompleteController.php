@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Breadcrumbs;
 use app\models\Category;
+use app\helpers\SchemaHelper;
 use app\widgets\filter\Filter;
 use ishop\App;
 use ishop\libs\Pagination;
@@ -37,8 +38,12 @@ class CompleteController extends AppController {
 		if($this->route["controller"]){ $path_controller = "/".mb_strtolower($this->route["controller"]).""; }else{ $path_controller = ""; }
 		if($this->route["alias"]){ $path_alias = "/".$this->route["alias"].""; }else{ $path_alias = ""; }		
 		$this->setMeta($title, $description, $keywords, '' . App::$app->getProperty('shop_name') . '', ''.PATH.'/images/' . App::$app->getProperty('og_logo') . '', ''.PATH.''.$path_controller.''.$path_alias.'');
+		$jsonLdBreadcrumbs = SchemaHelper::renderBreadcrumbsJsonLd([
+			['name' => 'Главная', 'link' => rtrim(PATH, '/') . '/'],
+			['name' => 'Комплекты товаров', 'link' => rtrim(PATH, '/') . '/complete'],
+		]);
 		/*SEO*/
-        $this->set(compact('completes', 'pagination'));
+        $this->set(compact('completes', 'pagination', 'jsonLdBreadcrumbs'));
     }
 	
 	public function viewAction()
