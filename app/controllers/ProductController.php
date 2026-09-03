@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\services\ProductCertificationService;
+
 use app\models\admin\Review;
 use app\models\Breadcrumbs;
 use app\models\Product;
@@ -519,6 +521,7 @@ class ProductController extends AppController
         $totalReviews = count($review);
 
         $needFancybox = true;
+        $certification = ProductCertificationService::forProduct($product);
 
         $this->set(compact(
             'product',
@@ -555,7 +558,8 @@ class ProductController extends AppController
             'totalReviews',
             'services',
             'servicesWidgetContext',
-            'needFancybox'
+            'needFancybox',
+            'certification'
         ));
 
 

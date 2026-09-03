@@ -56,6 +56,7 @@
 						<li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">Фильтры</a></li>
 						<li class="nav-item"><a class="nav-link" href="#tab_5" data-toggle="tab">Модификации</a></li>
 						<li class="nav-item"><a class="nav-link" href="#tab_6" data-toggle="tab">Доп. параметры</a></li>				  
+						<li class="nav-item"><a class="nav-link" href="#tab_7" data-toggle="tab">Сертификация</a></li>
 					</ul>
                 </div><!-- /.card-header -->
                 <div class="card-body">
@@ -494,6 +495,42 @@
                             </div>
                         </div>
 					</div>
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="tab_7">
+                    <div class="box-body">
+                      <div class="alert alert-info">
+                        Прямая привязка в этой вкладке имеет приоритет над правилами категории и производителя.
+                        Полные правила редактируются в разделе <a href="<?=ADMIN;?>/certificate">«Сертификаты»</a>.
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="certification_required">Обязательное подтверждение соответствия</label>
+                        <div class="col-sm-9">
+                          <select name="certification_required" id="certification_required" class="form-control">
+                            <option value="" <?= $product->certification_required === null || $product->certification_required === '' ? 'selected' : ''; ?>>Не определено</option>
+                            <option value="1" <?= (string)$product->certification_required === '1' ? 'selected' : ''; ?>>Требуется</option>
+                            <option value="0" <?= (string)$product->certification_required === '0' ? 'selected' : ''; ?>>Не требуется</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="tn_ved_code">Код ТН ВЭД</label>
+                        <div class="col-sm-9"><input name="tn_ved_code" id="tn_ved_code" class="form-control" value="<?=h($product->tn_ved_code ?? '');?>" placeholder="Например, 4011201000"></div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="certificate_ids">Прямые документы товара</label>
+                        <div class="col-sm-9">
+                          <select name="certificate_ids[]" id="certificate_ids" class="form-control select2" multiple data-placeholder="Выберите один или несколько документов">
+                            <?php foreach (($certificates ?? []) as $doc): ?>
+                              <option value="<?= (int)$doc['id']; ?>" <?= in_array((int)$doc['id'], $directCertificateIds ?? [], true) ? 'selected' : ''; ?>><?=h($doc['number']);?> — <?= $doc['document_type'] === 'certificate' ? 'сертификат' : 'декларация'; ?></option>
+                            <?php endforeach; ?>
+                          </select>
+                          <?php if (!empty($resolvedCertification['documents']) && empty($directCertificateIds)): ?>
+                            <small class="form-text text-success">Сейчас наследуется: <?=h(implode(', ', array_column($resolvedCertification['documents'], 'number')));?></small>
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <!-- /.tab-pane -->
                 </div>
