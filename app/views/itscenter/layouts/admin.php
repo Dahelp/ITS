@@ -222,6 +222,7 @@
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/product"><i class="fas fa-cubes nav-icon"></i><p>Список товаров</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/product/category"><i class="fas fa-sitemap nav-icon"></i><p>Товары по категориям</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/stock"><i class="fas fa-boxes nav-icon"></i><p>Наличие товаров</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/certificate"><i class="fas fa-file-signature nav-icon"></i><p>Сертификаты</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/review"><i class="far fa-comment-dots nav-icon"></i><p>Отзывы</p></a></li>
                     </ul>
                 </li>

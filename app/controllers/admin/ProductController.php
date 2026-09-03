@@ -11,6 +11,8 @@ use ishop\libs\Pagination;
 use DataTables\Database;
 use app\models\admin\PlaginsIndexnow;
 use app\helpers\TireSize;
+use app\models\admin\Certificate;
+use app\services\ProductCertificationService;
 
 class ProductController extends AppController {
 
@@ -30,9 +32,12 @@ class ProductController extends AppController {
 		if($category_id){ $whereParts[] = "a.category_id = '".$category_id."'"; }
 		if(in_array($badge, ['new_product', 'hit', 'sale'], true)){ $whereParts[] = "a.".$badge." = '1'"; }
 		$where = $whereParts ? " WHERE ".implode(' AND ', $whereParts) : '';
+		$complianceSql = ProductCertificationService::hasProductFields()
+			? "CONCAT(a.hide, '|', IFNULL(a.certification_required, ''))"
+			: "CONCAT(a.hide, '|')";
 		$table = <<<EOT
 		 (
-			SELECT a.id, a.img, a.article, a.name as cat, a.price, a.hide, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where 
+			SELECT a.id, a.img, a.article, a.name as cat, a.price, {$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where
 		 ) temp
 		EOT;
 		$primaryKey = 'id';	 
@@ -228,13 +233,18 @@ class ProductController extends AppController {
 							.$toggle('sale', 'Распродажа', $sale);
 					}
 			),
-			array( 'db' => 'hide',   'dt' => 10, 
-					'formatter' => function( $d, $row ) { 
-						if($d == 'show'){ $hide = 'Активный'; }
-						if($d == 'hide'){ $hide = 'Не активный'; }
-						if($d == 'lock'){ $hide = 'Закрыт от индексации'; }
-						
-						return $hide;
+			array( 'db' => 'compliance_status',   'dt' => 10,
+					'formatter' => function( $d, $row ) {
+						[$visibility, $required] = array_pad(explode('|', (string)$d, 2), 2, '');
+						$hide = $visibility === 'show' ? 'Активный' : ($visibility === 'lock' ? 'Закрыт от индексации' : 'Не активный');
+						if ($required === '1') {
+							$compliance = "<span class='badge badge-warning mt-1'><i class='fas fa-file-signature'></i> Сертификация: да</span>";
+						} elseif ($required === '0') {
+							$compliance = "<span class='badge badge-success mt-1'>Сертификация: не требуется</span>";
+						} else {
+							$compliance = "<span class='badge badge-danger mt-1'>Сертификация: не указано</span>";
+						}
+						return $hide.'<br>'.$compliance;
 					}
 			),
 			array( 'db' => 'id',   'dt' => 11, 
@@ -596,6 +606,9 @@ class ProductController extends AppController {
             $product = new Product();
             $data = $_POST;
             $data['seo_h1'] = trim((string)($data['seo_h1'] ?? ''));
+            $certificationRequired = ($data['certification_required'] ?? '') === '' ? null : (int)$data['certification_required'];
+            $tnVedCode = trim((string)($data['tn_ved_code'] ?? ''));
+            unset($data['certification_required'], $data['tn_ved_code'], $data['certificate_ids']);
 
 			$sz = TireSize::extract($data['name'] ?? '');
 			if ($sz) {
@@ -618,6 +631,9 @@ class ProductController extends AppController {
             }
 			
             if($product->update('product', $id)){
+				if (ProductCertificationService::hasProductFields()) {
+					\R::exec('UPDATE product SET certification_required = ?, tn_ved_code = ? WHERE id = ?', [$certificationRequired, $tnVedCode, $id]);
+				}
 				$isNonEmptyArray = $product->traverseArray($data['attrs']);
 				if($isNonEmptyArray){ $product->editFilter($id, $data); }
                 $product->editRelatedProduct($id, $data);
@@ -627,6 +643,9 @@ class ProductController extends AppController {
 				$product->editModificationProduct($id, $data);
 				$product->editTagsProduct($id, $data);
                 $product->saveGallery($id);
+                if (ProductCertificationService::isInstalled()) {
+                    Certificate::syncProductAssignments($id, $_POST['certificate_ids'] ?? []);
+                }
                 $alias = AppModel::createAlias('product', 'alias', $data['name'], $id);
                 $product = \R::load('product', $id);
 				if($data['alias']!=""){ $product->alias = $data['alias'];}
@@ -665,8 +684,15 @@ class ProductController extends AppController {
 		$count_review = \R::count('review_product', "product_id = ?", [$id]);
 		$count_order = \R::count('order_product', "product_id = ?", [$id]);
 		$count_bookmarks = \R::count('product_bookmarks', "product_id = ?", [$id]);
+        $certificates = ProductCertificationService::isInstalled()
+            ? \R::getAll("SELECT * FROM certificates WHERE status != 'archived' ORDER BY status = 'active' DESC, number")
+            : [];
+        $directCertificateIds = ProductCertificationService::isInstalled()
+            ? array_map('intval', \R::getCol("SELECT certificate_id FROM certificate_assignments WHERE target_type = 'product' AND product_id = ?", [$id]))
+            : [];
+        $resolvedCertification = ProductCertificationService::forProduct($product, false);
         $this->setMeta("Редактирование товара {$product->name}");
-        $this->set(compact('product', 'filter', 'related_product', 'similar_product', 'service_product', 'gallery', 'att_product', 'tags_product', 'attrs', 'groups', 'mods', 'count_review', 'count_order', 'count_bookmarks'));
+        $this->set(compact('product', 'filter', 'related_product', 'similar_product', 'service_product', 'gallery', 'att_product', 'tags_product', 'attrs', 'groups', 'mods', 'count_review', 'count_order', 'count_bookmarks', 'certificates', 'directCertificateIds', 'resolvedCertification'));
     }
 	
 	public function copyAction(){

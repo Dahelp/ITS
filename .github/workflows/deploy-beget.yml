@@ -69,6 +69,11 @@ jobs:
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && composer-php7.4 install --no-dev --no-interaction --optimize-autoloader"
 
+      - name: Install product certificates
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_certificates.php || php8.1 scripts/install_certificates.php || php7.4 scripts/install_certificates.php || php scripts/install_certificates.php) && (php8.2 scripts/seed_ekka_certificate.php || php8.1 scripts/seed_ekka_certificate.php || php7.4 scripts/seed_ekka_certificate.php || php scripts/seed_ekka_certificate.php)"
+
       - name: Add article content
         shell: bash
         run: |
