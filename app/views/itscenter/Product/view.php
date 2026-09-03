@@ -243,8 +243,8 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                   ?>
                   <?php if ((string)$certRequired === '1' || (string)$certRequired === '0'): ?>
                     <section class="product-card product-certification-card" aria-labelledby="product-certification-title">
+                      <div id="product-certification-title" class="product-block-title">Документы и сертификация</div>
                       <div class="product-quick-props mb-0">
-                        <div id="product-certification-title" class="product-block-title">Документы и сертификация</div>
                         <ul class="product-props-list">
                           <?php if ((string)$certRequired === '0'): ?>
                             <li>
