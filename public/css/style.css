@@ -6576,6 +6576,44 @@ body.catalog-open {
 .table-striped img{width:70px}
 .bg-light {background-color: #fff !important;padding: 10px 0;}
 .contents article{padding:30px}
+
+/* Legacy tyre calculator: keep its fixed-width layout inside the article. */
+.tire-calculator-content {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+.tire-calculator-content .resultsTable {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 24px;
+	max-width: 100%;
+	padding-left: 0 !important;
+}
+
+.tire-calculator-content .resultsTable > * {
+	float: none !important;
+	max-width: 100%;
+}
+
+.tire-calculator-content table {
+	max-width: 100%;
+}
+
+@media (max-width: 575.98px) {
+	.tire-calculator-content .calcValuesBlock {
+		float: none;
+		width: 100%;
+		margin-right: 0;
+		padding-left: 0;
+	}
+
+	.tire-calculator-content input,
+	.tire-calculator-content select {
+		max-width: 100%;
+	}
+}
 .contents .cont-desc{
   font-size: 17px;
   line-height: 1.75;
