@@ -1,6 +1,7 @@
 <?php if(!empty($_SESSION['cart'])): ?>
     <div id="prodcart" class="table-responsive">
         <table class="table table-hover table-striped">
+            <caption>Содержимое корзины</caption>
             <thead>
             <tr>
                 <th>Фото</th>

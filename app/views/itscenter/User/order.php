@@ -52,6 +52,7 @@
 
                             <div class="table-responsive">
                                 <table class="table aiz-table mb-0 footable footable-1 breakpoint-xl">
+                                    <caption>Состав заказа</caption>
                                     <thead>
                                     <tr>
                                         <th style="width: 8%">Фото</th>

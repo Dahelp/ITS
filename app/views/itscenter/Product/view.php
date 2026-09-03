@@ -991,6 +991,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
           <div class="tab-pane fade show active" id="pills-harakteristics">
           <?php if (!empty($attribute_group)): ?>
           <table class="table table-bordered table-striped">
+          <caption>Технические характеристики <?=h($product->name)?></caption>
           <?php foreach ($attribute_group as $group): ?>
           <thead>
           <tr><td colspan="2"><strong><?=$group["attribute_name"]?></strong></td></tr>
@@ -1017,6 +1018,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
          <?php if($technics) { ?>
               <div class="tab-pane fade" id="pills-primenenie" role="tabpanel" aria-labelledby="pills-primenenie-tab">
                 <table class="table table-bordered table-striped">
+                  <caption>Применяемость <?=h($product->name)?> по технике</caption>
                   <?php foreach($technics as $tech): ?>
                     <tr><td><?=$tech["name"]?></td><td><a href="<?=PATH?>/technics/<?=h($tech["alias"])?>" title="Посмотреть все шины для <?=$tech["name"]?> <?=$tech["model"]?>"><?=$tech["model"]?></a></td></tr>
                   <?php endforeach; ?>
@@ -1029,6 +1031,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
           <?php if ($cross): ?>
           <div class="tab-pane fade" id="pills-analog">
           <table class="table table-bordered table-striped">
+          <caption>Аналоги <?=h($product->name)?></caption>
           <?php foreach ($crossAnalog as $analog): ?>
           <tr>
           <td><?=$analog["name"]?></td>
@@ -1040,6 +1043,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
           <div class="tab-pane fade" id="pills-oem">
           <table class="table table-bordered table-striped">
+          <caption>Оригинальные номера для <?=h($product->name)?></caption>
           <?php foreach ($crossOem as $oem): ?>
           <tr>
           <td><?=$oem["name"]?></td>

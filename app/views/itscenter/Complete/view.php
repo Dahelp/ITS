@@ -465,6 +465,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                         <div class="tab-pane fade show active" id="pills-harakteristics" role="tabpanel" aria-labelledby="pills-harakteristics-tab">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped complete-compare-table">
+                                    <caption>Сравнение характеристик <?=h($complete->name)?></caption>
                                     <thead>
                                         <tr>
                                             <th style="min-width:240px;">Характеристика</th>
@@ -511,6 +512,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                         <?php if (!empty($technics)): ?>
                             <div class="tab-pane fade" id="pills-primenenie" role="tabpanel" aria-labelledby="pills-primenenie-tab">
                                 <table class="table table-bordered table-striped">
+                                    <caption>Применяемость <?=h($complete->name)?> по технике</caption>
                                     <?php foreach ($technics as $tech): ?>
                                         <tr>
                                             <td><?=htmlspecialchars($tech["name"] ?? '', ENT_QUOTES)?></td>

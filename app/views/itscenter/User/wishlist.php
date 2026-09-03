@@ -35,6 +35,7 @@ $companyTip = $comp_priceopt['tip'] ?? null;
 					<?php if($wishlists): ?>
 						<div class="table-responsive">
 							<table class="table aiz-table mb-0 footable footable-1 breakpoint-xl">
+								<caption>Избранные товары</caption>
 								<thead>
 								<tr class="footable-header">
 									<th class="footable-first-visible" style="display: table-cell;">Фото</th>

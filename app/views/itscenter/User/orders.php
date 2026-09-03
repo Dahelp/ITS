@@ -32,6 +32,7 @@
                         <?php if($orders): ?>
                             <div class="table-responsive">
                                 <table class="table aiz-table mb-0 footable footable-1 breakpoint-xl">
+                                    <caption>История заказов</caption>
                                     <thead>
                                         <tr class="footable-header">
                                             <th class="footable-first-visible" style="display: table-cell;">ID</th>

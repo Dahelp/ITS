@@ -449,6 +449,7 @@ if (property_exists($product, 'reserve')) {
 				<!-- harakteristics -->
 					<?php if($attribute_group): ?>
 						<table class="table table-bordered table-striped">
+							<caption>Технические характеристики <?=h($product->name)?></caption>
 							<?php foreach($attribute_group as $group): ?>
 								<thead>
 									<tr>
@@ -489,6 +490,7 @@ if (property_exists($product, 'reserve')) {
 					<div class="tab-pane fade" id="pills-analog" role="tabpanel" aria-labelledby="pills-analog-tab">
 						<?php $cross_analog = \R::getAll('SELECT plagins_cross_vendor.name, plagins_cross.cross_name, plagins_cross.cross_abbreviated_name, plagins_cross.tip_cross, plagins_cross.equipment_vendor FROM plagins_cross, plagins_cross_vendor WHERE plagins_cross.vendor_id = plagins_cross_vendor.id AND plagins_cross.equipment_vendor = ? AND plagins_cross.product_id = ? AND plagins_cross.cross_abbreviated_name != ?', [2, $product->id, $cross["cross_abbreviated_name"]]); ?>
 						<table class="table table-bordered table-striped">
+							<caption>Аналоги для <?=h($cross["cross_name"])?></caption>
 							<tbody>
 							<?php foreach($cross_analog as $analog): ?>
 								<tr><td><?=$analog["name"]?></td><td><a href="cross/<?=rawurlencode(mb_strtolower($analog["cross_abbreviated_name"]))?>" title="<?=$analog["cross_name"]?>"><?=$analog["cross_name"]?></a></td>
@@ -507,6 +509,7 @@ if (property_exists($product, 'reserve')) {
 					<div class="tab-pane fade" id="pills-oem" role="tabpanel" aria-labelledby="pills-oem-tab">
 						<?php $cross_oem = \R::getAll('SELECT plagins_cross_vendor.name, plagins_cross.cross_name, plagins_cross.cross_abbreviated_name, plagins_cross.tip_cross, plagins_cross.equipment_vendor FROM plagins_cross, plagins_cross_vendor WHERE plagins_cross.vendor_id = plagins_cross_vendor.id AND plagins_cross.equipment_vendor = ? AND plagins_cross.product_id = ? AND plagins_cross.cross_abbreviated_name != ?', [1, $product->id, $cross["cross_abbreviated_name"]]); ?>
 						<table class="table table-bordered table-striped">
+							<caption>Оригинальные номера для <?=h($cross["cross_name"])?></caption>
 							<tbody>
 							<?php foreach($cross_oem as $oem): ?>
 								<tr><td><?=$oem["name"]?></td><td><a href="cross/<?=rawurlencode(mb_strtolower($oem["cross_abbreviated_name"]))?>" title="<?=$oem["cross_name"]?>"><?=$oem["cross_name"]?></a></td>
@@ -640,7 +643,7 @@ if (property_exists($product, 'reserve')) {
 				</div>
             </div>
             <div class="modal-footer">
-                <table class="zayvka_1click"><tbody><tr><td><input type="checkbox" name="politika" value="pk" required></td><td style="font-size:14px;padding:0 0 0 20px">Я принимаю <a href="/pages/privacy" target="_blank" rel="noopener">Политику конфиденциальности</a> и даю <a href="/pages/personal-data-consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a>.</td></tr></tbody></table>
+                <table class="zayvka_1click" role="presentation"><tbody><tr><td><input type="checkbox" name="politika" value="pk" required></td><td style="font-size:14px;padding:0 0 0 20px">Я принимаю <a href="/pages/privacy" target="_blank" rel="noopener">Политику конфиденциальности</a> и даю <a href="/pages/personal-data-consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a>.</td></tr></tbody></table>
 				<button type="submit" name="oneclick" value="<?php echo md5(date('Y-m-d')); ?>" class="btn btn-danger">Отправить</button>
             </div>
         </div>

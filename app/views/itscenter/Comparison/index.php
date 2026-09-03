@@ -185,9 +185,10 @@ if (!empty($activeCategoryIds)) {
             <div class="comparison-card comparison-content">
                 <div class="table-responsive comparison-table-wrap">
                     <table class="comparison-table">
+                        <caption>Сравнение товаров</caption>
                         <tr>
                             <td class="comparison-table__labels">
-                                <table class="comparison-inner comparison-inner--labels">
+                                <table class="comparison-inner comparison-inner--labels" role="presentation">
                                     <tr>
                                         <td class="compar-img"></td>
                                     </tr>
@@ -232,7 +233,7 @@ if (!empty($activeCategoryIds)) {
                                 $hasOpt = !empty($prod_priceopt) && (int)($prod_priceopt['tip'] ?? 0) === 2;
                                 ?>
                                 <td class="comparison-table__product close-compartd-<?= $pid ?>">
-                                    <table class="comparison-inner">
+                                    <table class="comparison-inner" role="presentation">
                                         <tr>
                                             <td class="compar-img">
                                                 <button

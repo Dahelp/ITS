@@ -30,7 +30,9 @@
                 <!-- /.card-header -->
                 <div class="card-body">
 					<div class="table-responsive">
-						<table id="example" class="table table-bordered display" width="100%"></table>  
+						<table id="example" class="table table-bordered display" width="100%">
+							<caption>Список лидов</caption>
+						</table>
 					</div>
                 </div>                
             </div>
