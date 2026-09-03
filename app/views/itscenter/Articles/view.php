@@ -42,6 +42,7 @@ switch ($typeParam) {
 $shopName = \ishop\App::$app->getProperty('shop_name');
 $logoUrl = rtrim(PATH, '/') . '/images/' . \ishop\App::$app->getProperty('og_logo');
 $pageUrl = rtrim(PATH, '/') . '/' . trim((string)$type->param_url, '/') . '/' . $find->alias;
+$isTireCalculator = (string)$find->alias === 'shinnyy-kalkulyator-na-sayte-its-centr';
 $imageUrl = !empty($find->img)
     ? rtrim(PATH, '/') . '/images/contents/baseimg/' . $find->img
     : $logoUrl;
@@ -154,8 +155,33 @@ $breadcrumbSchema = [
                             </div>
                         <?php endif; ?>
 
-                        <div class="cont-desc">
-                            <?=$find->content;?>
+                        <?php
+                        $content = (string)$find->content;
+
+                        // This table only lays out the clearance button and its result; it is not tabular data.
+                        if ($isTireCalculator) {
+                            $content = preg_replace_callback(
+                                '~<table\b[^>]*>.*?</table>~is',
+                                static function (array $match): string {
+                                    $table = $match[0];
+
+                                    if (stripos($table, 'id="difClearense"') === false
+                                        && stripos($table, "id='difClearense'") === false) {
+                                        return $table;
+                                    }
+
+                                    if (preg_match('~^<table\b[^>]*\brole\s*=~i', $table)) {
+                                        return $table;
+                                    }
+
+                                    return preg_replace('~^<table\b~i', '<table role="presentation"', $table, 1);
+                                },
+                                $content
+                            );
+                        }
+                        ?>
+                        <div class="cont-desc<?=$isTireCalculator ? ' tire-calculator-content' : ''?>">
+                            <?=$content;?>
                         </div>
                     </article>
                 </div>
