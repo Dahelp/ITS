@@ -135,7 +135,61 @@
 });
 
 /* Sort product */
+function initCategoryProductLazyLoading() {
+    var sentinel = document.querySelector('[data-category-lazy-sentinel]');
+
+    if (!sentinel || sentinel.dataset.loading === '1') {
+        return;
+    }
+
+    var loadProducts = function () {
+        if (!sentinel.isConnected || sentinel.dataset.loading === '1') {
+            return;
+        }
+
+        sentinel.dataset.loading = '1';
+        var url = new URL(window.location.href);
+        url.searchParams.set('lazy_products', '1');
+
+        fetch(url.toString(), {
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            credentials: 'same-origin'
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Unable to load products');
+                }
+                return response.text();
+            })
+            .then(function (html) {
+                if (!sentinel.isConnected) {
+                    return;
+                }
+                sentinel.insertAdjacentHTML('beforebegin', html);
+                sentinel.remove();
+            })
+            .catch(function () {
+                sentinel.dataset.loading = '0';
+            });
+    };
+
+    if (!('IntersectionObserver' in window)) {
+        loadProducts();
+        return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        if (entries.some(function (entry) { return entry.isIntersecting; })) {
+            observer.disconnect();
+            loadProducts();
+        }
+    }, {rootMargin: '500px 0px'});
+
+    observer.observe(sentinel);
+}
+
 $(document).ready(function () {
+ initCategoryProductLazyLoading();
  $(".sort-inner span").click(function () {
 	var id = $(this).attr('id');
 	
@@ -159,6 +213,7 @@ $(document).ready(function () {
                     newURL = newURL.replace('&&', '&');
                     newURL = newURL.replace('?&', '?');
                     history.pushState({}, '', newURL);
+                    initCategoryProductLazyLoading();
 			
                 });
 		
