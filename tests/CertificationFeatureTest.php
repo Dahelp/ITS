@@ -22,7 +22,7 @@ $assert(strpos($service, "c.status = 'active'") !== false, 'only active document
 $assert(strpos($service, 'c.date_end >= CURDATE()') !== false, 'expired documents must not be shown');
 
 $view = $read('app/views/itscenter/Product/view.php');
-$assert(strpos($view, 'Обязательное подтверждение соответствия для данного товара не требуется') !== false, 'not-required disclosure is missing');
+$assert(strpos($view, 'Обязательное подтверждение соответствия не требуется') !== false, 'not-required disclosure is missing');
 $assert(strpos($view, "\$doc['registry_url']") !== false, 'official registry link is missing');
 $assert(strpos($view, 'rel="noopener noreferrer nofollow"') !== false, 'external registry link must be isolated');
 
