@@ -165,6 +165,20 @@ $breadcrumbSchema = [
                                 static function (array $match): string {
                                     $table = $match[0];
 
+                                    if (stripos($table, 'id="resultsTable"') !== false
+                                        || stripos($table, "id='resultsTable'") !== false) {
+                                        if (stripos($table, '<caption') === false) {
+                                            return preg_replace(
+                                                '~^(<table\b[^>]*>)~i',
+                                                '$1<caption>Результаты сравнения старого и нового типоразмера шин</caption>',
+                                                $table,
+                                                1
+                                            );
+                                        }
+
+                                        return $table;
+                                    }
+
                                     if (stripos($table, 'id="difClearense"') === false
                                         && stripos($table, "id='difClearense'") === false) {
                                         return $table;
