@@ -237,6 +237,46 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                   </div>
 
+                  <?php
+                  $certRequired = $product->certification_required;
+                  $certDocuments = $certification['documents'] ?? [];
+                  ?>
+                  <?php if ((string)$certRequired === '1' || (string)$certRequired === '0'): ?>
+                    <section class="product-card product-certification-card" aria-labelledby="product-certification-title">
+                      <div class="product-quick-props mb-0">
+                        <div id="product-certification-title" class="product-block-title">Документы и сертификация</div>
+                        <ul class="product-props-list">
+                          <?php if ((string)$certRequired === '0'): ?>
+                            <li>
+                              <span class="prop-name">Статус</span>
+                              <span class="prop-value"><i class="fas fa-check-circle text-success" aria-hidden="true"></i> Обязательное подтверждение соответствия не требуется</span>
+                            </li>
+                            <?php if (!empty($product->tn_ved_code)): ?>
+                              <li><span class="prop-name">Код ТН ВЭД</span><span class="prop-value"><?=h($product->tn_ved_code);?></span></li>
+                            <?php endif; ?>
+                          <?php elseif ($certDocuments): ?>
+                            <?php foreach ($certDocuments as $doc): ?>
+                              <li>
+                                <span class="prop-name"><?= $doc['document_type'] === 'certificate' ? 'Сертификат соответствия' : 'Декларация о соответствии'; ?></span>
+                                <span class="prop-value">
+                                  <?=h($doc['number']);?>
+                                  <?php if (!empty($doc['date_end'])): ?><small class="d-block text-muted">Действует до <?=date('d.m.Y', strtotime($doc['date_end']));?></small><?php endif; ?>
+                                  <a class="d-inline-block mt-1" href="<?=h($doc['registry_url']);?>" target="_blank" rel="noopener noreferrer nofollow">Проверить в реестре <i class="fas fa-external-link-alt" aria-hidden="true"></i></a>
+                                  <?php if (!empty($doc['file_url'])): ?> <span aria-hidden="true">·</span> <a href="<?=h($doc['file_url']);?>" target="_blank" rel="noopener noreferrer nofollow">PDF-копия</a><?php endif; ?>
+                                </span>
+                              </li>
+                            <?php endforeach; ?>
+                          <?php else: ?>
+                            <li>
+                              <span class="prop-name">Статус</span>
+                              <span class="prop-value text-danger"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Сведения о документе соответствия уточняются</span>
+                            </li>
+                          <?php endif; ?>
+                        </ul>
+                      </div>
+                    </section>
+                  <?php endif; ?>
+
                   <?php if (!empty($cat_prod->alias) || !empty($cat_prod->parent_id)): ?>
                     <div class="product-card product-help-card">
                       <div class="product-block-title">Полезные материалы</div>
@@ -896,33 +936,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
               </p>
           </div>
       <?php endif; ?>
-
-          <?php
-          $certRequired = $product->certification_required;
-          $certDocuments = $certification['documents'] ?? [];
-          ?>
-          <?php if ((string)$certRequired === '1' || (string)$certRequired === '0'): ?>
-          <section class="product-certification m-3 p-3 border rounded bg-white" aria-labelledby="product-certification-title">
-            <h2 id="product-certification-title" class="h5 mb-3">Документы и сертификация</h2>
-            <?php if ((string)$certRequired === '0'): ?>
-              <p class="mb-1"><i class="fas fa-check-circle text-success" aria-hidden="true"></i> Обязательное подтверждение соответствия для данного товара не требуется.</p>
-              <?php if (!empty($product->tn_ved_code)): ?><small class="text-muted">Код ТН ВЭД: <?=h($product->tn_ved_code);?></small><?php endif; ?>
-            <?php elseif ($certDocuments): ?>
-              <?php foreach ($certDocuments as $doc): ?>
-                <article class="mb-3">
-                  <strong><?= $doc['document_type'] === 'certificate' ? 'Сертификат соответствия' : 'Декларация о соответствии'; ?></strong><br>
-                  <span><?=h($doc['number']);?></span>
-                  <?php if (!empty($doc['date_end'])): ?><br><small class="text-muted">Действует до <?=date('d.m.Y', strtotime($doc['date_end']));?></small><?php endif; ?>
-                  <br><a href="<?=h($doc['registry_url']);?>" target="_blank" rel="noopener noreferrer nofollow">Проверить документ в реестре <i class="fas fa-external-link-alt" aria-hidden="true"></i></a>
-                  <?php if (!empty($doc['file_url'])): ?> <span aria-hidden="true">·</span> <a href="<?=h($doc['file_url']);?>" target="_blank" rel="noopener noreferrer nofollow">PDF-копия</a><?php endif; ?>
-                </article>
-              <?php endforeach; ?>
-            <?php else: ?>
-              <p class="mb-0 text-danger"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Сведения о документе соответствия уточняются.</p>
-            <?php endif; ?>
-          </section>
-          <?php endif; ?>
-
 
           <ul class="nav nav-pills p-3" id="pills-tab" role="tablist">
 
