@@ -67,7 +67,7 @@ class CategoryController extends AppController
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $page = max(1, $page);
 
-    $perpage = 12;
+    $perpage = 15;
 
     $sqlPart = '';
     $sqlSort = "ORDER BY FIELD(`stock_status_id`, 1,3,2,0), name ASC";
@@ -649,7 +649,7 @@ class CategoryController extends AppController
     );
 
     if ($this->isAjax() && isset($_GET['lazy_products']) && $_GET['lazy_products'] === '1') {
-        $products = array_slice(array_values($products), 8, 4);
+        $products = array_slice(array_values($products), 10, 5);
         $productWidgetContext = \app\widgets\product\Product::buildContext($products);
         $this->loadView('lazy_products', compact('products', 'productWidgetContext'));
         die;
