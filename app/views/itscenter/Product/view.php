@@ -249,7 +249,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                           <?php if ((string)$certRequired === '0'): ?>
                             <li>
                               <span class="prop-name">Статус</span>
-                              <span class="prop-value"><i class="fas fa-check-circle text-success" aria-hidden="true"></i> Обязательное подтверждение соответствия не требуется</span>
+                              <span class="prop-value"><i class="fas fa-check-circle text-success" aria-hidden="true"></i> Обязательное подтверждение соответствия для данного товара не требуется</span>
                             </li>
                             <?php if (!empty($product->tn_ved_code)): ?>
                               <li><span class="prop-name">Код ТН ВЭД</span><span class="prop-value"><?=h($product->tn_ved_code);?></span></li>
