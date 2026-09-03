@@ -59,6 +59,24 @@ $stockDelta = (int)($stockSummary['currentQty'] ?? 0) - (int)($stockSummary['pre
     </div>
 
     <div class="row">
+      <div class="col-lg-6 col-12">
+        <div class="card card-outline card-primary">
+          <div class="card-header"><h3 class="card-title"><i class="fas fa-file-signature mr-2"></i>Сертификация товаров</h3></div>
+          <div class="card-body">
+            <div class="row text-center">
+              <div class="col-4"><div class="text-lg font-weight-bold"><?= (int)$certificationSummary['required']; ?></div><div class="text-muted">требуется</div></div>
+              <div class="col-4"><div class="text-lg font-weight-bold"><?= $e($certificationSummary['filled_percent']); ?>%</div><div class="text-muted">статус заполнен</div></div>
+              <div class="col-4"><div class="text-lg font-weight-bold"><?= $e($certificationSummary['covered_percent']); ?>%</div><div class="text-muted">есть документ</div></div>
+            </div>
+            <div class="progress mt-3" style="height:8px"><div class="progress-bar bg-success" style="width:<?= (float)$certificationSummary['covered_percent']; ?>%"></div></div>
+            <?php if ($certificationSummary['unknown']): ?><p class="text-warning mt-3 mb-0"><i class="fas fa-exclamation-triangle"></i> У <?= (int)$certificationSummary['unknown']; ?> товаров статус не заполнен.</p><?php endif; ?>
+          </div>
+          <div class="card-footer"><a href="/admin/certificate">Управление сертификатами</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">

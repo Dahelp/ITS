@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use app\services\admin\AdminDashboardService;
+use app\services\ProductCertificationService;
 
 class MainController extends AppController
 {
@@ -23,6 +24,7 @@ class MainController extends AppController
         $recentActivity = AdminDashboardService::activity(24, 12);
         $recentActivityCount = AdminDashboardService::activityCount();
         $stockSummary = AdminDashboardService::stockSummary();
+        $certificationSummary = ProductCertificationService::dashboardSummary();
         $countInStock = (int)$stockSummary['currentQty'];
         $qtytotals = array_map(static fn($row) => ['qty_total' => $row['qty_total']], $stockSummary['history']);
 
@@ -42,7 +44,8 @@ class MainController extends AppController
             'salesMonth',
             'recentActivity',
             'recentActivityCount',
-            'stockSummary'
+            'stockSummary',
+            'certificationSummary'
         ));
     }
 }
