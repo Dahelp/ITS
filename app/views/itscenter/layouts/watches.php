@@ -314,7 +314,7 @@ window.APP_CONFIG = {
 window.APP_PATH = window.APP_CONFIG.path;
 </script>
 
-<?php require __DIR__ . '/../partials/catalog-menu.php'; ?>
+<?php require __DIR__ . '/../partials/catalog-menu-shell.php'; ?>
 <script src="/js/main.js"></script>
 
 </body>

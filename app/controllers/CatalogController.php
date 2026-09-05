@@ -7,6 +7,18 @@ use ishop\App;
 
 class CatalogController extends AppController {
 
+	public function menuAction(): void
+	{
+		if (!$this->isAjax()) {
+			throw new \Exception('Страница не найдена', 404);
+		}
+
+		header('Content-Type: text/html; charset=UTF-8');
+		header('Cache-Control: public, max-age=300, stale-while-revalidate=600');
+		require APP . '/views/itscenter/partials/catalog-menu.php';
+		die;
+	}
+
 	public function indexAction()
 	{
 		$alias = $this->route['alias'] ?? '';

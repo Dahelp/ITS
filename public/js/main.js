@@ -2427,9 +2427,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const menu        = document.getElementById('catalogMenu');
       const nav         = document.getElementById('catalogNav');
       const contentWrap = document.getElementById('catalogContentWrap');
-      const source      = document.getElementById('catalogSource');
 
-      if (!toggleBtn || !menu || !nav || !contentWrap || !source) return;
+      if (!toggleBtn || !menu || !nav || !contentWrap) return;
 
       const mqDesktop = window.matchMedia('(min-width: 993px)');
       const isDesktop = () => mqDesktop.matches;
@@ -2437,66 +2436,82 @@ document.addEventListener('DOMContentLoaded', function () {
       const barTitle = menu.querySelector('.catalog-menu__bar-title');
       const backBtn  = menu.querySelector('[data-back="1"]');
 
-      // =========================
-      // Read items from source
-      // =========================
-      const topLinks = Array.from(source.querySelectorAll('a.dropdown-item.submenu'));
       const items = [];
+      let loadPromise = null;
+      let isLoaded = false;
 
-      topLinks.forEach((a, idx) => {
-        const panel = a.nextElementSibling;
-        if (!panel || !panel.classList.contains('dropdown-menu-byp')) return;
+      function renderNavigation() {
+        nav.innerHTML = '';
 
-        items.push({
-          idx,
-          title: (a.textContent || '').trim(),
-          href:  (a.getAttribute('href') || '#').trim(),
-          panel
+        items.forEach((it) => {
+          const navEl = document.createElement('a');
+          navEl.className = 'catalog-menu__nav-el has-arrow';
+          navEl.href = it.href;
+          navEl.dataset.target = it.id;
+          navEl.textContent = it.title;
+          nav.appendChild(navEl);
         });
-      });
+      }
 
-      if (!items.length) return;
+      function readCatalogResponse(html) {
+        const responseDocument = new DOMParser().parseFromString(html, 'text/html');
+        const source = responseDocument.getElementById('catalogSource');
+        if (!source) throw new Error('Catalog source is missing');
 
-      // =========================
-      // Render nav + content
-      // =========================
-      nav.innerHTML = '';
-      contentWrap.innerHTML = '';
+        const topLinks = Array.from(source.querySelectorAll('a.dropdown-item.submenu'));
+        items.length = 0;
 
-      items.forEach((it) => {
-        const id = `cat-${it.idx}`;
+        topLinks.forEach((link, idx) => {
+          const panel = link.nextElementSibling;
+          if (!panel || !panel.classList.contains('dropdown-menu-byp')) return;
 
-        // LEFT
-        const navEl = document.createElement('a');
-        navEl.className = 'catalog-menu__nav-el has-arrow';
-        navEl.href = it.href;
-        navEl.dataset.target = id;
-        navEl.textContent = it.title;
-        nav.appendChild(navEl);
+          items.push({
+            id: `cat-${idx}`,
+            title: (link.textContent || '').trim(),
+            href: (link.getAttribute('href') || '#').trim(),
+            panelHtml: panel.outerHTML
+          });
+        });
 
-        // RIGHT
-        const contentEl = document.createElement('section');
-        contentEl.className = 'catalog-menu__content';
-        contentEl.id = id;
+        if (!items.length) throw new Error('Catalog is empty');
+        renderNavigation();
+        isLoaded = true;
+        menu.classList.remove('is-loading');
+        setActive(items[0].id);
+      }
 
-        const srcPanelClone = it.panel.cloneNode(true);
+      function loadCatalog(forceRetry) {
+        if (isLoaded) return Promise.resolve();
+        if (loadPromise && !forceRetry) return loadPromise;
 
-        // IMPORTANT: ручной шаблон должен быть .catalog-manual
-        const manual = srcPanelClone.querySelector('.catalog-manual');
-        if (manual) {
-          // вырезаем manual из клона и вставляем внутрь нашей секции
-          contentEl.appendChild(manual);
-        } else {
-          // fallback: старый блок как есть
-          srcPanelClone.style.position = 'static';
-          srcPanelClone.style.left = 'auto';
-          srcPanelClone.style.top = 'auto';
-          srcPanelClone.style.width = 'auto';
-          contentEl.appendChild(srcPanelClone);
-        }
+        menu.classList.add('is-loading');
+        nav.innerHTML = '<div class="catalog-menu__status" role="status">Загрузка каталога…</div>';
+        contentWrap.innerHTML = '';
 
-        contentWrap.appendChild(contentEl);
-      });
+        const basePath = (window.APP_PATH || '').replace(/\/$/, '');
+        loadPromise = fetch(basePath + '/catalog-menu', {
+          headers: {'X-Requested-With': 'XMLHttpRequest'},
+          credentials: 'same-origin'
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error('Unable to load catalog');
+            return response.text();
+          })
+          .then(readCatalogResponse)
+          .catch((error) => {
+            loadPromise = null;
+            menu.classList.remove('is-loading');
+            nav.innerHTML = '';
+            contentWrap.innerHTML =
+              '<div class="catalog-menu__status catalog-menu__status--error">' +
+              '<p>Не удалось загрузить каталог.</p>' +
+              '<button type="button" class="btn btn-outline-primary" data-catalog-retry>Повторить</button>' +
+              '</div>';
+            throw error;
+          });
+
+        return loadPromise;
+      }
 
       // =========================
       // Active switching
@@ -2505,18 +2520,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
       function setActive(id) {
         if (!id || id === lastActiveId) return;
-        lastActiveId = id;
+        const item = items.find((candidate) => candidate.id === id);
+        if (!item) return;
 
         nav.querySelectorAll('.catalog-menu__nav-el').forEach(el => {
           el.classList.toggle('is-active', el.dataset.target === id);
         });
 
-        contentWrap.querySelectorAll('.catalog-menu__content').forEach(el => {
-          el.classList.toggle('is-active', el.id === id);
-        });
-      }
+        const holder = document.createElement('template');
+        holder.innerHTML = item.panelHtml;
+        const panel = holder.content.firstElementChild;
+        const manual = panel && panel.querySelector('.catalog-manual');
+        const contentEl = document.createElement('section');
+        contentEl.className = 'catalog-menu__content is-active';
+        contentEl.id = id;
 
-      setActive(`cat-${items[0].idx}`);
+        if (manual) {
+          contentEl.appendChild(manual);
+        } else if (panel) {
+          panel.style.position = 'static';
+          panel.style.left = 'auto';
+          panel.style.top = 'auto';
+          panel.style.width = 'auto';
+          contentEl.appendChild(panel);
+        }
+
+        contentWrap.replaceChildren(contentEl);
+        lastActiveId = id;
+      }
 
       // =========================
       // Mobile screens
@@ -2557,6 +2588,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleBtn.setAttribute('aria-expanded', 'true');
         menu.setAttribute('aria-hidden', 'false');
         syncTopOffset();
+        loadCatalog().catch(() => {});
       }
 
       function closeMenu() {
@@ -2572,6 +2604,10 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         menu.classList.contains('is-open') ? closeMenu() : openMenu();
       });
+
+      toggleBtn.addEventListener('pointerdown', () => {
+        loadCatalog().catch(() => {});
+      }, {once: true});
 
       // =========================
       // Close on search interaction (ROBUST for typeahead)
@@ -2623,6 +2659,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target.closest && e.target.closest('[data-back="1"]')) {
           e.preventDefault();
           showNavScreen();
+          return;
+        }
+
+        if (e.target.closest && e.target.closest('[data-catalog-retry]')) {
+          e.preventDefault();
+          loadCatalog(true).catch(() => {});
           return;
         }
 

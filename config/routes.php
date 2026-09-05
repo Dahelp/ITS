@@ -11,6 +11,7 @@ Router::add('^([a-z0-9._-]+\.(php|txt|bak|zip|gz|rar|7z))$',
     ['controller' => 'Static', 'action' => 'notFound']);
 
 Router::add('^product/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Product', 'action' => 'view']);
+Router::add('^catalog-menu/?$', ['controller' => 'Catalog', 'action' => 'menu']);
 Router::add('^catalog/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Catalog', 'action' => 'index']);
 Router::add('^category/(?P<alias>[a-z0-9\-_]+)/(?P<filter_alias>[a-z0-9\.\-_]+(?:/[a-z0-9\.\-_]+)*)/?$', ['controller' => 'Category', 'action' => 'view']);
 
