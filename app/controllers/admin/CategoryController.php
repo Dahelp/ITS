@@ -55,6 +55,7 @@ class CategoryController extends AppController {
             $category = new Category();
             $data = $_POST;
             $category->load($data);
+            $category->attributes['certification_required'] = !empty($data['certification_required']) ? '1' : '0';
             $category->getImg();
     
             if (!$category->validate($data) || !$category->checkUnique()) {
@@ -93,6 +94,7 @@ class CategoryController extends AppController {
             $category = new Category();
             $data = $_POST;
             $category->load($data);
+			$category->attributes['certification_required'] = !empty($data['certification_required']) ? '1' : '0';
 			$category->attributes['sale'] = $category->attributes['sale'] ? '1' : '0';
 			$products = \R::findAll('product', 'category_id = ?', [$id]);
 			foreach($products as $product) {

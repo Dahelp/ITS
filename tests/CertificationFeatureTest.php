@@ -25,10 +25,19 @@ $view = $read('app/views/itscenter/Product/view.php');
 $assert(strpos($view, 'Обязательное подтверждение соответствия не требуется') !== false, 'not-required disclosure is missing');
 $assert(strpos($view, "\$doc['registry_url']") !== false, 'official registry link is missing');
 $assert(strpos($view, 'rel="noopener noreferrer nofollow"') !== false, 'external registry link must be isolated');
+$assert(strpos($view, '$certDocuments ? 1 : ($cat_prod->certification_required ?? null)') !== false, 'category flag must determine certification when no direct document exists');
 
 $schema = $read('scripts/install_certificates.php');
 $assert(strpos($schema, 'certification_required TINYINT(1) NULL') !== false, 'three-state product flag must remain nullable');
 $assert(strpos($schema, 'certificate_assignments') !== false, 'assignment table is missing');
+$assert(strpos($schema, "ALTER TABLE category ADD certification_required") !== false, 'category certification flag is missing');
+
+$categoryModel = $read('app/models/admin/Category.php');
+$categoryController = $read('app/controllers/admin/CategoryController.php');
+$categoryEdit = $read('app/views/itscenter/admin/Category/edit.php');
+$assert(strpos($categoryModel, "'certification_required' => '0'") !== false, 'category model must persist certification flag');
+$assert(strpos($categoryController, "!empty(\$data['certification_required']) ? '1' : '0'") !== false, 'unchecked category flag must be saved as zero');
+$assert(strpos($categoryEdit, 'Категория подлежит сертификации') !== false, 'category certification checkbox is missing');
 
 $seed = $read('scripts/seed_ekka_certificate.php');
 foreach (['маслян', 'топлив', 'воздуш'] as $word) {
@@ -36,7 +45,8 @@ foreach (['маслян', 'топлив', 'воздуш'] as $word) {
 }
 $assert(strpos($seed, "preg_match_all('/EK-?") !== false, 'EKKA seed must use the official article list');
 $assert(strpos($seed, "mb_strpos(\$name, 'спецтех')") === false, 'special-equipment tyres must not be classified as truck tyres');
-$assert(strpos($seed, "mb_strpos(\$name, 'груз')") !== false, 'truck tyre scope must be explicit');
-$assert(strpos($seed, 'array_merge($tyreCategoryIds, $filterCategoryIds)') !== false, 'all other tyres and filters must be reset to not-required');
+$assert(strpos($seed, "mb_strpos(\$name, 'груз')") === false, 'the substring груз must not match погрузчиков');
+$assert(strpos($seed, 'truckCategoryIds') === false, 'seed must not infer certified categories from their names');
+$assert(strpos($seed, 'categoryTreeIds') === false, 'seed must not derive certification status from category names');
 
 echo "Certification feature tests passed\n";

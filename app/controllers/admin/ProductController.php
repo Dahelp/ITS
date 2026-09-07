@@ -33,7 +33,14 @@ class ProductController extends AppController {
 		if(in_array($badge, ['new_product', 'hit', 'sale'], true)){ $whereParts[] = "a.".$badge." = '1'"; }
 		$where = $whereParts ? " WHERE ".implode(' AND ', $whereParts) : '';
 		$complianceSql = ProductCertificationService::hasProductFields()
-			? "CONCAT(a.hide, '|', IFNULL(a.certification_required, ''))"
+			? "CONCAT(a.hide, '|', IF(EXISTS (
+				SELECT 1 FROM certificate_assignments ca
+				JOIN certificates cert ON cert.id = ca.certificate_id
+				WHERE ca.target_type = 'product' AND ca.product_id = a.id
+				  AND cert.status = 'active'
+				  AND (cert.date_start IS NULL OR cert.date_start <= CURDATE())
+				  AND (cert.date_end IS NULL OR cert.date_end >= CURDATE())
+			), 1, IFNULL(b.certification_required, 0)))"
 			: "CONCAT(a.hide, '|')";
 		$table = <<<EOT
 		 (

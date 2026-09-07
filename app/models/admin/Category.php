@@ -20,6 +20,7 @@ class Category extends AppModel {
 		'position' => '',
 		'sale' => '',
 		'hide' => '',
+		'certification_required' => '0',
     ];
 
     public $rules = [

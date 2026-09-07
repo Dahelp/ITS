@@ -238,8 +238,9 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                   </div>
 
                   <?php
-                  $certRequired = $product->certification_required;
                   $certDocuments = $certification['documents'] ?? [];
+                  // A direct document is the most precise rule; otherwise the category flag is authoritative.
+                  $certRequired = $certDocuments ? 1 : ($cat_prod->certification_required ?? null);
                   ?>
                   <?php if ((string)$certRequired === '1' || (string)$certRequired === '0'): ?>
                     <section class="product-card product-certification-card" aria-labelledby="product-certification-title">

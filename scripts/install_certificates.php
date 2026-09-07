@@ -45,12 +45,12 @@ foreach ($queries as $query) {
     $pdo->exec($query);
 }
 
-$hasColumn = static function (PDO $pdo, string $column): bool {
+$hasColumn = static function (PDO $pdo, string $column, string $table = 'product'): bool {
     $query = $pdo->prepare(
         "SELECT COUNT(*) FROM information_schema.COLUMNS
-         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product' AND COLUMN_NAME = ?"
+         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?"
     );
-    $query->execute([$column]);
+    $query->execute([$table, $column]);
     return (bool)$query->fetchColumn();
 };
 
@@ -59,6 +59,9 @@ if (!$hasColumn($pdo, 'certification_required')) {
 }
 if (!$hasColumn($pdo, 'tn_ved_code')) {
     $pdo->exec("ALTER TABLE product ADD tn_ved_code VARCHAR(32) NOT NULL DEFAULT '' AFTER certification_required");
+}
+if (!$hasColumn($pdo, 'certification_required', 'category')) {
+    $pdo->exec("ALTER TABLE category ADD certification_required TINYINT(1) NOT NULL DEFAULT 0 AFTER hide");
 }
 
 echo "Certificates schema installed.\n";
