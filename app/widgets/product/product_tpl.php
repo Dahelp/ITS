@@ -305,7 +305,6 @@ $categoryName = htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8');
         <div class="pc-title">
             <a href="product/<?= $alias ?>">
                 <span itemprop="name"><?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?></span>
-                <span itemprop="description"></span>
                 <link itemprop="url" href="product/<?= $alias ?>">
                 <meta itemprop="priceCurrency" content="RUB">
             </a>
