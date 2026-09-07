@@ -36,7 +36,8 @@ foreach (['маслян', 'топлив', 'воздуш'] as $word) {
 }
 $assert(strpos($seed, "preg_match_all('/EK-?") !== false, 'EKKA seed must use the official article list');
 $assert(strpos($seed, "mb_strpos(\$name, 'спецтех')") === false, 'special-equipment tyres must not be classified as truck tyres');
-$assert(strpos($seed, "mb_strpos(\$name, 'груз')") !== false, 'truck tyre scope must be explicit');
+$assert(strpos($seed, "preg_match('/(^|[^\\p{L}])грузов/iu'") !== false, 'truck tyre scope must use a word boundary');
+$assert(strpos($seed, "mb_strpos(\$name, 'груз')") === false, 'the substring груз must not match погрузчиков');
 $assert(strpos($seed, 'array_merge($tyreCategoryIds, $filterCategoryIds)') !== false, 'all other tyres and filters must be reset to not-required');
 
 echo "Certification feature tests passed\n";

@@ -64,7 +64,8 @@ try {
         return mb_strpos($name, 'фильтр') !== false;
     });
     $truckCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
-        return mb_strpos($name, 'шин') !== false && mb_strpos($name, 'груз') !== false;
+        return mb_strpos($name, 'шин') !== false
+            && preg_match('/(^|[^\p{L}])грузов/iu', $name) === 1;
     });
 
     // Certification policy confirmed by the owner:
