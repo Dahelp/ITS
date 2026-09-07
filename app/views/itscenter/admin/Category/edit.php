@@ -111,6 +111,16 @@
 											</div>
 										</div>
 										<div class="form-group row">
+											<label class="col-sm-3 col-form-label" for="certificationRequired">Сертификация товаров</label>
+											<div class="col-sm-9">
+												<div class="custom-control custom-checkbox mb-2">
+													<input class="custom-control-input" type="checkbox" id="certificationRequired" name="certification_required" value="1" <?=!empty($category->certification_required) ? ' checked' : '';?>>
+													<label for="certificationRequired" class="custom-control-label"><i class="fas fa-file-signature mr-1"></i> Категория подлежит сертификации</label>
+												</div>
+												<small class="form-text text-muted mb-3">Флаг определяет статус сертификации товаров этой категории.</small>
+											</div>
+										</div>
+										<div class="form-group row">
 											<label class="col-sm-3 col-form-label" for="img">Базовое изображение</label>
 											<div class="col-sm-9">
                                        			<div id="single" class="btn btn-success" data-url="category/add-image" data-name="single" data-razdel="category">Выбрать файл</div>
