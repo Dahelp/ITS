@@ -55,6 +55,9 @@ jobs:
             --exclude='public/xml/' \
             --exclude='public/storage/' \
             --exclude='public/uploads/' \
+            --filter='protect public/images/contents/baseimg/***' \
+            --filter='protect public/images/contents/mini/***' \
+            --filter='protect public/images/contents/tmp/***' \
             --exclude='config/api.php' \
             --exclude='config/config_db.php' \
             --exclude='config/config_db_tamozh.php' \
