@@ -57,13 +57,27 @@ try {
     $certificateId = (int)$pdo->query("SELECT id FROM certificates WHERE number = " . $pdo->quote((string)$record['docId']))->fetchColumn();
 
     $categories = $pdo->query('SELECT id, parent_id, name FROM category')->fetchAll(PDO::FETCH_ASSOC);
-    $truckCategoryIds = truckTyreCategoryIds($categories);
+    $tyreCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
+        return mb_strpos($name, 'шин') !== false;
+    });
+    $filterCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
+        return mb_strpos($name, 'фильтр') !== false;
+    });
+    $truckCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
+        return mb_strpos($name, 'шин') !== false && mb_strpos($name, 'груз') !== false;
+    });
 
-    // Initial inventory policy confirmed by the owner: everything is not required,
-    // except truck tyres and exact EKKA filter articles from this certificate.
-    // Preserve statuses adjusted later by an administrator. Only classify products
-    // that have not received a certification decision yet.
+    // Certification policy confirmed by the owner:
+    // - all tyres and filters are not subject to mandatory certification by default;
+    // - only truck tyres require a document (it will be added later);
+    // - exact EKKA oil, fuel and air filter articles use this certificate.
     $pdo->exec('UPDATE product SET certification_required = 0 WHERE certification_required IS NULL');
+    $notRequiredCategoryIds = array_values(array_unique(array_merge($tyreCategoryIds, $filterCategoryIds)));
+    if ($notRequiredCategoryIds) {
+        $slots = implode(',', array_fill(0, count($notRequiredCategoryIds), '?'));
+        $stmt = $pdo->prepare("UPDATE product SET certification_required = 0 WHERE category_id IN ({$slots})");
+        $stmt->execute($notRequiredCategoryIds);
+    }
     if ($truckCategoryIds) {
         $slots = implode(',', array_fill(0, count($truckCategoryIds), '?'));
         $stmt = $pdo->prepare("UPDATE product SET certification_required = 1 WHERE category_id IN ({$slots})");
@@ -130,12 +144,12 @@ function normaliseArticle(string $value): string
     return strtoupper((string)preg_replace('/[^A-Z0-9]/i', '', $value));
 }
 
-function truckTyreCategoryIds(array $categories): array
+function categoryTreeIds(array $categories, callable $matches): array
 {
     $ids = [];
     foreach ($categories as $category) {
         $name = mb_strtolower((string)$category['name']);
-        if (mb_strpos($name, 'шин') !== false && (mb_strpos($name, 'груз') !== false || mb_strpos($name, 'спецтех') !== false)) {
+        if ($matches($name)) {
             $ids[] = (int)$category['id'];
         }
     }

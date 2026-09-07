@@ -269,7 +269,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                           <?php else: ?>
                             <li>
                               <span class="prop-name">Статус</span>
-                              <span class="prop-value text-danger"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Документ соответствия уточняется</span>
+                              <span class="prop-value text-warning"><i class="fas fa-info-circle" aria-hidden="true"></i> Сведения о документе соответствия уточняются</span>
                             </li>
                           <?php endif; ?>
                         </ul>
