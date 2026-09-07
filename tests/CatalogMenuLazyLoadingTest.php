@@ -18,6 +18,11 @@ if (strpos($layout, "partials/catalog-menu.php") !== false) {
     exit(1);
 }
 
+if (strpos($layout, "main.js?v=") === false || strpos($layout, "filemtime") === false) {
+    fwrite(STDERR, "FAILED: main.js is not cache-busted after catalog markup changes\n");
+    exit(1);
+}
+
 if (strpos($shell, 'id="catalogSource"') !== false) {
     fwrite(STDERR, "FAILED: catalog source remains in the initial DOM shell\n");
     exit(1);

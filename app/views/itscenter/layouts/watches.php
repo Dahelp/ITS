@@ -315,7 +315,7 @@ window.APP_PATH = window.APP_CONFIG.path;
 </script>
 
 <?php require __DIR__ . '/../partials/catalog-menu-shell.php'; ?>
-<script src="/js/main.js"></script>
+<script src="/js/main.js?v=<?= (int) @filemtime(WWW . '/js/main.js') ?>"></script>
 
 </body>
 </html>
