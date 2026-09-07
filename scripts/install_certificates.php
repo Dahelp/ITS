@@ -64,4 +64,11 @@ if (!$hasColumn($pdo, 'certification_required', 'category')) {
     $pdo->exec("ALTER TABLE category ADD certification_required TINYINT(1) NOT NULL DEFAULT 0 AFTER hide");
 }
 
+// Explicit business rule: truck tyres require a conformity document.
+// The certificate itself may be assigned later in the Certificates section.
+$markTruckTyres = $pdo->prepare(
+    "UPDATE category SET certification_required = 1 WHERE alias = ?"
+);
+$markTruckTyres->execute(['gruzovye-shiny']);
+
 echo "Certificates schema installed.\n";
