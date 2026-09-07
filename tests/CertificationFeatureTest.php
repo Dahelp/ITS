@@ -31,6 +31,7 @@ $schema = $read('scripts/install_certificates.php');
 $assert(strpos($schema, 'certification_required TINYINT(1) NULL') !== false, 'three-state product flag must remain nullable');
 $assert(strpos($schema, 'certificate_assignments') !== false, 'assignment table is missing');
 $assert(strpos($schema, "ALTER TABLE category ADD certification_required") !== false, 'category certification flag is missing');
+$assert(strpos($schema, "['gruzovye-shiny']") !== false, 'truck tyre category must be explicitly marked as requiring certification');
 
 $categoryModel = $read('app/models/admin/Category.php');
 $categoryController = $read('app/controllers/admin/CategoryController.php');
