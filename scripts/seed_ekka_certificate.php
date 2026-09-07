@@ -56,34 +56,9 @@ try {
     ]);
     $certificateId = (int)$pdo->query("SELECT id FROM certificates WHERE number = " . $pdo->quote((string)$record['docId']))->fetchColumn();
 
-    $categories = $pdo->query('SELECT id, parent_id, name FROM category')->fetchAll(PDO::FETCH_ASSOC);
-    $tyreCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
-        return mb_strpos($name, 'шин') !== false;
-    });
-    $filterCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
-        return mb_strpos($name, 'фильтр') !== false;
-    });
-    $truckCategoryIds = categoryTreeIds($categories, static function (string $name): bool {
-        return mb_strpos($name, 'шин') !== false
-            && preg_match('/(^|[^\p{L}])грузов/iu', $name) === 1;
-    });
-
     // Certification policy confirmed by the owner:
-    // - all tyres and filters are not subject to mandatory certification by default;
-    // - only truck tyres require a document (it will be added later);
+    // - categories requiring certification are selected explicitly in the admin panel;
     // - exact EKKA oil, fuel and air filter articles use this certificate.
-    $pdo->exec('UPDATE product SET certification_required = 0 WHERE certification_required IS NULL');
-    $notRequiredCategoryIds = array_values(array_unique(array_merge($tyreCategoryIds, $filterCategoryIds)));
-    if ($notRequiredCategoryIds) {
-        $slots = implode(',', array_fill(0, count($notRequiredCategoryIds), '?'));
-        $stmt = $pdo->prepare("UPDATE product SET certification_required = 0 WHERE category_id IN ({$slots})");
-        $stmt->execute($notRequiredCategoryIds);
-    }
-    if ($truckCategoryIds) {
-        $slots = implode(',', array_fill(0, count($truckCategoryIds), '?'));
-        $stmt = $pdo->prepare("UPDATE product SET certification_required = 1 WHERE category_id IN ({$slots})");
-        $stmt->execute($truckCategoryIds);
-    }
 
     $products = $pdo->query(
         "SELECT p.id, p.article, p.name, p.brand_id, b.name AS brand_name, c.name AS category_name
@@ -138,31 +113,8 @@ try {
 echo 'Документ: ' . $record['docId'] . PHP_EOL;
 echo 'Артикулов в реестре: ' . count($articleCodes) . PHP_EOL;
 echo 'Товаров EKKA сопоставлено: ' . count($matched) . PHP_EOL;
-echo 'Категорий грузовых шин (включая дочерние): ' . count($truckCategoryIds) . PHP_EOL;
 
 function normaliseArticle(string $value): string
 {
     return strtoupper((string)preg_replace('/[^A-Z0-9]/i', '', $value));
-}
-
-function categoryTreeIds(array $categories, callable $matches): array
-{
-    $ids = [];
-    foreach ($categories as $category) {
-        $name = mb_strtolower((string)$category['name']);
-        if ($matches($name)) {
-            $ids[] = (int)$category['id'];
-        }
-    }
-    do {
-        $changed = false;
-        foreach ($categories as $category) {
-            $id = (int)$category['id'];
-            if (!in_array($id, $ids, true) && in_array((int)$category['parent_id'], $ids, true)) {
-                $ids[] = $id;
-                $changed = true;
-            }
-        }
-    } while ($changed);
-    return array_values(array_unique($ids));
 }
