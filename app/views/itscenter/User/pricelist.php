@@ -200,8 +200,8 @@ function Selected(a) {
     </div>
 </section>
 
-<script src="/js/pdfmake.js"></script>
-<script src="/js/vfs_fonts.js"></script>
+<script defer src="/js/pdfmake.js"></script>
+<script defer src="/js/vfs_fonts.js"></script>
 
 <?php if (!empty($product)): ?>
 <script>

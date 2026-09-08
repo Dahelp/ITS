@@ -1840,8 +1840,8 @@ $kpData = [
 <?= json_encode($kpData, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>
 </script>
 
-<script src="/js/pdfmake.js"></script>
-<script src="/js/vfs_fonts.js"></script>
+<script defer src="/js/pdfmake.js"></script>
+<script defer src="/js/vfs_fonts.js"></script>
 <script src="/js/kp_template.js"></script>
 <script>
   (function(){
