@@ -140,7 +140,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
             <img
               src="/<?= h($filterImage) ?>"
               alt="<?= h($alt) ?>"
-              loading="lazy">
+              loading="lazy" width="600" height="450">
           </div>
         <?php endif; ?>
 

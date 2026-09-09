@@ -392,7 +392,7 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 					<div class="mbl-3">
 						<div class="menu-h2">Комплект шин на квадроцикл</div>
 						<div class="mbl-img">
-							<img src="../images/komplect_kvadro.webp" alt="Комплект шин на квадроцикл" title="Комплект шин на квадроцикл" />
+							<img src="../images/komplect_kvadro.webp" width="230" height="230" alt="Комплект шин на квадроцикл" title="Комплект шин на квадроцикл" />
 						</div>							
 					</div>
 				</div>
@@ -411,7 +411,7 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 						<div class="menu-h2">Диски для минипогрузчиков</div>
 						<div class="mbl-img">
 							<a href="category/diski-dlya-minipogruzchikov" title="Диски для вилочных погрузчиков">
-								<img src="../images/disk-mini.webp" alt="Диски для минипогрузчиков" title="Диски для минипогрузчиков" />
+								<img src="../images/disk-mini.webp" width="230" height="230" alt="Диски для минипогрузчиков" title="Диски для минипогрузчиков" />
 							</a>
 						</div>
 					</div>
@@ -419,7 +419,7 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 						<div class="menu-h2">Диски для вилочных погрузчиков</div>
 						<div class="mbl-img">
 							<a href="category/diski-dlya-vilochnyh-pogruzchikov" title="Диски для вилочных погрузчиков">
-								<img src="../images/disk-vil.webp" alt="Диски для вилочных погрузчиков" title="Диски для вилочных погрузчиков" />
+								<img src="../images/disk-vil.webp" width="230" height="230" alt="Диски для вилочных погрузчиков" title="Диски для вилочных погрузчиков" />
 							</a>
 						</div>							
 					</div>
@@ -440,13 +440,13 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 					<div class="mbl-2">
 						<div class="menu-h2">Комплект фильтров на технику JCB</div>
 						<div class="mbl-img">
-							<img src="../images/mini_filters_its_jcb.webp" alt="Комплект фильтров на технику JCB" title="Комплект фильтров на технику JCB" />
+							<img src="../images/mini_filters_its_jcb.webp" width="230" height="230" alt="Комплект фильтров на технику JCB" title="Комплект фильтров на технику JCB" />
 						</div>
 					</div>
 					<div class="mbl-3">
 						<div class="menu-h2">Комплект фильтров на технику BOBCAT</div>
 						<div class="mbl-img">
-							<img src="../images/mini_filters_its_bobcat.webp" alt="Комплект фильтров на технику BOBCAT" title="Комплект фильтров на технику BOBCAT" />
+							<img src="../images/mini_filters_its_bobcat.webp" width="230" height="230" alt="Комплект фильтров на технику BOBCAT" title="Комплект фильтров на технику BOBCAT" />
 						</div>							
 					</div>
 				</div>
@@ -495,7 +495,7 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 					<div class="mbl-3">
 						<div class="menu-h2">Самый популярный товар</div>
 						<div class="mbl-img">
-							<img src="../images/product/baseimg/06bde34572e293f789e67c9b6a91807c.webp" alt="315/80R22.5 F NF-202 КАМА Шина грузовая рулевая" title="315/80R22.5 F NF-202 КАМА Шина грузовая рулевая" />
+							<img src="../images/product/baseimg/06bde34572e293f789e67c9b6a91807c.webp" width="600" height="600" alt="315/80R22.5 F NF-202 КАМА Шина грузовая рулевая" title="315/80R22.5 F NF-202 КАМА Шина грузовая рулевая" />
 						</div>							
 					</div>
 				</div>

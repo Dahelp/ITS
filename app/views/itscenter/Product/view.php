@@ -1136,7 +1136,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                               </p>
                                           </div>
 
-                                          <img src="/images/qr-yandex-card.jpg" width="90">
+                                          <img src="/images/qr-yandex-card.jpg" width="102" height="102">
 
                                       </div>
 
@@ -1277,7 +1277,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                               ?>
 
                                               <a href="<?=$fullPath?>" data-fancybox="review-<?=$rw["id"]?>">
-                                                  <img src="<?=$thumbPath?>" alt="Фото отзыва" loading="lazy">
+                                                  <img src="<?=$thumbPath?>" alt="Фото отзыва" loading="lazy" width="70" height="70">
                                               </a>
 
                                           <?php endforeach; ?>

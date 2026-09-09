@@ -43,7 +43,7 @@
 								<tbody>
 								<?php foreach($bookmarks as $item): ?>									
 									<tr>
-										<td class="footable-first-visible" style="display: table-cell;"><img src="images/product/mini/<?=$item["img"]?>" /></td>
+										<td class="footable-first-visible" style="display: table-cell;"><img src="images/product/mini/<?=$item["img"]?>"  width="250" height="250"/></td>
 										<td style="display: table-cell;"><?=$item["article"]?></td>
 										<td style="display: table-cell;"><?=$item["name"]?></td>
 										<td style="display: table-cell;"><?=$item["quantity"]?></td>

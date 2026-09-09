@@ -50,7 +50,7 @@
                                 <div class="technics-card__img">
                                     <img src="<?= PATH ?>/images/technics_type/baseimg/<?= h($tech['img']) ?>"
                                          alt="<?= h($tech['name']) ?>"
-                                         title="<?= h($tech['name']) ?>">
+                                         title="<?= h($tech['name']) ?>" width="600" height="450">
                                 </div>
                                 <div class="technics-card__body">
                                     <div class="technics-card__title"><?= h($tech['name']) ?></div>

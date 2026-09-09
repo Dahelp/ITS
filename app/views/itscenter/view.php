@@ -38,7 +38,7 @@
                         <img
                             src="/images/filtrs/baseimg/<?=h($find->img);?>"
                             alt="<?=$alt;?>"
-                            loading="lazy">
+                            loading="lazy" width="600" height="450">
                     </div>
                 <?php endif; ?>
 

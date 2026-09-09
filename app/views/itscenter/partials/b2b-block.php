@@ -17,7 +17,7 @@
 				<div class="category-b2b__panel">
 				<div class="bnr-catalog">
 					<div class="col-md-2 bnr-bk1">
-					<img src="images/banner-1.webp" alt="шины для спецтехники" title="купить шины для погрузчика" />
+					<img src="images/banner-1.webp" width="691" height="656" alt="шины для спецтехники" title="купить шины для погрузчика" />
 					</div>
 
 					<div class="col-md-7 bnr-bk2">

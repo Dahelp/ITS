@@ -121,6 +121,8 @@ $renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
 						$catImgSrc = $catImg !== ''
 							? '/images/category/baseimg/' . $catImg
 							: '/images/no_image.jpg';
+						$catImgWidth = $catImg !== '' ? 600 : 125;
+						$catImgHeight = $catImg !== '' ? 600 : 200;
 						?>
 						<a href="<?php							
 							if($cat->type_id == 1) { 
@@ -129,7 +131,7 @@ $renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
 							}else{ echo "category/".$cat["alias"].""; } ?>" title="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" class="col-md-3">
 							<div class="p_cat">
 								<div class="cb-img">
-									<img src="<?= htmlspecialchars($catImgSrc, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" title="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>">
+									<img src="<?= htmlspecialchars($catImgSrc, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" title="<?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?>" width="<?= $catImgWidth ?>" height="<?= $catImgHeight ?>">
 								</div>
 								<div class="cb-span">
 									<h2><?= htmlspecialchars($cat["name"], ENT_QUOTES, 'UTF-8') ?></h2>

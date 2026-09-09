@@ -211,13 +211,13 @@ if (!empty($complete)) {
                                             <li>
                                                 <img itemprop="image"
                                                      src="<?= PATH ?>/images/technics/baseimg/<?= h($technics->img); ?>"
-                                                     alt="Шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>">
+                                                     alt="Шины на <?= $typeName ?> <?= $manufacturerName ?> <?= $technicsModel ?>" width="600" height="450">
                                             </li>
                                         <?php else: ?>
                                             <li>
                                                 <img itemprop="image"
                                                      src="<?= PATH ?>/images/no_image.jpg"
-                                                     alt="Изображение отсутствует">
+                                                     alt="Изображение отсутствует" width="125" height="200">
                                             </li>
                                         <?php endif; ?>
                                     </ul>
@@ -408,7 +408,7 @@ if (!empty($complete)) {
                                             alt="<?= $nm ?>"
                                             title="<?= $nm ?>"
                                             loading="lazy"
-                                        >
+                                         width="250" height="250">
                                     </div>
 
                                     <div class="complete-premium__meta">

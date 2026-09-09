@@ -151,7 +151,7 @@ $breadcrumbSchema = [
 
                         <?php if ($find->img && $find->img_hide == 'show'): ?>
                             <div class="cont-img mb-4">
-                                <img class="img-fluid rounded-4" src="<?= PATH ?>/images/contents/baseimg/<?=$find->img;?>" alt="<?=htmlspecialchars($find->name, ENT_QUOTES, 'UTF-8');?>">
+                                <img class="img-fluid rounded-4" src="<?= PATH ?>/images/contents/baseimg/<?=$find->img;?>" alt="<?=htmlspecialchars($find->name, ENT_QUOTES, 'UTF-8');?>" width="818" height="460">
                             </div>
                         <?php endif; ?>
 

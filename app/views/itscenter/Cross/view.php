@@ -127,13 +127,13 @@ if (property_exists($product, 'reserve')) {
 								<img itemprop="image"
 									class="main-photo"
 									src="images/product/baseimg/<?=$product->img;?>"
-									alt="<?=$crossTitle;?>">
+									alt="<?=$crossTitle;?>" width="600" height="600">
 							</li>
 							<?php foreach($gallery as $item): ?>
 								<li>
 								<img itemprop="image"
 									src="images/product/gallery/<?=$item->img;?>"
-									alt="<?=$crossTitle;?>">
+									alt="<?=$crossTitle;?>" width="600" height="450">
 								</li>
 							<?php endforeach; ?>
 							</ul>
@@ -144,13 +144,13 @@ if (property_exists($product, 'reserve')) {
 							<li>
 								<img itemprop="image"
 									src="images/product/baseimg/<?=$product->img;?>"
-									alt="<?=$crossTitle;?>">
+									alt="<?=$crossTitle;?>" width="600" height="600">
 							</li>
 							<?php foreach($gallery as $item): ?>
 								<li>
 								<img itemprop="image"
 									src="images/product/gallery/<?=$item->img;?>"
-									alt="<?=$crossTitle;?>">
+									alt="<?=$crossTitle;?>" width="600" height="450">
 								</li>
 							<?php endforeach; ?>
 							</ul>
@@ -162,7 +162,7 @@ if (property_exists($product, 'reserve')) {
 								<img itemprop="image"
 									class="main-photo"
 									src="https://its-center.ru/images/product/baseimg/<?=$product->img;?>"
-									alt="<?=$crossTitle;?>">
+									alt="<?=$crossTitle;?>" width="600" height="600">
 							</li>
 							</ul>
 						</div>

@@ -8,7 +8,7 @@
 				<div class="col-lg-3 col-md-6 site-footer__col site-footer__brand">
 					<div class="site-footer__logo">
 						<?php if($this->route["controller"] != "Main") { ?><a href="/"><?php } ?>
-							<img src="../images/logo-2.png" title="ИТС-Центр" alt="ИТС-Центр">
+							<img src="../images/logo-2.png" width="260" height="50" title="ИТС-Центр" alt="ИТС-Центр">
 						<?php if($this->route["controller"] != "Main") { ?></a><?php } ?>
 					</div>
 
@@ -115,10 +115,10 @@
 
 						<div class="site-footer__socials">
 							<a href="https://avito.ru/brands/i22305902" target="_blank" rel="noopener noreferrer" class="social-link social-link--avito" title="Avito">
-								<img src="images/avito.svg" alt="Avito">
+								<img src="images/avito.svg" width="90" height="90" alt="Avito">
 							</a>
 							<a href="https://dzen.ru/id/60c85a02ed79053dae0d1122" target="_blank" rel="noopener noreferrer" class="social-link social-link--dzen" title="Дзен">
-								<img src="images/dzen.svg" alt="Дзен">
+								<img src="images/dzen.svg" width="28" height="28" alt="Дзен">
 							</a>
 							<a href="https://vk.com/itscenterru" target="_blank" rel="noopener noreferrer" class="social-link social-link--vk" title="ВКонтакте">
 								<i class="fab fa-vk"></i>

@@ -8,7 +8,7 @@
 		<div class="container-grid">
 			<div class="item item-0">
 				<a class="category category-0" href="category/gruzovye-shiny" title="Грузовые шины">
-					<img src="images/cat-7.jpg" alt="Грузовые шины" title="Грузовые шины" />
+					<img src="images/cat-7.jpg" width="300" height="150" alt="Грузовые шины" title="Грузовые шины" />
 					<div class="cat-i"><i class="far fa-tire-rugged"></i></div>
 					<div class="cat-name"><h2>Грузовые шины</h2></div>
 					<div class="cat-span"><?php $count_gruzlo = \R::getAll("SELECT * FROM product WHERE category_id = '36'"); echo count($count_gruzlo);?> товаров</div>
@@ -16,7 +16,7 @@
 			</div>
 			<div class="item item-1">
 				<a class="category category-1" href="category/industrialnye-shiny" title="Индустриальные шины">
-					<img src="images/cat-1.webp" alt="Индустриальные шины" title="Индустриальные шины" />
+					<img src="images/cat-1.webp" width="300" height="150" alt="Индустриальные шины" title="Индустриальные шины" />
 					<div class="cat-i"><i class="fad fa-tire-rugged"></i></div>
 					<div class="cat-name"><h2>Индустриальные шины</h2></div>
 					<div class="cat-span"><?php $count_inds = \R::getAll("SELECT * FROM product WHERE category_id IN ('9', '18', '19', '20', '21', '22', '23', '24')"); echo count($count_inds);?> товаров</div>
@@ -24,7 +24,7 @@
 			</div>
 			<div class="item item-2">
 				<a class="category category-2" href="category/atv" title="Шины для квадроциклов АТВ">
-					<img src="images/cat-2.webp" alt="Шины АТВ" title="Шины АТВ" />
+					<img src="images/cat-2.webp" width="300" height="150" alt="Шины АТВ" title="Шины АТВ" />
 					<div class="cat-i"><i class="far fa-tire-rugged"></i></div>
 					<div class="cat-name"><h2>Шины АТВ</h2></div>
 					<div class="cat-span"><?php $count_atv = \R::getAll("SELECT * FROM product WHERE category_id = '2'"); echo count($count_atv);?> товаров</div>
@@ -32,15 +32,15 @@
 			</div>
 			<div class="item item-3">
 				<a class="category category-3" href="category/kamery-i-obodnye-lenty" title="Камеры и ободные ленты">
-					<img src="images/cat-5.webp" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" />
-					<div class="cat-i"><img src="images/camera.png" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" /></div>
+					<img src="images/cat-5.webp" width="300" height="150" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" />
+					<div class="cat-i"><img src="images/camera.png" width="32" height="32" alt="Камеры и ободные ленты" title="Камеры и ободные ленты" /></div>
 					<div class="cat-name"><h2>Камеры и ободные ленты</h2></div>
 					<div class="cat-span"><?php $count_atv = \R::getAll("SELECT * FROM product WHERE category_id IN ('31', '32', '33')"); echo count($count_atv);?> товаров</div>
 				</a>
 			</div>
 			<div class="item item-4">
 				<a class="category category-4" href="category/diski" title="Диски для спецтехники">
-					<img src="images/cat-3.webp" alt="Диски" title="Диски" />
+					<img src="images/cat-3.webp" width="300" height="150" alt="Диски" title="Диски" />
 					<div class="cat-i"><i class="fal fa-tire"></i></div>
 					<div class="cat-name"><h2>Диски</h2></div>
 					<div class="cat-span"><?php $count_inds = \R::getAll("SELECT * FROM product WHERE category_id IN ('26', '27', '28', '29', '30')"); echo count($count_inds);?> товаров</div>
@@ -48,8 +48,8 @@
 			</div>
 			<div class="item item-5">
 				<a class="category category-5" href="category/filtry" title="Фильтры для спецтехники">
-					<img src="images/cat-4.jpg" alt="Фильтры" title="Фильтры" />
-					<div class="cat-i"><img src="images/air-filter.png" alt="Фильтры" title="Фильтры" /></div>
+					<img src="images/cat-4.jpg" width="300" height="150" alt="Фильтры" title="Фильтры" />
+					<div class="cat-i"><img src="images/air-filter.png" width="32" height="32" alt="Фильтры" title="Фильтры" /></div>
 					<div class="cat-name"><h2>Фильтры</h2></div>
 					<div class="cat-span"><?php $count_inds = \R::getAll("SELECT * FROM product WHERE category_id IN ('10', '11', '12', '13', '14', '15', '16', '17')"); echo count($count_inds);?> товаров</div>
 				</a>
@@ -131,7 +131,7 @@
 				<p>Сотрудники компании знают о предлагаемых шинах и прочих товарах всё. Поэтому предоставят вам подробную информацию о любом интересующем товаре – от масляного фильтра и диска до шин на садовую тачку и цельнолитых шин на фронтальный погрузчик весом в полторы тонны. Вы купите то, что подходит на вашу технику.</p>
 			</div>
 			<div class="col-md-3 ocomp_img">
-				<img src="images/companys.webp" alt="Официальный сайт компании ИТС-ЦЕНТР" title="Официальный сайт компании ИТС-ЦЕНТР">
+				<img src="images/companys.webp" width="189" height="400" alt="Официальный сайт компании ИТС-ЦЕНТР" title="Официальный сайт компании ИТС-ЦЕНТР">
 			</div>
 		</div>
 	</div>
@@ -141,7 +141,7 @@
 		<div class="pch_name"><h3>Почему клиенты выбирают ИТС-ЦЕНТР?</h3></div>
 		<div class="pch_m">
 			<div class="col-md-4 pch_img">
-				<img src="images/advantages.webp" alt="Почему клиенты выбирают ИТС-ЦЕНТР?" title="Почему клиенты выбирают ИТС-ЦЕНТР?">
+				<img src="images/advantages.webp" width="487" height="534" alt="Почему клиенты выбирают ИТС-ЦЕНТР?" title="Почему клиенты выбирают ИТС-ЦЕНТР?">
 			</div>
 			<div class="pch_b col-md-8">				
 				<div class="pch_info">				
@@ -204,7 +204,7 @@
 				<div class="cont_ht">
 					<a class="cont_blok_img" href="articles/<?=$articl["alias"]?>">
 						<span class="cont_badge">Статья</span>
-						<img src="images/contents/baseimg/<?=$articl["img"]?>" alt="<?=$articl["name"]?>" title="<?=$articl["name"]?>">
+						<img src="images/contents/baseimg/<?=$articl["img"]?>" alt="<?=$articl["name"]?>" title="<?=$articl["name"]?>" width="818" height="460">
 					</a>
 
 					<div class="cont_info">

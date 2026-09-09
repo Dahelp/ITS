@@ -34,7 +34,7 @@
                                 <div class="technics-card__img">
                                     <img src="<?= PATH ?>/images/technics_manufacturer/baseimg/<?= h($item['img']) ?>"
                                          alt="<?= h($item['name']) ?>"
-                                         title="<?= h($item['name']) ?>">
+                                         title="<?= h($item['name']) ?>" width="600" height="480">
                                 </div>
                                 <div class="technics-card__body">
                                     <div class="technics-card__title"><?= h($item['name']) ?></div>

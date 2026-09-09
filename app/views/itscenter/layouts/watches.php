@@ -288,7 +288,7 @@
 
 <noscript>
   <div>
-    <img src="https://mc.yandex.ru/watch/<?= (int)\ishop\App::options('yametrika'); ?>" style="position:absolute;left:-9999px" alt="Счётчик Яндекс Метрики">
+    <img src="https://mc.yandex.ru/watch/<?= (int)\ishop\App::options('yametrika'); ?>" style="position:absolute;left:-9999px" alt="Счётчик Яндекс Метрики" width="1" height="1">
   </div>
 </noscript>
 

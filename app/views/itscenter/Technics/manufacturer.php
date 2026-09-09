@@ -42,11 +42,11 @@
                                     <?php if (!empty($item['img'])): ?>
                                         <img src="<?= PATH ?>/images/technics/mini/<?= h($item['img']) ?>"
                                              alt="<?= h($item['model']) ?>"
-                                             title="<?= h($item['model']) ?>">
+                                             title="<?= h($item['model']) ?>" width="250" height="187">
                                     <?php else: ?>
                                         <img src="<?= PATH ?>/images/no_image.jpg"
                                              alt="<?= h($item['model']) ?>"
-                                             title="<?= h($item['model']) ?>">
+                                             title="<?= h($item['model']) ?>" width="125" height="200">
                                     <?php endif; ?>
                                 </div>
                                 <div class="technics-card__body">

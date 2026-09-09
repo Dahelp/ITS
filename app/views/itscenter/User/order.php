@@ -72,7 +72,7 @@
                                         <tr>
                                             <td>
                                                 <?php if (!empty($item['img'])): ?>
-                                                    <img src="<?= PATH ?>/images/product/mini/<?= htmlspecialchars($item['img']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="max-width:60px; height:auto;">
+                                                    <img src="<?= PATH ?>/images/product/mini/<?= htmlspecialchars($item['img']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="max-width:60px; height:auto;" width="250" height="250">
                                                 <?php endif; ?>
                                             </td>
                                             <td>

@@ -96,13 +96,13 @@ $breadcrumbSchema = [
                                         src="<?= PATH ?>/images/contents/baseimg/<?=$item['img'];?>"
                                         alt="<?=htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8');?>"
                                         title="<?=htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8');?>"
-                                    >
+                                     width="818" height="460">
                                 <?php else: ?>
                                     <img
                                         src="<?= PATH ?>/images/no_image.jpg"
                                         alt="<?=htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8');?>"
                                         title="<?=htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8');?>"
-                                    >
+                                     width="125" height="200">
                                 <?php endif; ?>
                             </a>
 

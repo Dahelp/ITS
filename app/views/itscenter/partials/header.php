@@ -53,11 +53,11 @@ if ($isAuth) {
 					<div class="header-logo">
 						<?php if($this->route["controller"] != "Main"): ?>
 							<a href="/" class="header-logo__link" aria-label="ИТС-Центр — на главную">
-								<img src="/images/logo.svg" alt="ИТС-Центр" class="header-logo__img">
+								<img src="/images/logo.svg" width="260" height="50" alt="ИТС-Центр" class="header-logo__img">
 							</a>
 						<?php else: ?>
 							<div class="header-logo__link" aria-label="ИТС-Центр">
-								<img src="/images/logo.svg" alt="ИТС-Центр" class="header-logo__img">
+								<img src="/images/logo.svg" width="260" height="50" alt="ИТС-Центр" class="header-logo__img">
 							</div>
 						<?php endif; ?>
 					</div>

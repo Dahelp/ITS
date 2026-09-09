@@ -42,7 +42,7 @@
 				<a data-toggle="modal" data-target="#Modallogin" href="javascript:;" class="text-reset d-block text-center pb-2 pt-3">		
 			<?php endif; ?>
                 <span class="d-block mx-auto">
-                    <img src="images/avatar-place.png" class="rounded-circle size-20px">
+                    <img src="images/avatar-place.png" width="200" height="200" class="rounded-circle size-20px">
                 </span>
                 <span class="d-block fs-10 fw-600 opacity-60">Кабинет</span>
             </a>

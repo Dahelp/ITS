@@ -267,7 +267,7 @@ $rrs       = $p ? (float)($p->price_rrs ?? 0) : 0.0;
         <div class="cart-item__photo">
           <a href="<?= htmlspecialchars($href, ENT_QUOTES, 'UTF-8') ?>">
             <img src="<?= htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') ?>"
-                 alt="<?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>">
+                 alt="<?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>" width="250" height="250">
           </a>
         </div>
 

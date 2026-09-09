@@ -69,7 +69,7 @@ if (empty($cart) || !is_array($cart)) {
       <div class="step2-item__img">
         <?php if ($imgSrc !== ''): ?>
           <a href="<?= htmlspecialchars($href, ENT_QUOTES, 'UTF-8') ?>">
-            <img src="<?= htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') ?>" alt="">
+            <img src="<?= htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') ?>" alt="" width="250" height="250">
           </a>
         <?php endif; ?>
       </div>

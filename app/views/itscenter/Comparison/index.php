@@ -246,7 +246,7 @@ if (!empty($activeCategoryIds)) {
                                                 </button>
 
                                                 <a href="product/<?= h($product['alias']) ?>" title="<?= h($product['name']) ?>">
-                                                    <img src="images/product/mini/<?= h($product['img']) ?>" alt="<?= h($product['name']) ?>">
+                                                    <img src="images/product/mini/<?= h($product['img']) ?>" alt="<?= h($product['name']) ?>" width="250" height="250">
                                                 </a>
                                             </td>
                                         </tr>

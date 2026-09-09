@@ -375,7 +375,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
 												loading="lazy"
 												src="images/product/mini/<?= $img ?>"
 												alt="<?= $name ?>"
-												title="<?= $name ?>">
+												title="<?= $name ?>" width="250" height="250">
 										</a>
 
 										<div class="pc-body">

@@ -101,7 +101,7 @@ if (empty($_SESSION['callback_token'])) {
                             <div class="decide-advantages">
                                 <div class="decide-adv-card">
                                     <span class="main__y-ico col-center">
-                                        <img src="images/ar-ico.png" data-src="images/ar-ico.png" alt="Помощь в подборе товара" class="ls-is-cached lazyloaded">
+                                        <img src="images/ar-ico.png" width="35" height="35" data-src="images/ar-ico.png" alt="Помощь в подборе товара" class="ls-is-cached lazyloaded">
                                     </span>
                                     <div class="decide-adv-card__text">
                                         <b>Поможем выбрать</b><br>
@@ -111,7 +111,7 @@ if (empty($_SESSION['callback_token'])) {
 
                                 <div class="decide-adv-card">
                                     <span class="main__y-ico col-center">
-                                        <img src="images/ar-ico.png" data-src="images/ar-ico.png" alt="Консультация по выбору товара" class="ls-is-cached lazyloaded">
+                                        <img src="images/ar-ico.png" width="35" height="35" data-src="images/ar-ico.png" alt="Консультация по выбору товара" class="ls-is-cached lazyloaded">
                                     </span>
                                     <div class="decide-adv-card__text">
                                         <b>Подскажем,</b><br>
@@ -121,7 +121,7 @@ if (empty($_SESSION['callback_token'])) {
 
                                 <div class="decide-adv-card">
                                     <span class="main__y-ico col-center">
-                                        <img src="images/ar-ico.png" data-src="images/ar-ico.png" alt="Расчёт комплекта и стоимости заказа" class="ls-is-cached lazyloaded">
+                                        <img src="images/ar-ico.png" width="35" height="35" data-src="images/ar-ico.png" alt="Расчёт комплекта и стоимости заказа" class="ls-is-cached lazyloaded">
                                     </span>
                                     <div class="decide-adv-card__text">
                                         <b>Рассчитаем комплект</b><br>
@@ -131,7 +131,7 @@ if (empty($_SESSION['callback_token'])) {
 
                                 <div class="decide-adv-card">
                                     <span class="main__y-ico col-center">
-                                        <img src="images/ar-ico.png" data-src="images/ar-ico.png" alt="Информация о доставке и сроках" class="ls-is-cached lazyloaded">
+                                        <img src="images/ar-ico.png" width="35" height="35" data-src="images/ar-ico.png" alt="Информация о доставке и сроках" class="ls-is-cached lazyloaded">
                                     </span>
                                     <div class="decide-adv-card__text">
                                         <b>Сориентируем</b><br>
@@ -179,7 +179,7 @@ if (empty($_SESSION['callback_token'])) {
                         </div>
 
                         <div class="decide-figure">
-                            <img src="images/w.png" data-src="images/w.png" alt="Менеджер ИТС-Центр поможет с подбором товара" class="decide-right-wm ls-is-cached lazyloaded">
+                            <img src="images/w.png" width="281" height="449" data-src="images/w.png" alt="Менеджер ИТС-Центр поможет с подбором товара" class="decide-right-wm ls-is-cached lazyloaded">
                         </div>
                     </div>
                 </div>
