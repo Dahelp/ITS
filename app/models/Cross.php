@@ -6,6 +6,7 @@ use ishop\App;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
+use app\services\TrafficSource;
 
 class Cross extends AppModel {
 
@@ -63,7 +64,7 @@ class Cross extends AppModel {
 		// Create a message admin
         ob_start();
         require APP . '/views/mail/mail_oneclick.php';
-        $body = ob_get_clean();
+        $body = ob_get_clean() . TrafficSource::emailHtml();
 
         $message_admin = (new Swift_Message("Заказ товара в 1 клик на сайте " . App::$app->getProperty('shop_name')))
             ->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])

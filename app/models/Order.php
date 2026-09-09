@@ -8,6 +8,7 @@ use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
 use Swift_Attachment;
+use app\services\TrafficSource;
 
 class Order extends AppModel {
 
@@ -55,6 +56,7 @@ class Order extends AppModel {
 		if($data['branch_id'] !="") { $order->branch_id = $data['branch_id']; }
 		if($data['comp_id'] !="") { $order->comp_id = $data['comp_id']; }
 		$order->admin_id = $data['admin_id'];
+		$order->traffic_source = TrafficSource::code();
 		$order->user_id = isset($data['user_id']) ? $data['user_id'] : $_SESSION['user']['id'];
         $order->currency = $_SESSION['cart.currency']['code'];
         $order_id = \R::store($order);
@@ -128,10 +130,11 @@ class Order extends AppModel {
             ->setBody($body, 'text/html')
         ;
 
+        $body_admin = $body . TrafficSource::emailHtml();
         $message_admin = (new Swift_Message("Сделан заказ №{$ord["inv"]} на сайте " . App::$app->getProperty('shop_name')))
             ->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
             ->setTo(App::$app->getProperty('admin_email'))
-            ->setBody($body, 'text/html')
+            ->setBody($body_admin, 'text/html')
 		;
 		
 		
@@ -146,7 +149,7 @@ class Order extends AppModel {
 			$message_manager = (new Swift_Message("Сделан заказ №{$ord["inv"]} на сайте " . App::$app->getProperty('shop_name')))
 				->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
 				->setTo($adm["email"])
-				->setBody($body, 'text/html')
+				->setBody($body_admin, 'text/html')
 			;
 			$result = $mailer->send($message_manager);
 		}
