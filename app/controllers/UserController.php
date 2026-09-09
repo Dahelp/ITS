@@ -8,6 +8,7 @@ use app\widgets\cabinet\Cabinet;
 use ishop\App;
 use Swift_Mailer;
 use Swift_Message;
+use app\services\TrafficSource;
 use Swift_SmtpTransport;
 use Swift_Attachment;
 use ishop\libs\Pagination;
@@ -947,7 +948,7 @@ class UserController extends AppController {
 
 				ob_start();
 				require APP . '/views/' . TEMPLATE . '/mail/mail_callback.php';
-				$body = ob_get_clean();
+				$body = ob_get_clean() . TrafficSource::emailHtml();
 
 				$message_admin = (new Swift_Message("Заказ обратного звонка на сайте " . App::$app->getProperty('shop_name')))
 					->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
@@ -1044,7 +1045,7 @@ class UserController extends AppController {
 
 			ob_start();
 			require APP . '/views/' . TEMPLATE . '/mail/mail_catalog.php';
-			$body = ob_get_clean();
+			$body = ob_get_clean() . TrafficSource::emailHtml();
 
 			$message_admin = (new Swift_Message("Запрос каталога на сайте " . App::$app->getProperty('shop_name')))
 				->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])

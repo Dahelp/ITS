@@ -19,6 +19,23 @@
 <!-- Main content -->
 <section class="content">
     <div class="row">
+        <div class="col-md-7">
+            <div class="row">
+                <?php foreach (['search' => ['Поиск', 'info'], 'yandex_direct' => ['Директ', 'danger'], 'direct_visit' => ['Прямой', 'secondary']] as $code => $meta): ?>
+                    <div class="col-md-4">
+                        <div class="small-box bg-<?= $meta[1] ?>">
+                            <div class="inner"><h3><?= (int)$sourceStats[$code] ?></h3><p><?= $meta[0] ?></p></div>
+                            <div class="icon"><i class="fas fa-chart-pie"></i></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card"><div class="card-body" style="height:180px"><canvas id="traffic-source-chart"></canvas></div></div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
 			<div class="menu_btn">
                 <a href="<?=ADMIN;?>/order/add" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Создать заказ</a>
@@ -63,9 +80,13 @@ var dataSet = [
 	$comp = \R::findOne('company', 'id = ?', [$item["comp_id"]]);
 	if($comp>0) { $company_info = "".htmlspecialchars($comp["comp_short_name"])." (".$comp["inn"].")"; }else{ $company_info = "".$item["email"].""; }
 	$contdate = \ishop\App::contdatetime($item['date']);
+    $sourceLabels = ['search' => 'Поиск', 'yandex_direct' => 'Директ', 'direct_visit' => 'Прямой'];
+    $sourceClasses = ['search' => 'info', 'yandex_direct' => 'danger', 'direct_visit' => 'secondary'];
+    $sourceCode = $item['traffic_source'] ?: 'direct_visit';
+    $source = "<span class='badge badge-".($sourceClasses[$sourceCode] ?? 'secondary')."'>".($sourceLabels[$sourceCode] ?? 'Прямой')."</span>";
 	$user_info = "<a href='".ADMIN."/user/edit?id=".$item['user_id']."'>".htmlspecialchars($item["name"])."</a>";
 	$option = "<a href='".ADMIN."/order/view?id=".$item["id"]."'><i class='fas fa-fw fa-eye'></i></a> <a class='delete' href='".ADMIN."/order/delete?id=".$item["id"]."'><i class='fas fa-times-circle text-danger'></i></a>";
-    $set .= '[ "'.$item["id"].'", "'.$item["inv"].'", "'.$user_info.'<br />'.$company_info.'", "'.$item["status_name"].'", "'.$curr['symbol_left'].' '.$item["sum"].' '.$curr['symbol_right'].'", "'.$contdate.'", "'.$otvname.'", "'.$option.'" ],';
+    $set .= '[ "'.$item["id"].'", "'.$item["inv"].'", "'.$user_info.'<br />'.$company_info.'", "'.$item["status_name"].'", "'.$source.'", "'.$curr['symbol_left'].' '.$item["sum"].' '.$curr['symbol_right'].'", "'.$contdate.'", "'.$otvname.'", "'.$option.'" ],';
  } echo "".$set.""; ?>
  
 ];
@@ -74,7 +95,7 @@ $(document).ready(function() {
 	
     var table = $('#example').DataTable( {		
 		"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "Все"]],
-		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 7 ] }],
+		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 8 ] }],
 		"aaSorting": [[ 0, "desc" ]],
 		"stateSave": true,
         data: dataSet,
@@ -83,6 +104,7 @@ $(document).ready(function() {
 			{ title: "Номер заказа" },
 			{ title: "Контакт" },
             { title: "Статус" },
+            { title: "Источник" },
 			{ title: "Сумма" },
 			{ title: "Дата создания" },
 			{ title: "Ответственный" },
@@ -101,6 +123,18 @@ $(document).ready(function() {
             } 			
 		}		
     } );
+
+    var chartElement = document.getElementById('traffic-source-chart');
+    if (chartElement && window.Chart) {
+        new Chart(chartElement.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Поиск', 'Директ', 'Прямой'],
+                datasets: [{data: <?= json_encode(array_values($sourceStats)) ?>, backgroundColor: ['#17a2b8', '#dc3545', '#6c757d']}]
+            },
+            options: {maintainAspectRatio: false, legend: {position: 'right'}}
+        });
+    }
 
 
 } );

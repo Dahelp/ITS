@@ -15,15 +15,20 @@ class OrderController extends AppController {
         $params = $statusFilter > 0 ? [$statusFilter] : [];
         $count = $statusFilter > 0 ? \R::count('order', 'status = ?', [$statusFilter]) : \R::count('order');
 		$curr = \R::findOne('currency');
-        $orders = \R::getAll("SELECT `order_status`.`status_name`, `order`.`id`, `order`.`user_id`, `order`.`status`, `order`.`inv`, `order`.`date`, `order`.`update_at`, `order`.`currency`, `user`.`name`, `user`.`admin_id`, `user`.`email`, `order`.`comp_id`, ROUND(SUM(`order_product`.`price` * `order_product`.`qty`), 2) AS `sum` FROM `order`
+        $orders = \R::getAll("SELECT `order_status`.`status_name`, `order`.`id`, `order`.`user_id`, `order`.`status`, `order`.`inv`, `order`.`date`, `order`.`update_at`, `order`.`currency`, `order`.`traffic_source`, `user`.`name`, `user`.`admin_id`, `user`.`email`, `order`.`comp_id`, ROUND(SUM(`order_product`.`price` * `order_product`.`qty`), 2) AS `sum` FROM `order`
 			JOIN `user` ON `order`.`user_id` = `user`.`id`
 			JOIN `order_product` ON `order`.`id` = `order_product`.`order_id`
 			JOIN `order_status` ON `order`.`status` = `order_status`.`id`
             {$where}
 			GROUP BY `order`.`id`", $params);
+        $sourceRows = \R::getAll("SELECT COALESCE(NULLIF(`traffic_source`, ''), 'direct_visit') AS source, COUNT(*) AS qty FROM `order` {$where} GROUP BY source", $params);
+        $sourceStats = ['search' => 0, 'yandex_direct' => 0, 'direct_visit' => 0];
+        foreach ($sourceRows as $row) {
+            if (isset($sourceStats[$row['source']])) $sourceStats[$row['source']] = (int)$row['qty'];
+        }
 
         $this->setMeta('Список заказов');
-        $this->set(compact('orders', 'count', 'curr'));
+        $this->set(compact('orders', 'count', 'curr', 'sourceStats'));
     }
 
 	public function statProductAction()

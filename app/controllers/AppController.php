@@ -9,6 +9,7 @@ use ishop\base\Controller;
 use ishop\Cache;
 use app\models\admin\PlaginsBanner;
 use app\services\filters\FilterUrlHelper;
+use app\services\TrafficSource;
 
 class AppController extends Controller
 {
@@ -18,6 +19,7 @@ class AppController extends Controller
     {
         parent::__construct($route);
         new AppModel();
+        TrafficSource::capture($_GET, (string)($_SERVER['HTTP_REFERER'] ?? ''));
 
         App::$app->setProperty('currencies', Currency::getCurrencies());
         App::$app->setProperty('currency', Currency::getCurrency(App::$app->getProperty('currencies')));

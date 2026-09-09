@@ -6,6 +6,7 @@ use ishop\App;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
+use app\services\TrafficSource;
 
 class Product extends AppModel {
 
@@ -67,7 +68,7 @@ class Product extends AppModel {
         // письмо админу
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_oneclick.php';
-        $body_admin = ob_get_clean();
+        $body_admin = ob_get_clean() . TrafficSource::emailHtml();
 
         $message_admin = (new Swift_Message("Заказ товара в 1 клик на сайте {$namecomp}"))
             ->setFrom([App::$app->getProperty('smtp_login') => $namecomp])
@@ -118,7 +119,7 @@ class Product extends AppModel {
         // письмо админу
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_request.php';
-        $body_admin = ob_get_clean();
+        $body_admin = ob_get_clean() . TrafficSource::emailHtml();
 
         $message_admin = (new Swift_Message("Заявка на товар под заказ на сайте {$namecomp}"))
             ->setFrom([App::$app->getProperty('smtp_login') => $namecomp])
@@ -168,7 +169,7 @@ class Product extends AppModel {
         // админу (можно другую вёрстку, но сейчас одинаковая)
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_availability.php';
-        $body_admin = ob_get_clean();
+        $body_admin = ob_get_clean() . TrafficSource::emailHtml();
 
         $message_admin = (new Swift_Message("Заявка о поступлении товара на сайте {$namecomp}"))
             ->setFrom([App::$app->getProperty('smtp_login') => $namecomp])
