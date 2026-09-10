@@ -292,6 +292,8 @@ $categoryName = htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8');
         <img itemprop="image"
              loading="lazy"
              src="images/product/mini/<?= $img ?>"
+             width="250"
+             height="250"
              alt="<?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?>"
              title="<?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?>">
     </a>

@@ -14,7 +14,7 @@ if ($user && !empty($user->admin_id)) {
 <div class="aiz-user-sidenav rounded overflow-auto c-scrollbar-light pb-5 pb-xl-0">
 	<div class="p-4 text-xl-center mb-4 border-bottom bg-danger text-white position-relative">
 		<span class="avatar avatar-md mb-3">
-			<img src="images/avatar-place.png" class="image rounded-circle" alt="<?= h($user->name ?? 'Пользователь') ?>">
+			<img src="images/avatar-place.png" width="200" height="200" class="image rounded-circle" alt="<?= h($user->name ?? 'Пользователь') ?>">
 		</span>
 		<h4 class="h5 fs-16 mb-1 fw-600"><?= h($user->name ?? '') ?></h4>
 	</div>
@@ -106,7 +106,7 @@ if ($user && !empty($user->admin_id)) {
 		<div class="cab-manager p-3"><h4>Ваш менеджер</h4></div>
 		<div class="cab-manager-info pb-2">
 			<div class="cab-manager-img p-3">
-				<img src="adminlte/dist/img/user2-160x160.jpg" alt="" title="" class="img-circle elevation-2" />
+				<img src="adminlte/dist/img/user2-160x160.jpg" width="160" height="160" alt="" title="" class="img-circle elevation-2" />
 			</div>
 			<div class="cab-manager-name"><?= h($manager->name ?? 'Не назначен') ?></div>
 			<div class="cab-manager-telefon">+7 (495) 424-98-90</div>

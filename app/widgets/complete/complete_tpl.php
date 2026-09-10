@@ -18,7 +18,7 @@
  ?>
 <div class="card product-card card-static pb-3">				            
 	<a class="card-img-top d-block overflow-hidden" href="complete/<?=$complete["alias"]?>">							
-		<img src="images/complete/mini/<?=$complete["img"]?>" alt="<?=$complete["name"]?>" title="<?=$complete["name"]?>" />
+		<img src="images/complete/mini/<?=$complete["img"]?>" width="250" height="250" alt="<?=$complete["name"]?>" title="<?=$complete["name"]?>" />
 	</a>
 	<?php $cat_prod = \R::findOne('category', "id = ?", [$complete["category_id"]]); ?>
 	<div class="card-body py-2">
@@ -61,4 +61,4 @@
 		<?php } ?>
 		</div>
 	</div>
-</div>				            
+</div>
