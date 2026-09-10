@@ -157,42 +157,63 @@ $breadcrumbSchema = [
 
                         <?php
                         $content = (string)$find->content;
+                        $articleTableCaptions = [
+                            'kontrol-davleniya-i-temperatury-shin-spectehniki' => [
+                                'Контроль давления и температуры шин спецтехники',
+                                'Признаки проблем с шинами и рекомендации по выбору',
+                            ],
+                            'pochemu-shiny-spectehniki-bystro-iznashivayutsya' => [
+                                'Причины износа шин спецтехники и рекомендации по выбору',
+                            ],
+                            'sravnenie-materialov-shin-rezina-kompaundy-i-usilennye-smesi-chto-vybrat-dlya-spectehniki' => [
+                                'Сравнение материалов и резиновых смесей для шин спецтехники',
+                                'Выбор шинного компаунда по условиям эксплуатации',
+                            ],
+                            'shiny-dlya-elektropogruzchikov-vybor-otlichiya' => [
+                                'Типоразмеры шин для электропогрузчиков',
+                            ],
+                        ];
+                        $tableCaptions = $articleTableCaptions[(string)$find->alias] ?? [];
+                        $tableIndex = 0;
 
-                        // This table only lays out the clearance button and its result; it is not tabular data.
-                        if ($isTireCalculator) {
-                            $content = preg_replace_callback(
-                                '~<table\b[^>]*>.*?</table>~is',
-                                static function (array $match): string {
-                                    $table = $match[0];
+                        $content = preg_replace_callback(
+                            '~<table\b[^>]*>.*?</table>~is',
+                            static function (array $match) use ($find, $tableCaptions, &$tableIndex): string {
+                                $table = $match[0];
 
-                                    if (stripos($table, 'id="resultsTable"') !== false
-                                        || stripos($table, "id='resultsTable'") !== false) {
-                                        if (stripos($table, '<caption') === false) {
-                                            return preg_replace(
-                                                '~^(<table\b[^>]*>)~i',
-                                                '$1<caption>Результаты сравнения старого и нового типоразмера шин</caption>',
-                                                $table,
-                                                1
-                                            );
-                                        }
-
-                                        return $table;
-                                    }
-
-                                    if (stripos($table, 'id="difClearense"') === false
-                                        && stripos($table, "id='difClearense'") === false) {
-                                        return $table;
-                                    }
-
+                                // This table only lays out the clearance button and its result.
+                                if (stripos($table, 'id="difClearense"') !== false
+                                    || stripos($table, "id='difClearense'") !== false) {
                                     if (preg_match('~^<table\b[^>]*\brole\s*=~i', $table)) {
                                         return $table;
                                     }
 
                                     return preg_replace('~^<table\b~i', '<table role="presentation"', $table, 1);
-                                },
-                                $content
-                            );
-                        }
+                                }
+
+                                if (stripos($table, '<caption') !== false
+                                    || preg_match('~^<table\b[^>]*\brole\s*=\s*(["\'])presentation\1~i', $table)) {
+                                    return $table;
+                                }
+
+                                if (stripos($table, 'id="resultsTable"') !== false
+                                    || stripos($table, "id='resultsTable'") !== false) {
+                                    $caption = 'Результаты сравнения старого и нового типоразмера шин';
+                                } else {
+                                    $caption = $tableCaptions[$tableIndex]
+                                        ?? 'Таблица ' . ($tableIndex + 1) . ' к статье «' . (string)$find->name . '»';
+                                }
+                                $tableIndex++;
+
+                                return preg_replace(
+                                    '~^(<table\b[^>]*>)~i',
+                                    '$1<caption>' . htmlspecialchars($caption, ENT_QUOTES, 'UTF-8') . '</caption>',
+                                    $table,
+                                    1
+                                );
+                            },
+                            $content
+                        );
                         ?>
                         <div class="cont-desc<?=$isTireCalculator ? ' tire-calculator-content' : ''?>">
                             <?=$content;?>

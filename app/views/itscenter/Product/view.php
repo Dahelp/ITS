@@ -1010,9 +1010,37 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
           <!-- Описание -->
           <div class="tab-pane fade" id="pills-opisanie">
-          <?= empty($product->content)
+          <?php
+          $productDescription = empty($product->content)
               ? \ishop\App::seoreplace($inseo->content ?? '', $product->id)
-              : $product->content; ?>
+              : (string)$product->content;
+          $productTableIndex = 0;
+          $productDescription = preg_replace_callback(
+              '~<table\b[^>]*>.*?</table>~is',
+              static function (array $match) use ($product, &$productTableIndex): string {
+                  $table = $match[0];
+
+                  if (stripos($table, '<caption') !== false
+                      || preg_match('~^<table\b[^>]*\brole\s*=\s*(["\'])presentation\1~i', $table)) {
+                      return $table;
+                  }
+
+                  $caption = $productTableIndex === 0
+                      ? 'Размеры и характеристики ' . (string)$product->name
+                      : 'Табличные данные о ' . (string)$product->name . ', таблица ' . ($productTableIndex + 1);
+                  $productTableIndex++;
+
+                  return preg_replace(
+                      '~^(<table\b[^>]*>)~i',
+                      '$1<caption>' . htmlspecialchars($caption, ENT_QUOTES, 'UTF-8') . '</caption>',
+                      $table,
+                      1
+                  );
+              },
+              $productDescription
+          );
+          echo $productDescription;
+          ?>
           </div>
 
 
