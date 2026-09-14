@@ -1114,7 +1114,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                   <!-- ФОРМА -->
                                   <div class="review-box">
 
-                                      <h5>Оставить отзыв</h5>
+                                      <h3 class="h5">Оставить отзыв</h3>
 
                                       <?php if ($userId) { ?>
 
@@ -1153,7 +1153,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                   <!-- QR -->
                                   <div class="review-box review-box-gray">
 
-                                      <h5>Отзывы в Яндекс Картах</h5>
+                                      <h3 class="h5">Отзывы в Яндекс Картах</h3>
                                       <p class="mb-2">ИТС-Центр</p>
 
                                       <div class="d-flex align-items-center gap-3">
