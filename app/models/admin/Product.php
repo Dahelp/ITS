@@ -17,6 +17,7 @@ class Product extends AppModel {
         'description' => '',
         'price' => '',
 		'price_rrs' => '',
+        'short_description' => '',
         'content' => '',
         'hide' => '',
         'hit' => '',

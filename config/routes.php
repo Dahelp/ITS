@@ -10,6 +10,7 @@ Router::add('^(wp-admin|wp-login\.php|wp-json|xmlrpc\.php|wp-content|wp-includes
 Router::add('^([a-z0-9._-]+\.(php|txt|bak|zip|gz|rar|7z))$',
     ['controller' => 'Static', 'action' => 'notFound']);
 
+Router::add('^product-test/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Product', 'action' => 'test']);
 Router::add('^product/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Product', 'action' => 'view']);
 Router::add('^catalog-menu/?$', ['controller' => 'Catalog', 'action' => 'menu']);
 Router::add('^catalog/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Catalog', 'action' => 'index']);

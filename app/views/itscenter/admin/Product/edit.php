@@ -148,6 +148,12 @@
 								</div>
 							</div>
 							<div class="form-group row">
+								<label class="col-sm-3 col-form-label" for="short_description">Краткое описание</label>
+								<div class="col-sm-9">
+									<textarea name="short_description" id="editor2" cols="80" rows="6"><?=$product->short_description ?? '';?></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
 								<label class="col-sm-3 col-form-label" for="content">Подробное описание</label>
 								<div class="col-sm-9">                        
 									<textarea name="content" id="editor1" cols="80" rows="10"><?=$product->content;?></textarea>

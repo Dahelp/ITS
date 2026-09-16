@@ -13,6 +13,12 @@ use app\helpers\SchemaHelper;
 
 class ProductController extends AppController
 {
+    public function testAction()
+    {
+        $this->view = 'view-test';
+        $this->viewAction();
+    }
+
     public function viewAction()
     {
         $post = $_POST ?? [];
