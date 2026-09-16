@@ -659,6 +659,8 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       </div>
                     </div>
 
+                  </div>
+
                   <?php
                   $certDocuments = $certification['documents'] ?? [];
                   // A direct document is the most precise rule; otherwise the category flag is authoritative.
@@ -700,7 +702,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                     </section>
                   <?php endif; ?>
 
-                  </div>
+
                 </div>
               </aside>
 
