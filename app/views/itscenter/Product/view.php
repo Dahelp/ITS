@@ -1109,6 +1109,8 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         <div class="panel">
                             <div class="panel-body">
 
+                                <h2 class="h3 mb-3">Отзывы</h2>
+
                                 <div class="reviews-top">
 
                                   <!-- ФОРМА -->
