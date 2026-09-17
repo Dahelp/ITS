@@ -233,7 +233,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
                       continue;
                   }
 
-                  $relatedUrl = PATH . '/category/' . rawurlencode($currentCategoryAlias) . '/' . rawurlencode($relatedAlias);
+                  $relatedUrl = \app\services\filters\FilterUrlHelper::buildCategoryFilterUrl($currentCategoryAlias, $relatedAlias);
                   ?>
                   <a class="related-sizes__item" href="<?= h($relatedUrl) ?>">
                     <?= h($relatedValue) ?>
