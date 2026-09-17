@@ -10,7 +10,7 @@ $manufacturerName = h($manufacturer->name ?? '');
 
 $technicsAlias = h($technics->alias ?? '');
 $technicsModel = h($technics->model ?? '');
-$technicsContent = $technics->content ?? '';
+$technicsContent = \app\helpers\SeoStrong::apply((string)($technics->content ?? ''));
 
 $isKvadr = (($type->name ?? '') === 'Квадроцикл');
 $techGenitive = $isKvadr ? 'квадроцикла' : 'спецтехники';

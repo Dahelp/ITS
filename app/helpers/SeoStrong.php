@@ -38,8 +38,15 @@ final class SeoStrong
         '/technics/type/teleskopicheskij-pogruzchik' => ['телескопический погрузчик'],
         '/technics/type/mini-pogruzchik' => ['мини-погрузчик', 'мини погрузчик'],
         '/podbor/kamery' => ['подбор камер', 'подобрать камеры по параметрам'],
+        '/technics/teleskopicheskiy-pogruzchik-jcb-520-40' => ['шины для телескопического погрузчика'],
+        '/technics/frontalnyy-pogruzchik-bull-sl100' => ['шины на фронтальный погрузчик'],
+        '/category/shiny-dlya-frontalnyh-pogruzchikov/hengruida' => ['шины для фронтальных погрузчиков'],
+        '/category/shiny-dlya-vilochnyh-pogruzchikov/solid-star' => ['шины для вилочных погрузчиков'],
+        '/category/shiny-dlya-frontalnyh-pogruzchikov/halitrax' => ['шины для фронтальных погрузчиков'],
+        '/category/shiny-dlya-shahtnoy-tehniki/10.00-20' => ['шины для шахтной техники'],
+        '/category/shiny-dlya-vilochnyh-pogruzchikov/huiton' => ['шины для вилочных погрузчиков'],
+        '/category/shiny-dlya-vilochnyh-pogruzchikov/herade' => ['шины для вилочных погрузчиков'],
     ];
-
     private const FILTER_PATHS = [
         '/category/shiny-dlya-ekskavatorov-pogruzchikov/ekka' => 'ekka',
         '/category/shiny-dlya-vilochnyh-pogruzchikov/ist' => 'ist',
@@ -105,6 +112,7 @@ final class SeoStrong
             $filterPhrases = (array)self::FILTER_PATHS[$path];
             $phrases = array_merge($phrases, $filterPhrases);
         }
+
 
         if ($phrases === [] || $html === '') {
             return $html;

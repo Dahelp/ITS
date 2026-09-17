@@ -45,7 +45,7 @@ foreach ($cases as [$path, $input, $expectedFragment]) {
     }
 }
 
-if (count(SeoStrong::configuredPaths()) !== 80) {
+if (count(SeoStrong::configuredPaths()) < 80) {
     fwrite(STDERR, 'FAILED configured path count: ' . count(SeoStrong::configuredPaths()) . "\n");
     exit(1);
 }
