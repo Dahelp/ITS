@@ -1186,33 +1186,42 @@ class CategoryController extends AppController
 
     protected function findApplicableFilterValue(string $filterAlias, string $categoryIds)
     {
-        $filterAlias = trim($filterAlias);
+        $filterAlias = trim(rawurldecode($filterAlias), '/');
         $categoryIds = trim($categoryIds, ',');
 
         if ($filterAlias === '' || $categoryIds === '') {
             return null;
         }
 
-        $rows = \R::getAll(
-            "SELECT av.id, COUNT(DISTINCT p.id) AS product_count
-             FROM attribute_value av
-             INNER JOIN attribute_product ap ON ap.attr_id = av.id
-             INNER JOIN product p ON p.id = ap.product_id
-             WHERE av.alias = ?
-               AND av.hide = 'show'
-               AND p.hide = 'show'
-               AND p.category_id IN ($categoryIds)
-             GROUP BY av.id
-             ORDER BY product_count DESC, av.id ASC
-             LIMIT 1",
-            [$filterAlias]
-        );
+        $aliases = [$filterAlias];
+        $normalizedAlias = str_replace('/', '-', $filterAlias);
 
-        if (empty($rows[0]['id'])) {
-            return null;
+        if ($normalizedAlias !== $filterAlias) {
+            $aliases[] = $normalizedAlias;
         }
 
-        return \R::load('attribute_value', (int)$rows[0]['id']);
+        foreach (array_values(array_unique($aliases)) as $alias) {
+            $rows = \R::getAll(
+                "SELECT av.id, COUNT(DISTINCT p.id) AS product_count
+                 FROM attribute_value av
+                 INNER JOIN attribute_product ap ON ap.attr_id = av.id
+                 INNER JOIN product p ON p.id = ap.product_id
+                 WHERE av.alias = ?
+                   AND av.hide = 'show'
+                   AND p.hide = 'show'
+                   AND p.category_id IN ($categoryIds)
+                 GROUP BY av.id
+                 ORDER BY product_count DESC, av.id ASC
+                 LIMIT 1",
+                [$alias]
+            );
+
+            if (!empty($rows[0]['id'])) {
+                return \R::load('attribute_value', (int)$rows[0]['id']);
+            }
+        }
+
+        return null;
     }
 
     protected function getNamedFilterIdsFromQuery(): array
