@@ -9,6 +9,12 @@ $requiredFilters = [
     "--filter='protect public/images/contents/baseimg/***'",
     "--filter='protect public/images/contents/mini/***'",
     "--filter='protect public/images/contents/tmp/***'",
+    "--filter='protect public/images/product/original/***'",
+    "--filter='protect public/images/product/baseimg/***'",
+    "--filter='protect public/images/product/mini/***'",
+    "--filter='protect public/images/product/gallery/***'",
+    "--filter='protect public/images/product/tmp/***'",
+    "--filter='protect public/images/product/unload/***'",
 ];
 
 foreach ($requiredFilters as $filter) {
