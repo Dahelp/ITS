@@ -14,6 +14,7 @@ class Avito extends AppModel
     public $attributes = [
 
         'avito_id'       => '',
+        'avito_url'      => '',
         'status'         => 'draft',
         'ad_external_id' => '',
         'article'        => '',
@@ -624,8 +625,17 @@ class Avito extends AppModel
 
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
+    public static function ensureSchema(): void
+    {
+        $hasAvitoUrl = \R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'avito_url'");
+        if (!$hasAvitoUrl) {
+            \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
+        }
+    }
     public static function syncLinkedAdsFromProducts(): int
     {
+        self::ensureSchema();
+
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         $updated = 0;
@@ -894,5 +904,54 @@ class Avito extends AppModel
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
+    public static function syncUrlsFromApi(): int
+    {
+        self::ensureSchema();
+
+        try {
+            $client = new \app\services\AvitoApiClient();
+            $client->getAccessToken();
+        } catch (\Throwable $e) {
+            return 0;
+        }
+        $updated = 0;
+        $page = 1;
+        $perPage = 100;
+
+        do {
+            try {
+                $response = $client->api('GET', '/core/v1/items?page=' . $page . '&per_page=' . $perPage);
+            } catch (\Throwable $e) {
+                break;
+            }
+            $items = $response['resources'] ?? [];
+            if (!is_array($items) || !$items) {
+                break;
+            }
+
+            foreach ($items as $item) {
+                $itemId = (string)($item['id'] ?? '');
+                $url = trim((string)($item['url'] ?? ''));
+                if ($itemId === '' || $url === '') {
+                    continue;
+                }
+
+                $count = \R::exec(
+                    "UPDATE avito_ad SET avito_url = ? WHERE avito_id = ? OR ad_external_id = ?",
+                    [$url, $itemId, $itemId]
+                );
+                $updated += (int)$count;
+            }
+
+            $meta = $response['meta'] ?? [];
+            $currentPage = (int)($meta['page'] ?? $page);
+            $returnedPerPage = (int)($meta['per_page'] ?? $perPage);
+            $page++;
+        } while (count($items) >= max(1, $returnedPerPage) && $page <= $currentPage + 100);
+
+        return $updated;
+    }
 }
+
+
 

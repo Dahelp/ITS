@@ -82,6 +82,7 @@ class AvitoController extends AppController
      */
     public function serverProcessingAction()
     {
+        Avito::ensureSchema();
         header('Content-Type: application/json; charset=UTF-8');
 
         $table = <<<SQL
@@ -90,6 +91,7 @@ class AvitoController extends AppController
             a.id,
             a.images_json    AS images_json,    -- JSON с фото
             a.ad_external_id AS ad_external_id,
+            a.avito_url     AS avito_url,
             a.article        AS article,        -- артикул из avito_ad
             a.title          AS title,
             a.category       AS category,
@@ -130,7 +132,7 @@ class AvitoController extends AppController
 
                         if ($host && preg_match('~(^|\.)avito\.ru$~', $host)) {
                             $srcUrl = preg_replace('~^http://~i', 'https://', $srcUrl);
-                            $srcUrl = ADMIN . '/avito/image?u=' . rawurlencode($srcUrl);
+                            $srcUrl = rtrim(PATH, '/') . '/avito/image?u=' . rawurlencode($srcUrl);
                         }
 
                         $src = htmlspecialchars($srcUrl, ENT_QUOTES, 'UTF-8');
@@ -219,8 +221,12 @@ class AvitoController extends AppController
                     $del  = ADMIN . '/avito/delete?id=' . $id;
                     $exp  = ADMIN . '/avito/export?id=' . $id;
                     $avitoItemId = preg_replace('~\D+~', '', (string)($row['ad_external_id'] ?? ''));
-                    $avitoLink = $avitoItemId !== ''
-                        ? '<a target="_blank" rel="noopener" href="https://www.avito.ru/item/' . htmlspecialchars($avitoItemId, ENT_QUOTES, 'UTF-8') . '" title="Открыть объявление на Avito"><i class="fas fa-external-link-alt text-success"></i></a> '
+                    $avitoUrl = trim((string)($row['avito_url'] ?? ''));
+                    if ($avitoUrl === '' && $avitoItemId !== '') {
+                        $avitoUrl = 'https://www.avito.ru/all?q=' . rawurlencode($avitoItemId);
+                    }
+                    $avitoLink = $avitoUrl !== ''
+                        ? '<a target="_blank" rel="noopener" href="' . htmlspecialchars($avitoUrl, ENT_QUOTES, 'UTF-8') . '" title="Открыть/найти объявление на Avito"><i class="fas fa-external-link-alt text-success"></i></a> '
                         : '';
 
                     return
@@ -385,7 +391,8 @@ class AvitoController extends AppController
     {
         try {
             $updated = Avito::syncLinkedAdsFromProducts();
-            $_SESSION['success'] = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated;
+            $urlsUpdated = Avito::syncUrlsFromApi();
+            $_SESSION['success'] = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated . ', ссылок из API: ' . (int)$urlsUpdated;
         } catch (\Throwable $e) {
             $_SESSION['error'] = 'Avito: ошибка синхронизации: ' . $e->getMessage();
         }
@@ -702,6 +709,10 @@ private function buildAvitoXml($rows)
     }
 
 }
+
+
+
+
 
 
 
