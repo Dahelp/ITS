@@ -29,11 +29,12 @@ class AvitoController extends AppController
         // Декодируем оригинальный URL Avito
         $url = urldecode($url);
 
-        // Мини-проверка, что это действительно avito (чтоб не делали из нас открытый прокси)
-        if (stripos($url, 'avito.ru/autoload/') === false) {
+        if (!preg_match('~^https?://([^/]+\.)?avito\.ru/~i', $url)) {
             http_response_code(400);
             exit('Bad url');
         }
+
+        $url = preg_replace('~^http://~i', 'https://', $url);
 
         // ---- ВАРИАНТ 1: простой прокси без кэша ----
         $ch = curl_init($url);
@@ -48,6 +49,10 @@ class AvitoController extends AppController
             CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                                     . 'AppleWebKit/537.36 (KHTML, like Gecko) '
                                     . 'Chrome/120.0.0.0 Safari/537.36',
+            CURLOPT_HTTPHEADER     => [
+                'Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                'Referer: https://www.avito.ru/',
+            ],
         ]);
 
         $data        = curl_exec($ch);
@@ -119,15 +124,18 @@ class AvitoController extends AppController
                     }
 
                     if ($first) {
-                        // кодируем оригинальный URL для передачи в GET
-                        $encoded = urlencode($first);
+                        $srcUrl = $first;
+                        $host = parse_url($srcUrl, PHP_URL_HOST);
+                        $host = $host ? strtolower($host) : '';
 
-                        // путь к нашему обработчику (AvitoController::imageAction)
-                        $proxyUrl = ADMIN . '/avito/image?u=' . $encoded;
+                        if ($host && preg_match('~(^|\.)avito\.ru$~', $host)) {
+                            $srcUrl = preg_replace('~^http://~i', 'https://', $srcUrl);
+                            $srcUrl = ADMIN . '/avito/image?u=' . rawurlencode($srcUrl);
+                        }
 
-                        $src = htmlspecialchars($proxyUrl, ENT_QUOTES, 'UTF-8');
+                        $src = htmlspecialchars($srcUrl, ENT_QUOTES, 'UTF-8');
 
-                        return '<img src="' . $src . '" loading="lazy"
+                        return '<img src="' . $src . '" loading="lazy" referrerpolicy="no-referrer"
                                     style="max-width:80px; max-height:60px; object-fit:contain;">';
                     }
 
@@ -210,8 +218,13 @@ class AvitoController extends AppController
                     $edit = ADMIN . '/avito/edit?id=' . $id;
                     $del  = ADMIN . '/avito/delete?id=' . $id;
                     $exp  = ADMIN . '/avito/export?id=' . $id;
+                    $avitoItemId = preg_replace('~\D+~', '', (string)($row['ad_external_id'] ?? ''));
+                    $avitoLink = $avitoItemId !== ''
+                        ? '<a target="_blank" rel="noopener" href="https://www.avito.ru/item/' . htmlspecialchars($avitoItemId, ENT_QUOTES, 'UTF-8') . '" title="Открыть объявление на Avito"><i class="fas fa-external-link-alt text-success"></i></a> '
+                        : '';
 
                     return
+                        $avitoLink .
                         '<a href="' . $edit . '" title="Редактировать"><i class="fas fa-pencil-alt"></i></a> ' .
                         '<a class="delete" href="' . $del . '" onclick="return confirm(\'Удалить объявление?\')" title="Удалить"><i class="fas fa-times-circle text-danger"></i></a> ' .
                         '<a href="' . $exp . '" title="Экспорт объявления в XML"><i class="fas fa-file-code"></i></a>';
@@ -367,6 +380,18 @@ class AvitoController extends AppController
         exit;
     }
 
+
+    public function syncProductsAction()
+    {
+        try {
+            $updated = Avito::syncLinkedAdsFromProducts();
+            $_SESSION['success'] = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated;
+        } catch (\Throwable $e) {
+            $_SESSION['error'] = 'Avito: ошибка синхронизации: ' . $e->getMessage();
+        }
+        redirect(ADMIN . '/avito');
+    }
+
     /**
      * Удаление
      */
@@ -393,13 +418,9 @@ class AvitoController extends AppController
     public function exportAction()
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        if ($id) {
-            $rows = \R::getAll("SELECT * FROM avito_ad WHERE id = ? LIMIT 1", array($id));
-        } else {
-            $rows = \R::getAll("SELECT * FROM avito_ad ORDER BY id DESC");
-        }
+        $rows = Avito::getFeedRows($id);
 
-        $xml = $this->buildAvitoXml($rows);
+        $xml = Avito::buildXml($rows);
 
         // фиксированное имя файла для Авито
         $filename = 'avito.xml';
@@ -681,3 +702,10 @@ private function buildAvitoXml($rows)
     }
 
 }
+
+
+
+
+
+
+

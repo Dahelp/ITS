@@ -26,6 +26,12 @@
         <a href="<?=ADMIN;?>/avito/import-xls" class="btn btn-warning">
             <i class="fas fa-file-excel"></i> Импорт XLSX
         </a>
+        <a href="<?=ADMIN;?>/avito/sync-products" class="btn btn-info">
+            <i class="fas fa-sync-alt"></i> Синхронизировать с товарами
+        </a>
+        <a target="_blank" href="<?=PATH;?>/avito/refresh-tovars" class="btn btn-secondary">
+            <i class="fas fa-rss"></i> XML-фид
+        </a>
     </div>
       <div class="card">
         <div class="card-header d-flex p-0">
@@ -119,4 +125,6 @@ $(function () {
   });
 });
 </script>
+
+
 

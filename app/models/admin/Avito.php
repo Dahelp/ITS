@@ -624,4 +624,275 @@ class Avito extends AppModel
 
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
+    public static function syncLinkedAdsFromProducts(): int
+    {
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+
+        $updated = 0;
+        foreach ($rows as $row) {
+            $ad = \R::load('avito_ad', (int)$row['ad_id']);
+            if (!$ad || !$ad->id) {
+                continue;
+            }
+
+            $quantity = max(0, (int)($row['quantity'] ?? 0));
+            $hidden = (int)($row['hide'] ?? 0) === 1;
+            $price = (int)round((float)($row['price'] ?? 0));
+
+            if (empty($ad->uuid)) {
+                $ad->uuid = self::uuidV4();
+            }
+            if (empty($ad->ad_external_id)) {
+                $ad->ad_external_id = self::externalIdFromArticle((string)$row['article']);
+            }
+
+            $ad->price_rub = $price > 0 ? $price : null;
+            $ad->quantity = $quantity;
+            $ad->status = ($hidden || $quantity <= 0 || $price <= 0) ? 'archived' : 'active';
+
+            if (empty($ad->title)) {
+                $ad->title = self::limitText((string)$row['name'], 50);
+            }
+            if (empty($ad->description)) {
+                $ad->description = self::buildDescription($row);
+            }
+            if (empty($ad->brand) && !empty($row['brand_name'])) {
+                $ad->brand = trim((string)$row['brand_name']);
+            }
+            if (empty($ad->model) && !empty($row['model'])) {
+                $ad->model = trim((string)$row['model']);
+            }
+            if (empty($ad->weight_kg) && !empty($row['weight'])) {
+                $ad->weight_kg = (string)$row['weight'];
+            }
+
+            self::fillDefaults($ad);
+
+            $images = self::productImageUrls($row);
+            if ($images) {
+                $ad->images_json = json_encode($images, JSON_UNESCAPED_UNICODE);
+            }
+
+            \R::store($ad);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    public static function getFeedRows(int $id = 0): array
+    {
+        self::syncLinkedAdsFromProducts();
+        if ($id > 0) {
+            return \R::getAll("SELECT * FROM avito_ad WHERE id = ? LIMIT 1", [$id]);
+        }
+        return \R::getAll("SELECT * FROM avito_ad ORDER BY id DESC");
+    }
+
+    public static function buildFeedXml(int $id = 0): string
+    {
+        return self::buildXml(self::getFeedRows($id));
+    }
+
+    public static function buildXml(array $rows): string
+    {
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><Ads/>');
+        $xml->addAttribute('formatVersion', '3');
+        $xml->addAttribute('target', 'Avito.ru');
+
+        foreach ($rows as $r) {
+            $ad = $xml->addChild('Ad');
+            self::xmlAdd($ad, 'Id', !empty($r['ad_external_id']) ? (string)$r['ad_external_id'] : (string)$r['id']);
+            self::xmlAdd($ad, 'AvitoId', (string)($r['avito_id'] ?? ''));
+            self::xmlAdd($ad, 'Status', (string)($r['status'] ?? 'active'));
+            self::xmlAdd($ad, 'ListingFee', (string)($r['listing_fee'] ?? 'Package'));
+            self::xmlAdd($ad, 'AdStatus', (string)($r['ad_status'] ?? 'Free'));
+            self::xmlAdd($ad, 'DateBegin', (string)($r['date_begin'] ?? ''));
+            self::xmlAdd($ad, 'DateEnd', (string)($r['date_end'] ?? ''));
+            self::xmlAdd($ad, 'ManagerName', (string)($r['manager_name'] ?? ''));
+            self::xmlAdd($ad, 'ContactPhone', (string)($r['contact_phone'] ?? ''));
+            self::xmlAdd($ad, 'ContactMethod', (string)($r['contact_method'] ?? ''));
+            self::xmlAdd($ad, 'Address', (string)($r['address'] ?? ''));
+            self::xmlAdd($ad, 'Latitude', (string)($r['latitude'] ?? ''));
+            self::xmlAdd($ad, 'Longitude', (string)($r['longitude'] ?? ''));
+            self::xmlAdd($ad, 'SellerAddressId', (string)($r['seller_address_id'] ?? ''));
+            self::xmlAdd($ad, 'Category', (string)($r['category'] ?? ''));
+            self::xmlAdd($ad, 'GoodsType', (string)($r['goods_type'] ?? ''));
+            self::xmlAdd($ad, 'AdType', (string)($r['ad_type'] ?? ''));
+            self::xmlAdd($ad, 'ProductType', (string)($r['product_type'] ?? ''));
+            self::xmlAdd($ad, 'Title', (string)($r['title'] ?? ''));
+            self::xmlCdata($ad, 'Description', self::descriptionValue($r));
+            if (!empty($r['price_rub'])) {
+                self::xmlAdd($ad, 'Price', (string)((int)$r['price_rub']));
+            }
+            self::xmlAdd($ad, 'ItemCondition', (string)($r['item_condition'] ?? 'Новое'));
+            self::xmlAdd($ad, 'TargetAudience', (string)($r['target_audience'] ?? ''));
+            self::xmlAdd($ad, 'VideoURL', (string)($r['video_url'] ?? ''));
+            self::xmlAdd($ad, 'VideoFileURL', (string)($r['video_file_url'] ?? ''));
+            self::xmlAdd($ad, 'Brand', (string)($r['brand'] ?? ''));
+            self::xmlAdd($ad, 'Model', (string)($r['model'] ?? ''));
+            self::xmlAdd($ad, 'TireSectionWidth', (string)($r['tire_section_width'] ?? ''));
+            self::xmlAdd($ad, 'TireAspectRatio', (string)($r['tire_aspect_ratio'] ?? ''));
+            self::xmlAdd($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
+            self::xmlAdd($ad, 'TireType', (string)($r['tire_type'] ?? ''));
+            self::xmlAdd($ad, 'Quantity', (string)($r['quantity'] ?? ''));
+            self::xmlAdd($ad, 'SpeedIndex', (string)($r['speed_index'] ?? ''));
+            self::xmlAdd($ad, 'PlyRating', (string)($r['ply_rating'] ?? ''));
+            self::xmlAdd($ad, 'Construction', (string)($r['construction'] ?? ''));
+            self::xmlAdd($ad, 'TubeType', (string)($r['tube_type'] ?? ''));
+            self::xmlAdd($ad, 'WheelAxle', (string)($r['wheel_axle'] ?? ''));
+            self::xmlAdd($ad, 'LoadIndex', (string)($r['load_index'] ?? ''));
+            self::xmlAdd($ad, 'ResidualTreadSV', (string)($r['residual_tread_sv'] ?? ''));
+            self::xmlAdd($ad, 'Design', (string)($r['design'] ?? ''));
+            self::xmlAdd($ad, 'VehicleType', (string)($r['vehicle_type'] ?? ''));
+            self::xmlAdd($ad, 'DeliverySubsidy', (string)($r['delivery_subsidy'] ?? ''));
+            self::xmlAdd($ad, 'ReturnPolicy', (string)($r['return_policy'] ?? ''));
+            self::xmlAdd($ad, 'InternetCalls', (string)($r['internet_calls'] ?? ''));
+            self::xmlAdd($ad, 'CallsDevices', (string)($r['calls_devices_json'] ?? ''));
+            self::xmlAdd($ad, 'DeliveryOptions', (string)($r['delivery_json'] ?? ''));
+            self::xmlAdd($ad, 'Weight', (string)($r['weight_kg'] ?? ''));
+            self::xmlAdd($ad, 'Length', (string)($r['length_cm'] ?? ''));
+            self::xmlAdd($ad, 'Height', (string)($r['height_cm'] ?? ''));
+            self::xmlAdd($ad, 'Width', (string)($r['width_cm'] ?? ''));
+            self::xmlAdd($ad, 'Promo', (string)($r['promo'] ?? ''));
+            self::xmlAdd($ad, 'PromoAutoOptions', (string)($r['promo_auto_json'] ?? ''));
+            self::xmlAdd($ad, 'PromoManualOptions', (string)($r['promo_manual_json'] ?? ''));
+
+            $imagesNode = $ad->addChild('Images');
+            foreach (self::decodeImages($r['images_json'] ?? '') as $url) {
+                $imgNode = $imagesNode->addChild('Image');
+                $imgNode->addAttribute('url', $url);
+            }
+        }
+
+        $dom = dom_import_simplexml($xml)->ownerDocument;
+        $dom->formatOutput = true;
+        return $dom->saveXML();
+    }
+
+    private static function fillDefaults($ad): void
+    {
+        $cfg = (array)(\ishop\App::$app->getProperty('avito') ?? []);
+        $defaults = [
+            'manager_name' => $cfg['default_manager_name'] ?? 'ИТС-Центр',
+            'contact_phone' => $cfg['default_contact_phone'] ?? '+7 (495) 424-98-90',
+            'contact_method' => $cfg['default_contact_method'] ?? 'По телефону и в сообщениях',
+            'address' => $cfg['default_address'] ?? '',
+            'latitude' => $cfg['default_latitude'] ?? '',
+            'longitude' => $cfg['default_longitude'] ?? '',
+            'category' => 'Запчасти и аксессуары',
+            'goods_type' => 'Шины, диски и колёса',
+            'ad_type' => 'Товар приобретен на продажу',
+            'product_type' => 'Шины для грузовиков и спецтехники',
+            'item_condition' => 'Новое',
+            'listing_fee' => 'Package',
+            'ad_status' => 'Free',
+        ];
+        foreach ($defaults as $field => $value) {
+            if (empty($ad->$field) && $value !== '') {
+                $ad->$field = $value;
+            }
+        }
+    }
+
+    private static function productImageUrls(array $row): array
+    {
+        $urls = [];
+        foreach (['unload_img' => 'unload', 'img' => 'baseimg'] as $field => $dir) {
+            $file = trim((string)($row[$field] ?? ''));
+            if ($file !== '') {
+                $urls[] = rtrim(PATH, '/') . '/images/product/' . $dir . '/' . rawurlencode($file);
+            }
+        }
+        if (!empty($row['product_id'])) {
+            $gallery = \R::getCol('SELECT img FROM gallery WHERE product_id = ? ORDER BY id', [(int)$row['product_id']]);
+            foreach ($gallery as $file) {
+                $file = trim((string)$file);
+                if ($file !== '') {
+                    $urls[] = rtrim(PATH, '/') . '/images/product/gallery/' . rawurlencode($file);
+                }
+            }
+        }
+        return array_values(array_unique($urls));
+    }
+
+    private static function buildDescription(array $row): string
+    {
+        $text = trim(strip_tags((string)($row['content'] ?? '')));
+        if ($text === '') {
+            $text = trim((string)($row['description'] ?? ''));
+        }
+        if ($text === '') {
+            $text = trim((string)($row['name'] ?? ''));
+        }
+        $text = preg_replace('~\s+~u', ' ', $text);
+        return self::limitText($text, 7500);
+    }
+
+    private static function descriptionValue(array $row): string
+    {
+        $value = trim((string)($row['description'] ?? ''));
+        if ($value === '') {
+            $value = trim((string)($row['title'] ?? ''));
+        }
+        return self::limitText(preg_replace('~\r\n?~', "\n", $value), 7500);
+    }
+
+    private static function decodeImages($raw): array
+    {
+        $decoded = json_decode((string)$raw, true);
+        if (!is_array($decoded)) {
+            return [];
+        }
+        $urls = [];
+        foreach ($decoded as $img) {
+            if (is_string($img) && trim($img) !== '') {
+                $urls[] = trim($img);
+            } elseif (is_array($img) && !empty($img['url'])) {
+                $urls[] = trim((string)$img['url']);
+            }
+        }
+        return array_values(array_unique(array_filter($urls)));
+    }
+
+    private static function xmlAdd(\SimpleXMLElement $node, string $name, string $value): void
+    {
+        $node->addChild($name, htmlspecialchars($value, ENT_XML1 | ENT_COMPAT, 'UTF-8'));
+    }
+
+    private static function xmlCdata(\SimpleXMLElement $node, string $name, string $value): void
+    {
+        if ($value === '') {
+            return;
+        }
+        $child = $node->addChild($name);
+        $dom = dom_import_simplexml($child);
+        $dom->appendChild($dom->ownerDocument->createCDATASection(str_replace(']]>', ']]]]><![CDATA[>', $value)));
+    }
+
+    private static function limitText(string $text, int $limit): string
+    {
+        if (function_exists('mb_strlen') && mb_strlen($text, 'UTF-8') > $limit) {
+            return mb_substr($text, 0, $limit, 'UTF-8');
+        }
+        if (!function_exists('mb_strlen') && strlen($text) > $limit) {
+            return substr($text, 0, $limit);
+        }
+        return $text;
+    }
+
+    private static function externalIdFromArticle(string $article): string
+    {
+        $article = preg_replace('~[^a-zA-Z0-9_-]+~', '-', trim($article));
+        return 'its-' . trim($article, '-');
+    }
+
+    private static function uuidV4(): string
+    {
+        $data = random_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
 }
+

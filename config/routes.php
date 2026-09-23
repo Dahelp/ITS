@@ -85,6 +85,10 @@ Router::add('^cookie-log$', ['controller' => 'Cookie', 'action' => 'log']);
 
 // GPT ответчик
 
+Router::add('^avito/refresh-tovars/?$', [
+    'controller' => 'Avito',
+    'action'     => 'refreshTovars',
+]);
 // Маршрут для импорта Avito 
 Router::add('^admin/avito/import-xls/?$', [
     'controller' => 'Avito',
@@ -98,3 +102,4 @@ Router::add('^admin/?(?P<controller>[a-z-]+)/?(?P<action>[a-z-]+)?$', ['prefix' 
 
 Router::add('^$', ['controller' => 'Main', 'action' => 'index']);
 Router::add('^(?!wp-|xmlrpc\.php|phpmyadmin|vendor|composer\.|\.env)(?P<controller>[a-z-]+)/?(?P<action>[a-z-]+)?$');
+
