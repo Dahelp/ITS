@@ -137,8 +137,8 @@ class AvitoController extends AppController
 
                         $src = htmlspecialchars($srcUrl, ENT_QUOTES, 'UTF-8');
 
-                        return '<img src="' . $src . '" loading="lazy" referrerpolicy="no-referrer"
-                                    style="max-width:80px; max-height:60px; object-fit:contain;">';
+                        return '<img src="' . $src . '" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.outerHTML=&quot;&lt;span class=\&quot;badge bg-secondary\&quot;&gt;нет фото&lt;/span&gt;&quot;"'
+                                    . ' style="max-width:80px; max-height:60px; object-fit:contain;">';
                     }
 
                     return '<span class="badge bg-secondary">нет фото</span>';
@@ -709,6 +709,7 @@ private function buildAvitoXml($rows)
     }
 
 }
+
 
 
 
