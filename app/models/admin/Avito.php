@@ -636,7 +636,7 @@ class Avito extends AppModel
     {
         self::ensureSchema();
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         $updated = 0;
         foreach ($rows as $row) {
@@ -645,7 +645,7 @@ class Avito extends AppModel
                 continue;
             }
 
-            $quantity = max(0, (int)($row['quantity'] ?? 0));
+            $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
             $hidden = (int)($row['hide'] ?? 0) === 1;
             $price = (int)round((float)($row['price'] ?? 0));
 
@@ -978,7 +978,7 @@ class Avito extends AppModel
         foreach ($rows as $row) {
             $itemId = self::apiItemId($row);
             $price = (int)round((float)($row['price_rub'] ?? 0));
-            $quantity = max(0, (int)($row['quantity'] ?? 0));
+            $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
 
             if ($itemId <= 0) {
                 $stats['skipped']++;
@@ -1061,6 +1061,7 @@ class Avito extends AppModel
         $stats['errors'][] = ($itemId > 0 ? '#' . $itemId . ': ' : '') . $message;
     }
 }
+
 
 
 
