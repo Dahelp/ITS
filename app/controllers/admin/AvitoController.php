@@ -223,7 +223,7 @@ class AvitoController extends AppController
                     $avitoItemId = preg_replace('~\D+~', '', (string)($row['ad_external_id'] ?? ''));
                     $avitoUrl = trim((string)($row['avito_url'] ?? ''));
                     if ($avitoUrl === '' && $avitoItemId !== '') {
-                        $avitoUrl = 'https://www.avito.ru/all?q=' . rawurlencode($avitoItemId);
+                        $avitoUrl = self::buildAvitoItemUrl($row, $avitoItemId);
                     }
                     $avitoLink = $avitoUrl !== ''
                         ? '<a target="_blank" rel="noopener" href="' . htmlspecialchars($avitoUrl, ENT_QUOTES, 'UTF-8') . '" title="Открыть/найти объявление на Avito"><i class="fas fa-external-link-alt text-success"></i></a> '
@@ -451,6 +451,50 @@ class AvitoController extends AppController
     /**
      * textarea с URL (по одному в строке или JSON) → JSON для images_json
      */
+    private static function buildAvitoItemUrl(array $row, string $itemId): string
+    {
+        $city = 'podolsk';
+        $category = self::avitoCategorySlug((string)($row['category'] ?? ''));
+        $titleSlug = self::avitoSlug((string)($row['title'] ?? ''));
+
+        if ($itemId === '') {
+            return '';
+        }
+
+        if ($titleSlug === '') {
+            return 'https://www.avito.ru/' . $city . '/' . $category . '/' . rawurlencode($itemId);
+        }
+
+        return 'https://www.avito.ru/' . $city . '/' . $category . '/' . $titleSlug . '_' . rawurlencode($itemId);
+    }
+
+    private static function avitoCategorySlug(string $category): string
+    {
+        $category = trim(mb_strtolower($category, 'UTF-8'));
+        $map = [
+            'запчасти и аксессуары' => 'zapchasti_i_aksessuary',
+        ];
+
+        return $map[$category] ?? self::avitoSlug($category);
+    }
+
+    private static function avitoSlug(string $text): string
+    {
+        $text = trim(mb_strtolower($text, 'UTF-8'));
+        $map = [
+            'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d','е'=>'e','ё'=>'e','ж'=>'zh','з'=>'z','и'=>'i','й'=>'y',
+            'к'=>'k','л'=>'l','м'=>'m','н'=>'n','о'=>'o','п'=>'p','р'=>'r','с'=>'s','т'=>'t','у'=>'u','ф'=>'f',
+            'х'=>'h','ц'=>'ts','ч'=>'ch','ш'=>'sh','щ'=>'sch','ъ'=>'','ы'=>'y','ь'=>'','э'=>'e','ю'=>'yu','я'=>'ya',
+        ];
+        $text = strtr($text, $map);
+        $text = str_replace(['×', '/', '\\'], ['h', '-', '-'], $text);
+        $text = preg_replace('~[^a-z0-9_-]+~', '_', $text);
+        $text = preg_replace('~_+~', '_', $text);
+        $text = preg_replace('~-+~', '-', $text);
+
+        return trim($text, '_-');
+    }
+
     private function normalizeImagesJson($raw)
     {
         if ($raw === '' || $raw === null) {
