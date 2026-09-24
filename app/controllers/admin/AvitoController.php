@@ -397,7 +397,9 @@ class AvitoController extends AppController
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
                 . ', ссылок из API: ' . (int)$urlsUpdated
                 . ', цен отправлено: ' . (int)$apiStats['price_success']
-                . ', остатков отправлено: ' . (int)$apiStats['stock_success'];
+                . ', остатков отправлено: ' . (int)$apiStats['stock_success']
+                . ', остатков проверено в API: ' . (int)$apiStats['stock_checked']
+                . ', с наличием в API: ' . (int)$apiStats['stock_positive'];
 
             $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'];
             if ($failed > 0) {
@@ -767,6 +769,7 @@ private function buildAvitoXml($rows)
     }
 
 }
+
 
 
 

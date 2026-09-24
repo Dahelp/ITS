@@ -960,6 +960,8 @@ class Avito extends AppModel
             'price_failed' => 0,
             'stock_success' => 0,
             'stock_failed' => 0,
+            'stock_checked' => 0,
+            'stock_positive' => 0,
             'skipped' => 0,
             'errors' => [],
         ];
@@ -974,6 +976,7 @@ class Avito extends AppModel
         $client->getAccessToken();
 
         $stockBatch = [];
+        $expectedStock = [];
 
         foreach ($rows as $row) {
             $itemId = self::apiItemId($row);
@@ -1009,6 +1012,7 @@ class Avito extends AppModel
                 'item_id' => $itemId,
                 'quantity' => $quantity,
             ];
+            $expectedStock[$itemId] = $quantity;
         }
 
         foreach (array_chunk($stockBatch, 200) as $chunk) {
@@ -1039,9 +1043,45 @@ class Avito extends AppModel
             }
         }
 
+        self::checkStockInfo($client, array_keys($expectedStock), $expectedStock, $stats);
+
         return $stats;
     }
 
+    private static function checkStockInfo(\app\services\AvitoApiClient $client, array $itemIds, array $expectedStock, array &$stats): void
+    {
+        foreach (array_chunk($itemIds, 10) as $chunk) {
+            try {
+                $response = $client->api('POST', '/stock-management/1/info', [
+                    'json' => [
+                        'item_ids' => array_map('intval', $chunk),
+                        'strong_consistency' => true,
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                self::addApiError($stats, 0, 'Проверка остатков: ' . $e->getMessage());
+                continue;
+            }
+
+            $stocks = $response['stocks'] ?? [];
+            if (!is_array($stocks)) {
+                continue;
+            }
+
+            foreach ($stocks as $stock) {
+                $itemId = (int)($stock['item_id'] ?? 0);
+                $quantity = (int)($stock['quantity'] ?? 0);
+                $stats['stock_checked']++;
+                if ($quantity > 0) {
+                    $stats['stock_positive']++;
+                }
+                $expected = (int)($expectedStock[$itemId] ?? 0);
+                if ($expected > 0 && $quantity <= 0) {
+                    self::addApiError($stats, $itemId, 'После записи Avito API показывает остаток ' . $quantity . ', ожидали ' . $expected);
+                }
+            }
+        }
+    }
     private static function apiItemId(array $row): int
     {
         foreach (['avito_id', 'ad_external_id'] as $field) {
@@ -1061,6 +1101,8 @@ class Avito extends AppModel
         $stats['errors'][] = ($itemId > 0 ? '#' . $itemId . ': ' : '') . $message;
     }
 }
+
+
 
 
 
