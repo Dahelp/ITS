@@ -951,7 +951,117 @@ class Avito extends AppModel
 
         return $updated;
     }
+    public static function pushLinkedAdsToApi(): array
+    {
+        self::ensureSchema();
+
+        $stats = [
+            'price_success' => 0,
+            'price_failed' => 0,
+            'stock_success' => 0,
+            'stock_failed' => 0,
+            'skipped' => 0,
+            'errors' => [],
+        ];
+
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity\n            FROM avito_ad a\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+
+        if (!$rows) {
+            return $stats;
+        }
+
+        $client = new \app\services\AvitoApiClient();
+        $client->getAccessToken();
+
+        $stockBatch = [];
+
+        foreach ($rows as $row) {
+            $itemId = self::apiItemId($row);
+            $price = (int)round((float)($row['price_rub'] ?? 0));
+            $quantity = max(0, (int)($row['quantity'] ?? 0));
+
+            if ($itemId <= 0) {
+                $stats['skipped']++;
+                continue;
+            }
+
+            if ($price > 0) {
+                try {
+                    $response = $client->api('POST', '/core/v1/items/' . $itemId . '/update_price', [
+                        'json' => ['price' => $price],
+                    ]);
+                    $success = (bool)($response['result']['success'] ?? true);
+                    if ($success) {
+                        $stats['price_success']++;
+                    } else {
+                        $stats['price_failed']++;
+                        self::addApiError($stats, $itemId, 'Цена не обновлена: Avito вернул success=false');
+                    }
+                } catch (\Throwable $e) {
+                    $stats['price_failed']++;
+                    self::addApiError($stats, $itemId, 'Цена: ' . $e->getMessage());
+                }
+            } else {
+                $stats['skipped']++;
+            }
+
+            $stockBatch[] = [
+                'item_id' => $itemId,
+                'quantity' => $quantity,
+            ];
+        }
+
+        foreach (array_chunk($stockBatch, 200) as $chunk) {
+            try {
+                $response = $client->api('PUT', '/stock-management/1/stocks', [
+                    'json' => ['stocks' => $chunk],
+                ]);
+                $stocks = $response['stocks'] ?? [];
+                if (!is_array($stocks)) {
+                    $stats['stock_failed'] += count($chunk);
+                    self::addApiError($stats, 0, 'Остатки: Avito вернул неожиданный ответ');
+                    continue;
+                }
+                foreach ($stocks as $stock) {
+                    if (!empty($stock['success'])) {
+                        $stats['stock_success']++;
+                    } else {
+                        $stats['stock_failed']++;
+                        $itemId = (int)($stock['item_id'] ?? 0);
+                        $errors = $stock['errors'] ?? [];
+                        $message = is_array($errors) ? implode('; ', array_map('strval', $errors)) : (string)$errors;
+                        self::addApiError($stats, $itemId, 'Остаток: ' . ($message !== '' ? $message : 'не обновлен'));
+                    }
+                }
+            } catch (\Throwable $e) {
+                $stats['stock_failed'] += count($chunk);
+                self::addApiError($stats, 0, 'Остатки: ' . $e->getMessage());
+            }
+        }
+
+        return $stats;
+    }
+
+    private static function apiItemId(array $row): int
+    {
+        foreach (['avito_id', 'ad_external_id'] as $field) {
+            $value = preg_replace('~\D+~', '', (string)($row[$field] ?? ''));
+            if ($value !== '') {
+                return (int)$value;
+            }
+        }
+        return 0;
+    }
+
+    private static function addApiError(array &$stats, int $itemId, string $message): void
+    {
+        if (count($stats['errors']) >= 5) {
+            return;
+        }
+        $stats['errors'][] = ($itemId > 0 ? '#' . $itemId . ': ' : '') . $message;
+    }
 }
+
 
 
 

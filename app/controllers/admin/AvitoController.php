@@ -392,13 +392,27 @@ class AvitoController extends AppController
         try {
             $updated = Avito::syncLinkedAdsFromProducts();
             $urlsUpdated = Avito::syncUrlsFromApi();
-            $_SESSION['success'] = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated . ', ссылок из API: ' . (int)$urlsUpdated;
+            $apiStats = Avito::pushLinkedAdsToApi();
+
+            $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
+                . ', ссылок из API: ' . (int)$urlsUpdated
+                . ', цен отправлено: ' . (int)$apiStats['price_success']
+                . ', остатков отправлено: ' . (int)$apiStats['stock_success'];
+
+            $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'];
+            if ($failed > 0) {
+                $message .= ', ошибок API: ' . $failed;
+                if (!empty($apiStats['errors'])) {
+                    $message .= '. Первые ошибки: ' . implode(' | ', $apiStats['errors']);
+                }
+            }
+
+            $_SESSION['success'] = $message;
         } catch (\Throwable $e) {
             $_SESSION['error'] = 'Avito: ошибка синхронизации: ' . $e->getMessage();
         }
         redirect(ADMIN . '/avito');
     }
-
     /**
      * Удаление
      */
@@ -753,6 +767,7 @@ private function buildAvitoXml($rows)
     }
 
 }
+
 
 
 

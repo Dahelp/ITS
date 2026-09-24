@@ -88,7 +88,11 @@ class AvitoApiClient
             CURLOPT_HTTPHEADER => $headers,
         ]);
 
-        if (array_key_exists('body', $options)) {
+        if (array_key_exists('json', $options)) {
+            $headers[] = 'Content-Type: application/json';
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($options['json'], JSON_UNESCAPED_UNICODE));
+        } elseif (array_key_exists('body', $options)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, (string)$options['body']);
         }
 
@@ -137,3 +141,4 @@ class AvitoApiClient
         return (array)(App::$app->getProperty('avito') ?? []);
     }
 }
+
