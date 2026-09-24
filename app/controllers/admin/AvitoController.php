@@ -400,6 +400,8 @@ class AvitoController extends AppController
                 . ', остатков отправлено: ' . (int)$apiStats['stock_success']
                 . ', ненулевых отправлено: ' . (int)$apiStats['stock_sent_positive']
                 . ', сумма остатков: ' . (int)$apiStats['stock_sent_total']
+                . ', активных по статусу: ' . (int)$apiStats['status_active']
+                . ', в архив по статусу: ' . (int)$apiStats['status_archived']
                 . ', остатков проверено в API: ' . (int)$apiStats['stock_checked']
                 . ', с наличием в API: ' . (int)$apiStats['stock_positive'];
 
@@ -771,6 +773,7 @@ private function buildAvitoXml($rows)
     }
 
 }
+
 
 
 

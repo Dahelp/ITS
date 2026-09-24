@@ -690,20 +690,22 @@ class Avito extends AppModel
         return $updated;
     }
 
-    public static function getFeedRows(int $id = 0): array
+    public static function getFeedRows(int $id = 0, bool $onlyActive = false): array
     {
         self::syncLinkedAdsFromProducts();
         if ($id > 0) {
             return \R::getAll("SELECT * FROM avito_ad WHERE id = ? LIMIT 1", [$id]);
         }
+        if ($onlyActive) {
+            return \R::getAll("SELECT * FROM avito_ad WHERE status = 'active' ORDER BY id DESC");
+        }
         return \R::getAll("SELECT * FROM avito_ad ORDER BY id DESC");
     }
 
-    public static function buildFeedXml(int $id = 0): string
+    public static function buildFeedXml(int $id = 0, bool $onlyActive = true): string
     {
-        return self::buildXml(self::getFeedRows($id));
+        return self::buildXml(self::getFeedRows($id, $onlyActive));
     }
-
     public static function buildXml(array $rows): string
     {
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><Ads/>');
@@ -962,6 +964,8 @@ class Avito extends AppModel
             'stock_failed' => 0,
             'stock_checked' => 0,
             'stock_positive' => 0,
+            'status_active' => 0,
+            'status_archived' => 0,
             'skipped' => 0,
             'errors' => [],
         ];
@@ -982,6 +986,11 @@ class Avito extends AppModel
             $itemId = self::apiItemId($row);
             $price = (int)round((float)($row['price_rub'] ?? 0));
             $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
+            if ($quantity > 0 && $price > 0) {
+                $stats['status_active']++;
+            } else {
+                $stats['status_archived']++;
+            }
 
             if ($itemId <= 0) {
                 $stats['skipped']++;
@@ -1105,6 +1114,9 @@ class Avito extends AppModel
         $stats['errors'][] = ($itemId > 0 ? '#' . $itemId . ': ' : '') . $message;
     }
 }
+
+
+
 
 
 
