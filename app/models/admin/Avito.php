@@ -966,7 +966,7 @@ class Avito extends AppModel
             'errors' => [],
         ];
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity\n            FROM avito_ad a\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         if (!$rows) {
             return $stats;
@@ -1013,6 +1013,10 @@ class Avito extends AppModel
                 'quantity' => $quantity,
             ];
             $expectedStock[$itemId] = $quantity;
+            $stats['stock_sent_total'] += $quantity;
+            if ($quantity > 0) {
+                $stats['stock_sent_positive']++;
+            }
         }
 
         foreach (array_chunk($stockBatch, 200) as $chunk) {
@@ -1101,6 +1105,8 @@ class Avito extends AppModel
         $stats['errors'][] = ($itemId > 0 ? '#' . $itemId . ': ' : '') . $message;
     }
 }
+
+
 
 
 
