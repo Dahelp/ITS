@@ -1166,7 +1166,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                               </p>
                                           </div>
 
-                                          <img src="/images/qr-yandex-card.jpg" width="102" height="102">
+                                          <img src="/images/qr-yandex-card.jpg" width="102" height="102" alt="Оставить отзыв о <?= h($product->name) ?>">
 
                                       </div>
 
@@ -1870,8 +1870,6 @@ $kpData = [
 <?= json_encode($kpData, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>
 </script>
 
-<script defer src="/js/pdfmake.js"></script>
-<script defer src="/js/vfs_fonts.js"></script>
 <script src="/js/kp_template.js"></script>
 <script>
   (function(){

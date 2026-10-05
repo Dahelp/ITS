@@ -162,7 +162,7 @@ $breadcrumbSchema = [
                             <div class="share-text mb-2">Поделиться:</div>
                             <div class="share-ya">
                                 <script src="https://yastatic.net/share2/share.js"></script>
-                                <div class="ya-share2" data-curtain data-services="vkontakte,odnoklassniki,telegram,whatsapp"></div>
+                                <div class="ya-share2" data-curtain data-services="vkontakte,odnoklassniki,telegram"></div>
                             </div>
                         </div>
                     </article>

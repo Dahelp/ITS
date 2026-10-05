@@ -75,8 +75,40 @@
     };
   }
 
-  function openPdfFromDoc(docDefinition, fileName) {
-    var win = window.open('', '_blank');
+  var pdfMakePromise = null;
+
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = function () { reject(new Error('Не удалось загрузить ' + src)); };
+      document.head.appendChild(script);
+    });
+  }
+
+  function loadPdfMake() {
+    if (window.pdfMake && window.pdfMake.vfs) return Promise.resolve();
+    if (pdfMakePromise) return pdfMakePromise;
+
+    pdfMakePromise = loadScript('/js/pdfmake.js')
+      .then(function () { return loadScript('/js/vfs_fonts.js'); })
+      .then(function () {
+        if (!window.pdfMake || !window.pdfMake.vfs) {
+          throw new Error('pdfMake загрузился без шрифтов');
+        }
+      })
+      .catch(function (error) {
+        pdfMakePromise = null;
+        throw error;
+      });
+
+    return pdfMakePromise;
+  }
+
+  function openPdfFromDoc(docDefinition, fileName, pdfWindow) {
+    var win = pdfWindow || window.open('', '_blank');
     if (!win) { alert('Разрешите всплывающие окна для сайта'); return; }
     pdfMake.createPdf(docDefinition).getBlob(function (blob) {
       if (!blob) { win.close(); alert('Не удалось сформировать PDF'); return; }
@@ -85,7 +117,6 @@
       setTimeout(function () { try { win.document.title = fileName || 'document.pdf'; } catch (_) {} }, 300);
     });
   }
-
   // Публичный API
   window.KPTemplate = {
     buildDoc: buildDocDefinition,
@@ -93,11 +124,33 @@
     attach: function (btnSelector, data, fileName) {
       var btn = document.querySelector(btnSelector);
       if (!btn) return;
+
       btn.addEventListener('click', function () {
-        if (!window.pdfMake || !pdfMake.vfs) { alert('pdfMake не загружен'); return; }
-        var doc = buildDocDefinition(data);
-        openPdfFromDoc(doc, fileName);
+        if (btn.disabled) return;
+
+        // Открываем вкладку в рамках пользовательского клика, чтобы браузер не заблокировал её после загрузки скриптов.
+        var pdfWindow = window.open('', '_blank');
+        if (!pdfWindow) { alert('Разрешите всплывающие окна для сайта'); return; }
+
+        var initialHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.setAttribute('aria-busy', 'true');
+        btn.textContent = 'Формируем…';
+
+        loadPdfMake()
+          .then(function () {
+            openPdfFromDoc(buildDocDefinition(data), fileName, pdfWindow);
+          })
+          .catch(function (error) {
+            pdfWindow.close();
+            console.error(error);
+            alert('Не удалось загрузить модуль формирования PDF. Попробуйте ещё раз.');
+          })
+          .finally(function () {
+            btn.disabled = false;
+            btn.removeAttribute('aria-busy');
+            btn.innerHTML = initialHtml;
+          });
       });
-    }
-  };
+    }  };
 })();

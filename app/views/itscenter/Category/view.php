@@ -302,7 +302,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
           <?php if (!empty($categoryAlsoViewed)): ?>
             <div class="related_prod">
               <section class="pb-5 mb-2 mb-xl-4 recomend-1">
-                <h2 class="h3 pb-2 mb-grid-gutter text-center">Также смотрят</h2>
+                <h3 class="h3 pb-2 mb-grid-gutter text-center">Также смотрят</h3>
                 <div class="review-wrap">
                   <div class="wrap-container">
                     <div class="inner-container">
