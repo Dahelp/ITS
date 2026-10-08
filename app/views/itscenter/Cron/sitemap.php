@@ -191,7 +191,7 @@ if ($sm_cross) {
 | 7. Техника
 |--------------------------------------------------------------------------
 */
-$sm_technics = \R::getAll("SELECT alias FROM technics WHERE alias <> ''");
+$sm_technics = \R::getAll("SELECT alias FROM technics WHERE hide = 'show' AND alias <> ''");
 if ($sm_technics) {
     foreach ($sm_technics as $technics) {
         $addUrl(PATH . '/technics/' . $technics['alias']);
