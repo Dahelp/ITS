@@ -658,7 +658,6 @@ class Avito extends AppModel
             }
 
             $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
-            $hidden = (int)($row['hide'] ?? 0) === 1;
             $price = (int)round((float)($row['price'] ?? 0));
 
             if (empty($ad->uuid)) {
@@ -670,7 +669,7 @@ class Avito extends AppModel
 
             $ad->price_rub = $price > 0 ? $price : null;
             $ad->quantity = $quantity;
-            $ad->status = ($hidden || $quantity <= 0 || $price <= 0) ? 'archived' : 'active';
+            $ad->status = $quantity > 0 ? 'active' : 'archived';
 
             if (empty($ad->title)) {
                 $ad->title = self::limitText((string)$row['name'], 50);
