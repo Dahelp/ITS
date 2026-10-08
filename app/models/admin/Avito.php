@@ -11,6 +11,9 @@ use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
 
 class Avito extends AppModel
 {
+    private const MANAGER_NAME = 'Менеджер ИТС';
+    private const CONTACT_PHONE = '8 495 424-98-90';
+
     public $attributes = [
 
         'avito_id'       => '',
@@ -24,8 +27,8 @@ class Avito extends AppModel
         'listing_fee'    => 'Package',
         'ad_status'      => 'Free',
 
-        'manager_name'   => '',
-        'contact_phone'  => '',
+        'manager_name'   => 'Менеджер ИТС',
+        'contact_phone'  => '8 495 424-98-90',
         'contact_method' => 'По телефону и в сообщениях',
         'address'        => '',
         'latitude'       => '',
@@ -631,6 +634,14 @@ class Avito extends AppModel
         if (!$hasAvitoUrl) {
             \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
         }
+
+        // Контакты едины для всех объявлений: обновляем и ранее созданные записи.
+        \R::exec(
+            'UPDATE avito_ad SET manager_name = ?, contact_phone = ? '
+            . 'WHERE manager_name IS NULL OR manager_name != ? '
+            . 'OR contact_phone IS NULL OR contact_phone != ?',
+            [self::MANAGER_NAME, self::CONTACT_PHONE, self::MANAGER_NAME, self::CONTACT_PHONE]
+        );
     }
     public static function syncLinkedAdsFromProducts(): int
     {
@@ -786,8 +797,8 @@ class Avito extends AppModel
     {
         $cfg = (array)(\ishop\App::$app->getProperty('avito') ?? []);
         $defaults = [
-            'manager_name' => $cfg['default_manager_name'] ?? 'ИТС-Центр',
-            'contact_phone' => $cfg['default_contact_phone'] ?? '+7 (495) 424-98-90',
+            'manager_name' => self::MANAGER_NAME,
+            'contact_phone' => self::CONTACT_PHONE,
             'contact_method' => $cfg['default_contact_method'] ?? 'По телефону и в сообщениях',
             'address' => $cfg['default_address'] ?? '',
             'latitude' => $cfg['default_latitude'] ?? '',
