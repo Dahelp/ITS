@@ -648,6 +648,8 @@ class Avito extends AppModel
     {
         self::ensureSchema();
 
+        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) > 0 THEN 'active'\n                ELSE 'archived'\n            END\n        ");
+
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         $updated = 0;
