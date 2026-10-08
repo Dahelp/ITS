@@ -89,7 +89,17 @@ $sm_filter_landings = \R::getAll("
 ");
 
 if ($sm_filter_landings) {
-    $catModel = new \app\models\Category();
+    $categoryChildren = [];
+    foreach (\R::getAll('SELECT id, parent_id FROM category') as $categoryRow) {
+        $categoryChildren[(int)$categoryRow['parent_id']][] = (int)$categoryRow['id'];
+    }
+    $collectCategoryIds = function (int $categoryId) use (&$collectCategoryIds, &$categoryChildren): array {
+        $ids = [$categoryId];
+        foreach ($categoryChildren[$categoryId] ?? [] as $childId) {
+            $ids = array_merge($ids, $collectCategoryIds($childId));
+        }
+        return $ids;
+    };
 
     foreach ($sm_filter_landings as $row) {
         $categoryId = (int)$row['category_id'];
@@ -99,8 +109,7 @@ if ($sm_filter_landings) {
             continue;
         }
 
-        $categoryIds = $catModel->getIds($categoryId);
-        $categoryIds = !$categoryIds ? (string)$categoryId : $categoryIds . $categoryId;
+        $categoryIds = implode(',', array_map('intval', $collectCategoryIds($categoryId)));
 
         $hasProducts = (int)\R::getCell(
             "SELECT COUNT(*)

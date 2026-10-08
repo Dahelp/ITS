@@ -71,7 +71,7 @@ foreach (($argv ?? []) as $arg) {
 
 require_once $root . '/config/init.php';
 require_once LIBS . '/functions.php';
-require_once CONF . '/db_bootstrap.php';
+\ishop\Db::instance();
 
 chdir($public);
 
