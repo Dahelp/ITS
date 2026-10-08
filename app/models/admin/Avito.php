@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
 
 class Avito extends AppModel
 {
-    private const MANAGER_NAME = 'Менеджер ИТС';
+    private const MANAGER_NAME = 'ИТС-Центр';
     private const CONTACT_PHONE = '8 495 424-98-90';
 
     public $attributes = [
@@ -27,7 +27,7 @@ class Avito extends AppModel
         'listing_fee'    => 'Package',
         'ad_status'      => 'Free',
 
-        'manager_name'   => 'Менеджер ИТС',
+        'manager_name'   => 'ИТС-Центр',
         'contact_phone'  => '8 495 424-98-90',
         'contact_method' => 'По телефону и в сообщениях',
         'address'        => '',
@@ -635,11 +635,12 @@ class Avito extends AppModel
             \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
         }
 
-        // Контакты едины для всех объявлений: обновляем и ранее созданные записи.
+        // Контакты едины для всех объявлений, а черновики должны быть в архиве.
         \R::exec(
-            'UPDATE avito_ad SET manager_name = ?, contact_phone = ? '
+            "UPDATE avito_ad SET manager_name = ?, contact_phone = ?, "
+            . "status = CASE WHEN status = 'draft' THEN 'archived' ELSE status END "
             . 'WHERE manager_name IS NULL OR manager_name != ? '
-            . 'OR contact_phone IS NULL OR contact_phone != ?',
+            . "OR contact_phone IS NULL OR contact_phone != ? OR status = 'draft'",
             [self::MANAGER_NAME, self::CONTACT_PHONE, self::MANAGER_NAME, self::CONTACT_PHONE]
         );
     }
