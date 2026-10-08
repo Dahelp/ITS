@@ -59,6 +59,20 @@ if ($method === 'GET' || $method === 'HEAD') {
         '/cross/24719401' => '/cross/24719401a',
     ];
 
+    // Removed trademark/manufacturer landing pages. Keep the legacy URLs only
+    // as permanent redirects to the neutral ATV tyre category.
+    $removedTechnicsRedirects = [
+        '/technics/kvadrocikl/sf-moto' => '/category/atv',
+        '/technics/kvadrocikl-moto-cf-c-forse-400l-eps-x4-eps' => '/category/atv',
+        '/technics/kvadrocikl-moto-cf-500-x5-basic' => '/category/atv',
+        '/technics/kvadrocikl-moto-cf-500-x5-ho-eps' => '/category/atv',
+    ];
+
+    if (isset($removedTechnicsRedirects[$pathOnly])) {
+        header('Location: https://' . $_SERVER['SERVER_NAME'] . $removedTechnicsRedirects[$pathOnly], true, 301);
+        exit();
+    }
+
     if (isset($crossAliasRedirects[$pathOnly])) {
         header('Location: https://' . $_SERVER['SERVER_NAME'] . $crossAliasRedirects[$pathOnly], true, 301);
         exit();
