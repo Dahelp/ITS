@@ -920,7 +920,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
           <section class="desc-prod-inner bg-light shadow">
 
-          <?php if (!empty($technics)): ?>
+          <?php if (!empty($technics) && ($crossProductType ?? '') !== 'wheel'): ?>
           <?php
           $size = $attributeValueMap[4] ?? '';
 
@@ -1049,7 +1049,16 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                 <table class="table table-bordered table-striped">
                   <caption>Применяемость <?=h($product->name)?> по технике</caption>
                   <?php foreach($technics as $tech): ?>
-                    <tr><td><?=$tech["name"]?></td><td><a href="<?=PATH?>/technics/<?=h($tech["alias"])?>" title="Посмотреть все шины для <?=$tech["name"]?> <?=$tech["model"]?>"><?=$tech["model"]?></a></td></tr>
+                    <tr>
+                      <td><?=h($tech["name"])?></td>
+                      <td>
+                        <?php if (!empty($tech["alias"])): ?>
+                          <a href="<?=PATH?>/technics/<?=h($tech["alias"])?>" title="Посмотреть товары для <?=h($tech["name"] . ' ' . $tech["model"])?>"><?=h($tech["model"])?></a>
+                        <?php else: ?>
+                          <?=h($tech["model"])?><!-- plain text: техника отсутствует в каталоге -->
+                        <?php endif; ?>
+                      </td>
+                    </tr>
                   <?php endforeach; ?>
                 </table>
               </div>

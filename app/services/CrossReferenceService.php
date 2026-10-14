@@ -248,6 +248,113 @@ class CrossReferenceService
         return \R::getRow('SELECT * FROM product_cross_context WHERE product_id = ? LIMIT 1', [$productId]) ?: [];
     }
 
+    /**
+     * Применяемость диска из импорта. Ссылка добавляется только для модели,
+     * которая действительно существует в каталоге техники сайта.
+     */
+    public static function wheelApplicationsForProduct(int $productId): array
+    {
+        $context = self::productContextData($productId);
+        $fitment = trim((string)($context['fitment_text'] ?? ''));
+        if ($fitment === '') return [];
+
+        $catalog = \R::getAll(
+            'SELECT t.model,t.alias,tm.name FROM technics t
+             JOIN technics_manufacturer tm ON tm.id=t.manufacturer_id
+             WHERE t.alias IS NOT NULL AND t.alias != ? ORDER BY tm.name,t.model',
+            ['']
+        );
+        $catalogByBrand = [];
+        foreach ($catalog as $item) {
+            $brandKey = self::applicationKey((string)$item['name']);
+            $catalogByBrand[$brandKey][] = $item;
+        }
+
+        $brandAliases = [
+            'DAEWOO' => 'DOOSAN', 'DOOSAN' => 'DOOSAN', 'HYUNDAI' => 'HYUNDAI',
+            'JAC' => 'JAC', 'KOMATSU' => 'KOMATSU', 'LIUGONG' => 'LIUGONG',
+            'LONKING' => 'LONKING', 'MITSUBISHI' => 'MITSUBISHI', 'TCM' => 'TCM',
+            'TOYOTA' => 'TOYOTA',
+        ];
+        $sourceBrands = [
+            'DAEWOO', 'DOOSAN', 'KOMATSU', 'MITSUBISHI', 'NISSAN', 'TOYOTA',
+            'DALIAN', 'EP', 'GOODSENSE', 'HC', 'HELI', 'JAC', 'LIUGONG',
+            'LONKING', 'MAXIMAL', 'TCM', 'TEU', 'HYUNDAI',
+        ];
+
+        $result = [];
+        $lastBrand = '';
+        foreach (preg_split('~\s*,\s*~u', $fitment) ?: [] as $rawItem) {
+            $rawItem = trim($rawItem);
+            if ($rawItem === '') continue;
+
+            $brand = '';
+            $model = $rawItem;
+            foreach ($sourceBrands as $candidate) {
+                if (preg_match('~^' . preg_quote($candidate, '~') . '\s+(.+)$~iu', $rawItem, $match)) {
+                    $brand = $candidate;
+                    $model = trim($match[1]);
+                    break;
+                }
+            }
+            if ($brand === '' && $lastBrand !== '') {
+                $brand = $lastBrand;
+            } elseif ($brand !== '') {
+                $lastBrand = $brand;
+            }
+
+            $siteBrandKey = $brandAliases[mb_strtoupper($brand, 'UTF-8')] ?? '';
+            $matches = [];
+            if ($siteBrandKey !== '' && !empty($catalogByBrand[$siteBrandKey])) {
+                $modelKey = self::applicationModelKey($model);
+                $modelWithoutSeries = preg_replace('~^[A-Z0-9]+\s+(?=[A-Z]{2,}\d)~u', '', mb_strtoupper($model, 'UTF-8')) ?: $model;
+                $modelWithoutSeriesKey = self::applicationModelKey($modelWithoutSeries);
+                $rangeMatch = [];
+                preg_match('~^([A-Z]+)(\d+)-(\d+)~', mb_strtoupper(trim($modelWithoutSeries), 'UTF-8'), $rangeMatch);
+                foreach ($catalogByBrand[$siteBrandKey] as $technic) {
+                    $catalogKey = self::applicationModelKey((string)$technic['model']);
+                    if ($catalogKey === $modelKey || $catalogKey === $modelWithoutSeriesKey) {
+                        $matches[] = $technic;
+                        continue;
+                    }
+                    if ($rangeMatch
+                        && preg_match('~^' . preg_quote($rangeMatch[1], '~') . '(\d+)$~', $catalogKey, $number)
+                        && in_array((int)$number[1], [(int)$rangeMatch[2], (int)$rangeMatch[3]], true)) {
+                        $matches[] = $technic;
+                    }
+                }
+            }
+
+            if ($matches) {
+                foreach ($matches as $technic) {
+                    $key = self::applicationKey((string)$technic['name'] . ' ' . (string)$technic['model']);
+                    $result[$key] = [
+                        'name' => (string)$technic['name'],
+                        'model' => (string)$technic['model'],
+                        'alias' => (string)$technic['alias'],
+                    ];
+                }
+            } else {
+                $displayBrand = $brand !== '' ? $brand : '—';
+                $key = self::applicationKey($displayBrand . ' ' . $model);
+                $result[$key] = ['name' => $displayBrand, 'model' => $model, 'alias' => ''];
+            }
+        }
+
+        return array_values($result);
+    }
+
+    private static function applicationKey(string $value): string
+    {
+        return preg_replace('~[^A-ZА-ЯЁ0-9]+~u', '', mb_strtoupper(trim($value), 'UTF-8')) ?: '';
+    }
+
+    private static function applicationModelKey(string $value): string
+    {
+        $value = preg_replace('~\s*\(([^)]+)\)\s*~u', '$1', trim($value));
+        return self::applicationKey((string)$value);
+    }
+
     public static function syncLegacyRow(int $legacyRowId): void
     {
         if (!self::hasUnifiedSchema()) return;
