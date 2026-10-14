@@ -75,6 +75,21 @@ if (!$linkedApplications || !$plainApplications) {
     exit(1);
 }
 
+$crossApplicationSample = CrossReferenceService::findMatches('44110F302071', 'diski');
+$crossApplications = $crossApplicationSample
+    ? CrossReferenceService::wheelApplicationsForCross($crossApplicationSample[0])
+    : [];
+if (!$crossApplications || !array_filter($crossApplications, static fn($row) => !empty($row['alias']))) {
+    fwrite(STDERR, "FAILED: wheel cross application tab has no linked site model\n");
+    exit(1);
+}
+
+$crossView = (string)file_get_contents($root . '/app/views/itscenter/Cross/view.php');
+if (strpos($crossView, 'pills-primenenie-tab') === false || strpos($crossView, 'Применяемость диска-аналога OEM') === false) {
+    fwrite(STDERR, "FAILED: wheel cross application tab markup is missing\n");
+    exit(1);
+}
+
 $productView = (string)file_get_contents($root . '/app/views/itscenter/Product/view.php');
 if (strpos($productView, 'Посмотреть товары для') === false || strpos($productView, 'empty($tech["alias"])') === false) {
     fwrite(STDERR, "FAILED: product application tab does not render conditional links\n");
