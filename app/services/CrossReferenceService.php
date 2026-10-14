@@ -85,7 +85,11 @@ class CrossReferenceService
             $rows = \R::getAll(
                 "SELECT cr.id AS cross_reference_id, cr.display_code AS cross_name,
                         cr.slug AS cross_abbreviated_name, cr.normalized_code,
-                        cr.vendor_id, cv.name AS vendor_name,
+                        cr.vendor_id, COALESCE(crc.manufacturer, cv.name) AS vendor_name,
+                        crc.manufacturer AS cross_manufacturer,
+                        crc.equipment_models AS cross_equipment_models,
+                        crc.source_note AS cross_source_note,
+                        crc.confidence AS cross_confidence,
                         pc.id AS product_cross_id, pc.product_id, pc.relation_type,
                         pc.part_role, pc.product_type, pc.source,
                         p.*, c.name AS category_name
@@ -93,6 +97,7 @@ class CrossReferenceService
                  JOIN product_cross pc ON pc.cross_id = cr.id AND pc.is_active = 1
                  JOIN product p ON p.id = pc.product_id AND p.hide != 'hide'
                  LEFT JOIN plagins_cross_vendor cv ON cv.id = cr.vendor_id
+                 LEFT JOIN cross_reference_context crc ON crc.cross_id = cr.id
                  LEFT JOIN category c ON c.id = p.category_id
                  WHERE cr.normalized_code = ?
                  ORDER BY pc.product_type, p.quantity DESC, p.id",
@@ -175,15 +180,24 @@ class CrossReferenceService
         $vendorSuffix = $vendor !== '' && mb_strtoupper($vendor, 'UTF-8') !== 'OEM' ? ' ' . $vendor : '';
 
         if ($productType === 'wheel') {
+            $manufacturer = trim((string)($cross['cross_manufacturer'] ?? $vendor));
+            if (mb_strtoupper($manufacturer, 'UTF-8') === 'OEM') $manufacturer = '';
+            $models = self::shortModels((string)($cross['cross_equipment_models'] ?? ''), 4);
+            $application = trim($manufacturer . ($models !== '' ? ' ' . $models : ''));
+            $applicationSuffix = $application !== '' ? ' для ' . $application : '';
+            $manufacturerSuffix = $manufacturer !== '' ? ' ' . $manufacturer : '';
             return [
                 'type' => 'wheel',
                 'subject' => 'диск',
                 'subjectGenitive' => 'диска',
-                'heading' => (string)$product->name . ' — аналог диска ' . $code,
-                'title' => 'Купить диск — аналог ' . $code . ' по выгодной цене | ИТС-Центр',
-                'description' => (string)$product->name . ' подходит как аналог диска с номером ' . $code . '. Доставка по России.',
-                'keywords' => 'диск ' . $code . ', аналог диска, купить диск для спецтехники',
-                'intro' => 'Аналогом диска ' . $code . ' является ' . (string)$product->name . '.',
+                'heading' => 'Диск — аналог OEM ' . $code . $manufacturerSuffix,
+                'title' => 'Диск-аналог OEM ' . $code . $applicationSuffix . ' — купить | ИТС-Центр',
+                'description' => 'Купить диск-аналог OEM ' . $code . $applicationSuffix . '. Подходит по параметрам к диску ' . (string)$product->name . '. Доставка по России.',
+                'keywords' => 'диск ' . $code . ', аналог OEM ' . $code . ($manufacturer !== '' ? ', диск ' . $manufacturer : ''),
+                'intro' => 'Для OEM-номера ' . $code . $applicationSuffix . ' предлагаем совместимый диск ' . (string)$product->name . '.',
+                'manufacturer' => $manufacturer,
+                'equipmentModels' => (string)($cross['cross_equipment_models'] ?? ''),
+                'sourceNote' => (string)($cross['cross_source_note'] ?? ''),
                 'showPartRole' => false,
                 'routeKind' => 'diski',
             ];
@@ -216,6 +230,14 @@ class CrossReferenceService
             'showPartRole' => false,
             'routeKind' => '',
         ];
+    }
+
+    private static function shortModels(string $models, int $limit): string
+    {
+        $items = array_values(array_filter(array_map('trim', preg_split('~\s*,\s*~u', $models) ?: [])));
+        if (!$items) return '';
+        $short = array_slice($items, 0, $limit);
+        return implode(', ', $short) . (count($items) > $limit ? ' и др.' : '');
     }
 
     public static function productContextData(int $productId): array
