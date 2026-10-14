@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Breadcrumbs;
 use app\models\Cross;
 use app\services\admin\AdminActivityLogger;
+use app\services\CrossReferenceService;
 use ishop\App;
 
 class CrossController extends AppController {
@@ -14,18 +15,32 @@ class CrossController extends AppController {
         $alias = rawurldecode((string)$this->route['alias']);
         $up_registr = App::upRegistrLetter($alias);
 
-        // берём cross безопасно
-        $cross = \R::findOne('plagins_cross', "cross_abbreviated_name = ?", [$alias]);
-        if (!$cross) {
+        $routeKind = isset($this->route['kind']) ? (string)$this->route['kind'] : null;
+        $crossMatches = CrossReferenceService::findMatches($alias, $routeKind);
+        if (!$crossMatches) {
             throw new \Exception('Страница не найдена', 404);
         }
 
+        $cross = $crossMatches[0];
+
         // связанные сущности
-        $crossvendor = \R::findOne('plagins_cross_vendor', "id = ?", [(int)$cross->vendor_id]);
-        $product     = \R::findOne('product', "id = ? AND hide != 'hide'", [(int)$cross->product_id]);
+        $crossvendor = (object)['name' => (string)($cross['vendor_name'] ?? '')];
+        $product     = \R::findOne('product', "id = ? AND hide != 'hide'", [(int)$cross['product_id']]);
         if(!$product){
             throw new \Exception('Страница не найдена', 404);
         }
+        $productType = (string)($cross['product_type'] ?? CrossReferenceService::productType($product));
+        $crossContext = CrossReferenceService::context($product, $cross, $productType);
+        $crossProductData = CrossReferenceService::productContextData((int)$product->id);
+        $productCrosses = CrossReferenceService::forProduct((int)$product->id);
+        $crossAnalog = array_values(array_filter($productCrosses, static function ($item) use ($cross) {
+            return ($item['relation_type'] ?? '') !== 'oem'
+                && ($item['cross_abbreviated_name'] ?? '') !== ($cross['cross_abbreviated_name'] ?? '');
+        }));
+        $crossOem = array_values(array_filter($productCrosses, static function ($item) use ($cross) {
+            return ($item['relation_type'] ?? '') === 'oem'
+                && ($item['cross_abbreviated_name'] ?? '') !== ($cross['cross_abbreviated_name'] ?? '');
+        }));
 
         // --- безопасные чтения POST/SESSION ---
         $post = $_POST ?? [];
@@ -143,11 +158,9 @@ class CrossController extends AppController {
         $mods    = \R::findAll('modification', 'product_id = ?', [$product->id]);
 
         // SEO-тексты
-        $title = "Купить аналог фильтра " . (string)$cross->cross_name . " " . ($crossvendor ? (string)$crossvendor->name : "") . " по низким ценам | ИТС-Центр";
-        $description = $product->name . " является аналогом для фильтра " . ($crossvendor ? (string)$crossvendor->name : "") .
-                       " с OEM номером " . (string)$cross->cross_name . " и соответствует всем характеристикам. " .
-                       "Купить фильтр с доставкой по России можно в ИТС-Центре по низким ценам.";
-        $keywords = "Купить " . ($crossvendor ? (string)$crossvendor->name : "") . ", фильтр " . (string)$cross->cross_name . " цена";
+        $title = $crossContext['title'];
+        $description = $crossContext['description'];
+        $keywords = $crossContext['keywords'];
 
         $date = date("Y-m-d H:i:s");
         $action = \R::findOne('actions', "product_id = ? AND hide = 'show' AND date_end > ?", [$product->id, $date]);
@@ -175,7 +188,8 @@ class CrossController extends AppController {
         $this->set(compact(
             'product', 'related', 'similar', 'gallery', 'recentlyViewed', 'breadcrumbs',
             'mods', 'attribute_group', 'attributs', 'cat_prod', 'vendor', 'inseo', 'action',
-            'cross', 'crossvendor'
+            'cross', 'crossvendor', 'crossContext', 'crossMatches', 'crossProductData',
+            'crossAnalog', 'crossOem', 'productType'
         ));
     }
 

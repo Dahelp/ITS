@@ -19,7 +19,7 @@ if (property_exists($product, 'reserve')) {
 }
 ?>
 <span itemscope itemtype="http://schema.org/Product">
-<meta itemprop="name" content="<?php echo "".$product->name." аналог фильтра ".$cross["cross_name"]." ".$crossvendor->name.""; ?>" />
+<meta itemprop="name" content="<?=h($crossContext['heading'])?>" />
 <span itemprop="brand" itemtype="https://schema.org/Brand" itemscope>
 	<meta itemprop="name" content="<?=$vendor->name?>" />
 </span>
@@ -47,8 +47,8 @@ if (property_exists($product, 'reserve')) {
 				</li>
 				<li class='breadcrumb-item' data-id='3'>
 					<span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'>
-						<a itemprop='item' href='https://its-center.ru/category/filtry'>
-							<span itemprop='name'>Фильтры</span>
+						<a itemprop='item' href='<?=PATH?>/category/<?=$productType === 'wheel' ? 'diski' : 'filtry'?>'>
+							<span itemprop='name'><?=$productType === 'wheel' ? 'Диски' : 'Фильтры'?></span>
 							<meta itemprop='position' content='3'>
 						</a>
 					</span>
@@ -62,8 +62,8 @@ if (property_exists($product, 'reserve')) {
 					</span>
 				</li>
 				<li class='breadcrumb-item text-nowrap active' data-id='7'>
-					<span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><?php echo "".$product->name." аналог фильтра ".$cross["cross_name"]." ".$crossvendor->name.""; ?>
-						<meta itemprop='name' content='<?php echo "".$product->name." аналог фильтра ".$cross["cross_name"]." ".$crossvendor->name.""; ?>'>
+					<span itemscope='' itemprop='itemListElement' itemtype='http://schema.org/ListItem'><?=h($crossContext['heading'])?>
+						<meta itemprop='name' content='<?=h($crossContext['heading'])?>'>
 						<link itemprop='item' href='https://its-center.ru/product/<?=$product->alias?>'>
 						<meta itemprop='position' content='5'>
 					</span>
@@ -84,7 +84,7 @@ if (property_exists($product, 'reserve')) {
         <!-- Content-->
         <!-- Product Gallery + description-->
         <?php
-			$crossTitle = $product->name . ' аналог фильтра ' . $cross["cross_name"] . ' ' . $crossvendor->name;
+			$crossTitle = $crossContext['heading'];
 
 			$price = (float)$product->price;
 
@@ -202,7 +202,7 @@ if (property_exists($product, 'reserve')) {
 
 					<div class="product-rating-row">
 						<div class="product-sku-inline">
-						Фильтр аналог: <strong><?=$cross["cross_name"]?> <?=$crossvendor->name?></strong>
+						<?=h(ucfirst($crossContext['subject']))?>, кросс-номер: <strong><?=h($cross["cross_name"])?><?=!empty($crossvendor->name) && $crossvendor->name !== 'OEM' ? ' ' . h($crossvendor->name) : ''?></strong>
 						</div>
 
 						<?php if (!empty($cross["cross_abbreviated_name"])): ?>
@@ -256,7 +256,7 @@ if (property_exists($product, 'reserve')) {
 					<div class="product-card product-buy-card">
 
 					<span itemprop="offers" itemtype="https://schema.org/Offer" itemscope>
-						<link itemprop="url" href="<?=PATH?>/cross/<?=rawurlencode(mb_strtolower($cross["cross_abbreviated_name"]))?>" />
+						<link itemprop="url" href="<?=PATH . \app\services\CrossReferenceService::url($cross, $productType)?>" />
 						<meta itemprop="availability" content="https://schema.org/InStock" />
 						<meta itemprop="priceCurrency" content="RUR" />
 						<meta itemprop="itemCondition" content="https://schema.org/UsedCondition" />
@@ -482,19 +482,37 @@ if (property_exists($product, 'reserve')) {
 				<!-- /harakteristics -->
 				</div>
 				<div class="tab-pane fade" id="pills-opisanie" role="tabpanel" aria-labelledby="pills-opisanie-tab" itemprop="description">
-					<p>Аналогом для фильтра <?php echo "".$cross["cross_name"]." ".$crossvendor->name.""; ?> является <?=$product->name?>.</p>
-					<p>Фильтр EKKA (Польский бренд) соответствует европейским стандартам. Полностью совпадает по всем характеристикам с оригиналом. Успешно прошёл испытания в России, получен сертификат соответствия.</p>
-					<p>Купить фильтр можно у нас в ИТС-Центр по низким ценам с доставкой во все регионы РФ. Самовывоз из 5 складов: Климовск (Московская обл.), Санкт-Петербург, Воронеж, Краснодар, Екатеринбург. Позвоните нам по телефону или напишите нам на почту, мы поможем Вам подобрать фильтр по OEM номеру, подберём по марке техники, проконсультируем по всем вопросам.</p>
+					<p><?=h($crossContext['intro'])?></p>
+					<?php if ($productType === 'wheel'): ?>
+						<?php if (!empty($crossProductData['description'])): ?><p><?=h($crossProductData['description'])?></p><?php endif; ?>
+						<?php if (!empty($crossProductData['fitment_text'])): ?>
+							<h2 class="h5">Применяемость по технике</h2>
+							<p><?=h($crossProductData['fitment_text'])?></p>
+						<?php endif; ?>
+						<p>Уточнить совместимость диска с конкретной моделью техники можно у менеджера ИТС-Центр.</p>
+					<?php else: ?>
+						<p>Фильтр EKKA соответствует европейским стандартам и совпадает по основным характеристикам с оригиналом.</p>
+						<p>Купить фильтр можно в ИТС-Центр с доставкой во все регионы России. Менеджеры помогут подобрать фильтр по OEM-номеру и модели техники.</p>
+					<?php endif; ?>
+					<?php if (count($crossMatches) > 1): ?>
+						<h2 class="h5">Другие товары по номеру <?=h($cross['cross_name'])?></h2>
+						<ul>
+						<?php foreach ($crossMatches as $match): ?>
+							<?php if ((int)$match['product_id'] !== (int)$product->id): ?>
+							<li><a href="<?=PATH?>/product/<?=h($match['alias'])?>"><?=h($match['name'])?></a></li>
+							<?php endif; ?>
+						<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
 				</div>
 				<?php if($cross) { ?>
 					<div class="tab-pane fade" id="pills-analog" role="tabpanel" aria-labelledby="pills-analog-tab">
-						<?php $cross_analog = \R::getAll('SELECT plagins_cross_vendor.name, plagins_cross.cross_name, plagins_cross.cross_abbreviated_name, plagins_cross.tip_cross, plagins_cross.equipment_vendor FROM plagins_cross, plagins_cross_vendor WHERE plagins_cross.vendor_id = plagins_cross_vendor.id AND plagins_cross.equipment_vendor = ? AND plagins_cross.product_id = ? AND plagins_cross.cross_abbreviated_name != ?', [2, $product->id, $cross["cross_abbreviated_name"]]); ?>
 						<table class="table table-bordered table-striped">
 							<caption>Аналоги для <?=h($cross["cross_name"])?></caption>
 							<tbody>
-							<?php foreach($cross_analog as $analog): ?>
-								<tr><td><?=$analog["name"]?></td><td><a href="cross/<?=rawurlencode(mb_strtolower($analog["cross_abbreviated_name"]))?>" title="<?=$analog["cross_name"]?>"><?=$analog["cross_name"]?></a></td>
-								<?php if($analog['tip_cross'] < 3) {
+							<?php foreach($crossAnalog as $analog): ?>
+								<tr><td><?=h($analog["name"] ?: '—')?></td><td><a href="<?=PATH . \app\services\CrossReferenceService::url($analog, $productType)?>" title="<?=h($analog["cross_name"])?>"><?=h($analog["cross_name"])?></a></td>
+								<?php if($crossContext['showPartRole'] && $analog['tip_cross'] < 3) {
 									if($analog['tip_cross'] == 1) { $analog_tip = "Внешняя часть"; }
 									if($analog['tip_cross'] == 2) { $analog_tip = "Внутренняя часть"; }
 									if($analog['tip_cross'] == 3) { $analog_tip = "Не определено"; }
@@ -507,13 +525,12 @@ if (property_exists($product, 'reserve')) {
 						</table>
 					</div>
 					<div class="tab-pane fade" id="pills-oem" role="tabpanel" aria-labelledby="pills-oem-tab">
-						<?php $cross_oem = \R::getAll('SELECT plagins_cross_vendor.name, plagins_cross.cross_name, plagins_cross.cross_abbreviated_name, plagins_cross.tip_cross, plagins_cross.equipment_vendor FROM plagins_cross, plagins_cross_vendor WHERE plagins_cross.vendor_id = plagins_cross_vendor.id AND plagins_cross.equipment_vendor = ? AND plagins_cross.product_id = ? AND plagins_cross.cross_abbreviated_name != ?', [1, $product->id, $cross["cross_abbreviated_name"]]); ?>
 						<table class="table table-bordered table-striped">
 							<caption>Оригинальные номера для <?=h($cross["cross_name"])?></caption>
 							<tbody>
-							<?php foreach($cross_oem as $oem): ?>
-								<tr><td><?=$oem["name"]?></td><td><a href="cross/<?=rawurlencode(mb_strtolower($oem["cross_abbreviated_name"]))?>" title="<?=$oem["cross_name"]?>"><?=$oem["cross_name"]?></a></td>
-								<?php if($oem['tip_cross'] < 3) {
+							<?php foreach($crossOem as $oem): ?>
+								<tr><td><?=h($oem["name"] ?: '—')?></td><td><a href="<?=PATH . \app\services\CrossReferenceService::url($oem, $productType)?>" title="<?=h($oem["cross_name"])?>"><?=h($oem["cross_name"])?></a></td>
+								<?php if($crossContext['showPartRole'] && $oem['tip_cross'] < 3) {
 									if($oem['tip_cross'] == 1) { $oem_tip = "Внешняя часть"; }
 									if($oem['tip_cross'] == 2) { $oem_tip = "Внутренняя часть"; }
 									if($oem['tip_cross'] == 3) { $oem_tip = "Не определено"; }
@@ -676,7 +693,7 @@ if (!empty($attribute_group)) {
     }
 }
 
-$subtitle = $product->name . ' аналог фильтра ' . $cross['cross_name'] . ' ' . $crossvendor->name;
+$subtitle = $crossContext['heading'];
 
 // ===== СКИДКА ДЛЯ КП (просто и жёстко) =====
 $base  = (float)$product->price_rrs > 0 ? (float)$product->price_rrs : (float)$product->price; // "старая" цена

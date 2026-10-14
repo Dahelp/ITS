@@ -185,12 +185,19 @@ if ($sm_category) {
 | 6. Cross
 |--------------------------------------------------------------------------
 */
-$sm_cross = \R::getAll("SELECT cross_abbreviated_name FROM plagins_cross WHERE cross_abbreviated_name <> ''");
+$sm_cross = \app\services\CrossReferenceService::hasUnifiedSchema()
+    ? \R::getAll("SELECT DISTINCT cr.slug AS cross_abbreviated_name, pc.product_type
+                  FROM cross_reference cr
+                  JOIN product_cross pc ON pc.cross_id = cr.id AND pc.is_active = 1
+                  WHERE cr.slug <> ''")
+    : \R::getAll("SELECT DISTINCT cross_abbreviated_name, 'filter' AS product_type
+                  FROM plagins_cross WHERE cross_abbreviated_name <> ''");
 if ($sm_cross) {
     foreach ($sm_cross as $cross) {
         $cross_abbreviated_name = mb_strtolower(trim($cross['cross_abbreviated_name']));
         if ($cross_abbreviated_name !== '') {
-            $addUrl(PATH . '/cross/' . rawurlencode($cross_abbreviated_name));
+            $kind = ($cross['product_type'] ?? '') === 'wheel' ? 'diski/' : '';
+            $addUrl(PATH . '/cross/' . $kind . rawurlencode($cross_abbreviated_name));
         }
     }
 }

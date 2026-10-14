@@ -22,7 +22,8 @@ Router::add('^category/(?P<alias>[a-z0-9-]+)$', [
 Router::add('^complete/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Complete', 'action' => 'view']);
 Router::add('^podbor/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Podbor', 'action' => 'index']);
 Router::add('^size/(?P<alias>[0-9./-]+)/?$', ['controller' => 'Size', 'action' => 'view']);
-Router::add('^cross/(?P<alias>(?:%[0-9a-f]{2}|[a-z0-9._-])+)/?$', ['controller' => 'Cross', 'action' => 'view']);
+Router::add('^cross/(?P<kind>diski)/(?P<alias>(?:%[0-9A-Fa-f]{2}|[a-z0-9._-])+)/?$', ['controller' => 'Cross', 'action' => 'view']);
+Router::add('^cross/(?P<alias>(?:%[0-9A-Fa-f]{2}|[a-z0-9._-])+)/?$', ['controller' => 'Cross', 'action' => 'view']);
 Router::add('^technics/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Technics', 'action' => 'view']);
 Router::add('^technics/type/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Technics', 'action' => 'type']);
 Router::add('^technics/(?P<type>[a-z0-9-]+)/(?P<alias>[a-z0-9-]+)/?$', ['controller' => 'Technics', 'action' => 'manufacturer']);

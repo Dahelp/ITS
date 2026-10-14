@@ -20,6 +20,7 @@ use app\models\admin\PlaginsYandexTovars;
 use app\models\admin\PlaginsBanner;
 use app\helpers\ImageConverter;
 use app\helpers\Upload;
+use app\services\CrossReferenceService;
 
 class PlaginsController extends AppController {
 
@@ -266,6 +267,7 @@ class PlaginsController extends AppController {
 			$product = \R::findOne('product', 'article = ?', [$data['product_id']]);
 			$cross->attributes['product_id'] = $product['id'];
             if($id = $cross->save('plagins_cross')){
+				CrossReferenceService::syncLegacyRow((int)$id);
 				
 				$p = \R::load('plagins_cross', $id);
 				
@@ -298,6 +300,7 @@ class PlaginsController extends AppController {
                 redirect();
             }
             if($cross->update('plagins_cross', $id)){
+				CrossReferenceService::syncLegacyRow((int)$id);
 				
 				$p = \R::load('plagins_cross', $id);
 				
@@ -483,6 +486,7 @@ class PlaginsController extends AppController {
 			$sql_part = rtrim($sql_part, ',');
 			if($sql_part){					
 				\R::exec("INSERT IGNORE INTO plagins_cross (cross_id, product_id, vendor_id, cross_name, cross_abbreviated_name, tip_cross, equipment_vendor) VALUES $sql_part");
+				CrossReferenceService::syncAllLegacy();
 			}				
 						
 			$_SESSION['success'] = 'Кросс-номера импортированы';
@@ -546,6 +550,7 @@ class PlaginsController extends AppController {
 	public function deleteCrossAction(){
         $id = $this->getRequestID();        
         $cross = \R::load('plagins_cross', $id);
+		CrossReferenceService::removeLegacyRelation((string)$cross->cross_id);
         \R::trash($cross);
 		
 		// API IndexNow

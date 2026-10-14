@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\services\ProductCertificationService;
+use app\services\CrossReferenceService;
 
 use app\models\admin\Review;
 use app\models\Breadcrumbs;
@@ -354,44 +355,14 @@ class ProductController extends AppController
             }
         }
 
-        $cross = \R::getAll(
-            "SELECT
-                pcv.name,
-                pc.cross_name,
-                pc.cross_abbreviated_name,
-                pc.tip_cross,
-                pc.equipment_vendor
-             FROM plagins_cross pc
-             JOIN plagins_cross_vendor pcv ON pc.vendor_id = pcv.id
-             WHERE pc.product_id = ?",
-            [$product->id]
-        );
-
-        $crossAnalog = \R::getAll(
-            "SELECT
-                pcv.name,
-                pc.cross_name,
-                pc.cross_abbreviated_name,
-                pc.tip_cross,
-                pc.equipment_vendor
-             FROM plagins_cross pc
-             JOIN plagins_cross_vendor pcv ON pc.vendor_id = pcv.id
-             WHERE pc.equipment_vendor = ? AND pc.product_id = ?",
-            [2, $product->id]
-        );
-
-        $crossOem = \R::getAll(
-            "SELECT
-                pcv.name,
-                pc.cross_name,
-                pc.cross_abbreviated_name,
-                pc.tip_cross,
-                pc.equipment_vendor
-             FROM plagins_cross pc
-             JOIN plagins_cross_vendor pcv ON pc.vendor_id = pcv.id
-             WHERE pc.equipment_vendor = ? AND pc.product_id = ?",
-            [1, $product->id]
-        );
+        $cross = CrossReferenceService::forProduct((int)$product->id);
+        $crossAnalog = array_values(array_filter($cross, static function ($item) {
+            return ($item['relation_type'] ?? '') !== 'oem';
+        }));
+        $crossOem = array_values(array_filter($cross, static function ($item) {
+            return ($item['relation_type'] ?? '') === 'oem';
+        }));
+        $crossProductType = CrossReferenceService::productType($product);
 
         $services = [];
         $servicesWidgetContext = [];
@@ -547,6 +518,7 @@ class ProductController extends AppController
             'cross',
             'crossAnalog',
             'crossOem',
+            'crossProductType',
             'reviewGalleryByReviewId',
             'administr',
             'productWishlisted',
