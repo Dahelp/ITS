@@ -42,6 +42,24 @@ if (!$sample || ($sample[0]['product_type'] ?? '') !== 'wheel') {
     exit(1);
 }
 
+if (($sample[0]['cross_manufacturer'] ?? '') !== 'TOYOTA') {
+    fwrite(STDERR, "FAILED: wheel OEM manufacturer metadata is missing\n");
+    exit(1);
+}
+
+$sampleProduct = \R::load('product', (int)$sample[0]['product_id']);
+$sampleContext = CrossReferenceService::context($sampleProduct, $sample[0], 'wheel');
+if (strpos($sampleContext['heading'], 'Диск — аналог OEM 441081048071 TOYOTA') !== 0
+    || strpos($sampleContext['title'], (string)$sampleProduct->name) !== false) {
+    fwrite(STDERR, "FAILED: wheel cross SEO does not have an independent OEM intent\n");
+    exit(1);
+}
+
+if ((int)\R::getCell("SELECT COUNT(*) FROM product_cross_context WHERE description LIKE '%в к-те%'") !== 0) {
+    fwrite(STDERR, "FAILED: abbreviated wheel description remains in the database\n");
+    exit(1);
+}
+
 $routes = (string)file_get_contents($root . '/config/routes.php');
 if (strpos($routes, "(?P<kind>diski)") === false) {
     fwrite(STDERR, "FAILED: disk cross route is missing\n");

@@ -80,6 +80,7 @@ for ($row = 2; $row <= $highestRow; $row++) {
     $crossRaw = trim((string)$sheet->getCell('C' . $row)->getValue());
     $fitment = trim((string)$sheet->getCell('D' . $row)->getValue());
     $description = trim((string)$sheet->getCell('E' . $row)->getValue());
+    $description = preg_replace('~\bв\s+к-те\b~ui', 'в комплекте', $description);
     if ($size === '' && $sourceKey === '' && $crossRaw === '') continue;
 
     $spec = normalizeSpec($size);

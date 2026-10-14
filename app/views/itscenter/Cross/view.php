@@ -484,11 +484,14 @@ if (property_exists($product, 'reserve')) {
 				<div class="tab-pane fade" id="pills-opisanie" role="tabpanel" aria-labelledby="pills-opisanie-tab" itemprop="description">
 					<p><?=h($crossContext['intro'])?></p>
 					<?php if ($productType === 'wheel'): ?>
-						<?php if (!empty($crossProductData['description'])): ?><p><?=h($crossProductData['description'])?></p><?php endif; ?>
-						<?php if (!empty($crossProductData['fitment_text'])): ?>
-							<h2 class="h5">Применяемость по технике</h2>
-							<p><?=h($crossProductData['fitment_text'])?></p>
+						<?php if (!empty($crossContext['manufacturer'])): ?>
+							<p><strong>Производитель техники:</strong> <?=h($crossContext['manufacturer'])?></p>
 						<?php endif; ?>
+						<?php if (!empty($crossContext['equipmentModels'])): ?>
+							<h2 class="h5">Модели техники для OEM-номера <?=h($cross['cross_name'])?></h2>
+							<p><?=h($crossContext['equipmentModels'])?></p>
+						<?php endif; ?>
+						<?php if (!empty($crossProductData['description'])): ?><p><?=h($crossProductData['description'])?></p><?php endif; ?>
 						<p>Уточнить совместимость диска с конкретной моделью техники можно у менеджера ИТС-Центр.</p>
 					<?php else: ?>
 						<p>Фильтр EKKA соответствует европейским стандартам и совпадает по основным характеристикам с оригиналом.</p>

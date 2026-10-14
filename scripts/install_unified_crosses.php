@@ -48,6 +48,16 @@ $sql = [
         updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (product_id),
         UNIQUE KEY uq_product_cross_context_source (source, source_key)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+    "CREATE TABLE IF NOT EXISTS cross_reference_context (
+        cross_id INT UNSIGNED NOT NULL,
+        manufacturer VARCHAR(120) NULL,
+        equipment_models TEXT NULL,
+        source_note VARCHAR(255) NULL,
+        confidence ENUM('confirmed','catalog','inferred','unknown') NOT NULL DEFAULT 'unknown',
+        updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (cross_id),
+        CONSTRAINT fk_cross_reference_context_reference FOREIGN KEY (cross_id) REFERENCES cross_reference(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 ];
 

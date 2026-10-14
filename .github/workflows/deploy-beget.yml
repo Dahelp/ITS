@@ -93,6 +93,11 @@ jobs:
         run: |
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_unified_crosses.php || php8.1 scripts/install_unified_crosses.php || php7.4 scripts/install_unified_crosses.php || php scripts/install_unified_crosses.php)"
 
+      - name: Seed wheel cross metadata
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/seed_wheel_cross_metadata.php || php8.1 scripts/seed_wheel_cross_metadata.php || php7.4 scripts/seed_wheel_cross_metadata.php || php scripts/seed_wheel_cross_metadata.php)"
+
       - name: Add article content
         shell: bash
         run: |
