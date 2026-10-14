@@ -1064,7 +1064,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
           <?php foreach ($crossAnalog as $analog): ?>
           <tr>
           <td><?=$analog["name"]?></td>
-          <td><a href="cross/<?=rawurlencode(mb_strtolower($analog["cross_abbreviated_name"]))?>"><?=$analog["cross_name"]?></a></td>
+          <td><a href="<?=PATH . \app\services\CrossReferenceService::url($analog, $crossProductType ?? null)?>"><?=$analog["cross_name"]?></a></td>
           </tr>
           <?php endforeach; ?>
           </table>
@@ -1076,7 +1076,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
           <?php foreach ($crossOem as $oem): ?>
           <tr>
           <td><?=$oem["name"]?></td>
-          <td><a href="cross/<?=rawurlencode(mb_strtolower($oem["cross_abbreviated_name"]))?>"><?=$oem["cross_name"]?></a></td>
+          <td><a href="<?=PATH . \app\services\CrossReferenceService::url($oem, $crossProductType ?? null)?>"><?=$oem["cross_name"]?></a></td>
           </tr>
           <?php endforeach; ?>
           </table>

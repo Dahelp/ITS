@@ -88,6 +88,11 @@ jobs:
         run: |
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_order_traffic_source.php || php8.1 scripts/add_order_traffic_source.php || php7.4 scripts/add_order_traffic_source.php || php scripts/add_order_traffic_source.php)"
 
+      - name: Install unified cross references
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_unified_crosses.php || php8.1 scripts/install_unified_crosses.php || php7.4 scripts/install_unified_crosses.php || php scripts/install_unified_crosses.php)"
+
       - name: Add article content
         shell: bash
         run: |
