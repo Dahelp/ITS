@@ -237,7 +237,7 @@ class CrossReferenceService
         $items = array_values(array_filter(array_map('trim', preg_split('~\s*,\s*~u', $models) ?: [])));
         if (!$items) return '';
         $short = array_slice($items, 0, $limit);
-        return implode(', ', $short) . (count($items) > $limit ? ' и др.' : '');
+        return implode(', ', $short) . (count($items) > $limit ? ' и другие модели' : '');
     }
 
     public static function productContextData(int $productId): array
