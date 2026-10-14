@@ -60,6 +60,27 @@ if ((int)\R::getCell("SELECT COUNT(*) FROM product_cross_context WHERE descripti
     exit(1);
 }
 
+$applicationProductId = (int)\R::getCell(
+    "SELECT product_id FROM product_cross_context WHERE source_key='500F10ET06180150' LIMIT 1"
+);
+$applications = CrossReferenceService::wheelApplicationsForProduct($applicationProductId);
+if (!$applications) {
+    fwrite(STDERR, "FAILED: wheel product application list is empty\n");
+    exit(1);
+}
+$linkedApplications = array_values(array_filter($applications, static fn($row) => !empty($row['alias'])));
+$plainApplications = array_values(array_filter($applications, static fn($row) => empty($row['alias'])));
+if (!$linkedApplications || !$plainApplications) {
+    fwrite(STDERR, "FAILED: wheel applications must contain linked and plain models\n");
+    exit(1);
+}
+
+$productView = (string)file_get_contents($root . '/app/views/itscenter/Product/view.php');
+if (strpos($productView, 'Посмотреть товары для') === false || strpos($productView, 'empty($tech["alias"])') === false) {
+    fwrite(STDERR, "FAILED: product application tab does not render conditional links\n");
+    exit(1);
+}
+
 $routes = (string)file_get_contents($root . '/config/routes.php');
 if (strpos($routes, "(?P<kind>diski)") === false) {
     fwrite(STDERR, "FAILED: disk cross route is missing\n");

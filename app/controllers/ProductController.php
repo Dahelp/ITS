@@ -316,6 +316,9 @@ class ProductController extends AppController
                 [$attributeValueMap[4]]
             );
         }
+        if (CrossReferenceService::productType($product) === 'wheel') {
+            $technics = CrossReferenceService::wheelApplicationsForProduct((int)$product->id);
+        }
 
         $complete = \R::getAll(
             "SELECT DISTINCT pc.complete_id AS id, c.name, c.alias, c.img, c.description
