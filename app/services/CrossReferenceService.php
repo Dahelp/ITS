@@ -258,6 +258,26 @@ class CrossReferenceService
         $fitment = trim((string)($context['fitment_text'] ?? ''));
         if ($fitment === '') return [];
 
+        return self::wheelApplicationsFromFitment($fitment);
+    }
+
+    public static function wheelApplicationsForCross(array $cross): array
+    {
+        $manufacturer = trim((string)($cross['cross_manufacturer'] ?? ''));
+        $models = trim((string)($cross['cross_equipment_models'] ?? ''));
+        if ($manufacturer === '' || $models === '') return [];
+
+        $items = array_values(array_filter(array_map('trim', preg_split('~\s*,\s*~u', $models) ?: [])));
+        $fitment = implode(', ', array_map(static function ($model) use ($manufacturer) {
+            return $manufacturer . ' ' . $model;
+        }, $items));
+
+        return self::wheelApplicationsFromFitment($fitment);
+    }
+
+    private static function wheelApplicationsFromFitment(string $fitment): array
+    {
+
         $catalog = \R::getAll(
             'SELECT t.model,t.alias,tm.name FROM technics t
              JOIN technics_manufacturer tm ON tm.id=t.manufacturer_id

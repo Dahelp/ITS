@@ -424,6 +424,11 @@ if (property_exists($product, 'reserve')) {
 				<li class="nav-item" role="presentation">
 					<button class="nav-link" id="pills-opisanie-tab" data-bs-toggle="pill" data-bs-target="#pills-opisanie" type="button" role="tab" aria-controls="pills-opisanie" aria-selected="false">Описание</button>
 				</li>
+			<?php if (!empty($technics)): ?>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="pills-primenenie-tab" data-bs-toggle="pill" data-bs-target="#pills-primenenie" type="button" role="tab" aria-controls="pills-primenenie" aria-selected="false">Применяемость</button>
+				</li>
+			<?php endif; ?>
 			<?php if($cross) { ?>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link" id="pills-analog-tab" data-bs-toggle="pill" data-bs-target="#pills-analog" type="button" role="tab" aria-controls="pills-analog" aria-selected="false">Аналоги</button>
@@ -487,10 +492,6 @@ if (property_exists($product, 'reserve')) {
 						<?php if (!empty($crossContext['manufacturer'])): ?>
 							<p><strong>Производитель техники:</strong> <?=h($crossContext['manufacturer'])?></p>
 						<?php endif; ?>
-						<?php if (!empty($crossContext['equipmentModels'])): ?>
-							<h2 class="h5">Модели техники для OEM-номера <?=h($cross['cross_name'])?></h2>
-							<p><?=h($crossContext['equipmentModels'])?></p>
-						<?php endif; ?>
 						<?php if (!empty($crossProductData['description'])): ?><p><?=h($crossProductData['description'])?></p><?php endif; ?>
 						<p>Уточнить совместимость диска с конкретной моделью техники можно у менеджера ИТС-Центр.</p>
 					<?php else: ?>
@@ -508,6 +509,27 @@ if (property_exists($product, 'reserve')) {
 						</ul>
 					<?php endif; ?>
 				</div>
+				<?php if (!empty($technics)): ?>
+					<div class="tab-pane fade" id="pills-primenenie" role="tabpanel" aria-labelledby="pills-primenenie-tab">
+						<table class="table table-bordered table-striped">
+							<caption>Применяемость диска-аналога OEM <?=h($cross['cross_name'])?> по технике</caption>
+							<tbody>
+							<?php foreach ($technics as $tech): ?>
+								<tr>
+									<td><?=h($tech['name'])?></td>
+									<td>
+									<?php if (!empty($tech['alias'])): ?>
+										<a href="<?=PATH?>/technics/<?=h($tech['alias'])?>" title="Посмотреть товары для <?=h($tech['name'] . ' ' . $tech['model'])?>"><?=h($tech['model'])?></a>
+									<?php else: ?>
+										<?=h($tech['model'])?>
+									<?php endif; ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					</div>
+				<?php endif; ?>
 				<?php if($cross) { ?>
 					<div class="tab-pane fade" id="pills-analog" role="tabpanel" aria-labelledby="pills-analog-tab">
 						<table class="table table-bordered table-striped">

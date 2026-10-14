@@ -32,6 +32,9 @@ class CrossController extends AppController {
         $productType = (string)($cross['product_type'] ?? CrossReferenceService::productType($product));
         $crossContext = CrossReferenceService::context($product, $cross, $productType);
         $crossProductData = CrossReferenceService::productContextData((int)$product->id);
+        $technics = $productType === 'wheel'
+            ? CrossReferenceService::wheelApplicationsForCross($cross)
+            : [];
         $productCrosses = CrossReferenceService::forProduct((int)$product->id);
         $crossAnalog = array_values(array_filter($productCrosses, static function ($item) use ($cross) {
             return ($item['relation_type'] ?? '') !== 'oem'
@@ -188,7 +191,7 @@ class CrossController extends AppController {
         $this->set(compact(
             'product', 'related', 'similar', 'gallery', 'recentlyViewed', 'breadcrumbs',
             'mods', 'attribute_group', 'attributs', 'cat_prod', 'vendor', 'inseo', 'action',
-            'cross', 'crossvendor', 'crossContext', 'crossMatches', 'crossProductData',
+            'cross', 'crossvendor', 'crossContext', 'crossMatches', 'crossProductData', 'technics',
             'crossAnalog', 'crossOem', 'productType'
         ));
     }
