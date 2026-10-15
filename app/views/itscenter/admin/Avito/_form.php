@@ -249,9 +249,9 @@ if (!function_exists('avito_h')) {
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Тип объявления (AdType)</label>
+                    <label class="col-sm-3 col-form-label">Вид объявления (AdType)</label>
                     <div class="col-sm-9">
-                      <?php $adTypes = ['Товар приобретен на продажу','Товар от производителя']; ?>
+                      <?php $adTypes = ['Продаю своё','Товар приобретен на продажу','Товар от производителя']; ?>
                       <select class="form-control" name="ad_type">
                         <?php foreach ($adTypes as $v): ?>
                           <option value="<?=$v?>" <?php if ($ad_type === $v) echo 'selected'; ?>><?=$v?></option>

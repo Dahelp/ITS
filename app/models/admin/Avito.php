@@ -672,6 +672,13 @@ class Avito extends AppModel
             \R::exec("ALTER TABLE avito_ad MODIFY speed_index VARCHAR(16) NULL DEFAULT NULL");
         }
 
+        // В актуальном справочнике Avito появилось третье значение «Продаю своё».
+        $adTypeColumn = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE 'ad_type'");
+        $adTypeType = (string)($adTypeColumn['Type'] ?? '');
+        if ($adTypeColumn && stripos($adTypeType, 'enum(') === 0) {
+            \R::exec("ALTER TABLE avito_ad MODIFY ad_type VARCHAR(64) NULL DEFAULT NULL");
+        }
+
         // Контакты едины для всех объявлений, а черновики должны быть в архиве.
         \R::exec(
             "UPDATE avito_ad SET manager_name = ?, contact_phone = ?, "
