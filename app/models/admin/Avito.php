@@ -1180,6 +1180,19 @@ class Avito extends AppModel
             'vehicle_model' => 'Модель техники', 'vehicle_generation' => 'Поколение',
             'vehicle_modification' => 'Модификация',
         ];
+        $diskOptional = [
+            'availability' => 'Доступность',
+            'minimum_order_quantity' => 'Минимальное количество',
+            'multi_item' => 'Объединение объявлений',
+            'rims_repair' => 'Ремонт дисков',
+            'rims_straightened' => 'Выпрямление дисков',
+            'rims_welded' => 'Сварка дисков',
+            'rims_with_cracks' => 'Трещины',
+            'rims_with_geometry_change' => 'Изменение геометрии',
+            'painting_type' => 'Покраска',
+            'center_caps' => 'Центральные колпачки',
+            'pressure_sensors' => 'Датчики давления',
+        ];
         $optional = $tireOptional;
         $type = trim((string)($row['product_type'] ?? ''));
         if ($type === 'Шины для грузовиков и спецтехники') {
@@ -1193,6 +1206,7 @@ class Avito extends AppModel
                 'rim_diameter' => 'Диаметр', 'wheel_axle' => 'Ось',
             ];
         } elseif ($type === 'Диски') {
+            $optional = $diskOptional;
             $required += [
                 'rim_diameter' => 'Диаметр', 'rim_bolts' => 'Количество отверстий',
                 'rim_bolts_diameter' => 'PCD', 'rim_type' => 'Тип диска', 'rim_dia' => 'DIA',
@@ -1286,9 +1300,12 @@ class Avito extends AppModel
         } elseif ($reviewStatus === 'needs_review') {
             $status = 'warning';
             $label = 'Требует проверки';
+        } elseif ($missingOptional || $warnings) {
+            $status = 'warning';
+            $label = 'Подтверждено — есть рекомендации';
         } else {
             $status = 'ready';
-            $label = $warnings ? 'Подтверждено — есть рекомендации' : 'Готово к выгрузке';
+            $label = 'Готово к выгрузке';
         }
 
         return compact(

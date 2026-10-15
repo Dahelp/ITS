@@ -68,4 +68,19 @@ if (!preg_grep('~DIA .+ отсутствует~u', $analysis['warnings'])) {
     exit(1);
 }
 
+$adWithOptionalGaps = $base + [
+    'ad_external_id' => 'test-1', 'description' => str_repeat('Описание товара ', 50), 'price_rub' => 1000,
+    'category' => 'Запчасти и аксессуары', 'goods_type' => 'Шины, диски и колёса',
+    'product_type' => 'Диски', 'manager_name' => 'ИТС-Центр', 'contact_phone' => '8 495 424-98-90',
+    'address' => 'Подольск', 'images_json' => json_encode(['https://example.test/1.jpg', 'https://example.test/2.jpg']),
+    'rim_diameter' => '18', 'rim_bolts' => '5', 'rim_bolts_diameter' => '335',
+    'rim_type' => 'Штампованные', 'rim_dia' => '281', 'rim_offset' => '0', 'rim_width' => '9',
+    'review_status' => 'confirmed',
+];
+$optionalAnalysis = Avito::analyzeRow($adWithOptionalGaps);
+if ($optionalAnalysis['status'] !== 'warning' || $optionalAnalysis['label'] !== 'Подтверждено — есть рекомендации') {
+    fwrite(STDERR, "FAILED: optional gaps must use the yellow warning status\n");
+    exit(1);
+}
+
 echo "Avito category feed tests passed\n";
