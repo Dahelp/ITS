@@ -13,6 +13,12 @@ class Avito extends AppModel
 {
     private const MANAGER_NAME = 'ИТС-Центр';
     private const CONTACT_PHONE = '8 495 424-98-90';
+    private const RIM_DIA_VALUES = '0,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,38,40,42,42.1,52,52.1,52.5,54,54.1,55,56,56.1,56.2,56.5,56.6,56.7,56.62,57,57.06,57.1,57.2,57.3,57.12,58,58.1,58.5,58.6,58.7,58.8,59,59.1,59.5,59.6,60,60.06,60.1,60.2,60.5,60.8,60.15,61.1,61.9,62.5,62.6,62.56,63,63.3,63.4,63.5,63.34,63.35,64,64.1,64.3,64.5,64.12,65,65.05,65.06,65.1,65.2,66,66.06,66.1,66.2,66.4,66.5,66.6,66.7,66.9,66.15,66.45,66.46,66.55,66.56,66.69,67,67.04,67.05,67.06,67.08,67.1,67.2,67.7,67.14,68,68.1,69,69.1,69.5,70,70.02,70.1,70.2,70.3,70.4,70.5,70.6,70.7,70.27,71,71.1,71.4,71.5,71.6,71.8,71.56,71.58,71.69,72,72.1,72.2,72.3,72.4,72.5,72.6,72.7,72.55,72.56,72.62,72.69,73,73.06,73.1,73.2,73.3,73.6,73.8,73.9,74,74.1,74.2,74.5,74.6,75,75.1,76,76.1,76.9,77,77.7,77.8,77.9,77.77,78,78.05,78.09,78.1,78.3,78.5,79,79.1,79.5,79.6,80,80.1,81.5,82,83,83.5,83.7,84,84.1,84.2,86.8,86.9,87,87.1,87.2,89,89.1,89.3,90,92,92.1,92.2,92.3,92.5,93,93.1,95,95.1,95.3,95.4,95.5,95.6,96,98,98.1,98.5,98.6,100,100.1,100.3,100.5,101,102,104.1,106,106.1,106.2,106.3,106.5,106.6,106.25,107,107.1,107.5,107.6,108,108.1,108.2,108.3,108.4,108.5,108.6,108.7,109,109.5,109.7,109.8,110,110.1,110.2,110.3,110.5,110.6,111,111.2,111.6,111.8,112,112.1,112.2,112.5,113,113.1,114.3,116.1,116.7,117,118,118.3,120,120.9,121,122.5,125,125.1,125.2,127,130,130.1,130.8,131,134,135,138.8,139,139.7,140,141,142,142.1,145,146,147,150,152.4,160,161,161.1,163,164,165,175,176,180,199.5,200,202,205,214,219,220,221,222,230,281,282,370,370.5,371,372,402,423,428.8,431,446,448,449,452,460,472,480,600.3';
+
+    public static function rimDiaValues(): array
+    {
+        return explode(',', self::RIM_DIA_VALUES);
+    }
 
     public $attributes = [
 
@@ -62,6 +68,33 @@ class Avito extends AppModel
         'goods_type'    => 'Шины, диски и колёса',
         'ad_type'       => 'Товар приобретен на продажу',
         'product_type'  => 'Шины для грузовиков и спецтехники',
+        'spare_part_type' => '',
+        'technic_spare_part_type' => '',
+        'part_type' => '',
+        'cooling_system_spare_part_type' => '',
+        'fuel_system_part_type' => '',
+        'interior_part_type' => '',
+        'availability' => '',
+        'originality' => '',
+        'manufacturer' => '',
+        'oem_number' => '',
+        'original_vendor' => '',
+        'original_number' => '',
+        'technic' => '',
+        'vehicle_make' => '',
+        'vehicle_model' => '',
+        'vehicle_generation' => '',
+        'vehicle_modification' => '',
+        'nds' => '',
+        'postponed_payment' => '',
+        'wholesale_type' => '',
+        'wholesale_min_order_type' => '',
+        'wholesale_min_order_value' => '',
+        'wholesale_packing' => '',
+        'wholesale_packing_value' => '',
+        'wholesale_measure_unit' => '',
+        'wholesale_discount_ladder_type' => '',
+        'wholesale_discount_value' => '',
         'brand'         => '',
         'model'         => '',
         'tire_section_width' => '',
@@ -87,6 +120,16 @@ class Avito extends AppModel
         'rim_dia'            => '',
         'rim_offset'         => '',
         'rim_width'          => '',
+        'minimum_order_quantity' => '',
+        'multi_item' => '',
+        'rims_repair' => '',
+        'rims_straightened' => '',
+        'rims_welded' => '',
+        'rims_with_cracks' => '',
+        'rims_with_geometry_change' => '',
+        'painting_type' => '',
+        'center_caps' => '',
+        'pressure_sensors' => '',
     ];
 
     /**
@@ -647,9 +690,46 @@ class Avito extends AppModel
             'rim_bolts_diameter' => 'VARCHAR(32)',
             'rim_type' => 'VARCHAR(64)',
             'rim_dia' => 'VARCHAR(32)',
+            'minimum_order_quantity' => 'VARCHAR(32)',
+            'multi_item' => 'VARCHAR(8)',
+            'rims_repair' => 'VARCHAR(16)',
+            'rims_straightened' => 'VARCHAR(16)',
+            'rims_welded' => 'VARCHAR(16)',
+            'rims_with_cracks' => 'VARCHAR(16)',
+            'rims_with_geometry_change' => 'VARCHAR(16)',
+            'painting_type' => 'VARCHAR(32)',
+            'center_caps' => 'VARCHAR(16)',
+            'pressure_sensors' => 'VARCHAR(16)',
             'rim_offset' => 'VARCHAR(32)',
             'rim_width' => 'VARCHAR(32)',
             'review_status' => 'VARCHAR(32)',
+            'spare_part_type' => 'VARCHAR(128)',
+            'technic_spare_part_type' => 'VARCHAR(128)',
+            'part_type' => 'VARCHAR(128)',
+            'cooling_system_spare_part_type' => 'VARCHAR(128)',
+            'fuel_system_part_type' => 'VARCHAR(128)',
+            'interior_part_type' => 'VARCHAR(128)',
+            'availability' => 'VARCHAR(32)',
+            'originality' => 'VARCHAR(32)',
+            'manufacturer' => 'VARCHAR(128)',
+            'oem_number' => 'VARCHAR(128)',
+            'original_vendor' => 'VARCHAR(128)',
+            'original_number' => 'VARCHAR(128)',
+            'technic' => 'VARCHAR(128)',
+            'vehicle_make' => 'VARCHAR(128)',
+            'vehicle_model' => 'VARCHAR(128)',
+            'vehicle_generation' => 'VARCHAR(128)',
+            'vehicle_modification' => 'VARCHAR(128)',
+            'nds' => 'VARCHAR(32)',
+            'postponed_payment' => 'VARCHAR(32)',
+            'wholesale_type' => 'VARCHAR(16)',
+            'wholesale_min_order_type' => 'VARCHAR(32)',
+            'wholesale_min_order_value' => 'VARCHAR(32)',
+            'wholesale_packing' => 'VARCHAR(32)',
+            'wholesale_packing_value' => 'VARCHAR(32)',
+            'wholesale_measure_unit' => 'VARCHAR(32)',
+            'wholesale_discount_ladder_type' => 'VARCHAR(64)',
+            'wholesale_discount_value' => 'VARCHAR(64)',
         ];
         foreach ($columns as $name => $definition) {
             if (!\R::getCell("SHOW COLUMNS FROM avito_ad LIKE ?", [$name])) {
@@ -677,6 +757,13 @@ class Avito extends AppModel
         $adTypeType = (string)($adTypeColumn['Type'] ?? '');
         if ($adTypeColumn && stripos($adTypeType, 'enum(') === 0) {
             \R::exec("ALTER TABLE avito_ad MODIFY ad_type VARCHAR(64) NULL DEFAULT NULL");
+        }
+
+        foreach (['goods_type', 'product_type'] as $field) {
+            $column = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE ?", [$field]);
+            if ($column && stripos((string)($column['Type'] ?? ''), 'enum(') === 0) {
+                \R::exec("ALTER TABLE avito_ad MODIFY `{$field}` VARCHAR(128) NULL DEFAULT NULL");
+            }
         }
 
         // Контакты едины для всех объявлений, а черновики должны быть в архиве.
@@ -787,42 +874,73 @@ class Avito extends AppModel
             self::xmlAdd($ad, 'GoodsType', (string)($r['goods_type'] ?? ''));
             self::xmlAdd($ad, 'AdType', (string)($r['ad_type'] ?? ''));
             self::xmlAdd($ad, 'ProductType', (string)($r['product_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'SparePartType', (string)($r['spare_part_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'TechnicSparePartType', (string)($r['technic_spare_part_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'PartType', (string)($r['part_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'CoolingSystemSparePartType', (string)($r['cooling_system_spare_part_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'FuelSystemPartType', (string)($r['fuel_system_part_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'InteriorPartType', (string)($r['interior_part_type'] ?? ''));
             self::xmlAdd($ad, 'Title', (string)($r['title'] ?? ''));
             self::xmlCdata($ad, 'Description', self::descriptionValue($r));
             if (!empty($r['price_rub'])) {
                 self::xmlAdd($ad, 'Price', (string)((int)$r['price_rub']));
             }
             self::xmlAdd($ad, 'Condition', (string)($r['item_condition'] ?? 'Новое'));
+            self::xmlAddIfNotEmpty($ad, 'Availability', (string)($r['availability'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Originality', (string)($r['originality'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Manufacturer', (string)($r['manufacturer'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'OEM', (string)($r['oem_number'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'OriginalVendor', (string)($r['original_vendor'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'OriginalNumber', (string)($r['original_number'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Technic', (string)($r['technic'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Make', (string)($r['vehicle_make'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Model', (string)($r['vehicle_model'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Generation', (string)($r['vehicle_generation'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Modification', (string)($r['vehicle_modification'] ?? ''));
             self::xmlAdd($ad, 'TargetAudience', (string)($r['target_audience'] ?? ''));
             self::xmlAdd($ad, 'VideoURL', (string)($r['video_url'] ?? ''));
             self::xmlAdd($ad, 'VideoFileURL', (string)($r['video_file_url'] ?? ''));
             $productType = trim((string)($r['product_type'] ?? ''));
-            if ($productType !== 'Мотошины' && $productType !== 'Диски') {
+            $isTire = in_array($productType, ['Шины для грузовиков и спецтехники', 'Мотошины'], true);
+            if ($isTire && $productType !== 'Мотошины') {
                 self::xmlAddIfNotEmpty($ad, 'Brand', (string)($r['brand'] ?? ''));
             }
-            $avitoModel = self::avitoModelValue($productType, (string)($r['model'] ?? ''));
-            self::xmlAddIfNotEmpty($ad, 'Model', $avitoModel);
-            self::xmlAdd($ad, 'TireSectionWidth', (string)($r['tire_section_width'] ?? ''));
-            self::xmlAdd($ad, 'TireAspectRatio', (string)($r['tire_aspect_ratio'] ?? ''));
-            self::xmlAdd($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
-            self::xmlAdd($ad, 'TireType', (string)($r['tire_type'] ?? ''));
-            self::xmlAdd($ad, 'Quantity', (string)($r['quantity'] ?? ''));
-            self::xmlAdd($ad, 'SpeedIndex', (string)($r['speed_index'] ?? ''));
-            self::xmlAdd($ad, 'PlyRating', (string)($r['ply_rating'] ?? ''));
-            self::xmlAdd($ad, 'Construction', (string)($r['construction'] ?? ''));
-            self::xmlAdd($ad, 'TubeType', (string)($r['tube_type'] ?? ''));
-            self::xmlAdd($ad, 'WheelAxle', (string)($r['wheel_axle'] ?? ''));
-            self::xmlAdd($ad, 'LoadIndex', (string)($r['load_index'] ?? ''));
-            self::xmlAdd($ad, 'ResidualTreadSV', (string)($r['residual_tread_sv'] ?? ''));
-            self::xmlAdd($ad, 'Design', (string)($r['design'] ?? ''));
-            self::xmlAdd($ad, 'VehicleType', (string)($r['vehicle_type'] ?? ''));
+            if ($isTire) {
+                $avitoModel = self::avitoModelValue($productType, (string)($r['model'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'Model', $avitoModel);
+                self::xmlAdd($ad, 'TireSectionWidth', (string)($r['tire_section_width'] ?? ''));
+                self::xmlAdd($ad, 'TireAspectRatio', (string)($r['tire_aspect_ratio'] ?? ''));
+                self::xmlAdd($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'TireType', (string)($r['tire_type'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'Quantity', (string)($r['quantity'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'SpeedIndex', (string)($r['speed_index'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'PlyRayting', (string)($r['ply_rating'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'Construction', (string)($r['construction'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'TubeType', (string)($r['tube_type'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'WheelAxle', (string)($r['wheel_axle'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'LoadIndex', (string)($r['load_index'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'ResidualTreadSV', (string)($r['residual_tread_sv'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'Design', (string)($r['design'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'VehicleType', (string)($r['vehicle_type'] ?? ''));
+            }
             if ($productType === 'Диски') {
+                self::xmlAddIfNotEmpty($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
                 self::xmlAdd($ad, 'RimBolts', (string)($r['rim_bolts'] ?? ''));
                 self::xmlAdd($ad, 'RimBoltsDiameter', (string)($r['rim_bolts_diameter'] ?? ''));
                 self::xmlAdd($ad, 'RimType', (string)($r['rim_type'] ?? ''));
                 self::xmlAdd($ad, 'RimDIA', (string)($r['rim_dia'] ?? ''));
                 self::xmlAdd($ad, 'RimOffset', (string)($r['rim_offset'] ?? ''));
                 self::xmlAdd($ad, 'RimWidth', (string)($r['rim_width'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'MinimumOrderQuantity', (string)($r['minimum_order_quantity'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'MultiItem', (string)($r['multi_item'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'RimsRepair', (string)($r['rims_repair'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'RimsStraightened', (string)($r['rims_straightened'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'RimsWelded', (string)($r['rims_welded'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'RimsWithCracks', (string)($r['rims_with_cracks'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'RimsWithGeometryChange', (string)($r['rims_with_geometry_change'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'PaintingType', (string)($r['painting_type'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'CenterCaps', (string)($r['center_caps'] ?? ''));
+                self::xmlAddIfNotEmpty($ad, 'PressureSensors', (string)($r['pressure_sensors'] ?? ''));
             }
             self::xmlAdd($ad, 'DeliverySubsidy', (string)($r['delivery_subsidy'] ?? ''));
             self::xmlAdd($ad, 'ReturnPolicy', (string)($r['return_policy'] ?? ''));
@@ -833,6 +951,16 @@ class Avito extends AppModel
             self::xmlAdd($ad, 'Length', (string)($r['length_cm'] ?? ''));
             self::xmlAdd($ad, 'Height', (string)($r['height_cm'] ?? ''));
             self::xmlAdd($ad, 'Width', (string)($r['width_cm'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'NDS', (string)($r['nds'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'PostponedPayment', (string)($r['postponed_payment'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesaleType', (string)($r['wholesale_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesaleMinOrderType', (string)($r['wholesale_min_order_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesaleMinOrderValue', (string)($r['wholesale_min_order_value'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesalePacking', (string)($r['wholesale_packing'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesalePackingValue', (string)($r['wholesale_packing_value'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesaleMeasureUnit', (string)($r['wholesale_measure_unit'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesaleDiscountLadderType', (string)($r['wholesale_discount_ladder_type'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'WholesaleDiscountValue', (string)($r['wholesale_discount_value'] ?? ''));
             self::xmlAdd($ad, 'Promo', (string)($r['promo'] ?? ''));
             self::xmlAdd($ad, 'PromoAutoOptions', (string)($r['promo_auto_json'] ?? ''));
             self::xmlAdd($ad, 'PromoManualOptions', (string)($r['promo_manual_json'] ?? ''));
@@ -1007,13 +1135,22 @@ class Avito extends AppModel
             'item_condition' => 'Состояние', 'manager_name' => 'Менеджер',
             'contact_phone' => 'Телефон', 'address' => 'Адрес', 'images_json' => 'Фотографии',
         ];
-        $optional = [
+        $tireOptional = [
             'brand' => 'Бренд', 'model' => 'Модель', 'tire_section_width' => 'Ширина профиля',
             'tire_aspect_ratio' => 'Высота профиля', 'rim_diameter' => 'Диаметр',
             'tire_type' => 'Сезонность', 'speed_index' => 'Индекс скорости',
             'ply_rating' => 'Слойность', 'construction' => 'Каркас', 'tube_type' => 'Тип TT/TL',
             'wheel_axle' => 'Ось', 'load_index' => 'Индекс нагрузки',
         ];
+        $partsOptional = [
+            'availability' => 'Доступность', 'originality' => 'Происхождение',
+            'manufacturer' => 'Производитель', 'oem_number' => 'Номер детали OEM',
+            'original_vendor' => 'Производитель оригинала', 'original_number' => 'Номер оригинала',
+            'technic' => 'Тип спецтехники', 'vehicle_make' => 'Марка техники',
+            'vehicle_model' => 'Модель техники', 'vehicle_generation' => 'Поколение',
+            'vehicle_modification' => 'Модификация',
+        ];
+        $optional = $tireOptional;
         $type = trim((string)($row['product_type'] ?? ''));
         if ($type === 'Шины для грузовиков и спецтехники') {
             $required += [
@@ -1027,10 +1164,26 @@ class Avito extends AppModel
             ];
         } elseif ($type === 'Диски') {
             $required += [
-                'rim_diameter' => 'Диаметр', 'quantity' => 'Количество', 'rim_bolts' => 'Количество отверстий',
+                'rim_diameter' => 'Диаметр', 'rim_bolts' => 'Количество отверстий',
                 'rim_bolts_diameter' => 'PCD', 'rim_type' => 'Тип диска', 'rim_dia' => 'DIA',
                 'rim_offset' => 'Вылет ET', 'rim_width' => 'Ширина обода',
             ];
+        } elseif ($type === 'Для грузовиков и спецтехники') {
+            $optional = $partsOptional;
+            $required += [
+                'spare_part_type' => 'Вид запчасти',
+                'technic_spare_part_type' => 'Тип запчасти',
+            ];
+            $categoryFields = [
+                'Система смазки' => ['part_type' => 'Тип детали'],
+                'Система выпуска' => ['part_type' => 'Тип детали'],
+                'Система охлаждения ДВС' => ['cooling_system_spare_part_type' => 'Тип детали системы охлаждения'],
+                'Топливная система' => ['fuel_system_part_type' => 'Тип детали топливной системы'],
+                'Детали салона' => ['interior_part_type' => 'Тип детали салона'],
+            ];
+            foreach ($categoryFields[trim((string)($row['technic_spare_part_type'] ?? ''))] ?? [] as $field => $label) {
+                $optional[$field] = $label;
+            }
         }
         foreach (array_keys($required) as $field) {
             unset($optional[$field]);
@@ -1074,6 +1227,12 @@ class Avito extends AppModel
         if ($model !== '' && $type === 'Шины для грузовиков и спецтехники'
             && self::avitoModelValue($type, $model) === '') {
             $warnings[] = 'Модели «' . $model . '» нет в справочнике Avito — она указана только в названии';
+        }
+        if ($type === 'Диски') {
+            $rimDia = str_replace(',', '.', trim((string)($row['rim_dia'] ?? '')));
+            if ($rimDia !== '' && !in_array($rimDia, self::rimDiaValues(), true)) {
+                $warnings[] = 'DIA «' . $rimDia . '» отсутствует в справочнике Avito — выберите допустимое значение';
+            }
         }
 
         $requiredTotal = count($required);

@@ -114,7 +114,7 @@ if (!function_exists('avito_h')) {
             <ul class="nav nav-pills ml-auto p-2">
               <li class="nav-item"><a class="nav-link active" href="#tab-main" data-toggle="tab">Основное</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-contacts" data-toggle="tab">Контакты</a></li>
-              <li class="nav-item"><a class="nav-link" href="#tab-tires" data-toggle="tab">Характеристики шин и дисков</a></li>
+              <li class="nav-item"><a class="nav-link" href="#tab-tires" data-toggle="tab">Характеристики товара</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-delivery" data-toggle="tab">Доставка/габариты</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-promo" data-toggle="tab">Промо</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-media" data-toggle="tab">Медиа</a></li>
@@ -243,8 +243,11 @@ if (!function_exists('avito_h')) {
                       Вид товара (GoodsType) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input class="form-control" name="goods_type" value="<?=avito_h($goods_type)?>">
-                      <small class="form-text text-muted">Например: «Шины, диски и колёса».</small>
+                      <select class="form-control" name="goods_type" id="avito-goods-type">
+                        <?php foreach (['Шины, диски и колёса', 'Запчасти'] as $v): ?>
+                          <option value="<?=$v?>" <?=$goods_type === $v ? 'selected' : ''?>><?=$v?></option>
+                        <?php endforeach; ?>
+                      </select>
                     </div>
                   </div>
 
@@ -265,8 +268,11 @@ if (!function_exists('avito_h')) {
                       Тип товара в Авито (ProductType) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input class="form-control" name="product_type" value="<?=avito_h($product_type)?>">
-                      <small class="form-text text-muted">Например: «Шины для грузовиков и спецтехники».</small>
+                      <select class="form-control" name="product_type" id="avito-product-type">
+                        <?php foreach (['Шины для грузовиков и спецтехники', 'Мотошины', 'Диски', 'Для грузовиков и спецтехники'] as $v): ?>
+                          <option value="<?=$v?>" <?=$product_type === $v ? 'selected' : ''?>><?=$v?></option>
+                        <?php endforeach; ?>
+                      </select>
                     </div>
                   </div>
 
@@ -450,9 +456,15 @@ if (!function_exists('avito_h')) {
                 </div>
               </div>
 
-              <!-- ============ ТАБ: ХАРАКТЕРИСТИКИ ШИН ============ -->
+              <!-- ============ ТАБ: ХАРАКТЕРИСТИКИ ТОВАРА ============ -->
               <div class="tab-pane" id="tab-tires">
                 <div class="box-body">
+
+                  <div class="alert alert-info py-2">
+                    Показываются только поля выбранного типа товара. Обязательные параметры отмечены звёздочкой.
+                  </div>
+
+                  <div class="avito-profile avito-profile-tires">
 
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">
@@ -532,7 +544,7 @@ if (!function_exists('avito_h')) {
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Индекс скорости (SpeedIndex)</label>
                     <div class="col-sm-9">
-                      <?php $si = ['A1','A2','A3','A4','A5','A6','A7','A8','B','C','D','E','F','G','J','K','L','M','N','P','Q','R','S','T']; ?>
+                      <?php $si = ['A5','A6','A8','C','D','E','F','G','J','K','L','M','N','P','Q','R','S','T']; ?>
                       <select class="form-control" name="speed_index">
                         <option value=""></option>
                         <?php foreach ($si as $v): ?>
@@ -630,6 +642,8 @@ if (!function_exists('avito_h')) {
                     </div>
                   </div>
 
+                  </div>
+
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">
                       Состояние товара (Condition) <span class="text-danger">*</span>
@@ -657,27 +671,46 @@ if (!function_exists('avito_h')) {
                     </div>
                   </div>
 
-                  <hr>
-                  <h5>Обязательные характеристики диска</h5>
+                  <div class="avito-profile avito-profile-disks">
+                  <h5>Характеристики диска</h5>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Диаметр диска (RimDiameter) <span class="text-danger">*</span></label>
+                    <div class="col-sm-9"><input class="form-control" name="rim_diameter" value="<?=avito_h($ad->rim_diameter ?? '')?>"></div>
+                  </div>
                   <?php
                     $rimFields = [
                       'rim_width' => ['Ширина обода (RimWidth)', 'Например: 9.5'],
                       'rim_offset' => ['Вылет ET (RimOffset)', 'Например: 0'],
                       'rim_bolts' => ['Количество отверстий (RimBolts)', 'Например: 8'],
                       'rim_bolts_diameter' => ['Диаметр отверстий PCD (RimBoltsDiameter)', 'Например: 203.2'],
-                      'rim_dia' => ['Центральное отверстие DIA (RimDIA)', 'Например: 152.4'],
                     ];
                   ?>
                   <?php foreach ($rimFields as $field => $meta): ?>
                     <div class="form-group row">
-                      <label class="col-sm-3 col-form-label"><?=$meta[0]?></label>
+                      <label class="col-sm-3 col-form-label"><?=$meta[0]?> <span class="text-danger">*</span></label>
                       <div class="col-sm-9">
                         <input class="form-control" name="<?=$field?>" placeholder="<?=$meta[1]?>" value="<?=avito_h($ad->$field ?? '')?>">
                       </div>
                     </div>
                   <?php endforeach; ?>
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Тип диска (RimType)</label>
+                    <label class="col-sm-3 col-form-label">Центральное отверстие DIA (RimDIA) <span class="text-danger">*</span></label>
+                    <div class="col-sm-9">
+                      <?php $currentDia = str_replace(',', '.', trim((string)($ad->rim_dia ?? ''))); ?>
+                      <select class="form-control" name="rim_dia">
+                        <option value=""></option>
+                        <?php if ($currentDia !== '' && !in_array($currentDia, \app\models\admin\Avito::rimDiaValues(), true)): ?>
+                          <option value="<?=$currentDia?>" selected disabled><?=$currentDia?> — нет в справочнике Avito</option>
+                        <?php endif; ?>
+                        <?php foreach (\app\models\admin\Avito::rimDiaValues() as $v): ?>
+                          <option value="<?=$v?>" <?=$currentDia === $v ? 'selected' : ''?>><?=$v?></option>
+                        <?php endforeach; ?>
+                      </select>
+                      <small class="form-text text-muted">Значения взяты из официального шаблона Avito для дисков.</small>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Тип диска (RimType) <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                       <?php $rimTypes = ['Штампованные','Литые','Кованые','Спицованные','Сборные','Карбоновые']; ?>
                       <select class="form-control" name="rim_type">
@@ -687,6 +720,91 @@ if (!function_exists('avito_h')) {
                         <?php endforeach; ?>
                       </select>
                     </div>
+                  </div>
+
+                  <h5 class="mt-3">Дополнительные характеристики диска</h5>
+                  <div class="form-group row"><label class="col-sm-3 col-form-label">Доступность</label><div class="col-sm-9"><select class="form-control" name="availability"><option value=""></option><?php foreach (['В наличии','Под заказ'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->availability ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                  <div class="form-group row"><label class="col-sm-3 col-form-label">Продавать по</label><div class="col-sm-9"><select class="form-control" name="minimum_order_quantity"><option value=""></option><?php foreach (['по 2 шт.','по 4 шт.'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->minimum_order_quantity ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                  <div class="form-group row"><label class="col-sm-3 col-form-label">Объединять с другими объявлениями</label><div class="col-sm-9"><select class="form-control" name="multi_item"><option value=""></option><?php foreach (['Да','Нет'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->multi_item ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                  <?php
+                    $diskSelects = [
+                      'rims_repair' => ['Был ли ремонт дисков', ['Да','Нет','Не знаю']],
+                      'rims_straightened' => ['Сколько дисков выпрямляли', ['Ни одного','1','2','Более 2']],
+                      'rims_welded' => ['Сколько дисков варили', ['Ни одного','1','2','Более 2']],
+                      'rims_with_cracks' => ['Сколько дисков с трещинами', ['Ни одного','1','2','Более 2']],
+                      'rims_with_geometry_change' => ['Сколько дисков с изменением геометрии', ['Ни одного','1','2','Более 2']],
+                      'painting_type' => ['Тип покраски', ['Заводской','Была покраска']],
+                      'center_caps' => ['Центральные колпачки', ['Да, все','Не все','Нет']],
+                      'pressure_sensors' => ['Датчики давления', ['Есть','Нет','Не знаю']],
+                    ];
+                  ?>
+                  <?php foreach ($diskSelects as $field => $meta): ?>
+                    <div class="form-group row"><label class="col-sm-3 col-form-label"><?=$meta[0]?></label><div class="col-sm-9"><select class="form-control" name="<?=$field?>"><option value=""></option><?php foreach ($meta[1] as $v): ?><option value="<?=$v?>" <?=(string)($ad->$field ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                  <?php endforeach; ?>
+
+                  </div>
+
+                  <div class="avito-profile avito-profile-parts">
+                    <h5>Категория запчасти</h5>
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">Вид запчасти (SparePartType) <span class="text-danger">*</span></label>
+                      <div class="col-sm-9">
+                        <select class="form-control" name="spare_part_type" id="avito-spare-part-type">
+                          <option value=""></option>
+                          <?php foreach (['Двигатели и комплектующие','Гидравлические и пневмосистемы','Кабина'] as $v): ?>
+                            <option value="<?=$v?>" <?=(string)($ad->spare_part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">Тип запчасти (TechnicSparePartType) <span class="text-danger">*</span></label>
+                      <div class="col-sm-9">
+                        <select class="form-control" name="technic_spare_part_type" id="avito-technic-spare-part-type">
+                          <option value=""></option>
+                          <?php foreach (['Топливная система','Система смазки','Система охлаждения ДВС','Система выпуска','Фильтры и фильтроэлементы','Детали салона'] as $v): ?>
+                            <option value="<?=$v?>" <?=(string)($ad->technic_spare_part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="avito-part-subprofile" data-part-type="Топливная система">
+                      <?php $fuelTypes = ['Форсунки и распылители','Крепёж и уплотнители','Топливные баки и комплектующие','Трубки и шланги','Клапаны и регуляторы','Сепараторы и фильтры','Топливные насосы и комплектующие']; ?>
+                      <div class="form-group row"><label class="col-sm-3 col-form-label">Тип детали топливной системы</label><div class="col-sm-9"><select class="form-control" name="fuel_system_part_type"><option value=""></option><?php foreach ($fuelTypes as $v): ?><option value="<?=$v?>" <?=(string)($ad->fuel_system_part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    </div>
+                    <div class="avito-part-subprofile" data-part-type="Система смазки">
+                      <?php $lubricationTypes = ['Масляные фильтры','Насосы масляные и комплектующие','Прокладки и уплотнители','Форсунки масляные','Щупы','Корпусы масляного фильтра','Теплообменники','Маслоприёмники','Поддоны картера','Датчики давления, уровня и температуры','Клапаны редукционные и перепускные','Трубки, шланги']; ?>
+                      <div class="form-group row"><label class="col-sm-3 col-form-label">Тип детали системы смазки</label><div class="col-sm-9"><select class="form-control" name="part_type"><option value=""></option><?php foreach ($lubricationTypes as $v): ?><option value="<?=$v?>" <?=(string)($ad->part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    </div>
+                    <div class="avito-part-subprofile" data-part-type="Система охлаждения ДВС">
+                      <?php $coolingTypes = ['Насос водяной','Вентилятор радиатора','Патрубки, фланцы, шланги','Термостат','Радиатор охлаждения','Интеркулер','Бачок расширительный','Крышка бачка расширительного','Прокладки, уплотнители системы охлаждения','Крышка радиатора','Другое']; ?>
+                      <div class="form-group row"><label class="col-sm-3 col-form-label">Тип детали системы охлаждения</label><div class="col-sm-9"><select class="form-control" name="cooling_system_spare_part_type"><option value=""></option><?php foreach ($coolingTypes as $v): ?><option value="<?=$v?>" <?=(string)($ad->cooling_system_spare_part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    </div>
+                    <div class="avito-part-subprofile" data-part-type="Система выпуска">
+                      <?php $exhaustTypes = ['Глушители и резонаторы','Приёмные и выхлопные трубы','Выпускные коллекторы','Гофры и металлокомпенсаторы','Катализаторы','Сажевые фильтры','Крепёж и уплотнения','Система EGR','Система AdBlue','Комплектующие']; ?>
+                      <div class="form-group row"><label class="col-sm-3 col-form-label">Тип детали системы выпуска</label><div class="col-sm-9"><select class="form-control" name="part_type"><option value=""></option><?php foreach ($exhaustTypes as $v): ?><option value="<?=$v?>" <?=(string)($ad->part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    </div>
+                    <div class="avito-part-subprofile" data-part-type="Детали салона">
+                      <?php $interiorTypes = ['Накладка','Обшивка','Панель','Ручка','Ящик','Крышка','Переключатель','Воздуховод','Дефлектор','Кожух','Кнопка','Плафон','Полка','Консоль','Солнцезащитный козырёк']; ?>
+                      <div class="form-group row"><label class="col-sm-3 col-form-label">Тип детали салона</label><div class="col-sm-9"><select class="form-control" name="interior_part_type"><option value=""></option><?php foreach ($interiorTypes as $v): ?><option value="<?=$v?>" <?=(string)($ad->interior_part_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    </div>
+
+                    <h5 class="mt-3">Общие характеристики запчасти</h5>
+                    <?php
+                      $partTextFields = [
+                        'manufacturer' => 'Производитель', 'oem_number' => 'Номер детали OEM',
+                        'original_vendor' => 'Производитель оригинала', 'original_number' => 'Номер оригинала',
+                        'vehicle_make' => 'Марка техники', 'vehicle_model' => 'Модель техники',
+                        'vehicle_generation' => 'Поколение', 'vehicle_modification' => 'Модификация',
+                      ];
+                    ?>
+                    <?php foreach ($partTextFields as $field => $label): ?>
+                      <div class="form-group row"><label class="col-sm-3 col-form-label"><?=$label?></label><div class="col-sm-9"><input class="form-control" name="<?=$field?>" value="<?=avito_h($ad->$field ?? '')?>"></div></div>
+                    <?php endforeach; ?>
+                    <div class="form-group row"><label class="col-sm-3 col-form-label">Доступность</label><div class="col-sm-9"><select class="form-control" name="availability"><option value=""></option><?php foreach (['В наличии','Под заказ'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->availability ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    <div class="form-group row"><label class="col-sm-3 col-form-label">Происхождение</label><div class="col-sm-9"><select class="form-control" name="originality"><option value=""></option><?php foreach (['Оригинал','Аналог','Не знаю'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->originality ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
+                    <div class="form-group row"><label class="col-sm-3 col-form-label">Тип спецтехники</label><div class="col-sm-9"><select class="form-control" name="technic"><option value=""></option><?php foreach (['Автобусы','Автодома','Автокраны','Бульдозеры','Грузовики','Коммунальная техника','Лёгкий коммерческий транспорт','Навесное оборудование','Погрузчики','Прицепы','Сельхозтехника','Строительная техника','Техника для лесозаготовки','Тягачи','Экскаваторы','Другое'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->technic ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div></div>
                   </div>
 
                 </div>
@@ -744,6 +862,38 @@ if (!function_exists('avito_h')) {
                       <input class="form-control" name="delivery_subsidy" value="<?=avito_h($ad->delivery_subsidy ?? '')?>">
                     </div>
                   </div>
+
+                  <hr>
+                  <h5>Условия продажи</h5>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">НДС (NDS)</label>
+                    <div class="col-sm-9"><select class="form-control" name="nds"><option value=""></option><?php foreach (['Без НДС','0','5','7','10','22'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->nds ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div>
+                  </div>
+                  <div class="form-group row avito-profile avito-profile-parts">
+                    <label class="col-sm-3 col-form-label">Отсрочка платежа (PostponedPayment)</label>
+                    <div class="col-sm-9"><select class="form-control" name="postponed_payment"><option value=""></option><?php foreach (['Да','Нет'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->postponed_payment ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Оптовая продажа (WholesaleType)</label>
+                    <div class="col-sm-9"><select class="form-control" name="wholesale_type"><option value=""></option><?php foreach (['Да','Нет'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->wholesale_type ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div>
+                  </div>
+                  <?php
+                    $wholesaleFields = [
+                      'wholesale_min_order_type' => 'Тип минимального заказа',
+                      'wholesale_min_order_value' => 'Минимальный заказ',
+                      'wholesale_packing' => 'Тип упаковки',
+                      'wholesale_packing_value' => 'Количество в упаковке',
+                      'wholesale_measure_unit' => 'Единица измерения',
+                      'wholesale_discount_ladder_type' => 'Тип оптовой скидки',
+                      'wholesale_discount_value' => 'Значение оптовой скидки',
+                    ];
+                  ?>
+                  <?php foreach ($wholesaleFields as $field => $label): ?>
+                    <div class="form-group row avito-wholesale-field">
+                      <label class="col-sm-3 col-form-label"><?=$label?></label>
+                      <div class="col-sm-9"><input class="form-control" name="<?=$field?>" value="<?=avito_h($ad->$field ?? '')?>"></div>
+                    </div>
+                  <?php endforeach; ?>
 
                 </div>
               </div>
@@ -823,6 +973,48 @@ if (!function_exists('avito_h')) {
       <script>
   (function($) {
     $(function() {
+      var partGroups = {
+        'Двигатели и комплектующие': ['Топливная система','Система смазки','Система охлаждения ДВС','Система выпуска'],
+        'Гидравлические и пневмосистемы': ['Фильтры и фильтроэлементы'],
+        'Кабина': ['Детали салона']
+      };
+
+      function setPartSubprofile() {
+        var selectedGroup = $('#avito-spare-part-type').val() || '';
+        var allowed = partGroups[selectedGroup] || [];
+        var $type = $('#avito-technic-spare-part-type');
+        $type.find('option').each(function() {
+          var value = $(this).attr('value') || '';
+          $(this).prop('disabled', value !== '' && allowed.indexOf(value) === -1).toggle(value === '' || allowed.indexOf(value) !== -1);
+        });
+        if (allowed.indexOf($type.val()) === -1) {
+          $type.val('');
+        }
+        var selectedType = $type.val() || '';
+        $('.avito-part-subprofile').each(function() {
+          var active = $(this).data('part-type') === selectedType;
+          $(this).toggle(active).find(':input').prop('disabled', !active);
+        });
+      }
+
+      function setProductProfile() {
+        var productType = $('#avito-product-type').val() || '';
+        var profile = productType === 'Диски' ? 'disks' : (productType === 'Для грузовиков и спецтехники' ? 'parts' : 'tires');
+        $('.avito-profile').each(function() {
+          var active = $(this).hasClass('avito-profile-' + profile);
+          $(this).toggle(active).find(':input').prop('disabled', !active);
+        });
+        $('#avito-goods-type').val(profile === 'parts' ? 'Запчасти' : 'Шины, диски и колёса');
+        if (profile === 'parts') setPartSubprofile();
+      }
+
+      $('#avito-product-type').on('change', setProductProfile);
+      $('#avito-spare-part-type, #avito-technic-spare-part-type').on('change', setPartSubprofile);
+      $('[name="wholesale_type"]').on('change', function() {
+        $('.avito-wholesale-field').toggle($(this).val() === 'Да');
+      }).trigger('change');
+      setProductProfile();
+
       $('#avito-article').select2({
         width: '100%',
         placeholder: 'Начните вводить название или артикул товара',
