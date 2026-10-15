@@ -655,6 +655,14 @@ class Avito extends AppModel
             }
         }
 
+        $wheelAxleColumn = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE 'wheel_axle'");
+        $wheelAxleType = (string)($wheelAxleColumn['Type'] ?? '');
+        if ($wheelAxleColumn
+            && stripos($wheelAxleType, 'enum(') === 0
+            && stripos($wheelAxleType, 'Любая') === false) {
+            \R::exec("ALTER TABLE avito_ad MODIFY wheel_axle VARCHAR(64) NULL DEFAULT NULL");
+        }
+
         // Контакты едины для всех объявлений, а черновики должны быть в архиве.
         \R::exec(
             "UPDATE avito_ad SET manager_name = ?, contact_phone = ?, "
