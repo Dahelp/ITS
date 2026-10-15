@@ -397,6 +397,7 @@ class AvitoController extends AppController
                 $results[] = [
                     'id'   => $article, // это попадёт в <select name="article">
                     'text' => ($article ? $article . ' — ' : '') . $name,
+                    'product_id' => (int)$row['id'],
                 ];
             }
         }

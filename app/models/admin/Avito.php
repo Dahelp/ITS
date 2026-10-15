@@ -881,7 +881,7 @@ class Avito extends AppModel
             'Windforce' => '~\bwindforce\b~iu',
         ];
         foreach ($brandPatterns as $brand => $pattern) {
-            if (preg_match($pattern, $text)) {
+            if (empty($ad->brand) && preg_match($pattern, $text)) {
                 $ad->brand = $brand;
                 break;
             }
@@ -891,23 +891,25 @@ class Avito extends AppModel
         }
 
         $productModel = trim((string)($row['model'] ?? ''));
-        if ($productModel !== '' && self::containsToken($text, $productModel)) {
+        if (empty($ad->model) && $productModel !== '' && self::containsToken($text, $productModel)) {
             $ad->model = $productModel;
         }
 
-        if (preg_match('~\b(\d{1,2})\s*PR\b~iu', $text, $match)) {
+        if (empty($ad->ply_rating) && preg_match('~\b(\d{1,2})\s*PR\b~iu', $text, $match)) {
             $ad->ply_rating = $match[1];
         }
 
         if ($productType === 'Мотошины') {
-            $ad->wheel_axle = 'Любая';
-            $ad->model = 'Другая';
+            if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Любая';
+            if (empty($ad->model)) $ad->model = 'Другая';
         } elseif ($productType === 'Шины для грузовиков и спецтехники') {
-            $ad->wheel_axle = 'Универсальная';
-            $ad->construction = preg_match('~\d(?:[.,]\d+)?\s*R\s*\d~iu', $text) ? 'Радиальный' : 'Диагональный';
-            if (preg_match('~\b(?:TL|бескамерн)~iu', $text)) {
+            if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Универсальная';
+            if (empty($ad->construction)) {
+                $ad->construction = preg_match('~\d(?:[.,]\d+)?\s*R\s*\d~iu', $text) ? 'Радиальный' : 'Диагональный';
+            }
+            if (empty($ad->tube_type) && preg_match('~\b(?:TL|бескамерн)~iu', $text)) {
                 $ad->tube_type = 'Бескамерная';
-            } elseif (preg_match('~\b(?:TTF?|камерн|шинокомплект)~iu', $text)) {
+            } elseif (empty($ad->tube_type) && preg_match('~\b(?:TTF?|камерн|шинокомплект)~iu', $text)) {
                 $ad->tube_type = 'Камерная';
             }
         } elseif ($productType === 'Диски') {
@@ -917,22 +919,23 @@ class Avito extends AppModel
 
     private static function normalizeRimFields($ad, string $text): void
     {
-        $ad->rim_type = 'Штампованные';
-        $ad->quantity = 'за 1 шт.';
+        if (empty($ad->rim_type)) $ad->rim_type = 'Штампованные';
+        if (empty($ad->quantity)) $ad->quantity = 'за 1 шт.';
         if (preg_match('~(?:W\s*)?(\d+(?:[.,]\d+)?)\s*[xх×]\s*R?(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
-            $ad->rim_width = str_replace(',', '.', $m[1]);
-            $ad->rim_diameter = str_replace(',', '.', $m[2]);
+            if (empty($ad->rim_width)) $ad->rim_width = str_replace(',', '.', $m[1]);
+            if (empty($ad->rim_diameter)) $ad->rim_diameter = str_replace(',', '.', $m[2]);
         }
-        if (preg_match('~\bET\s*(-?\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+        if (empty($ad->rim_offset) && preg_match('~\bET\s*(-?\d+(?:[.,]\d+)?)~iu', $text, $m)) {
             $ad->rim_offset = str_replace(',', '.', $m[1]);
         }
-        if (preg_match('~\bPCD\s*(\d+)\s*[xх×]\s*(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
-            $ad->rim_bolts = $m[1];
-            $ad->rim_bolts_diameter = str_replace(',', '.', $m[2]);
-        } elseif (preg_match('~(?:шпил(?:ек|ьки)|отверсти(?:й|я))\D{0,10}(\d+)~iu', $text, $m)) {
+        if ((empty($ad->rim_bolts) || empty($ad->rim_bolts_diameter))
+            && preg_match('~\bPCD\s*(\d+)\s*[xх×]\s*(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+            if (empty($ad->rim_bolts)) $ad->rim_bolts = $m[1];
+            if (empty($ad->rim_bolts_diameter)) $ad->rim_bolts_diameter = str_replace(',', '.', $m[2]);
+        } elseif (empty($ad->rim_bolts) && preg_match('~(?:шпил(?:ек|ьки)|отверсти(?:й|я))\D{0,10}(\d+)~iu', $text, $m)) {
             $ad->rim_bolts = $m[1];
         }
-        if (preg_match('~(?:HUB|DIA|центрального отверстия)\D{0,10}(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+        if (empty($ad->rim_dia) && preg_match('~(?:HUB|DIA|центрального отверстия)\D{0,10}(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
             $ad->rim_dia = str_replace(',', '.', $m[1]);
         }
         if (empty($ad->rim_bolts_diameter)

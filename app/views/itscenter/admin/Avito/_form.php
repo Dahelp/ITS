@@ -17,6 +17,9 @@ $item_condition = isset($ad->item_condition) ? $ad->item_condition : 'Новое
 $contact_method = isset($ad->contact_method) ? $ad->contact_method : 'По телефону и в сообщениях';
 $internet_calls = isset($ad->internet_calls) ? $ad->internet_calls : 'Нет';
 $review_status  = isset($ad->review_status) && $ad->review_status ? $ad->review_status : 'confirmed';
+$linkedProductId = !empty($ad->article)
+    ? (int)\R::getCell('SELECT id FROM product WHERE article = ? LIMIT 1', [(string)$ad->article])
+    : 0;
 $avitoAnalysis  = !empty($isEdit) && !empty($ad->id)
     ? \app\models\admin\Avito::analyzeRow($ad->export())
     : null;
@@ -160,6 +163,13 @@ if (!function_exists('avito_h')) {
                           </option>
                         <?php endforeach; ?>
                       </select>
+
+                      <a id="avito-open-product"
+                         class="btn btn-outline-primary btn-sm mt-2<?=$linkedProductId ? '' : ' d-none'?>"
+                         href="<?=$linkedProductId ? ADMIN . '/product/edit?id=' . $linkedProductId : '#'?>"
+                         target="_blank" rel="noopener">
+                        <i class="fas fa-external-link-alt"></i> Открыть товар в новой вкладке
+                      </a>
                     </div>
                   </div>
 
@@ -835,6 +845,15 @@ if (!function_exists('avito_h')) {
           noResults: function() { return 'Ничего не найдено'; },
           searching: function() { return 'Поиск...'; }
         }
+      }).on('select2:select', function(event) {
+        var item = event.params.data || {};
+        if (item.product_id) {
+          $('#avito-open-product')
+            .attr('href', '<?=ADMIN;?>/product/edit?id=' + encodeURIComponent(item.product_id))
+            .removeClass('d-none');
+        }
+      }).on('select2:clear', function() {
+        $('#avito-open-product').attr('href', '#').addClass('d-none');
       });
     });
   })(jQuery);
