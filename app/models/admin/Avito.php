@@ -80,6 +80,7 @@ class Avito extends AppModel
         'vehicle_type'       => '',
         'item_condition'     => 'Новое',
         'target_audience'    => '',
+        'review_status'      => 'confirmed',
         'rim_bolts'          => '',
         'rim_bolts_diameter' => '',
         'rim_type'           => '',
@@ -648,6 +649,7 @@ class Avito extends AppModel
             'rim_dia' => 'VARCHAR(32)',
             'rim_offset' => 'VARCHAR(32)',
             'rim_width' => 'VARCHAR(32)',
+            'review_status' => 'VARCHAR(32)',
         ];
         foreach ($columns as $name => $definition) {
             if (!\R::getCell("SHOW COLUMNS FROM avito_ad LIKE ?", [$name])) {
@@ -676,7 +678,7 @@ class Avito extends AppModel
     {
         self::ensureSchema();
 
-        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) > 0 THEN 'active'\n                ELSE 'archived'\n            END\n        ");
+        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) <= 0 THEN 'archived'\n                WHEN a.review_status = 'needs_review' THEN 'archived'\n                ELSE 'active'\n            END\n        ");
 
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
@@ -700,7 +702,9 @@ class Avito extends AppModel
             $ad->price_rub = $price > 0 ? $price : null;
             // Quantity в XML Avito — это цена «за N шт.», а не складской остаток.
             $ad->quantity = 'за 1 шт.';
-            $ad->status = $quantity > 0 ? 'active' : 'archived';
+            $ad->status = $quantity > 0 && (string)$ad->review_status !== 'needs_review'
+                ? 'active'
+                : 'archived';
 
             if (empty($ad->title)) {
                 $ad->title = self::limitText((string)$row['name'], 50);
@@ -957,6 +961,159 @@ class Avito extends AppModel
             }
         }
         return '';
+    }
+
+    public static function analyzeRow(array $row): array
+    {
+        $required = [
+            'ad_external_id' => 'Внешний ID', 'title' => 'Название', 'description' => 'Описание',
+            'price_rub' => 'Цена', 'category' => 'Категория', 'goods_type' => 'Вид товара',
+            'ad_type' => 'Вид объявления', 'product_type' => 'Тип товара',
+            'item_condition' => 'Состояние', 'manager_name' => 'Менеджер',
+            'contact_phone' => 'Телефон', 'address' => 'Адрес', 'images_json' => 'Фотографии',
+        ];
+        $optional = [
+            'brand' => 'Бренд', 'model' => 'Модель', 'tire_section_width' => 'Ширина профиля',
+            'tire_aspect_ratio' => 'Высота профиля', 'rim_diameter' => 'Диаметр',
+            'tire_type' => 'Сезонность', 'speed_index' => 'Индекс скорости',
+            'ply_rating' => 'Слойность', 'construction' => 'Каркас', 'tube_type' => 'Тип TT/TL',
+            'wheel_axle' => 'Ось', 'load_index' => 'Индекс нагрузки',
+        ];
+        $type = trim((string)($row['product_type'] ?? ''));
+        if ($type === 'Шины для грузовиков и спецтехники') {
+            $required += [
+                'brand' => 'Бренд', 'tire_section_width' => 'Ширина профиля',
+                'tire_aspect_ratio' => 'Высота профиля', 'rim_diameter' => 'Диаметр',
+            ];
+        } elseif ($type === 'Мотошины') {
+            $required += [
+                'model' => 'Модель Avito', 'tire_section_width' => 'Ширина профиля',
+                'rim_diameter' => 'Диаметр', 'wheel_axle' => 'Ось',
+            ];
+        } elseif ($type === 'Диски') {
+            $required += [
+                'rim_diameter' => 'Диаметр', 'quantity' => 'Количество', 'rim_bolts' => 'Количество отверстий',
+                'rim_bolts_diameter' => 'PCD', 'rim_type' => 'Тип диска', 'rim_dia' => 'DIA',
+                'rim_offset' => 'Вылет ET', 'rim_width' => 'Ширина обода',
+            ];
+        }
+        foreach (array_keys($required) as $field) {
+            unset($optional[$field]);
+        }
+
+        $isEmpty = static function ($value): bool {
+            if (is_array($value)) return count($value) === 0;
+            return trim((string)$value) === '';
+        };
+        $missingRequired = [];
+        foreach ($required as $field => $label) {
+            $value = $row[$field] ?? '';
+            if ($field === 'images_json') {
+                $value = self::decodeImages($value);
+            }
+            if ($isEmpty($value) || ($field === 'price_rub' && (float)$value <= 0)) {
+                $missingRequired[$field] = $label;
+            }
+        }
+        $missingOptional = [];
+        foreach ($optional as $field => $label) {
+            if ($isEmpty($row[$field] ?? '')) {
+                $missingOptional[$field] = $label;
+            }
+        }
+
+        $warnings = [];
+        $title = trim((string)($row['title'] ?? ''));
+        $description = trim(strip_tags((string)($row['description'] ?? '')));
+        if ($title !== '' && (mb_strlen($title, 'UTF-8') < 12 || mb_strlen($title, 'UTF-8') > 50)) {
+            $warnings[] = 'Название желательно сделать длиной 12–50 символов';
+        }
+        $descriptionLength = mb_strlen($description, 'UTF-8');
+        if ($descriptionLength < 250) {
+            $warnings[] = 'Описание слишком короткое — желательно не менее 250 символов';
+        }
+        if (count(self::decodeImages($row['images_json'] ?? '')) < 2) {
+            $warnings[] = 'Желательно добавить минимум 2 фотографии';
+        }
+        $model = trim((string)($row['model'] ?? ''));
+        if ($model !== '' && $type === 'Шины для грузовиков и спецтехники'
+            && self::avitoModelValue($type, $model) === '') {
+            $warnings[] = 'Модели «' . $model . '» нет в справочнике Avito — она указана только в названии';
+        }
+
+        $requiredTotal = count($required);
+        $requiredFilled = $requiredTotal - count($missingRequired);
+        $optionalTotal = count($optional);
+        $optionalFilled = $optionalTotal - count($missingOptional);
+        $requiredScore = $requiredTotal ? (int)round($requiredFilled * 100 / $requiredTotal) : 100;
+        $optionalScore = $optionalTotal ? (int)round($optionalFilled * 100 / $optionalTotal) : 100;
+        $textScore = 0;
+        if ($title !== '') $textScore += 25;
+        if (mb_strlen($title, 'UTF-8') >= 12 && mb_strlen($title, 'UTF-8') <= 50) $textScore += 15;
+        if ($descriptionLength >= 250) $textScore += 25;
+        if ($descriptionLength >= 600) $textScore += 15;
+        if (preg_match('~\d~u', $title)) $textScore += 10;
+        if (count(self::decodeImages($row['images_json'] ?? '')) >= 2) $textScore += 10;
+
+        $reviewStatus = trim((string)($row['review_status'] ?? 'confirmed'));
+        if ($missingRequired) {
+            $status = 'error';
+            $label = 'Нужно исправить';
+        } elseif ($reviewStatus === 'needs_review' || $warnings) {
+            $status = 'warning';
+            $label = 'Требует проверки';
+        } else {
+            $status = 'ready';
+            $label = 'Готово к выгрузке';
+        }
+
+        return compact(
+            'status', 'label', 'missingRequired', 'missingOptional', 'warnings',
+            'requiredScore', 'optionalScore', 'textScore', 'requiredTotal', 'optionalTotal'
+        );
+    }
+
+    public static function createArchivedForProduct(int $productId): int
+    {
+        self::ensureSchema();
+        $row = \R::getRow("SELECT p.*, b.name AS brand_name,
+            (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')
+               FROM attribute_product ap
+               INNER JOIN attribute_value av ON av.id = ap.attr_id
+               INNER JOIN attribute_group ag ON ag.id = av.attr_group_id
+              WHERE ap.product_id = p.id) AS attribute_text
+            FROM product p LEFT JOIN brand b ON b.id = p.brand_id WHERE p.id = ? LIMIT 1", [$productId]);
+        if (!$row) {
+            throw new \RuntimeException('Товар не найден');
+        }
+        $row['product_id'] = (int)$row['id'];
+        $article = trim((string)($row['article'] ?? ''));
+        if ($article === '') {
+            throw new \RuntimeException('У товара не заполнен артикул');
+        }
+        $existing = \R::findOne('avito_ad', 'article = ?', [$article]);
+        if ($existing) {
+            return (int)$existing->id;
+        }
+
+        $ad = \R::dispense('avito_ad');
+        $ad->uuid = self::uuidV4();
+        $ad->ad_external_id = self::externalIdFromArticle($article);
+        $ad->article = $article;
+        $ad->status = 'archived';
+        $ad->review_status = 'needs_review';
+        $ad->title = self::limitText((string)($row['name'] ?? ''), 50);
+        $ad->description = self::buildDescription($row);
+        $ad->price_rub = (int)round((float)($row['price'] ?? 0));
+        $ad->quantity = 'за 1 шт.';
+        $name = mb_strtolower((string)($row['name'] ?? ''), 'UTF-8');
+        $ad->product_type = preg_match('~\bдиск~u', $name) ? 'Диски' : 'Шины для грузовиков и спецтехники';
+        self::fillDefaults($ad);
+        self::normalizeCatalogFields($ad, $row);
+        if (!empty($row['weight'])) $ad->weight_kg = (string)$row['weight'];
+        $images = self::productImageUrls($row);
+        if ($images) $ad->images_json = json_encode($images, JSON_UNESCAPED_UNICODE);
+        return (int)\R::store($ad);
     }
 
     private static function containsToken(string $text, string $token): bool

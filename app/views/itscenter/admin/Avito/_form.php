@@ -16,6 +16,10 @@ $product_type   = isset($ad->product_type) ? $ad->product_type : 'Шины дл�
 $item_condition = isset($ad->item_condition) ? $ad->item_condition : 'Новое';
 $contact_method = isset($ad->contact_method) ? $ad->contact_method : 'По телефону и в сообщениях';
 $internet_calls = isset($ad->internet_calls) ? $ad->internet_calls : 'Нет';
+$review_status  = isset($ad->review_status) && $ad->review_status ? $ad->review_status : 'confirmed';
+$avitoAnalysis  = !empty($isEdit) && !empty($ad->id)
+    ? \app\models\admin\Avito::analyzeRow($ad->export())
+    : null;
 
 // подготовка картинок из images_json -> textarea
 $imgsVal = '';
@@ -112,6 +116,27 @@ if (!function_exists('avito_h')) {
               <span class="text-danger">*</span> — обязательные поля для корректной автозагрузки на Avito.
             </p>
 
+            <?php if ($avitoAnalysis): ?>
+              <?php
+                $analysisClass = $avitoAnalysis['status'] === 'ready' ? 'success' : ($avitoAnalysis['status'] === 'warning' ? 'warning' : 'danger');
+                $missingRequiredText = implode(', ', array_values($avitoAnalysis['missingRequired']));
+                $missingOptionalText = implode(', ', array_values($avitoAnalysis['missingOptional']));
+              ?>
+              <div class="alert alert-<?=$analysisClass?>">
+                <h5><i class="fas fa-clipboard-check"></i> Проверка Avito: <?=avito_h($avitoAnalysis['label'])?></h5>
+                <div class="row">
+                  <div class="col-md-4"><strong>Обязательные:</strong> <?=$avitoAnalysis['requiredScore']?>%<br>Не заполнено: <?=count($avitoAnalysis['missingRequired'])?></div>
+                  <div class="col-md-4"><strong>Дополнительные:</strong> <?=$avitoAnalysis['optionalScore']?>%<br>Не заполнено: <?=count($avitoAnalysis['missingOptional'])?></div>
+                  <div class="col-md-4"><strong>Качество текста:</strong> <?=$avitoAnalysis['textScore']?>%</div>
+                </div>
+                <?php if ($missingRequiredText): ?><div class="mt-2"><strong>Нужно исправить:</strong> <?=avito_h($missingRequiredText)?></div><?php endif; ?>
+                <?php if ($missingOptionalText): ?><div class="mt-1"><strong>Можно дополнить:</strong> <?=avito_h($missingOptionalText)?></div><?php endif; ?>
+                <?php if ($avitoAnalysis['warnings']): ?>
+                  <div class="mt-1"><strong>Предупреждения:</strong> <?=avito_h(implode('; ', $avitoAnalysis['warnings']))?></div>
+                <?php endif; ?>
+              </div>
+            <?php endif; ?>
+
             <div class="tab-content">
 
               <!-- ================== ТАБ: ОСНОВНОЕ ================== -->
@@ -135,6 +160,17 @@ if (!function_exists('avito_h')) {
                           </option>
                         <?php endforeach; ?>
                       </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ручная проверка Avito</label>
+                    <div class="col-sm-9">
+                      <select class="form-control" name="review_status">
+                        <option value="needs_review" <?=$review_status === 'needs_review' ? 'selected' : ''?>>Требует ручной проверки</option>
+                        <option value="confirmed" <?=$review_status === 'confirmed' ? 'selected' : ''?>>Проверено и подтверждено</option>
+                      </select>
+                      <small class="form-text text-muted">Новое автоматически созданное объявление остаётся в архиве, пока вы его не проверите и не подтвердите.</small>
                     </div>
                   </div>
 

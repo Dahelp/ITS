@@ -12,6 +12,7 @@ use DataTables\Database;
 use app\models\admin\PlaginsIndexnow;
 use app\helpers\TireSize;
 use app\models\admin\Certificate;
+use app\models\admin\Avito;
 use app\services\ProductCertificationService;
 
 class ProductController extends AppController {
@@ -25,6 +26,7 @@ class ProductController extends AppController {
     }
 	
 	public function serverProcessingAction(){		
+		Avito::ensureSchema();
 		//datatables server-side
 		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
 		$badge = isset($_GET['badge']) ? $_GET['badge'] : '';
@@ -44,7 +46,9 @@ class ProductController extends AppController {
 			: "CONCAT(a.hide, '|')";
 		$table = <<<EOT
 		 (
-			SELECT a.id, a.img, a.article, a.name as cat, a.price, {$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where
+			SELECT a.id, a.img, a.article, a.name as cat, a.price,
+			CONCAT(COALESCE((SELECT CONCAT(aa.id, '|', aa.status, '|', COALESCE(aa.review_status, 'confirmed')) FROM avito_ad aa WHERE aa.article = a.article ORDER BY aa.id DESC LIMIT 1), ''), '|', COALESCE(a.rest, a.quantity, 0)) AS avito_state,
+			{$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where
 		 ) temp
 		EOT;
 		$primaryKey = 'id';	 
@@ -263,6 +267,27 @@ class ProductController extends AppController {
 						<i class="fas fa-recycle"></i>
 					</a>'; 
 					}
+			),
+			array('db' => 'avito_state', 'dt' => 12,
+				'formatter' => function($d, $row) {
+					$productId = (int)($row['id'] ?? 0);
+					[$adId, $status, $review, $stock] = array_pad(explode('|', (string)$d, 4), 4, '');
+					$stock = (int)$stock;
+					if ($adId !== '') {
+						$label = $review === 'needs_review' ? 'Требует проверки' : ($status === 'active' ? 'Есть активное' : 'Есть в архиве');
+						$class = $review === 'needs_review' ? 'warning' : ($status === 'active' ? 'success' : 'secondary');
+						return '<span class="badge badge-' . $class . '"><i class="fas fa-bullhorn"></i> ' . $label . '</span><br>'
+							. '<a href="' . ADMIN . '/avito/edit?id=' . (int)$adId . '">Открыть объявление</a>';
+					}
+					$warning = $stock > 0
+						? '<span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> Есть остаток, нет объявления</span>'
+						: '<span class="badge badge-light">Объявления нет</span>';
+					return $warning
+						. '<form method="post" action="' . ADMIN . '/product/create-avito" class="mt-1">'
+						. '<input type="hidden" name="id" value="' . $productId . '">'
+						. '<button class="btn btn-xs btn-outline-primary" type="submit"><i class="fas fa-plus"></i> Создать в архиве</button>'
+						. '</form>';
+				}
 			)
 		);
 		 
@@ -278,6 +303,21 @@ class ProductController extends AppController {
 			$spp::simple( $_GET, $sql_details, $table, $primaryKey, $columns, null, "" )
 		);
 		die;
+	}
+
+	public function createAvitoAction(){
+		if (empty($_POST['id'])) {
+			$_SESSION['error'] = 'Не выбран товар';
+			redirect(ADMIN . '/product');
+		}
+		try {
+			$adId = Avito::createArchivedForProduct((int)$_POST['id']);
+			$_SESSION['success'] = 'Объявление Avito создано в архиве. Проверьте обязательные поля и подтвердите готовность.';
+			redirect(ADMIN . '/avito/edit?id=' . $adId);
+		} catch (\Throwable $e) {
+			$_SESSION['error'] = 'Не удалось создать объявление Avito: ' . $e->getMessage();
+			redirect(ADMIN . '/product');
+		}
 	}
 
 	public function badgeToggleAction(){

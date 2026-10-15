@@ -51,6 +51,7 @@
                 <th>Менеджер</th>
                 <th>Наличие</th>
                 <th>Статус</th>
+                <th>Готовность Avito</th>
                 <th>Действия</th>
               </tr>
               </thead>
@@ -65,17 +66,22 @@
 
 <script>
 $(function () {
-  // Фото (1) и Действия (9) не экспортируем
-  var hideFromExport = [1, 9];
+  // Фото (1) и Действия (10) не экспортируем
+  var hideFromExport = [1, 10];
 
   var table = $('#avito-table').DataTable({
     processing: true,
     serverSide: true,
     stateSave: true,
+    stateLoadParams: function (settings, data) {
+      if (!data.columns || data.columns.length !== 11) {
+        return false;
+      }
+    },
     lengthChange: true,
     lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "Все"]],
     aoColumnDefs: [
-      { 'bSortable': false, 'aTargets': [1, 9] } // фото и действия не сортируются
+      { 'bSortable': false, 'aTargets': [1, 9, 10] }
     ],
     dom: '<"blok-bottoms"B><"blok-table"lfrtip>',
     ajax: { url: adminpath + '/avito/server-processing' },

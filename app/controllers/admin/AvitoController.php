@@ -216,6 +216,25 @@ class AvitoController extends AppController
                 'db' => 'id',
                 'dt' => 9,
                 'formatter' => function ($id, $row) {
+                    $adRow = \R::getRow('SELECT * FROM avito_ad WHERE id = ? LIMIT 1', [(int)$id]);
+                    $analysis = Avito::analyzeRow($adRow);
+                    $class = $analysis['status'] === 'ready' ? 'success' : ($analysis['status'] === 'warning' ? 'warning' : 'danger');
+                    $details = [];
+                    if ($analysis['missingRequired']) $details[] = 'Обязательные: ' . implode(', ', $analysis['missingRequired']);
+                    if ($analysis['warnings']) $details[] = implode('; ', $analysis['warnings']);
+                    $title = htmlspecialchars(implode(' | ', $details), ENT_QUOTES, 'UTF-8');
+                    return '<span class="badge badge-' . $class . '" title="' . $title . '">' . htmlspecialchars($analysis['label'], ENT_QUOTES, 'UTF-8') . '</span>'
+                        . '<div class="small mt-1">Обязательные: <strong>' . $analysis['requiredScore'] . '%</strong> (' . count($analysis['missingRequired']) . ' не заполнено)</div>'
+                        . '<div class="small">Доп.: ' . $analysis['optionalScore'] . '% (' . count($analysis['missingOptional']) . ')</div>'
+                        . '<div class="small">Текст: ' . $analysis['textScore'] . '%</div>';
+                }
+            ),
+
+            // 10: Действия
+            array(
+                'db' => 'id',
+                'dt' => 10,
+                'formatter' => function ($id, $row) {
                     $id   = (int)$id;
                     $edit = ADMIN . '/avito/edit?id=' . $id;
                     $del  = ADMIN . '/avito/delete?id=' . $id;

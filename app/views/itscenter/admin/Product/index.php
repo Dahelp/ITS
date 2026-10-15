@@ -78,6 +78,7 @@ $ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
 									<th>Перелинковка</th>
 									<th>Статус</th>
 									<th>Действия</th>
+									<th>Avito</th>
 								</tr>
 							</thead>
 						</table>                    
@@ -94,19 +95,19 @@ $ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
 <script>
 $(document).ready(function () {
 	$('#example thead tr th').eq(8).after('<th>Отметки</th>');
-	var hideFromExport = [1, 6, 7, 8, 9, 10, 11];
+	var hideFromExport = [1, 6, 7, 8, 9, 10, 11, 12];
 	var table = $('#example').DataTable({		
 		"processing": true,
 		"serverSide": true,
 		"stateSave": true,
 		"stateLoadParams": function (settings, data) {
-			if (!data.columns || data.columns.length !== 12) {
+			if (!data.columns || data.columns.length !== 13) {
 				return false;
 			}
 		},
 		"lengthChange": true,
 		"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "Все"]],
-		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 1, 4, 6, 7, 8, 11 ] }],
+		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 1, 4, 6, 7, 8, 11, 12 ] }],
 		dom: '<"blok-bottoms"B><"blok-table"lfrtip>',
 		"ajax": {
             url: adminpath + '/product/server-processing<?= $ajaxQuery; ?>',		
@@ -172,10 +173,10 @@ $(document).ready(function () {
         ],		
 		
 		createdRow: function( row, data, dataIndex){
-            if( data[9] == "Не активный"  ){
+			if( data[10].indexOf("Не активный") !== -1 ){
                 $(row).css('background-color', '#fed8d8');
             } 
-			if( data[9] == "Закрыт от индексации"  ){
+			if( data[10].indexOf("Закрыт от индексации") !== -1 ){
                 $(row).css('background-color', '#d7d6d6');
             } 
 		}
