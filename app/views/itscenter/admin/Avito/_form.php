@@ -100,7 +100,7 @@ if (!function_exists('avito_h')) {
             <ul class="nav nav-pills ml-auto p-2">
               <li class="nav-item"><a class="nav-link active" href="#tab-main" data-toggle="tab">Основное</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-contacts" data-toggle="tab">Контакты</a></li>
-              <li class="nav-item"><a class="nav-link" href="#tab-tires" data-toggle="tab">Характеристики шин</a></li>
+              <li class="nav-item"><a class="nav-link" href="#tab-tires" data-toggle="tab">Характеристики шин и дисков</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-delivery" data-toggle="tab">Доставка/габариты</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-promo" data-toggle="tab">Промо</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab-media" data-toggle="tab">Медиа</a></li>
@@ -420,6 +420,12 @@ if (!function_exists('avito_h')) {
                     <label class="col-sm-3 col-form-label">Модель шины (Model)</label>
                     <div class="col-sm-9">
                       <input class="form-control" name="model" value="<?=avito_h($ad->model ?? '')?>">
+                      <?php $xmlModel = \app\models\admin\Avito::avitoModelValue($product_type, (string)($ad->model ?? '')); ?>
+                      <?php if (!empty($ad->model) && $xmlModel === ''): ?>
+                        <small class="form-text text-warning">Этой модели нет в справочнике Avito: она остаётся в названии, но тег Model не отправляется.</small>
+                      <?php elseif ($xmlModel !== ''): ?>
+                        <small class="form-text text-success">В XML Avito: <?=avito_h($xmlModel)?></small>
+                      <?php endif; ?>
                     </div>
                   </div>
 
@@ -525,7 +531,7 @@ if (!function_exists('avito_h')) {
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Ось установки (WheelAxle)</label>
                     <div class="col-sm-9">
-                      <?php $wa = ['Рулевая','Ведущая','Прицепная','Рулевая/Прицепная','Универсальная']; ?>
+                      <?php $wa = ['Рулевая','Ведущая','Прицепная','Рулевая/Прицепная','Универсальная','Передняя','Задняя','Любая']; ?>
                       <select class="form-control" name="wheel_axle">
                         <option value=""></option>
                         <?php foreach ($wa as $v): ?>
@@ -577,7 +583,7 @@ if (!function_exists('avito_h')) {
 
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">
-                      Состояние товара (ItemCondition) <span class="text-danger">*</span>
+                      Состояние товара (Condition) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
                       <?php $cond = ['Новое','Б/у']; ?>
@@ -597,6 +603,38 @@ if (!function_exists('avito_h')) {
                         <option value=""></option>
                         <?php foreach ($ta as $v): ?>
                           <option value="<?=$v?>" <?php if (($ad->target_audience ?? '') === $v) echo 'selected'; ?>><?=$v?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                  </div>
+
+                  <hr>
+                  <h5>Обязательные характеристики диска</h5>
+                  <?php
+                    $rimFields = [
+                      'rim_width' => ['Ширина обода (RimWidth)', 'Например: 9.5'],
+                      'rim_offset' => ['Вылет ET (RimOffset)', 'Например: 0'],
+                      'rim_bolts' => ['Количество отверстий (RimBolts)', 'Например: 8'],
+                      'rim_bolts_diameter' => ['Диаметр отверстий PCD (RimBoltsDiameter)', 'Например: 203.2'],
+                      'rim_dia' => ['Центральное отверстие DIA (RimDIA)', 'Например: 152.4'],
+                    ];
+                  ?>
+                  <?php foreach ($rimFields as $field => $meta): ?>
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label"><?=$meta[0]?></label>
+                      <div class="col-sm-9">
+                        <input class="form-control" name="<?=$field?>" placeholder="<?=$meta[1]?>" value="<?=avito_h($ad->$field ?? '')?>">
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Тип диска (RimType)</label>
+                    <div class="col-sm-9">
+                      <?php $rimTypes = ['Штампованные','Литые','Кованые','Спицованные','Сборные','Карбоновые']; ?>
+                      <select class="form-control" name="rim_type">
+                        <option value=""></option>
+                        <?php foreach ($rimTypes as $v): ?>
+                          <option value="<?=$v?>" <?php if (($ad->rim_type ?? '') === $v) echo 'selected'; ?>><?=$v?></option>
                         <?php endforeach; ?>
                       </select>
                     </div>

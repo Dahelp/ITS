@@ -80,6 +80,12 @@ class Avito extends AppModel
         'vehicle_type'       => '',
         'item_condition'     => 'Новое',
         'target_audience'    => '',
+        'rim_bolts'          => '',
+        'rim_bolts_diameter' => '',
+        'rim_type'           => '',
+        'rim_dia'            => '',
+        'rim_offset'         => '',
+        'rim_width'          => '',
     ];
 
     /**
@@ -635,6 +641,20 @@ class Avito extends AppModel
             \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
         }
 
+        $columns = [
+            'rim_bolts' => 'VARCHAR(16)',
+            'rim_bolts_diameter' => 'VARCHAR(32)',
+            'rim_type' => 'VARCHAR(64)',
+            'rim_dia' => 'VARCHAR(32)',
+            'rim_offset' => 'VARCHAR(32)',
+            'rim_width' => 'VARCHAR(32)',
+        ];
+        foreach ($columns as $name => $definition) {
+            if (!\R::getCell("SHOW COLUMNS FROM avito_ad LIKE ?", [$name])) {
+                \R::exec("ALTER TABLE avito_ad ADD `{$name}` {$definition} NULL DEFAULT NULL");
+            }
+        }
+
         // Контакты едины для всех объявлений, а черновики должны быть в архиве.
         \R::exec(
             "UPDATE avito_ad SET manager_name = ?, contact_phone = ?, "
@@ -650,7 +670,7 @@ class Avito extends AppModel
 
         \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) > 0 THEN 'active'\n                ELSE 'archived'\n            END\n        ");
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         $updated = 0;
         foreach ($rows as $row) {
@@ -670,7 +690,8 @@ class Avito extends AppModel
             }
 
             $ad->price_rub = $price > 0 ? $price : null;
-            $ad->quantity = $quantity;
+            // Quantity в XML Avito — это цена «за N шт.», а не складской остаток.
+            $ad->quantity = 'за 1 шт.';
             $ad->status = $quantity > 0 ? 'active' : 'archived';
 
             if (empty($ad->title)) {
@@ -679,12 +700,7 @@ class Avito extends AppModel
             if (empty($ad->description)) {
                 $ad->description = self::buildDescription($row);
             }
-            if (empty($ad->brand) && !empty($row['brand_name'])) {
-                $ad->brand = trim((string)$row['brand_name']);
-            }
-            if (empty($ad->model) && !empty($row['model'])) {
-                $ad->model = trim((string)$row['model']);
-            }
+            self::normalizeCatalogFields($ad, $row);
             if (empty($ad->weight_kg) && !empty($row['weight'])) {
                 $ad->weight_kg = (string)$row['weight'];
             }
@@ -750,12 +766,16 @@ class Avito extends AppModel
             if (!empty($r['price_rub'])) {
                 self::xmlAdd($ad, 'Price', (string)((int)$r['price_rub']));
             }
-            self::xmlAdd($ad, 'ItemCondition', (string)($r['item_condition'] ?? 'Новое'));
+            self::xmlAdd($ad, 'Condition', (string)($r['item_condition'] ?? 'Новое'));
             self::xmlAdd($ad, 'TargetAudience', (string)($r['target_audience'] ?? ''));
             self::xmlAdd($ad, 'VideoURL', (string)($r['video_url'] ?? ''));
             self::xmlAdd($ad, 'VideoFileURL', (string)($r['video_file_url'] ?? ''));
-            self::xmlAdd($ad, 'Brand', (string)($r['brand'] ?? ''));
-            self::xmlAdd($ad, 'Model', (string)($r['model'] ?? ''));
+            $productType = trim((string)($r['product_type'] ?? ''));
+            if ($productType !== 'Мотошины' && $productType !== 'Диски') {
+                self::xmlAddIfNotEmpty($ad, 'Brand', (string)($r['brand'] ?? ''));
+            }
+            $avitoModel = self::avitoModelValue($productType, (string)($r['model'] ?? ''));
+            self::xmlAddIfNotEmpty($ad, 'Model', $avitoModel);
             self::xmlAdd($ad, 'TireSectionWidth', (string)($r['tire_section_width'] ?? ''));
             self::xmlAdd($ad, 'TireAspectRatio', (string)($r['tire_aspect_ratio'] ?? ''));
             self::xmlAdd($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
@@ -770,6 +790,14 @@ class Avito extends AppModel
             self::xmlAdd($ad, 'ResidualTreadSV', (string)($r['residual_tread_sv'] ?? ''));
             self::xmlAdd($ad, 'Design', (string)($r['design'] ?? ''));
             self::xmlAdd($ad, 'VehicleType', (string)($r['vehicle_type'] ?? ''));
+            if ($productType === 'Диски') {
+                self::xmlAdd($ad, 'RimBolts', (string)($r['rim_bolts'] ?? ''));
+                self::xmlAdd($ad, 'RimBoltsDiameter', (string)($r['rim_bolts_diameter'] ?? ''));
+                self::xmlAdd($ad, 'RimType', (string)($r['rim_type'] ?? ''));
+                self::xmlAdd($ad, 'RimDIA', (string)($r['rim_dia'] ?? ''));
+                self::xmlAdd($ad, 'RimOffset', (string)($r['rim_offset'] ?? ''));
+                self::xmlAdd($ad, 'RimWidth', (string)($r['rim_width'] ?? ''));
+            }
             self::xmlAdd($ad, 'DeliverySubsidy', (string)($r['delivery_subsidy'] ?? ''));
             self::xmlAdd($ad, 'ReturnPolicy', (string)($r['return_policy'] ?? ''));
             self::xmlAdd($ad, 'InternetCalls', (string)($r['internet_calls'] ?? ''));
@@ -818,6 +846,114 @@ class Avito extends AppModel
                 $ad->$field = $value;
             }
         }
+    }
+
+    private static function normalizeCatalogFields($ad, array $row): void
+    {
+        $text = implode(' ', array_filter([
+            (string)($row['name'] ?? ''),
+            (string)($row['model'] ?? ''),
+            strip_tags((string)($row['description'] ?? '')),
+            strip_tags((string)($row['content'] ?? '')),
+            (string)($row['attribute_text'] ?? ''),
+        ]));
+        $productType = trim((string)($ad->product_type ?? ''));
+
+        $brandPatterns = [
+            'Primex' => '~\bprimex\b~iu',
+            'SUPERGUIDER' => '~\bsuperguider\b~iu',
+            'EKKA' => '~\b(?:ekka|екка)\b~iu',
+            'Boto' => '~\bboto\b~iu',
+            'Galaxy' => '~\bgalaxy\b~iu',
+            'HENGRUIDA' => '~\bhengruida\b~iu',
+            'Windforce' => '~\bwindforce\b~iu',
+        ];
+        foreach ($brandPatterns as $brand => $pattern) {
+            if (preg_match($pattern, $text)) {
+                $ad->brand = $brand;
+                break;
+            }
+        }
+        if (empty($ad->brand) && !empty($row['brand_name'])) {
+            $ad->brand = trim((string)$row['brand_name']);
+        }
+
+        $productModel = trim((string)($row['model'] ?? ''));
+        if ($productModel !== '' && self::containsToken($text, $productModel)) {
+            $ad->model = $productModel;
+        }
+
+        if (preg_match('~\b(\d{1,2})\s*PR\b~iu', $text, $match)) {
+            $ad->ply_rating = $match[1];
+        }
+
+        if ($productType === 'Мотошины') {
+            $ad->wheel_axle = 'Любая';
+            $ad->model = 'Другая';
+        } elseif ($productType === 'Шины для грузовиков и спецтехники') {
+            $ad->wheel_axle = 'Универсальная';
+            $ad->construction = preg_match('~\d(?:[.,]\d+)?\s*R\s*\d~iu', $text) ? 'Радиальный' : 'Диагональный';
+            if (preg_match('~\b(?:TL|бескамерн)~iu', $text)) {
+                $ad->tube_type = 'Бескамерная';
+            } elseif (preg_match('~\b(?:TTF?|камерн|шинокомплект)~iu', $text)) {
+                $ad->tube_type = 'Камерная';
+            }
+        } elseif ($productType === 'Диски') {
+            self::normalizeRimFields($ad, $text);
+        }
+    }
+
+    private static function normalizeRimFields($ad, string $text): void
+    {
+        $ad->rim_type = 'Штампованные';
+        $ad->quantity = 'за 1 шт.';
+        if (preg_match('~(?:W\s*)?(\d+(?:[.,]\d+)?)\s*[xх×]\s*R?(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+            $ad->rim_width = str_replace(',', '.', $m[1]);
+            $ad->rim_diameter = str_replace(',', '.', $m[2]);
+        }
+        if (preg_match('~\bET\s*(-?\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+            $ad->rim_offset = str_replace(',', '.', $m[1]);
+        }
+        if (preg_match('~\bPCD\s*(\d+)\s*[xх×]\s*(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+            $ad->rim_bolts = $m[1];
+            $ad->rim_bolts_diameter = str_replace(',', '.', $m[2]);
+        } elseif (preg_match('~(?:шпил(?:ек|ьки)|отверсти(?:й|я))\D{0,10}(\d+)~iu', $text, $m)) {
+            $ad->rim_bolts = $m[1];
+        }
+        if (preg_match('~(?:HUB|DIA|центрального отверстия)\D{0,10}(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+            $ad->rim_dia = str_replace(',', '.', $m[1]);
+        }
+        if (empty($ad->rim_bolts_diameter)
+            && preg_match('~(?:межболтов(?:ой|ого)\s+диаметр)\D{0,10}(\d+(?:[.,]\d+)?)~iu', $text, $m)) {
+            $ad->rim_bolts_diameter = str_replace(',', '.', $m[1]);
+        }
+    }
+
+    public static function avitoModelValue(string $productType, string $model): string
+    {
+        $model = trim($model);
+        if ($productType === 'Мотошины') {
+            return 'Другая';
+        }
+        if ($productType !== 'Шины для грузовиков и спецтехники') {
+            return '';
+        }
+        $allowed = [
+            'Atlas', 'C1', 'E3', 'E3/L3', 'G-2/L-2', 'Knight', 'L-2', 'L-5', 'L2',
+            'P319', 'P323', 'QH-201', 'QH107', 'QH601', 'QH602', 'QH608', 'R-4',
+            'SKS-1', 'Standard', 'Vulcan',
+        ];
+        foreach ($allowed as $value) {
+            if (strcasecmp($model, $value) === 0) {
+                return $value;
+            }
+        }
+        return '';
+    }
+
+    private static function containsToken(string $text, string $token): bool
+    {
+        return mb_stripos($text, $token, 0, 'UTF-8') !== false;
     }
 
     private static function productImageUrls(array $row): array
@@ -883,6 +1019,13 @@ class Avito extends AppModel
     private static function xmlAdd(\SimpleXMLElement $node, string $name, string $value): void
     {
         $node->addChild($name, htmlspecialchars($value, ENT_XML1 | ENT_COMPAT, 'UTF-8'));
+    }
+
+    private static function xmlAddIfNotEmpty(\SimpleXMLElement $node, string $name, string $value): void
+    {
+        if (trim($value) !== '') {
+            self::xmlAdd($node, $name, $value);
+        }
     }
 
     private static function xmlCdata(\SimpleXMLElement $node, string $name, string $value): void

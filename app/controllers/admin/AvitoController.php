@@ -636,7 +636,7 @@ private function buildAvitoXml($rows)
         }
 
         // Состояние/аудитория
-        $this->xmlAdd($ad, 'ItemCondition',  (string)(isset($r['item_condition']) ? $r['item_condition'] : ''));
+        $this->xmlAdd($ad, 'Condition',  (string)(isset($r['item_condition']) ? $r['item_condition'] : ''));
         $this->xmlAdd($ad, 'TargetAudience', (string)(isset($r['target_audience']) ? $r['target_audience'] : ''));
 
         // Видео
