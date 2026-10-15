@@ -66,7 +66,7 @@ class Avito extends AppModel
         'delivery_subsidy' => '',
 
         'goods_type'    => 'Шины, диски и колёса',
-        'ad_type'       => 'Товар приобретен на продажу',
+        'ad_type'       => 'Товар от производителя',
         'product_type'  => 'Шины для грузовиков и спецтехники',
         'spare_part_type' => '',
         'technic_spare_part_type' => '',
@@ -85,7 +85,7 @@ class Avito extends AppModel
         'vehicle_model' => '',
         'vehicle_generation' => '',
         'vehicle_modification' => '',
-        'nds' => '',
+        'nds' => '22',
         'postponed_payment' => '',
         'wholesale_type' => '',
         'wholesale_min_order_type' => '',
@@ -774,6 +774,35 @@ class Avito extends AppModel
             . "OR contact_phone IS NULL OR contact_phone != ? OR status = 'draft'",
             [self::MANAGER_NAME, self::CONTACT_PHONE, self::MANAGER_NAME, self::CONTACT_PHONE]
         );
+
+        // Единые коммерческие параметры для всех объявлений.
+        \R::exec(
+            'UPDATE avito_ad SET ad_type = ?, nds = ? WHERE ad_type IS NULL OR ad_type != ? OR nds IS NULL OR nds != ?',
+            ['Товар от производителя', '22', 'Товар от производителя', '22']
+        );
+
+        // С 2026 года в объявлениях указываем НДС 22%. Нормализуем также HTML-пробелы.
+        $descriptions = \R::getAll("SELECT id, description FROM avito_ad WHERE description LIKE '%НДС%20%'");
+        foreach ($descriptions as $descriptionRow) {
+            $description = (string)($descriptionRow['description'] ?? '');
+            $updatedDescription = self::normalizeDescriptionNds($description);
+            if ($updatedDescription !== $description) {
+                \R::exec('UPDATE avito_ad SET description = ? WHERE id = ?', [
+                    $updatedDescription,
+                    (int)$descriptionRow['id'],
+                ]);
+            }
+        }
+    }
+
+    public static function normalizeDescriptionNds(string $description): string
+    {
+        $updated = preg_replace(
+            '~НДС(?:\\s|&nbsp;|&#160;)*(?:[:\\-–—](?:\\s|&nbsp;|&#160;)*)?20(?:\\s|&nbsp;|&#160;)*%~iu',
+            'НДС 22%',
+            $description
+        );
+        return $updated === null ? $description : $updated;
     }
     public static function syncLinkedAdsFromProducts(): int
     {
@@ -989,7 +1018,8 @@ class Avito extends AppModel
             'longitude' => $cfg['default_longitude'] ?? '',
             'category' => 'Запчасти и аксессуары',
             'goods_type' => 'Шины, диски и колёса',
-            'ad_type' => 'Товар приобретен на продажу',
+            'ad_type' => 'Товар от производителя',
+            'nds' => '22',
             'product_type' => 'Шины для грузовиков и спецтехники',
             'item_condition' => 'Новое',
             'listing_fee' => 'Package',

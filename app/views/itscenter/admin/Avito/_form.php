@@ -11,7 +11,7 @@ if (!isset($ad) || !is_object($ad)) {
 $status         = isset($ad->status) ? $ad->status : 'draft';
 $category       = isset($ad->category) ? $ad->category : 'Запчасти и аксессуары';
 $goods_type     = isset($ad->goods_type) ? $ad->goods_type : 'Шины, диски и колёса';
-$ad_type        = isset($ad->ad_type) ? $ad->ad_type : 'Товар приобретен на продажу';
+$ad_type        = !empty($ad->ad_type) ? $ad->ad_type : 'Товар от производителя';
 $product_type   = isset($ad->product_type) ? $ad->product_type : 'Шины для грузовиков и спецтехники';
 $item_condition = isset($ad->item_condition) ? $ad->item_condition : 'Новое';
 $contact_method = isset($ad->contact_method) ? $ad->contact_method : 'По телефону и в сообщениях';
@@ -254,7 +254,7 @@ if (!function_exists('avito_h')) {
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Вид объявления (AdType)</label>
                     <div class="col-sm-9">
-                      <?php $adTypes = ['Продаю своё','Товар приобретен на продажу','Товар от производителя']; ?>
+                      <?php $adTypes = ['Товар от производителя']; ?>
                       <select class="form-control" name="ad_type">
                         <?php foreach ($adTypes as $v): ?>
                           <option value="<?=$v?>" <?php if ($ad_type === $v) echo 'selected'; ?>><?=$v?></option>
@@ -867,7 +867,7 @@ if (!function_exists('avito_h')) {
                   <h5>Условия продажи</h5>
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">НДС (NDS)</label>
-                    <div class="col-sm-9"><select class="form-control" name="nds"><option value=""></option><?php foreach (['Без НДС','0','5','7','10','22'] as $v): ?><option value="<?=$v?>" <?=(string)($ad->nds ?? '') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div>
+                    <div class="col-sm-9"><select class="form-control" name="nds"><?php foreach (['22'] as $v): ?><option value="<?=$v?>" <?=((string)($ad->nds ?? '') ?: '22') === $v ? 'selected' : ''?>><?=$v?></option><?php endforeach; ?></select></div>
                   </div>
                   <div class="form-group row avito-profile avito-profile-parts">
                     <label class="col-sm-3 col-form-label">Отсрочка платежа (PostponedPayment)</label>
