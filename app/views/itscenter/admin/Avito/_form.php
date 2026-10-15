@@ -531,13 +531,14 @@ if (!function_exists('avito_h')) {
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Индекс скорости (SpeedIndex)</label>
                     <div class="col-sm-9">
-                      <?php $si = ['C','D','E','F','G','J','K','L','M','N','P','Q','R','S','T']; ?>
+                      <?php $si = ['A1','A2','A3','A4','A5','A6','A7','A8','B','C','D','E','F','G','J','K','L','M','N','P','Q','R','S','T']; ?>
                       <select class="form-control" name="speed_index">
                         <option value=""></option>
                         <?php foreach ($si as $v): ?>
                           <option value="<?=$v?>" <?php if (($ad->speed_index ?? '') === $v) echo 'selected'; ?>><?=$v?></option>
                         <?php endforeach; ?>
                       </select>
+                      <small class="form-text text-muted">Например, в маркировке <code>178A8</code>: индекс нагрузки — <strong>178</strong>, индекс скорости — <strong>A8</strong>.</small>
                     </div>
                   </div>
 
@@ -591,6 +592,7 @@ if (!function_exists('avito_h')) {
                     <label class="col-sm-3 col-form-label">Индекс нагрузки (LoadIndex)</label>
                     <div class="col-sm-9">
                       <input class="form-control" name="load_index" value="<?=avito_h($ad->load_index ?? '')?>">
+                      <small class="form-text text-muted">Числовая часть комбинированной маркировки: для <code>178A8</code> укажите <strong>178</strong>.</small>
                     </div>
                   </div>
 

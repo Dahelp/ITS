@@ -899,6 +899,12 @@ class Avito extends AppModel
             $ad->ply_rating = $match[1];
         }
 
+        // Комбинированная маркировка грузовых/индустриальных шин: 178A8.
+        if (preg_match('~\b(\d{2,3})(A[1-8]|B|C|D|E|F|G|J|K|L|M|N|P|Q|R|S|T)\b~iu', $text, $match)) {
+            if (empty($ad->load_index)) $ad->load_index = $match[1];
+            if (empty($ad->speed_index)) $ad->speed_index = strtoupper($match[2]);
+        }
+
         if ($productType === 'Мотошины') {
             if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Любая';
             if (empty($ad->model)) $ad->model = 'Другая';
