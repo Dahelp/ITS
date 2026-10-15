@@ -966,6 +966,18 @@ class Avito extends AppModel
         if ($productType !== 'Шины для грузовиков и спецтехники') {
             return '';
         }
+        $modelAliases = [
+            'L5' => 'L-5',
+            'L 5' => 'L-5',
+            'E3/L-3' => 'E3/L3',
+            'E3-L3' => 'E3/L3',
+        ];
+        foreach ($modelAliases as $source => $target) {
+            if (strcasecmp($model, $source) === 0) {
+                $model = $target;
+                break;
+            }
+        }
         $allowed = [
             'Atlas', 'C1', 'E3', 'E3/L3', 'G-2/L-2', 'Knight', 'L-2', 'L-5', 'L2',
             'P319', 'P323', 'QH-201', 'QH107', 'QH601', 'QH602', 'QH608', 'R-4',
@@ -1075,12 +1087,12 @@ class Avito extends AppModel
         if ($missingRequired) {
             $status = 'error';
             $label = 'Нужно исправить';
-        } elseif ($reviewStatus === 'needs_review' || $warnings) {
+        } elseif ($reviewStatus === 'needs_review') {
             $status = 'warning';
             $label = 'Требует проверки';
         } else {
             $status = 'ready';
-            $label = 'Готово к выгрузке';
+            $label = $warnings ? 'Подтверждено — есть рекомендации' : 'Готово к выгрузке';
         }
 
         return compact(

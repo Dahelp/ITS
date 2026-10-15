@@ -91,6 +91,13 @@ if (!function_exists('avito_h')) {
             <i class="fad fa-file-export"></i> Выгрузить XML всех объявлений
           </a>
         <?php endif; ?>
+
+        <a id="avito-open-product"
+           class="btn btn-outline-primary<?=$linkedProductId ? '' : ' d-none'?>"
+           href="<?=$linkedProductId ? ADMIN . '/product/edit?id=' . $linkedProductId : '#'?>"
+           target="_blank" rel="noopener">
+          <i class="fas fa-external-link-alt"></i> Открыть товар
+        </a>
       </div>
 
       <form method="post" id="avito-form">
@@ -164,12 +171,6 @@ if (!function_exists('avito_h')) {
                         <?php endforeach; ?>
                       </select>
 
-                      <a id="avito-open-product"
-                         class="btn btn-outline-primary btn-sm mt-2<?=$linkedProductId ? '' : ' d-none'?>"
-                         href="<?=$linkedProductId ? ADMIN . '/product/edit?id=' . $linkedProductId : '#'?>"
-                         target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Открыть товар в новой вкладке
-                      </a>
                     </div>
                   </div>
 
