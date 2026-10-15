@@ -311,7 +311,7 @@ class AvitoController extends AppController
 
             \R::store($ad);
 
-            $_SESSION['success'] = 'Объявление добавлено';
+            $_SESSION['success'] = 'Объявление добавлено. ' . $this->requestAvitoAutoload();
             redirect(ADMIN . '/avito');
         }
 
@@ -359,7 +359,7 @@ class AvitoController extends AppController
 
             \R::store($ad);
 
-            $_SESSION['success'] = 'Изменения сохранены';
+            $_SESSION['success'] = 'Изменения сохранены. ' . $this->requestAvitoAutoload();
             redirect(ADMIN . '/avito/edit?id=' . $ad->id);
         }
 
@@ -406,6 +406,17 @@ class AvitoController extends AppController
 
         echo json_encode(['results' => $results], JSON_UNESCAPED_UNICODE);
         exit;
+    }
+
+    private function requestAvitoAutoload(): string
+    {
+        $result = Avito::triggerAutoloadUpload();
+        if (!empty($result['triggered'])) {
+            return 'Обновление отправлено в автозагрузку Avito; обработка выполняется не мгновенно.';
+        }
+
+        return 'Запустить автозагрузку Avito не удалось: ' . (string)($result['message'] ?? 'неизвестная ошибка')
+            . '. Данные сохранены на сайте, повторите синхронизацию позже.';
     }
 
 
