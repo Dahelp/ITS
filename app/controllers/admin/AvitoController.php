@@ -395,7 +395,7 @@ class AvitoController extends AppController
             $updated = Avito::syncLinkedAdsFromProducts();
             $urlsUpdated = Avito::syncUrlsFromApi();
             $apiStats = Avito::pushLinkedAdsToApi();
-            $autoloadTriggered = Avito::triggerAutoloadUpload();
+            $autoload = Avito::triggerAutoloadUpload();
 
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
                 . ', ссылок из API: ' . (int)$urlsUpdated
@@ -408,7 +408,7 @@ class AvitoController extends AppController
                 . ', остатков проверено в API: ' . (int)$apiStats['stock_checked']
                 . ', с наличием в API: ' . (int)$apiStats['stock_positive']
                 . ', несовпадений остатков: ' . (int)$apiStats['stock_mismatch']
-                . ', автозагрузка: ' . ($autoloadTriggered ? 'запущена' : 'не запущена');
+                . ', автозагрузка: ' . (string)$autoload['message'];
 
             $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'] + (int)$apiStats['stock_mismatch'];
             if ($failed > 0) {

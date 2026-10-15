@@ -1113,14 +1113,18 @@ class Avito extends AppModel
         }
     }
 
-    public static function triggerAutoloadUpload(): bool
+    public static function triggerAutoloadUpload(): array
     {
-        $client = new \app\services\AvitoApiClient();
-        $client->getAccessToken();
-        $client->api('POST', '/autoload/v1/upload', [
-            'rate_limit_retries' => 0,
-        ]);
-        return true;
+        try {
+            $client = new \app\services\AvitoApiClient();
+            $client->getAccessToken();
+            $client->api('POST', '/autoload/v1/upload', [
+                'rate_limit_retries' => 0,
+            ]);
+            return ['triggered' => true, 'message' => 'запущена'];
+        } catch (\Throwable $e) {
+            return ['triggered' => false, 'message' => $e->getMessage()];
+        }
     }
     private static function apiItemId(array $row): int
     {
