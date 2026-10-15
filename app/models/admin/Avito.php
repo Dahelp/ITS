@@ -810,6 +810,11 @@ class Avito extends AppModel
 
         \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) <= 0 THEN 'archived'\n                WHEN a.review_status = 'needs_review' THEN 'archived'\n                ELSE 'active'\n            END\n        ");
 
+        // Категория каталога 2 — шины для квадроциклов (ATV). Ранее созданные
+        // объявления могли остаться в профиле грузовых шин, поэтому приводим
+        // весь связанный набор к официальному типу Avito «Мотошины».
+        \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.goods_type = 'Шины, диски и колёса',\n                a.product_type = 'Мотошины',\n                a.wheel_axle = CASE\n                    WHEN a.wheel_axle IN ('Передняя', 'Задняя', 'Любая') THEN a.wheel_axle\n                    ELSE 'Любая'\n                END\n            WHERE p.category_id = 2\n        ");
+
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         $updated = 0;
