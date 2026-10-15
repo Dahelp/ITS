@@ -644,6 +644,44 @@ if (!function_exists('avito_h')) {
 
                   </div>
 
+                  <div class="avito-profile avito-profile-moto">
+                    <div class="alert alert-warning py-2">
+                      Для шин ATV выберите тип «Мотошины». Avito не предусматривает здесь отдельные поля «ATV» и «Сезонность» — укажите квадроцикл в названии и описании.
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">Бренд (Brand)</label>
+                      <div class="col-sm-9"><input class="form-control" name="brand" value="<?=avito_h($ad->brand ?? '')?>"></div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label">Модель (Model)</label>
+                      <div class="col-sm-9"><input class="form-control" name="model" value="<?=avito_h($ad->model ?? '')?>"></div>
+                    </div>
+                    <?php
+                      $motoRims = ['5','6','7','8','9','10','11','12','13','14','15','16','16.5','17','18','19','20','21','22','23','24'];
+                      $motoWidths = ['2.5','2.75','3','3.5','3.25','3.75','4','4.1','4.5','4.6','5','6','6.5','7','7.1','8','8.5','9','10','11','12','16','18','19','20','21','22','25','26','27','28','29','30','60','70','80','90','100','110','120','125','130','140','145','150','160','170','180','190','200','205','210','215','220','225','230','240','250','260','270','280','290','300','310','320','330','340','350','360','370','380','390','MT90','MU85'];
+                      $motoAspects = ['7','8','9','9.5','10','11.0','12','25','26','27','28','29','29.5','30','35','40','45','50','55','60','65','70','75','80','85','90','95','100','105','110','Другое'];
+                      $motoSelects = [
+                        'rim_diameter' => ['Диаметр диска (RimDiameter)', $motoRims],
+                        'tire_section_width' => ['Ширина профиля (TireSectionWidth)', $motoWidths],
+                        'tire_aspect_ratio' => ['Высота профиля (TireAspectRatio)', $motoAspects],
+                        'wheel_axle' => ['Ось установки (WheelAxle)', ['Передняя','Задняя','Любая']],
+                      ];
+                    ?>
+                    <?php foreach ($motoSelects as $field => [$label, $values]): ?>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label"><?=$label?> <span class="text-danger">*</span></label>
+                        <div class="col-sm-9">
+                          <select class="form-control" name="<?=$field?>">
+                            <option value=""></option>
+                            <?php foreach ($values as $value): ?>
+                              <option value="<?=avito_h($value)?>" <?php if ((string)($ad->$field ?? '') === $value) echo 'selected'; ?>><?=avito_h($value)?></option>
+                            <?php endforeach; ?>
+                          </select>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">
                       Состояние товара (Condition) <span class="text-danger">*</span>
@@ -999,7 +1037,7 @@ if (!function_exists('avito_h')) {
 
       function setProductProfile() {
         var productType = $('#avito-product-type').val() || '';
-        var profile = productType === 'Диски' ? 'disks' : (productType === 'Для грузовиков и спецтехники' ? 'parts' : 'tires');
+        var profile = productType === 'Диски' ? 'disks' : (productType === 'Для грузовиков и спецтехники' ? 'parts' : (productType === 'Мотошины' ? 'moto' : 'tires'));
         $('.avito-profile').each(function() {
           var active = $(this).hasClass('avito-profile-' + profile);
           $(this).toggle(active).find(':input').prop('disabled', !active);

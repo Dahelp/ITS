@@ -930,13 +930,13 @@ class Avito extends AppModel
             self::xmlAdd($ad, 'VideoURL', (string)($r['video_url'] ?? ''));
             self::xmlAdd($ad, 'VideoFileURL', (string)($r['video_file_url'] ?? ''));
             $productType = trim((string)($r['product_type'] ?? ''));
-            $isTire = in_array($productType, ['Шины для грузовиков и спецтехники', 'Мотошины'], true);
-            if ($isTire && $productType !== 'Мотошины') {
+            $isTruckTire = $productType === 'Шины для грузовиков и спецтехники';
+            $isMotoTire = $productType === 'Мотошины';
+            if ($isTruckTire || $isMotoTire) {
                 self::xmlAddIfNotEmpty($ad, 'Brand', (string)($r['brand'] ?? ''));
             }
-            if ($isTire) {
-                $avitoModel = self::avitoModelValue($productType, (string)($r['model'] ?? ''));
-                self::xmlAddIfNotEmpty($ad, 'Model', $avitoModel);
+            if ($isTruckTire) {
+                self::xmlAddIfNotEmpty($ad, 'Model', self::avitoModelValue($productType, (string)($r['model'] ?? '')));
                 self::xmlAdd($ad, 'TireSectionWidth', (string)($r['tire_section_width'] ?? ''));
                 self::xmlAdd($ad, 'TireAspectRatio', (string)($r['tire_aspect_ratio'] ?? ''));
                 self::xmlAdd($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
@@ -951,6 +951,13 @@ class Avito extends AppModel
                 self::xmlAddIfNotEmpty($ad, 'ResidualTreadSV', (string)($r['residual_tread_sv'] ?? ''));
                 self::xmlAddIfNotEmpty($ad, 'Design', (string)($r['design'] ?? ''));
                 self::xmlAddIfNotEmpty($ad, 'VehicleType', (string)($r['vehicle_type'] ?? ''));
+            }
+            if ($isMotoTire) {
+                self::xmlAddIfNotEmpty($ad, 'Model', (string)($r['model'] ?? ''));
+                self::xmlAdd($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
+                self::xmlAdd($ad, 'TireSectionWidth', (string)($r['tire_section_width'] ?? ''));
+                self::xmlAdd($ad, 'TireAspectRatio', (string)($r['tire_aspect_ratio'] ?? ''));
+                self::xmlAdd($ad, 'WheelAxle', (string)($r['wheel_axle'] ?? ''));
             }
             if ($productType === 'Диски') {
                 self::xmlAddIfNotEmpty($ad, 'RimDiameter', (string)($r['rim_diameter'] ?? ''));
@@ -1079,7 +1086,6 @@ class Avito extends AppModel
 
         if ($productType === 'Мотошины') {
             if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Любая';
-            if (empty($ad->model)) $ad->model = 'Другая';
         } elseif ($productType === 'Шины для грузовиков и спецтехники') {
             if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Универсальная';
             if (empty($ad->construction)) {
@@ -1125,9 +1131,6 @@ class Avito extends AppModel
     public static function avitoModelValue(string $productType, string $model): string
     {
         $model = trim($model);
-        if ($productType === 'Мотошины') {
-            return 'Другая';
-        }
         if ($productType !== 'Шины для грузовиков и спецтехники') {
             return '';
         }
@@ -1202,9 +1205,10 @@ class Avito extends AppModel
             ];
         } elseif ($type === 'Мотошины') {
             $required += [
-                'model' => 'Модель Avito', 'tire_section_width' => 'Ширина профиля',
+                'tire_section_width' => 'Ширина профиля', 'tire_aspect_ratio' => 'Высота профиля',
                 'rim_diameter' => 'Диаметр', 'wheel_axle' => 'Ось',
             ];
+            $optional = ['brand' => 'Бренд', 'model' => 'Модель'];
         } elseif ($type === 'Диски') {
             $optional = $diskOptional;
             $required += [

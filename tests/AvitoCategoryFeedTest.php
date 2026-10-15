@@ -51,6 +51,36 @@ if (!str_contains($tireXml, '<SpeedIndex>A8</SpeedIndex>') || !str_contains($tir
     exit(1);
 }
 
+$motoXml = Avito::buildXml([$base + [
+    'goods_type' => 'Шины, диски и колёса', 'product_type' => 'Мотошины',
+    'brand' => 'Superguider', 'model' => 'ATV-1', 'rim_diameter' => '12',
+    'tire_section_width' => '25', 'tire_aspect_ratio' => '8', 'wheel_axle' => 'Любая',
+    'tire_type' => 'Всесезонные', 'speed_index' => 'A8', 'ply_rating' => '6',
+]]);
+foreach (['<Brand>Superguider</Brand>', '<Model>ATV-1</Model>', '<RimDiameter>12</RimDiameter>',
+    '<TireSectionWidth>25</TireSectionWidth>', '<TireAspectRatio>8</TireAspectRatio>', '<WheelAxle>Любая</WheelAxle>'] as $tag) {
+    if (!str_contains($motoXml, $tag)) {
+        fwrite(STDERR, "FAILED: moto tire profile misses {$tag}\n");
+        exit(1);
+    }
+}
+foreach (['<TireType>', '<SpeedIndex>', '<PlyRayting>'] as $tag) {
+    if (str_contains($motoXml, $tag)) {
+        fwrite(STDERR, "FAILED: moto tire profile contains unsupported {$tag}\n");
+        exit(1);
+    }
+}
+
+$motoAnalysis = Avito::analyzeRow($base + [
+    'product_type' => 'Мотошины', 'rim_diameter' => '12', 'tire_section_width' => '25',
+    'tire_aspect_ratio' => '8', 'wheel_axle' => 'Любая',
+]);
+if (in_array('Модель Avito', $motoAnalysis['missingRequired'], true)
+    || in_array('Высота профиля', $motoAnalysis['missingRequired'], true)) {
+    fwrite(STDERR, "FAILED: moto tire required field analysis is incorrect\n");
+    exit(1);
+}
+
 $partXml = Avito::buildXml([$base + [
     'goods_type' => 'Запчасти', 'product_type' => 'Для грузовиков и спецтехники',
     'spare_part_type' => 'Двигатели и комплектующие', 'technic_spare_part_type' => 'Топливная система',
