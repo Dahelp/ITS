@@ -81,6 +81,18 @@ if (in_array('Модель Avito', $motoAnalysis['missingRequired'], true)
     exit(1);
 }
 
+$motoFlotationXml = Avito::buildXml([$base + [
+    'title' => 'Шина 13x6-5 P336 EKKA', 'goods_type' => 'Шины, диски и колёса',
+    'product_type' => 'Мотошины', 'rim_diameter' => '5', 'tire_section_width' => '6',
+    'tire_aspect_ratio' => 'Другое', 'wheel_axle' => 'Любая',
+]]);
+if (!str_contains($motoFlotationXml, '<RimDiameter>5</RimDiameter>')
+    || !str_contains($motoFlotationXml, '<TireSectionWidth>6</TireSectionWidth>')
+    || !str_contains($motoFlotationXml, '<TireAspectRatio>Другое</TireAspectRatio>')) {
+    fwrite(STDERR, "FAILED: ATV flotation size is not exported correctly\n");
+    exit(1);
+}
+
 $partXml = Avito::buildXml([$base + [
     'goods_type' => 'Запчасти', 'product_type' => 'Для грузовиков и спецтехники',
     'spare_part_type' => 'Двигатели и комплектующие', 'technic_spare_part_type' => 'Топливная система',

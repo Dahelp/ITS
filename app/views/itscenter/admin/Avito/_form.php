@@ -646,7 +646,7 @@ if (!function_exists('avito_h')) {
 
                   <div class="avito-profile avito-profile-moto">
                     <div class="alert alert-warning py-2">
-                      Для шин ATV выберите тип «Мотошины». Avito не предусматривает здесь отдельные поля «ATV» и «Сезонность» — укажите квадроцикл в названии и описании.
+                      Для шин ATV выберите тип «Мотошины». Размер <strong>13×6-5</strong> передаётся как: ширина — <strong>6</strong>, диаметр диска — <strong>5</strong>, высота профиля — <strong>Другое</strong>. Полный размер сохраняйте в названии и описании.
                     </div>
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">Бренд (Brand)</label>
