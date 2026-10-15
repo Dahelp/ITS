@@ -74,10 +74,34 @@ class AvitoApiClient
 
     private function request(string $method, string $url, array $options = []): array
     {
+        $maxRateLimitRetries = (int)($options['rate_limit_retries'] ?? 2);
+        unset($options['rate_limit_retries']);
+
+        for ($attempt = 0; ; $attempt++) {
+            try {
+                return $this->requestOnce($method, $url, $options);
+            } catch (AvitoApiException $e) {
+                if ($e->getStatusCode() !== 429 || $attempt >= $maxRateLimitRetries) {
+                    throw $e;
+                }
+
+                $retryAfter = $e->getRetryAfter();
+                if ($retryAfter === null) {
+                    $retryAfter = 60;
+                }
+                sleep(max(1, min(120, $retryAfter)));
+            }
+        }
+    }
+
+    private function requestOnce(string $method, string $url, array $options = []): array
+    {
         $headers = (array)($options['headers'] ?? []);
         if (!empty($options['auth'])) {
             $headers[] = 'Authorization: Bearer ' . $this->getAccessToken();
         }
+
+        $responseHeaders = [];
 
         $ch = curl_init($url);
         curl_setopt_array($ch, [
@@ -86,6 +110,14 @@ class AvitoApiClient
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_HEADERFUNCTION => static function ($curl, string $line) use (&$responseHeaders): int {
+                $length = strlen($line);
+                $parts = explode(':', $line, 2);
+                if (count($parts) === 2) {
+                    $responseHeaders[strtolower(trim($parts[0]))] = trim($parts[1]);
+                }
+                return $length;
+            },
         ]);
 
         if (array_key_exists('json', $options)) {
@@ -109,7 +141,11 @@ class AvitoApiClient
         $decoded = json_decode((string)$body, true);
         if ($code < 200 || $code >= 300) {
             $message = is_array($decoded) ? json_encode($decoded, JSON_UNESCAPED_UNICODE) : (string)$body;
-            throw new \RuntimeException('Avito API HTTP ' . $code . ': ' . $message);
+            $retryAfter = null;
+            if (isset($responseHeaders['retry-after']) && ctype_digit($responseHeaders['retry-after'])) {
+                $retryAfter = (int)$responseHeaders['retry-after'];
+            }
+            throw new AvitoApiException($code, $message, $retryAfter);
         }
 
         return is_array($decoded) ? $decoded : [];
@@ -139,6 +175,29 @@ class AvitoApiClient
     private function config(): array
     {
         return (array)(App::$app->getProperty('avito') ?? []);
+    }
+}
+
+class AvitoApiException extends \RuntimeException
+{
+    private int $statusCode;
+    private ?int $retryAfter;
+
+    public function __construct(int $statusCode, string $message, ?int $retryAfter = null)
+    {
+        parent::__construct('Avito API HTTP ' . $statusCode . ': ' . $message);
+        $this->statusCode = $statusCode;
+        $this->retryAfter = $retryAfter;
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    public function getRetryAfter(): ?int
+    {
+        return $this->retryAfter;
     }
 }
 

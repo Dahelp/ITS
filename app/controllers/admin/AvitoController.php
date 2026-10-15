@@ -389,10 +389,13 @@ class AvitoController extends AppController
 
     public function syncProductsAction()
     {
+        @set_time_limit(0);
+
         try {
             $updated = Avito::syncLinkedAdsFromProducts();
             $urlsUpdated = Avito::syncUrlsFromApi();
             $apiStats = Avito::pushLinkedAdsToApi();
+            $autoloadTriggered = Avito::triggerAutoloadUpload();
 
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
                 . ', ссылок из API: ' . (int)$urlsUpdated
@@ -403,9 +406,11 @@ class AvitoController extends AppController
                 . ', активных по статусу: ' . (int)$apiStats['status_active']
                 . ', в архив по статусу: ' . (int)$apiStats['status_archived']
                 . ', остатков проверено в API: ' . (int)$apiStats['stock_checked']
-                . ', с наличием в API: ' . (int)$apiStats['stock_positive'];
+                . ', с наличием в API: ' . (int)$apiStats['stock_positive']
+                . ', несовпадений остатков: ' . (int)$apiStats['stock_mismatch']
+                . ', автозагрузка: ' . ($autoloadTriggered ? 'запущена' : 'не запущена');
 
-            $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'];
+            $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'] + (int)$apiStats['stock_mismatch'];
             if ($failed > 0) {
                 $message .= ', ошибок API: ' . $failed;
                 if (!empty($apiStats['errors'])) {

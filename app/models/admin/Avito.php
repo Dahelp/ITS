@@ -977,6 +977,9 @@ class Avito extends AppModel
             'stock_failed' => 0,
             'stock_checked' => 0,
             'stock_positive' => 0,
+            'stock_mismatch' => 0,
+            'stock_sent_total' => 0,
+            'stock_sent_positive' => 0,
             'status_active' => 0,
             'status_archived' => 0,
             'skipped' => 0,
@@ -999,7 +1002,7 @@ class Avito extends AppModel
             $itemId = self::apiItemId($row);
             $price = (int)round((float)($row['price_rub'] ?? 0));
             $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
-            if ($quantity > 0 && $price > 0) {
+            if ($quantity > 0) {
                 $stats['status_active']++;
             } else {
                 $stats['status_archived']++;
@@ -1102,11 +1105,22 @@ class Avito extends AppModel
                     $stats['stock_positive']++;
                 }
                 $expected = (int)($expectedStock[$itemId] ?? 0);
-                if ($expected > 0 && $quantity <= 0) {
+                if ($quantity !== $expected) {
+                    $stats['stock_mismatch']++;
                     self::addApiError($stats, $itemId, 'После записи Avito API показывает остаток ' . $quantity . ', ожидали ' . $expected);
                 }
             }
         }
+    }
+
+    public static function triggerAutoloadUpload(): bool
+    {
+        $client = new \app\services\AvitoApiClient();
+        $client->getAccessToken();
+        $client->api('POST', '/autoload/v1/upload', [
+            'rate_limit_retries' => 0,
+        ]);
+        return true;
     }
     private static function apiItemId(array $row): int
     {
