@@ -665,6 +665,13 @@ class Avito extends AppModel
             \R::exec("ALTER TABLE avito_ad MODIFY wheel_axle VARCHAR(64) NULL DEFAULT NULL");
         }
 
+        // Старый ENUM не принимает промышленные индексы A1–A8 и молча сохраняет пустую строку.
+        $speedIndexColumn = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE 'speed_index'");
+        $speedIndexType = (string)($speedIndexColumn['Type'] ?? '');
+        if ($speedIndexColumn && stripos($speedIndexType, 'enum(') === 0) {
+            \R::exec("ALTER TABLE avito_ad MODIFY speed_index VARCHAR(16) NULL DEFAULT NULL");
+        }
+
         // Контакты едины для всех объявлений, а черновики должны быть в архиве.
         \R::exec(
             "UPDATE avito_ad SET manager_name = ?, contact_phone = ?, "

@@ -282,6 +282,7 @@ class AvitoController extends AppController
      */
     public function addAction()
     {
+        Avito::ensureSchema();
         $model = new Avito();
 
         if (!empty($_POST)) {
@@ -326,6 +327,7 @@ class AvitoController extends AppController
      */
     public function editAction()
     {
+        Avito::ensureSchema();
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         $ad = \R::load('avito_ad', $id);
 
