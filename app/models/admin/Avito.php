@@ -813,7 +813,7 @@ class Avito extends AppModel
         // Категория каталога 2 — шины для квадроциклов (ATV). Ранее созданные
         // объявления могли остаться в профиле грузовых шин, поэтому приводим
         // весь связанный набор к официальному типу Avito «Мотошины».
-        \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.goods_type = 'Шины, диски и колёса',\n                a.product_type = 'Мотошины',\n                a.tire_aspect_ratio = CASE\n                    WHEN a.tire_aspect_ratio IS NULL OR TRIM(a.tire_aspect_ratio) = '' THEN 'Другое'\n                    ELSE a.tire_aspect_ratio\n                END,\n                a.wheel_axle = CASE\n                    WHEN a.wheel_axle IN ('Передняя', 'Задняя', 'Любая') THEN a.wheel_axle\n                    ELSE 'Любая'\n                END\n            WHERE p.category_id = 2\n        ");
+        \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.goods_type = 'Шины, диски и колёса',\n                a.product_type = 'Мотошины',\n                a.wheel_axle = CASE\n                    WHEN a.wheel_axle IN ('Передняя', 'Задняя', 'Любая') THEN a.wheel_axle\n                    ELSE 'Любая'\n                END\n            WHERE p.category_id = 2\n        ");
 
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
@@ -1092,11 +1092,10 @@ class Avito extends AppModel
         if ($productType === 'Мотошины') {
             // ATV uses flotation sizing: outer diameter × width - rim (e.g. 13×6-5).
             // Avito has no outer-diameter field, so the complete size stays in Title,
-            // while supported structured fields receive width, rim and «Другое».
+            // while supported structured fields receive width and rim. Profile is selected manually.
             if (preg_match('~\b\d+(?:[.,]\d+)?\s*[xх×]\s*(\d+(?:[.,]\d+)?)\s*-\s*(\d+(?:[.,]\d+)?)\b~iu', $text, $m)) {
-                if (empty($ad->tire_section_width)) $ad->tire_section_width = str_replace(',', '.', $m[1]);
-                if (empty($ad->rim_diameter)) $ad->rim_diameter = str_replace(',', '.', $m[2]);
-                if (empty($ad->tire_aspect_ratio)) $ad->tire_aspect_ratio = 'Другое';
+                $ad->tire_section_width = str_replace(',', '.', $m[1]);
+                $ad->rim_diameter = str_replace(',', '.', $m[2]);
             }
             if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Любая';
         } elseif ($productType === 'Шины для грузовиков и спецтехники') {
