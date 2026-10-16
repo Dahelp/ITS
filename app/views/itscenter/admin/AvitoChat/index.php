@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261017-1">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261017-2">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
     <?php if (!$allowed): ?>
         <div class="alert alert-info">Для вашей учётной записи доступ к переписке отключён. Администратор может включить его в разделе «Пользователи», в карточке сотрудника.</div>
     <?php else: ?>
-        <div id="avito-chat" data-endpoint="<?= htmlspecialchars(ADMIN.'/avito-chat/api', ENT_QUOTES, 'UTF-8') ?>" data-csrf="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>" data-max-image-bytes="<?= (int)$maxImageBytes ?>">
+        <div id="avito-chat" data-endpoint="<?= htmlspecialchars(ADMIN.'/avito-chat/api', ENT_QUOTES, 'UTF-8') ?>" data-csrf="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>" data-max-image-bytes="<?= (int)$maxImageBytes ?>" data-max-document-bytes="<?= (int)$maxDocumentBytes ?>">
             <p><button id="avito-chat-check" class="btn btn-info" type="button">Проверить подключение к Авито</button> <span id="avito-chat-check-result" role="status"></span></p>
             <div id="avito-chat-error" class="alert alert-danger" role="alert" hidden></div>
             <div class="row">
@@ -43,6 +43,24 @@
                         </div>
                         <div id="avito-photo-status" class="text-muted" role="status"></div>
                     </div>
+                    <div class="avito-document-compose">
+                        <label for="avito-chat-document">Счёт или документ</label>
+                        <div class="avito-photo-actions">
+                            <input type="file" id="avito-chat-document" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" disabled>
+                            <button id="avito-document-upload" class="btn btn-outline-primary" type="button" disabled>Подготовить ссылку</button>
+                        </div>
+                        <small class="text-muted">PDF или DOCX · до <?= h(round($maxDocumentBytes / 1048576, 1)) ?> МБ. Ссылка действует 7 дней. Скачать сможет любой, у кого есть ссылка.</small>
+                        <div id="avito-document-prepared" class="avito-document-prepared" hidden>
+                            <strong id="avito-document-name"></strong>
+                            <a id="avito-document-link" target="_blank" rel="noopener noreferrer">Проверить документ</a>
+                            <small id="avito-document-expires"></small>
+                            <div class="avito-photo-actions mt-2">
+                                <button id="avito-document-send" class="btn btn-primary" type="button" disabled>Отправить ссылку в чат</button>
+                                <button id="avito-document-revoke" class="btn btn-outline-danger" type="button" disabled>Отозвать ссылку</button>
+                            </div>
+                        </div>
+                        <div id="avito-document-status" class="text-muted" role="status"></div>
+                    </div>
                     <small class="text-muted">Обновление каждые 15 секунд. Нажмите на изображение для увеличения, на «Прослушать» — для голосового.</small>
                 </div></div></div>
             </div>
@@ -56,6 +74,6 @@
         </dialog>
         <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-media.js?v=20261017-1" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-1" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-2" defer></script>
     <?php endif; ?>
 </section>

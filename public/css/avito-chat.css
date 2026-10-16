@@ -30,3 +30,7 @@
 .avito-image-dialog::backdrop{background:#000b}
 .avito-image-dialog-toolbar{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:12px}
 .avito-image-dialog>img{display:block;max-width:88vw;max-height:76vh;object-fit:contain;margin:auto}
+.avito-document-compose{margin:20px 0 16px;padding-top:16px;border-top:1px solid #e1e5eb}
+.avito-document-prepared{margin-top:12px;padding:14px;background:#edf5ff;border-radius:8px;overflow-wrap:anywhere}
+.avito-document-prepared[hidden]{display:none}
+.avito-document-prepared>strong,.avito-document-prepared>a,.avito-document-prepared>small{display:block;margin-bottom:6px}
