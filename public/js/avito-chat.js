@@ -6,6 +6,9 @@
     const list = el('avito-chat-list'), messages = el('avito-chat-messages');
     const text = el('avito-chat-text'), submit = el('avito-chat-submit');
     const photoInput = el('avito-chat-image'), photoSend = el('avito-chat-image-send');
+    const docInput = el('avito-chat-document'), docUpload = el('avito-document-upload');
+    const documentDrafts = new Map();
+    let documentFile = null;
     let photoFile = null, photoPreviewUrl = '', messageRows = new Map();
     let selected = '', chatOffset = 0, messageOffset = 0, busy = false, refreshing = false;
     let chatVersion = 0, messageVersion = 0, history = new Map();
@@ -36,6 +39,31 @@
         text.disabled = disabled; submit.disabled = disabled;
         photoInput.disabled = disabled; photoSend.disabled = disabled || !photoFile;
         el('avito-photo-remove').disabled = disabled;
+        docInput.disabled = disabled; docUpload.disabled = disabled || !documentFile;
+        const draft = documentDrafts.get(selected);
+        el('avito-document-send').disabled = disabled || !draft || draft.sent || draft.revoked || !!documentFile;
+        el('avito-document-revoke').disabled = disabled || !draft || draft.revoked;
+    }
+    function renderDocument() {
+        const draft = documentDrafts.get(selected);
+        el('avito-document-prepared').hidden = !draft || draft.revoked;
+        if (draft) {
+            el('avito-document-name').textContent = draft.name;
+            el('avito-document-link').href = draft.url;
+            el('avito-document-expires').textContent = 'Доступен до ' + fullDate(draft.expires_at);
+        }
+        el('avito-document-status').textContent = draft?.revoked ? 'Доступ по ссылке отозван.' : draft?.sent ? 'Ссылка отправлена в чат.' : '';
+    }
+    async function revokeDocument(token, chat) {
+        if (busy) return false;
+        busy = true; composeDisabled(true);
+        try {
+            await api('revoke-document', {token, chat}, true);
+            const draft = documentDrafts.get(chat);
+            if (draft?.token === token) { draft.revoked = true; renderDocument(); }
+            error(''); return true;
+        } catch (e) { error(e.message); return false; }
+        finally { busy = false; composeDisabled(!selected); }
     }
     function clearPhoto() {
         if (photoPreviewUrl) URL.revokeObjectURL(photoPreviewUrl);
@@ -68,6 +96,19 @@
             body.textContent = content.text || content.link?.text || content.item?.title || content.location?.text ||
                 ({image: 'Изображение', voice: 'Голосовое сообщение', call: 'Звонок', deleted: 'Сообщение удалено'}[message.type]) || 'Сообщение: ' + (message.type || 'неизвестный тип');
             row.append(body);
+            const documentToken = message.direction === 'out' && typeof content.text === 'string'
+                ? content.text.match(/https:\/\/its-center\.ru\/avito-document\/download\?token=([a-f0-9]{64})(?![a-f0-9])/)
+                : null;
+            if (documentToken) {
+                const open = document.createElement('a'); open.href = 'https://its-center.ru/avito-document/download?token=' + documentToken[1];
+                open.textContent = 'Скачать документ'; open.target = '_blank'; open.rel = 'noopener noreferrer'; open.className = 'd-block'; row.append(open);
+                const revoke = document.createElement('button'); revoke.type = 'button'; revoke.className = 'btn btn-sm btn-outline-danger mt-2'; revoke.textContent = 'Отозвать ссылку';
+                revoke.addEventListener('click', async () => {
+                    revoke.disabled = true;
+                    if (await revokeDocument(documentToken[1], selected)) revoke.textContent = 'Ссылка отозвана';
+                    else revoke.disabled = false;
+                }); row.append(revoke);
+            }
             const sizes = content.image?.sizes || {};
             const imageUrl = safeMediaUrl(sizes['640x480'] || sizes['1280x960'] || Object.values(sizes)[0]);
             if (imageUrl) {
@@ -116,9 +157,13 @@
     }
     async function selectChat(chat, title) {
         if (busy) return;
-        if (selected !== chat) { clearPhoto(); el('avito-photo-status').textContent = ''; }
+        if (selected !== chat) {
+            clearPhoto(); el('avito-photo-status').textContent = '';
+            documentFile = null; docInput.value = '';
+        }
         if (selected) drafts.set(selected, text.value);
         selected = chat; ++messageVersion; history = new Map(); messageOffset = 0;
+        renderDocument();
         list.querySelectorAll('[data-chat-id]').forEach(button => button.classList.toggle('avito-chat-selected', button.dataset.chatId === selected));
         text.value = drafts.get(chat) || '';
         messages.replaceChildren(); messageRows = new Map(); el('avito-chat-title').textContent = title;
@@ -200,6 +245,42 @@
         el('avito-photo-status').textContent = ''; photoSend.disabled = !selected || busy; error('');
     });
     el('avito-photo-remove').addEventListener('click', clearPhoto);
+    docInput.addEventListener('change', () => {
+        documentFile = null;
+        const file = docInput.files[0];
+        if (file && !/\.(pdf|docx)$/i.test(file.name)) { error('Выберите PDF или DOCX.'); docInput.value = ''; }
+        else if (file && (!file.size || file.size > Number(root.dataset.maxDocumentBytes))) {
+            error('Документ пуст или превышает указанный лимит размера.'); docInput.value = '';
+        } else { documentFile = file || null; error(''); }
+        composeDisabled(busy || !selected);
+    });
+    docUpload.addEventListener('click', async () => {
+        if (busy || !selected || !documentFile) return;
+        const chat = selected, payload = new FormData(); payload.set('chat', chat); payload.set('document', documentFile);
+        busy = true; composeDisabled(true); el('avito-document-status').textContent = 'Загружаем документ…';
+        try {
+            const draft = await api('upload-document', payload, true);
+            documentDrafts.set(chat, draft); documentFile = null; docInput.value = '';
+            renderDocument(); error('');
+        } catch (e) { el('avito-document-status').textContent = ''; error(e.message); }
+        finally { busy = false; composeDisabled(!selected); }
+    });
+    el('avito-document-send').addEventListener('click', async () => {
+        const chat = selected, draft = documentDrafts.get(chat);
+        if (busy || !draft || draft.sent || draft.revoked) return;
+        busy = true; composeDisabled(true); el('avito-document-status').textContent = 'Отправляем ссылку…';
+        try {
+            await api('send-document', {chat, token: draft.token}, true);
+            draft.sent = true; renderDocument(); error('');
+            try { await loadMessages(); }
+            catch (_) { error('Ссылка отправлена. Обновить историю не удалось — нажмите «Обновить».'); }
+        } catch (e) { el('avito-document-status').textContent = ''; error(e.message + ' При обрыве связи проверьте историю перед повторной отправкой.'); }
+        finally { busy = false; composeDisabled(!selected); }
+    });
+    el('avito-document-revoke').addEventListener('click', () => {
+        const draft = documentDrafts.get(selected);
+        if (draft) revokeDocument(draft.token, selected);
+    });
     photoSend.addEventListener('click', async () => {
         if (busy || !selected || !photoFile) return;
         const chat = selected, payload = new FormData();
