@@ -8,6 +8,8 @@
     let selected = '', chatOffset = 0, messageOffset = 0, busy = false, refreshing = false;
     let chatVersion = 0, messageVersion = 0, history = new Map();
     const drafts = new Map();
+    const {formatChatDate, fullDate} = window.AvitoChatUI;
+    el('avito-chat-unread').checked = new URLSearchParams(location.search).get('unread') === '1';
     function error(message) {
         el('avito-chat-error').textContent = message || '';
         el('avito-chat-error').hidden = !message;
@@ -56,7 +58,7 @@
                 link.textContent = 'Открыть ссылку'; row.append(link);
             }
             const time = document.createElement('small'); time.className = 'text-muted d-block';
-            time.textContent = new Date(Number(message.created) * 1000).toLocaleString('ru-RU'); row.append(time);
+            time.textContent = formatChatDate(message.created); time.title = fullDate(message.created); row.append(time);
             messages.append(row);
         });
         if (nearBottom) messages.scrollTop = messages.scrollHeight;
@@ -74,12 +76,16 @@
         if (older || offset === 0 && messageOffset <= 100) el('avito-messages-more').hidden = rows.length < 100;
         renderMessages();
         // Read receipts are sent only while the conversation is visible.
-        if (!document.hidden && !older) await api('read', {chat}, true);
+        if (!document.hidden && !older) {
+            await api('read', {chat}, true);
+            window.dispatchEvent(new Event('avito-chat-read'));
+        }
     }
     async function selectChat(chat, title) {
         if (busy) return;
         if (selected) drafts.set(selected, text.value);
         selected = chat; ++messageVersion; history = new Map(); messageOffset = 0;
+        list.querySelectorAll('[data-chat-id]').forEach(button => button.classList.toggle('avito-chat-selected', button.dataset.chatId === selected));
         text.value = drafts.get(chat) || '';
         messages.replaceChildren(); el('avito-chat-title').textContent = title;
         el('avito-messages-more').hidden = true; text.disabled = true; submit.disabled = true;
@@ -96,8 +102,18 @@
         if (!more) list.replaceChildren();
         rows.forEach(chat => {
             const button = document.createElement('button'); button.type = 'button'; button.className = 'list-group-item list-group-item-action';
+            button.dataset.chatId = chat.id;
+            button.classList.toggle('avito-chat-selected', chat.id === selected);
             const title = chat.context?.value?.title || 'Диалог ' + chat.id;
-            button.textContent = title + (chat.last_message?.content?.text ? ' — ' + chat.last_message.content.text : '');
+            const heading = document.createElement('span'); heading.className = 'avito-chat-heading';
+            const label = document.createElement('span'); label.className = 'avito-chat-label'; label.textContent = title;
+            const time = document.createElement('time'), timestamp = chat.last_message?.created || chat.updated || chat.created;
+            time.className = 'avito-chat-date'; time.textContent = formatChatDate(timestamp); time.title = fullDate(timestamp);
+            if (time.textContent) time.dateTime = new Date(Number(timestamp) * 1000).toISOString();
+            heading.append(label, time); button.append(heading);
+            const preview = document.createElement('span'); preview.className = 'avito-chat-preview';
+            preview.textContent = chat.last_message?.content?.text || ({image: 'Изображение', voice: 'Голосовое сообщение'}[chat.last_message?.type]) || '';
+            button.append(preview);
             button.addEventListener('click', () => selectChat(chat.id, title)); list.append(button);
         });
         if (!list.children.length) list.textContent = 'Диалогов нет.';
