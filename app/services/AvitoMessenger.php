@@ -23,22 +23,15 @@ class AvitoMessenger
 
     public static function allowed(int $userId): bool
     {
-        return (bool)\R::getCell("SELECT u.id FROM user u INNER JOIN avito_chat_manager m ON m.user_id = u.id WHERE u.id = ? AND u.role = 'admin'", [$userId]);
+        return (bool)\R::getCell("SELECT u.id FROM user u INNER JOIN avito_chat_manager m ON m.user_id = u.id WHERE u.id = ? AND u.role IN ('admin', 'manager')", [$userId]);
     }
 
-    public static function saveManagers(array $ids, int $actor): void
+    public static function setManagerAccess(int $userId, bool $enabled, int $actor): void
     {
-        $ids = array_unique(array_filter(array_map('intval', $ids), static function ($id) { return $id > 0; }));
-        \R::begin();
-        try {
-            \R::exec('DELETE FROM avito_chat_manager');
-            foreach ($ids as $id) {
-                \R::exec("INSERT INTO avito_chat_manager (user_id, enabled_by) SELECT id, ? FROM user WHERE id = ? AND role = 'admin'", [$actor, $id]);
-            }
-            \R::commit();
-        } catch (\Throwable $e) {
-            \R::rollback();
-            throw $e;
+        if ($enabled) {
+            \R::exec("INSERT INTO avito_chat_manager (user_id, enabled_by) SELECT id, ? FROM user WHERE id = ? AND role IN ('admin', 'manager') ON DUPLICATE KEY UPDATE enabled_by = VALUES(enabled_by)", [$actor, $userId]);
+        } else {
+            \R::exec('DELETE FROM avito_chat_manager WHERE user_id = ?', [$userId]);
         }
     }
 

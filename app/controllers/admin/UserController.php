@@ -6,6 +6,7 @@ use app\models\admin\User;
 use app\models\admin\UserCustomer;
 use app\models\admin\UserRole;
 use app\models\admin\UserGroup;
+use app\services\AvitoMessenger;
 use app\services\admin\AdminActivityLogger;
 use app\models\AppModel;
 use ishop\App;
@@ -214,6 +215,8 @@ class UserController extends AppController {
             }
             if(User::isAdmin()){
                 redirect(ADMIN);
+            }elseif (($_SESSION['user']['role'] ?? '') === 'manager') {
+                redirect(ADMIN.'/avito-chat');
             }else{
                 redirect();
             }
@@ -255,12 +258,33 @@ class UserController extends AppController {
     }
 	
 	public function customersAction(){
-        $users = \R::getAll("SELECT user.id, user.email, user.name, user.date_last_visit, user_groups.name AS groups FROM user, user_groups, roles WHERE user.role = roles.alt_name AND user.groups = user_groups.id AND user.role != 'user'");
+        $users = \R::getAll("SELECT user.id, user.email, user.name, user.date_last_visit, user_groups.name AS groups FROM user, user_groups, roles WHERE user.role = roles.alt_name AND user.groups = user_groups.id AND user.role IN ('admin', 'manager')");
         $this->setMeta('Список администраторов');
         $this->set(compact('users'));
     }
 	
+    private function customerChatAccessForm(): void
+    {
+        if ((int)($_SESSION['user']['groups'] ?? 0) !== 1) {
+            throw new \Exception('Доступ закрыт', 403);
+        }
+        if (empty($_SESSION['avito_chat_csrf'])) {
+            $_SESSION['avito_chat_csrf'] = bin2hex(random_bytes(32));
+        }
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' &&
+            !hash_equals($_SESSION['avito_chat_csrf'], (string)($_POST['avito_chat_csrf'] ?? ''))) {
+            throw new \Exception('Обновите страницу и повторите сохранение.', 403);
+        }
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+            $role = \R::getCell("SELECT role FROM user_groups WHERE id = ? AND role IN ('admin', 'manager')", [(int)($_POST['groups'] ?? 0)]);
+            if (!$role) { throw new \Exception('Выберите группу администратора или менеджера.', 400); }
+            $_POST['role'] = $role;
+        }
+        AvitoMessenger::ensureSchema();
+    }
+
 	public function addCustomerAction(){
+        $this->customerChatAccessForm();
 		if(!empty($_POST)){
             $usercus = new UserCustomer();
 			$user = new User();
@@ -272,6 +296,7 @@ class UserController extends AppController {
             }else{
                 $usercus->attributes['password'] = password_hash($usercus->attributes['password'], PASSWORD_DEFAULT);
                 if($id = $usercus->save('user')){
+                    AvitoMessenger::setManagerAccess((int)$id, !empty($data['avito_chat_access']), (int)$_SESSION['user']['id']);
 					if($data["newsletter"] == 1) {
 						$user->editNewsletterGroup($id, $data);
 					}
@@ -283,12 +308,17 @@ class UserController extends AppController {
             }
             redirect();
         }
-        $this->setMeta('Новый администратор');
-		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role != 'user'");
+        $this->setMeta('Новый администратор или менеджер');
+		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role IN ('admin', 'manager')");
         $this->set(compact('user_groups'));
     }
 
 	public function editCustomerAction(){
+        $this->customerChatAccessForm();
+        $targetId = $this->getRequestID(($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST');
+        if (!\R::getCell("SELECT id FROM user WHERE id = ? AND role IN ('admin', 'manager')", [$targetId])) {
+            throw new \Exception('Сотрудник не найден', 404);
+        }
         if(!empty($_POST)){
             $id = $this->getRequestID(false);
             $user = new UserCustomer();
@@ -310,18 +340,20 @@ class UserController extends AppController {
                 redirect();
             }
             if($user->update('user', $id)){
+                AvitoMessenger::setManagerAccess((int)$id, !empty($data['avito_chat_access']), (int)$_SESSION['user']['id']);
 				AdminActivityLogger::admin(40, 'user', (int)$id);
                 $_SESSION['success'] = 'Изменения сохранены';
             }
             redirect();
         }
-		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role != 'user'");
+		$user_groups = \R::getAll("SELECT * FROM user_groups WHERE role IN ('admin', 'manager')");
         $user_id = $this->getRequestID();
         $user = \R::load('user', $user_id);
 		$newsletters = \R::getAll("SELECT * FROM user_newsletter, newsletter WHERE user_newsletter.newsletter_id = newsletter.id AND user_newsletter.user_id = '".$user_id."'");
 
         $this->setMeta('Редактирование профиля администратора');
-        $this->set(compact('user', 'user_groups', 'newsletters'));
+        $avitoChatAccess = AvitoMessenger::allowed((int)$user_id);
+        $this->set(compact('user', 'user_groups', 'newsletters', 'avitoChatAccess'));
     }
 	
 	public function deleteCustomerAction(){

@@ -1,8 +1,8 @@
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
-    <p><a href="<?= ADMIN ?>/avito-chat/settings">Настроить доступ сотрудников</a> · <a href="<?= ADMIN ?>/avito">Объявления</a></p>
+    <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
     <?php if (!$allowed): ?>
-        <div class="alert alert-info">Для вашей учётной записи доступ к переписке отключён. Включите его в настройках сотрудников.</div>
+        <div class="alert alert-info">Для вашей учётной записи доступ к переписке отключён. Администратор может включить его в разделе «Пользователи», в карточке сотрудника.</div>
     <?php else: ?>
         <div id="avito-chat" data-endpoint="<?= htmlspecialchars(ADMIN.'/avito-chat/api', ENT_QUOTES, 'UTF-8') ?>" data-csrf="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
             <p><button id="avito-chat-check" class="btn btn-info" type="button">Проверить подключение к Авито</button> <span id="avito-chat-check-result" role="status"></span></p>
