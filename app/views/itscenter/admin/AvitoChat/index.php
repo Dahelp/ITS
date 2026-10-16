@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261016-2">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261016-3">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
@@ -10,9 +10,14 @@
             <div id="avito-chat-error" class="alert alert-danger" role="alert" hidden></div>
             <div class="row">
                 <div class="col-md-4"><div class="card"><div class="card-body">
-                    <label><input id="avito-chat-unread" type="checkbox"> Только непрочитанные</label>
-                    <button id="avito-chat-refresh" class="btn btn-sm btn-default" type="button">Обновить</button>
-                    <div id="avito-chat-list" class="list-group mt-2" aria-label="Диалоги"></div>
+                    <div class="avito-chat-toolbar">
+                        <label class="avito-chat-filter" for="avito-chat-unread">
+                            <input id="avito-chat-unread" type="checkbox">
+                            <span>Только непрочитанные</span>
+                        </label>
+                        <button id="avito-chat-refresh" class="btn btn-sm btn-default" type="button">Обновить</button>
+                    </div>
+                    <div id="avito-chat-list" class="list-group" aria-label="Диалоги"></div>
                     <button id="avito-chat-more" class="btn btn-default mt-2" type="button" hidden>Ещё диалоги</button>
                 </div></div></div>
                 <div class="col-md-8"><div class="card"><div class="card-body">
