@@ -8,7 +8,7 @@
     let selected = '', chatOffset = 0, messageOffset = 0, busy = false, refreshing = false;
     let chatVersion = 0, messageVersion = 0, history = new Map();
     const drafts = new Map();
-    const {formatChatDate, fullDate} = window.AvitoChatUI;
+    const {formatChatDate, fullDate, chatStatus} = window.AvitoChatUI;
     el('avito-chat-unread').checked = new URLSearchParams(location.search).get('unread') === '1';
     function error(message) {
         el('avito-chat-error').textContent = message || '';
@@ -78,6 +78,13 @@
         // Read receipts are sent only while the conversation is visible.
         if (!document.hidden && !older) {
             await api('read', {chat}, true);
+            if (selected === chat) {
+                list.querySelectorAll('[data-chat-id]').forEach(button => {
+                    if (button.dataset.chatId !== chat) return;
+                    button.classList.remove('avito-chat-unread');
+                    button.querySelector('.avito-chat-status-unread')?.remove();
+                });
+            }
             window.dispatchEvent(new Event('avito-chat-read'));
         }
     }
@@ -104,13 +111,22 @@
             const button = document.createElement('button'); button.type = 'button'; button.className = 'list-group-item list-group-item-action';
             button.dataset.chatId = chat.id;
             button.classList.toggle('avito-chat-selected', chat.id === selected);
+            button.classList.toggle('avito-chat-unread', chat.is_unread === true);
             const title = chat.context?.value?.title || 'Диалог ' + chat.id;
             const heading = document.createElement('span'); heading.className = 'avito-chat-heading';
             const label = document.createElement('span'); label.className = 'avito-chat-label'; label.textContent = title;
             const time = document.createElement('time'), timestamp = chat.last_message?.created || chat.updated || chat.created;
             time.className = 'avito-chat-date'; time.textContent = formatChatDate(timestamp); time.title = fullDate(timestamp);
             if (time.textContent) time.dateTime = new Date(Number(timestamp) * 1000).toISOString();
-            heading.append(label, time); button.append(heading);
+            const meta = document.createElement('span'); meta.className = 'avito-chat-meta'; meta.append(time);
+            const status = chatStatus(chat);
+            if (status) {
+                const mark = document.createElement('span');
+                mark.className = 'avito-chat-status avito-chat-status-' + status.kind;
+                mark.textContent = status.symbol; mark.title = status.label; mark.setAttribute('aria-label', status.label);
+                meta.append(mark);
+            }
+            heading.append(label, meta); button.append(heading);
             const preview = document.createElement('span'); preview.className = 'avito-chat-preview';
             preview.textContent = chat.last_message?.content?.text || ({image: 'Изображение', voice: 'Голосовое сообщение'}[chat.last_message?.type]) || '';
             button.append(preview);

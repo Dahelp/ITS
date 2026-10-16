@@ -18,7 +18,14 @@
         const result = date(value);
         return result ? result.toLocaleString('ru-RU', {timeZone: zone}) + ' (МСК)' : '';
     }
-    const api = {formatChatDate, fullDate};
+    function chatStatus(chat) {
+        if (chat.is_unread === true) return {kind: 'unread', label: 'Непрочитанный чат', symbol: '● Новое'};
+        const last = chat.last_message || {};
+        if (last.direction !== 'out') return null;
+        if (Number(last.read) > 0 || last.isRead === true) return {kind: 'read', label: 'Прочитано собеседником', symbol: '✓✓'};
+        return {kind: 'sent', label: 'Отправлено', symbol: '✓'};
+    }
+    const api = {formatChatDate, fullDate, chatStatus};
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else scope.AvitoChatUI = api;
 })(globalThis);
