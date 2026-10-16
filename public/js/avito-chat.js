@@ -311,5 +311,6 @@
     el('avito-chat-more').addEventListener('click', () => loadChats(true).catch(e => error(e.message)));
     el('avito-messages-more').addEventListener('click', () => loadMessages(true).catch(e => error(e.message)));
     document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+    window.addEventListener('avito-chat-event', refresh);
     refresh(); setInterval(refresh, 15000);
 })();

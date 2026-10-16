@@ -22,25 +22,34 @@ async function testNotifications() {
     const makeNode = id => ({dataset: {endpoint: '/admin/avito-chat/api?operation=unread'}, hidden: false, textContent: '', title: '', classList: {toggle() {}}});
     for (const id of ['avito-chat-notification', 'avito-chat-notification-count', 'avito-chat-notification-link', 'avito-chat-notification-banner']) nodes.set(id, makeNode(id));
     const docEvents = {}, winEvents = {}, intervals = [];
-    const document = {title: 'Товары', hidden: false, getElementById: id => nodes.get(id), addEventListener: (name, fn) => { docEvents[name] = fn; }};
+    const document = {title: 'Товары', hidden: false, getElementById: id => nodes.get(id), addEventListener: (name, fn) => { (docEvents[name] ||= []).push(fn); }};
+    let eventRevision = 1;
     let response = {ok: true, status: 200, json: async () => ({data: {count: 3, has_more: false}})}, calls = 0;
     const context = {
         document,
-        window: {addEventListener: (name, fn) => { winEvents[name] = fn; }},
+        URL, location: {href:'https://its-center.ru/admin'}, Event,
+        window: {addEventListener: (name, fn) => { winEvents[name] = fn; }, dispatchEvent: event => winEvents[event.type]?.()},
         fetch: async (url, options) => {
+            if (String(url).includes('operation=events')) return {ok:true,status:200,json:async () => ({data:{registered:true,revision:eventRevision}})};
             calls++;
             assert.equal(url, '/admin/avito-chat/api?operation=unread');
             assert.equal(options.credentials, 'same-origin');
             assert.ok(!options.method || options.method === 'GET', 'Notification does not mark messages read');
             return response;
         },
-        setInterval: (fn, delay) => { intervals.push(fn); assert.equal(delay, 30000); },
+        setInterval: (fn, delay) => { intervals.push(fn); assert.ok([30000,5000].includes(delay)); },
     };
     vm.runInNewContext(fs.readFileSync(require.resolve('../public/js/avito-chat-notifications.js'), 'utf8'), context);
     await new Promise(setImmediate);
     assert.equal(nodes.get('avito-chat-notification-banner').hidden, false);
     assert.equal(nodes.get('avito-chat-notification-count').textContent, '3');
     assert.match(document.title, /^\(3\) Авито/);
+    eventRevision++;
+    const beforeWebhook = calls;
+    await intervals[1](); await new Promise(setImmediate);
+    assert.equal(calls, beforeWebhook+1, 'Webhook revision triggers immediate unread refresh');
+    await intervals[1](); await new Promise(setImmediate);
+    assert.equal(calls, beforeWebhook+1, 'Unchanged local revision does not query Avito');
     response = {ok: true, status: 200, json: async () => ({data: {count: 0, has_more: false}})};
     await winEvents['avito-chat-read']();
     assert.equal(nodes.get('avito-chat-notification-banner').hidden, true);
@@ -51,7 +60,7 @@ async function testNotifications() {
     assert.equal(calls, before, 'No polling in hidden tabs');
     document.hidden = false;
     response = {ok: true, status: 200, json: async () => ({data: {count: 50, has_more: true}})};
-    await docEvents.visibilitychange();
+    for (const callback of docEvents.visibilitychange) await callback();
     assert.equal(nodes.get('avito-chat-notification-count').textContent, '50+');
     response = {ok: false, status: 403};
     await intervals[0]();

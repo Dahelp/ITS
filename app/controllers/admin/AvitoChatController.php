@@ -48,14 +48,14 @@ class AvitoChatController extends AppController
         header('Content-Type: application/json; charset=utf-8');
         header('Cache-Control: no-store');
         try {
-            AvitoMessenger::ensureSchema();
+            $operation = (string)($_GET['operation'] ?? '');
+            if ($operation !== 'events') AvitoMessenger::ensureSchema();
             if (!AvitoMessenger::allowed((int)$_SESSION['user']['id'])) {
                 http_response_code(403);
                 echo json_encode(['error' => 'Доступ к чату отключён в настройках.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
-            $operation = (string)($_GET['operation'] ?? '');
-            if (!in_array($operation, ['upload-document', 'send-document', 'revoke-document', 'voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
+            if (!in_array($operation, ['events', 'upload-document', 'send-document', 'revoke-document', 'voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
                 throw new \InvalidArgumentException('Неизвестная операция.');
             }
             if (in_array($operation, ['upload-document', 'send-document', 'revoke-document', 'send', 'send-image', 'read'], true)) { $this->checkPost(); }
@@ -65,6 +65,7 @@ class AvitoChatController extends AppController
             $client = new AvitoMessenger();
             $offset = max(0, min(100000, (int)($_GET['offset'] ?? 0)));
             switch ($operation) {
+                case 'events': $result = (new \app\services\AvitoWebhook())->status(); break;
                 case 'upload-document':
                     $file = $_FILES['document'] ?? [];
                     if (!is_array($file) || ($file['error'] ?? null) !== UPLOAD_ERR_OK || !is_string($file['tmp_name'] ?? null) || !is_uploaded_file($file['tmp_name'])) {
