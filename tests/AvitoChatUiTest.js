@@ -1,8 +1,12 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const {formatChatDate, fullDate} = require('../public/js/avito-chat-ui.js');
+const {formatChatDate, fullDate, chatStatus} = require('../public/js/avito-chat-ui.js');
 const unix = iso => Date.parse(iso) / 1000;
+assert.equal(chatStatus({is_unread: true, last_message: {direction: 'in'}}).kind, 'unread');
+assert.equal(chatStatus({is_unread: false, last_message: {direction: 'in'}}), null, 'Missing read field must not label an incoming chat unread');
+assert.equal(chatStatus({last_message: {direction: 'out', read: 1792183320}}).kind, 'read');
+assert.equal(chatStatus({last_message: {direction: 'out'}}).kind, 'sent');
 const now = new Date('2026-10-16T22:00:00Z'); // 17 October, 01:00 Moscow.
 assert.equal(formatChatDate(unix('2026-10-16T21:05:00Z'), now), '00:05');
 assert.equal(formatChatDate(unix('2026-10-16T20:59:00Z'), now), '16.10.2026');

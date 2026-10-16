@@ -78,6 +78,34 @@ class AvitoMessenger
         return $result;
     }
 
+    public function chatsWithStatus(int $offset = 0, bool $unreadOnly = false): array
+    {
+        $response = $this->chats($offset, $unreadOnly);
+        $rows = $response['chats'] ?? [];
+        $unreadIds = [];
+        if (!$unreadOnly && $rows) {
+            // Missing message.read is not reliable for incoming messages. Use Avito's filter.
+            $wanted = array_fill_keys(array_column($rows, 'id'), true);
+            for ($pageOffset = 0; ; $pageOffset += 50) {
+                $page = $this->chats($pageOffset, true);
+                if (!isset($page['chats']) || !is_array($page['chats'])) {
+                    throw new \RuntimeException('Unexpected unread response');
+                }
+                foreach ($page['chats'] as $chat) {
+                    $unreadIds[(string)$chat['id']] = true;
+                    unset($wanted[(string)$chat['id']]);
+                }
+                if (count($page['chats']) < 50 || !$wanted) { break; }
+            }
+        }
+        foreach ($rows as &$chat) {
+            $chat['is_unread'] = $unreadOnly || isset($unreadIds[(string)$chat['id']]);
+        }
+        unset($chat);
+        $response['chats'] = $rows;
+        return $response;
+    }
+
     public function messages(string $chat, int $offset = 0): array
     {
         $chat = $this->chat($chat);

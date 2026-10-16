@@ -71,7 +71,7 @@ class AvitoChatController extends AppController
                     $result = ['count' => $count, 'has_more' => $count >= 50];
                     break;
                 case 'check': $result = $client->diagnose(); break;
-                case 'chats': $result = $client->chats($offset, !empty($_GET['unread'])); break;
+                case 'chats': $result = $client->chatsWithStatus($offset, !empty($_GET['unread'])); break;
                 case 'messages': $result = $client->messages((string)($_GET['chat'] ?? ''), $offset); break;
                 case 'send': $result = $client->send((string)($_POST['chat'] ?? ''), (string)($_POST['text'] ?? '')); break;
                 case 'read': $result = $client->read((string)($_POST['chat'] ?? '')); break;
