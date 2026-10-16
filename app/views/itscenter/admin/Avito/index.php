@@ -17,6 +17,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="menu_btn">
+        <a href="<?=ADMIN;?>/avito-chat" class="btn btn-primary"><i class="fas fa-comments"></i> Чат Авито</a>
+        <a href="<?=ADMIN;?>/avito-chat/settings" class="btn btn-default">Доступ сотрудников</a>
         <a href="<?=ADMIN;?>/avito/add" class="btn btn-primary">
             <i class="fa fa-fw fa-plus"></i> Добавить объявление
         </a>
