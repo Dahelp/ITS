@@ -25,6 +25,7 @@ class AvitoChatController extends AppController
 
     public function indexAction()
     {
+        if (($_SESSION['user']['role'] ?? '') === 'manager') { $this->layout = 'avito-chat'; }
         AvitoMessenger::ensureSchema();
         $allowed = AvitoMessenger::allowed((int)$_SESSION['user']['id']);
         $csrf = $this->csrf();
@@ -34,25 +35,7 @@ class AvitoChatController extends AppController
 
     public function settingsAction()
     {
-        AvitoMessenger::ensureSchema();
-        $error = '';
-        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
-            try {
-                $this->checkPost();
-                if (!is_array($_POST['managers'] ?? [])) {
-                    throw new \InvalidArgumentException('Некорректный список сотрудников.');
-                }
-                AvitoMessenger::saveManagers($_POST['managers'] ?? [], (int)$_SESSION['user']['id']);
-                $_SESSION['success'] = 'Доступ к чату Авито сохранён.';
-                redirect(ADMIN.'/avito-chat/settings');
-            } catch (\InvalidArgumentException $e) {
-                $error = $e->getMessage();
-            }
-        }
-        $managers = \R::getAll("SELECT u.id, u.name, u.email, m.user_id AS enabled FROM user u LEFT JOIN avito_chat_manager m ON m.user_id = u.id WHERE u.role = 'admin' ORDER BY u.name, u.id");
-        $csrf = $this->csrf();
-        $this->setMeta('Доступ к чату Авито');
-        $this->set(compact('managers', 'csrf', 'error'));
+        redirect(ADMIN.'/user/customers');
     }
 
     public function apiAction()

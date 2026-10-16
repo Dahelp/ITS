@@ -12,7 +12,10 @@ class AppController extends Controller {
 
     public function __construct($route){
         parent::__construct($route);
-        if(!User::isAdmin() && $route['action'] != 'login-admin'){
+        $managerChat = ($_SESSION['user']['role'] ?? '') === 'manager'
+            && ($route['controller'] ?? '') === 'AvitoChat'
+            && in_array($route['action'] ?? '', ['index', 'api'], true);
+        if(!User::isAdmin() && !$managerChat && $route['action'] != 'login-admin'){
             redirect(ADMIN . '/user/login-admin'); // UserController::loginAdminAction
         }
         new AppModel();

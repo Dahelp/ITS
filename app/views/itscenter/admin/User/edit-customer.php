@@ -40,6 +40,12 @@
 								</select>
 							</div>
                         </div>
+                        <input type="hidden" name="avito_chat_csrf" value="<?= h($_SESSION['avito_chat_csrf']) ?>">
+                        <div class="form-group row">
+                            <div class="offset-sm-3 col-sm-9">
+                                <label><input type="checkbox" name="avito_chat_access" value="1" <?= !empty($avitoChatAccess) ? 'checked' : '' ?>> Доступ к чату Авито</label>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="new_password">Новый пароль</label>
 							<div class="col-sm-9">
@@ -70,7 +76,6 @@
 								<input type="text" class="form-control phonez" name="telefon" id="telefon" value="<?=h($user->telefon);?>">
                             </div>
                         </div>
-						<input type="hidden" name="role" value="admin">                        
                     </div>				
 				</div><!-- /.card-body -->			  
             </div>
