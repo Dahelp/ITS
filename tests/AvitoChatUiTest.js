@@ -1,8 +1,10 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const {formatChatDate, fullDate, chatStatus} = require('../public/js/avito-chat-ui.js');
+const {formatChatDate, fullDate, chatStatus, safeMediaUrl} = require('../public/js/avito-chat-ui.js');
 const unix = iso => Date.parse(iso) / 1000;
+assert.equal(safeMediaUrl('https://media.example.test/a.mp4'), 'https://media.example.test/a.mp4');
+for (const url of ['javascript:alert(1)', 'http://media.example.test/a', 'https://user:pass@media.example.test/a', undefined]) assert.equal(safeMediaUrl(url), '');
 assert.equal(chatStatus({is_unread: true, last_message: {direction: 'in'}}).kind, 'unread');
 assert.equal(chatStatus({is_unread: false, last_message: {direction: 'in'}}), null, 'Missing read field must not label an incoming chat unread');
 assert.equal(chatStatus({last_message: {direction: 'out', read: 1792183320}}).kind, 'read');

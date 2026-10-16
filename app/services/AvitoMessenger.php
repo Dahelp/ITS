@@ -131,4 +131,68 @@ class AvitoMessenger
         $chat = $this->chat($chat);
         return $this->client->api('POST', $this->base(1).'/chats/'.$chat.'/read');
     }
+
+    public static function maxUploadBytes(): int
+    {
+        $limit = 24 * 1024 * 1024;
+        foreach (['upload_max_filesize', 'post_max_size'] as $setting) {
+            $value = trim((string)ini_get($setting));
+            $bytes = (float)$value;
+            $suffix = strtolower(substr($value, -1));
+            $bytes *= ['k'=>1024, 'm'=>1048576, 'g'=>1073741824][$suffix] ?? 1;
+            if ($bytes > 0) {
+                $limit = min($limit, (int)$bytes - ($setting === 'post_max_size' ? 65536 : 0));
+            }
+        }
+        return max(0, $limit);
+    }
+
+    public function uploadImage(string $path): string
+    {
+        if (!is_file($path) || !is_readable($path) || filesize($path) <= 0 || filesize($path) > self::maxUploadBytes()) {
+            throw new \InvalidArgumentException('Размер фотографии превышает лимит сервера или файл пуст.');
+        }
+        $info = @getimagesize($path);
+        $types = ['image/jpeg'=>'jpg', 'image/png'=>'png', 'image/gif'=>'gif', 'image/bmp'=>'bmp'];
+        $mime = (string)($info['mime'] ?? '');
+        $detected = (new \finfo(FILEINFO_MIME_TYPE))->file($path);
+        if ($detected === 'image/x-ms-bmp') { $detected = 'image/bmp'; }
+        if (!$info || !isset($types[$mime]) || $detected !== $mime) {
+            throw new \InvalidArgumentException('Выберите настоящее изображение JPG, PNG, GIF или BMP.');
+        }
+        if ($info[0] <= 0 || $info[1] <= 0 || (float)$info[0] * $info[1] > 75000000) {
+            throw new \InvalidArgumentException('Разрешение фотографии должно быть не больше 75 мегапикселей.');
+        }
+        $response = $this->client->api('POST', $this->base(1).'/uploadImages', [
+            'multipart'=>['uploadfile[]'=>new \CURLFile($path, $mime, 'photo.'.$types[$mime])],
+        ]);
+        $id = (string)array_key_first($response);
+        if ($id === '' || strlen($id) > 256 || !is_array($response[$id])) {
+            throw new \RuntimeException('Avito image upload response missing image ID');
+        }
+        return $id;
+    }
+
+    public function sendPhoto(string $chat, string $path): array
+    {
+        $chat = $this->chat($chat);
+        $imageId = $this->uploadImage($path);
+        return $this->client->api('POST', $this->base(1).'/chats/'.$chat.'/messages/image', [
+            'json'=>['image_id'=>$imageId],
+        ]);
+    }
+
+    public function voiceUrl(string $voiceId): array
+    {
+        if ($voiceId === '' || strlen($voiceId) > 256 || preg_match('/[\x00-\x20\x7f]/', $voiceId)) {
+            throw new \InvalidArgumentException('Некорректный идентификатор голосового сообщения.');
+        }
+        $response = $this->client->api('GET', $this->base(1).'/getVoiceFiles?'.http_build_query(['voice_ids'=>$voiceId]));
+        $url = $response['voices_urls'][$voiceId] ?? '';
+        $parsed = is_string($url) ? parse_url($url) : false;
+        if (!$parsed || ($parsed['scheme'] ?? '') !== 'https' || empty($parsed['host']) || isset($parsed['user']) || isset($parsed['pass'])) {
+            throw new \RuntimeException('Avito voice response missing safe URL');
+        }
+        return ['url'=>$url];
+    }
 }

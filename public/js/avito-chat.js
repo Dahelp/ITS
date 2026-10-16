@@ -5,10 +5,12 @@
     const el = id => document.getElementById(id);
     const list = el('avito-chat-list'), messages = el('avito-chat-messages');
     const text = el('avito-chat-text'), submit = el('avito-chat-submit');
+    const photoInput = el('avito-chat-image'), photoSend = el('avito-chat-image-send');
+    let photoFile = null, photoPreviewUrl = '', messageRows = new Map();
     let selected = '', chatOffset = 0, messageOffset = 0, busy = false, refreshing = false;
     let chatVersion = 0, messageVersion = 0, history = new Map();
     const drafts = new Map();
-    const {formatChatDate, fullDate, chatStatus} = window.AvitoChatUI;
+    const {formatChatDate, fullDate, chatStatus, safeMediaUrl} = window.AvitoChatUI;
     el('avito-chat-unread').checked = new URLSearchParams(location.search).get('unread') === '1';
     function error(message) {
         el('avito-chat-error').textContent = message || '';
@@ -20,7 +22,8 @@
         const options = {credentials: 'same-origin', headers: {'Accept': 'application/json'}};
         if (post) {
             options.method = 'POST';
-            options.body = new URLSearchParams({...values, csrf: root.dataset.csrf});
+            options.body = values instanceof FormData ? values : new URLSearchParams(values);
+            options.body.set('csrf', root.dataset.csrf);
         } else Object.entries(values).forEach(([key, value]) => url.searchParams.set(key, value));
         const response = await fetch(url, options);
         let body;
@@ -29,15 +32,34 @@
         if (!response.ok || body.error) throw new Error(body.error || 'Ошибка запроса.');
         return body.data;
     }
-    function safeUrl(value) {
-        try { const url = new URL(value); return url.protocol === 'https:' ? url.href : ''; }
-        catch (_) { return ''; }
+    function composeDisabled(disabled) {
+        text.disabled = disabled; submit.disabled = disabled;
+        photoInput.disabled = disabled; photoSend.disabled = disabled || !photoFile;
+        el('avito-photo-remove').disabled = disabled;
+    }
+    function clearPhoto() {
+        if (photoPreviewUrl) URL.revokeObjectURL(photoPreviewUrl);
+        photoPreviewUrl = ''; photoFile = null; photoInput.value = '';
+        el('avito-photo-preview-image').removeAttribute('src');
+        el('avito-photo-preview').hidden = true;
+        el('avito-photo-name').textContent = ''; photoSend.disabled = true;
     }
     function renderMessages() {
         const nearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 60;
         const previousHeight = messages.scrollHeight, previousTop = messages.scrollTop;
-        messages.replaceChildren();
-        [...history.values()].sort((a, b) => Number(a.created) - Number(b.created)).forEach(message => {
+        const ordered = [...history.values()].sort((a, b) => Number(a.created) - Number(b.created));
+        const visibleIds = new Set(ordered.map(message => message.id));
+        for (const [id, entry] of messageRows) {
+            if (!visibleIds.has(id)) { entry.node.remove(); messageRows.delete(id); }
+        }
+        ordered.forEach((message, index) => {
+            const signature = JSON.stringify([message.created, message.direction, message.type, message.content]);
+            const existing = messageRows.get(message.id);
+            // Keep unchanged DOM nodes so periodic refresh does not interrupt audio.
+            if (existing?.signature === signature) {
+                if (messages.children[index] !== existing.node) messages.insertBefore(existing.node, messages.children[index] || null);
+                return;
+            }
             const row = document.createElement('div');
             row.className = 'p-2 mb-2 rounded ' + (message.direction === 'out' ? 'bg-light text-right' : 'border');
             row.style.whiteSpace = 'pre-wrap';
@@ -47,19 +69,23 @@
                 ({image: 'Изображение', voice: 'Голосовое сообщение', call: 'Звонок', deleted: 'Сообщение удалено'}[message.type]) || 'Сообщение: ' + (message.type || 'неизвестный тип');
             row.append(body);
             const sizes = content.image?.sizes || {};
-            const imageUrl = safeUrl(sizes['640x480'] || sizes['1280x960'] || Object.values(sizes)[0]);
+            const imageUrl = safeMediaUrl(sizes['640x480'] || sizes['1280x960'] || Object.values(sizes)[0]);
             if (imageUrl) {
-                const img = document.createElement('img'); img.src = imageUrl; img.alt = 'Изображение из сообщения';
-                img.style.maxWidth = '100%'; img.style.maxHeight = '300px'; img.loading = 'lazy'; row.append(img);
+                window.AvitoChatMedia.image(row, imageUrl, sizes['1280x960'] || imageUrl);
             }
-            const linkUrl = safeUrl(content.link?.url || content.item?.item_url);
+            if (content.voice?.voice_id) {
+                window.AvitoChatMedia.voice(row, content.voice.voice_id, voiceId => api('voice', {voice_id: voiceId}));
+            }
+            const linkUrl = safeMediaUrl(content.link?.url || content.item?.item_url);
             if (linkUrl) {
                 const link = document.createElement('a'); link.href = linkUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
                 link.textContent = 'Открыть ссылку'; row.append(link);
             }
             const time = document.createElement('small'); time.className = 'text-muted d-block';
             time.textContent = formatChatDate(message.created); time.title = fullDate(message.created); row.append(time);
-            messages.append(row);
+            if (existing) existing.node.replaceWith(row);
+            if (messages.children[index] !== row) messages.insertBefore(row, messages.children[index] || null);
+            messageRows.set(message.id, {node: row, signature});
         });
         if (nearBottom) messages.scrollTop = messages.scrollHeight;
         else messages.scrollTop = previousTop + Math.max(0, messages.scrollHeight - previousHeight);
@@ -90,15 +116,16 @@
     }
     async function selectChat(chat, title) {
         if (busy) return;
+        if (selected !== chat) { clearPhoto(); el('avito-photo-status').textContent = ''; }
         if (selected) drafts.set(selected, text.value);
         selected = chat; ++messageVersion; history = new Map(); messageOffset = 0;
         list.querySelectorAll('[data-chat-id]').forEach(button => button.classList.toggle('avito-chat-selected', button.dataset.chatId === selected));
         text.value = drafts.get(chat) || '';
-        messages.replaceChildren(); el('avito-chat-title').textContent = title;
-        el('avito-messages-more').hidden = true; text.disabled = true; submit.disabled = true;
+        messages.replaceChildren(); messageRows = new Map(); el('avito-chat-title').textContent = title;
+        el('avito-messages-more').hidden = true; composeDisabled(true);
         try {
             await loadMessages();
-            if (selected === chat) { text.disabled = false; submit.disabled = busy; error(''); }
+            if (selected === chat) { composeDisabled(busy); error(''); }
         } catch (e) { error(e.message); }
     }
     async function loadChats(more = false) {
@@ -146,7 +173,7 @@
         event.preventDefault();
         if (busy || !selected || !text.value.trim()) return;
         const chat = selected, draft = text.value;
-        busy = true; submit.disabled = true; text.disabled = true;
+        busy = true; composeDisabled(true);
         try {
             await api('send', {chat, text: draft}, true);
             text.value = ''; error('');
@@ -155,7 +182,38 @@
             catch (_) { error('Сообщение отправлено, но обновить историю не удалось. Нажмите «Обновить».'); }
         } catch (e) {
             error(e.message + ' При обрыве связи проверьте историю перед повторной отправкой.');
-        } finally { busy = false; submit.disabled = !selected; text.disabled = !selected; }
+        } finally { busy = false; composeDisabled(!selected); }
+    });
+    photoInput.addEventListener('change', () => {
+        const file = photoInput.files[0]; clearPhoto();
+        if (!file) return;
+        if (!/\.(jpe?g|png|gif|bmp)$/i.test(file.name)) {
+            error('Выберите фотографию JPG, PNG, GIF или BMP.'); return;
+        }
+        if (!file.size || file.size > Number(root.dataset.maxImageBytes)) {
+            error('Фотография превышает указанный лимит размера или файл пуст.'); return;
+        }
+        photoFile = file; photoPreviewUrl = URL.createObjectURL(file);
+        el('avito-photo-preview-image').src = photoPreviewUrl;
+        el('avito-photo-name').textContent = file.name;
+        el('avito-photo-preview').hidden = false;
+        el('avito-photo-status').textContent = ''; photoSend.disabled = !selected || busy; error('');
+    });
+    el('avito-photo-remove').addEventListener('click', clearPhoto);
+    photoSend.addEventListener('click', async () => {
+        if (busy || !selected || !photoFile) return;
+        const chat = selected, payload = new FormData();
+        payload.set('chat', chat); payload.set('image', photoFile);
+        busy = true; composeDisabled(true); el('avito-photo-status').textContent = 'Загружаем и отправляем фото…';
+        try {
+            await api('send-image', payload, true);
+            clearPhoto(); error(''); el('avito-photo-status').textContent = 'Фотография отправлена.';
+            try { if (selected === chat) await loadMessages(); }
+            catch (_) { error('Фото отправлено, но обновить историю не удалось. Нажмите «Обновить».'); }
+        } catch (e) {
+            el('avito-photo-status').textContent = '';
+            error(e.message + ' При обрыве связи проверьте историю перед повторной отправкой.');
+        } finally { busy = false; composeDisabled(!selected); }
     });
     el('avito-chat-refresh').addEventListener('click', refresh);
     el('avito-chat-check').addEventListener('click', async event => {

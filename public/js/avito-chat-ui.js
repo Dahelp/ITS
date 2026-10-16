@@ -25,7 +25,13 @@
         if (Number(last.read) > 0 || last.isRead === true) return {kind: 'read', label: 'Прочитано собеседником', symbol: '✓✓'};
         return {kind: 'sent', label: 'Отправлено', symbol: '✓'};
     }
-    const api = {formatChatDate, fullDate, chatStatus};
+    function safeMediaUrl(value) {
+        try {
+            const url = new URL(value);
+            return url.protocol === 'https:' && !url.username && !url.password ? url.href : '';
+        } catch (_) { return ''; }
+    }
+    const api = {formatChatDate, fullDate, chatStatus, safeMediaUrl};
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else scope.AvitoChatUI = api;
 })(globalThis);
