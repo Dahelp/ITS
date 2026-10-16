@@ -14,6 +14,6 @@ if ($avitoNotifyAllowed): ?>
 #avito-chat-notification-banner[hidden]{display:none}
 #avito-chat-notification-link.avito-has-unread{color:#c32f0b;font-weight:700}
 </style>
-<script src="<?= PATH ?>/js/avito-chat-notifications.js?v=20261016-1" defer></script>
+<script src="<?= PATH ?>/js/avito-chat-notifications.js?v=20261017-3" defer></script>
 </li>
 <?php endif; ?>
