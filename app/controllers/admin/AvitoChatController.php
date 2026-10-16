@@ -52,7 +52,7 @@ class AvitoChatController extends AppController
                 exit;
             }
             $operation = (string)($_GET['operation'] ?? '');
-            if (!in_array($operation, ['check', 'chats', 'messages', 'send', 'read'], true)) {
+            if (!in_array($operation, ['unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
                 throw new \InvalidArgumentException('Неизвестная операция.');
             }
             if (in_array($operation, ['send', 'read'], true)) { $this->checkPost(); }
@@ -62,6 +62,14 @@ class AvitoChatController extends AppController
             $client = new AvitoMessenger();
             $offset = max(0, min(100000, (int)($_GET['offset'] ?? 0)));
             switch ($operation) {
+                case 'unread':
+                    $unreadChats = $client->chats(0, true);
+                    if (!isset($unreadChats['chats']) || !is_array($unreadChats['chats'])) {
+                        throw new \RuntimeException('Unexpected unread response');
+                    }
+                    $count = count($unreadChats['chats']);
+                    $result = ['count' => $count, 'has_more' => $count >= 50];
+                    break;
                 case 'check': $result = $client->diagnose(); break;
                 case 'chats': $result = $client->chats($offset, !empty($_GET['unread'])); break;
                 case 'messages': $result = $client->messages((string)($_GET['chat'] ?? ''), $offset); break;

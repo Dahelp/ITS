@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261016-1">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
@@ -27,6 +28,7 @@
                 </div></div></div>
             </div>
         </div>
-        <script src="<?= PATH ?>/js/avito-chat.js" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261016-1" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=20261016-1" defer></script>
     <?php endif; ?>
 </section>

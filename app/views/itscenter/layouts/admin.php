@@ -116,6 +116,7 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
+      <?php require APP.'/views/'.TEMPLATE.'/admin/AvitoChat/_notification.php'; ?>
       <!-- Navbar Search -->
       <li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
