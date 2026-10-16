@@ -92,6 +92,9 @@ class AvitoApiClient
             $headers[] = 'Content-Type: application/json';
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($options['json'], JSON_UNESCAPED_UNICODE));
+        } elseif (array_key_exists('multipart', $options)) {
+            // cURL supplies the multipart boundary; do not set Content-Type manually.
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $options['multipart']);
         } elseif (array_key_exists('body', $options)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, (string)$options['body']);
         }

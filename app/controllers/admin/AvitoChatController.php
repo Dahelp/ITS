@@ -29,8 +29,9 @@ class AvitoChatController extends AppController
         AvitoMessenger::ensureSchema();
         $allowed = AvitoMessenger::allowed((int)$_SESSION['user']['id']);
         $csrf = $this->csrf();
+        $maxImageBytes = AvitoMessenger::maxUploadBytes();
         $this->setMeta('Чат Авито');
-        $this->set(compact('allowed', 'csrf'));
+        $this->set(compact('allowed', 'csrf', 'maxImageBytes'));
     }
 
     public function settingsAction()
@@ -52,16 +53,27 @@ class AvitoChatController extends AppController
                 exit;
             }
             $operation = (string)($_GET['operation'] ?? '');
-            if (!in_array($operation, ['unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
+            if (!in_array($operation, ['voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
                 throw new \InvalidArgumentException('Неизвестная операция.');
             }
-            if (in_array($operation, ['send', 'read'], true)) { $this->checkPost(); }
+            if (in_array($operation, ['send', 'send-image', 'read'], true)) { $this->checkPost(); }
             elseif (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
                 throw new \InvalidArgumentException('Требуется GET-запрос.');
             }
             $client = new AvitoMessenger();
             $offset = max(0, min(100000, (int)($_GET['offset'] ?? 0)));
             switch ($operation) {
+                case 'voice': $result = $client->voiceUrl((string)($_GET['voice_id'] ?? '')); break;
+                case 'send-image':
+                    $file = $_FILES['image'] ?? [];
+                    if (!is_array($file) || !isset($file['error']) || !is_int($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
+                        throw new \InvalidArgumentException('Не удалось загрузить фото. Проверьте размер файла и выберите его заново.');
+                    }
+                    if (!is_string($file['tmp_name'] ?? null) || !is_uploaded_file($file['tmp_name'])) {
+                        throw new \InvalidArgumentException('Выберите фотографию для отправки.');
+                    }
+                    $result = $client->sendPhoto((string)($_POST['chat'] ?? ''), $file['tmp_name']);
+                    break;
                 case 'unread':
                     $unreadChats = $client->chats(0, true);
                     if (!isset($unreadChats['chats']) || !is_array($unreadChats['chats'])) {
