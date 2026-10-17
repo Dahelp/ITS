@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'mobile/**'
+      - '.github/workflows/avito-mobile.yml'
   workflow_dispatch:
 
 jobs:
@@ -42,6 +45,7 @@ jobs:
             --exclude='vendor/***' \
             --exclude='.git/' \
             --exclude='.github/' \
+            --exclude='mobile/' \
             --exclude='.gitignore' \
             --exclude='.git.corrupt-*' \
             --exclude='.idea/' \
