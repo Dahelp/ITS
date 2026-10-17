@@ -6,6 +6,49 @@ import 'package:its_avito/main.dart';
 import 'package:its_avito/push.dart';
 
 void main() {
+  testWidgets(
+      'Responsible filter combines unread, resets and remembers per user',
+      (tester) async {
+    final api = DemoApi()..assignee = 1;
+    final store = MemoryTokenStore();
+    final session = ChatSession(api, store)
+      ..user = {'id': 1}
+      ..restoring = false;
+    await tester.pumpWidget(AvitoApp(session: session));
+    await tester.pumpAndSettle();
+    Future<void> select(String title) async {
+      await tester.tap(find.byType(DropdownButton<String>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(title).last);
+      await tester.pumpAndSettle();
+    }
+
+    await select('Мои чаты');
+    expect(find.text('Шины 18x7-8 NHS EKKA'), findsOneWidget);
+    expect(find.text('Шина 21x8-9 C601 · Шинокомплект'), findsNothing);
+    expect(await store.readFilter('1'), 'mine');
+    expect(await store.readFilter('2'), null);
+    await tester.tap(find.text('Непрочитанные'));
+    await tester.pumpAndSettle();
+    expect(find.text('Шины 18x7-8 NHS EKKA'), findsOneWidget);
+    await tester.tap(find.text('Непрочитанные'));
+    await tester.pumpAndSettle();
+    await select('Без ответственного');
+    expect(find.text('Шины 18x7-8 NHS EKKA'), findsNothing);
+    await select('Все чаты');
+    expect(find.text('Шина 21x8-9 C601 · Шинокомплект'), findsOneWidget);
+    await select('Мои чаты');
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(AvitoApp(session: session));
+    await tester.pumpAndSettle();
+    expect(find.text('Мои чаты'), findsOneWidget);
+    expect(find.text('Шина 21x8-9 C601 · Шинокомплект'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    session.dispose();
+    api.close();
+  });
   testWidgets('Push opens product title and clears unread before polling',
       (tester) async {
     final api = DemoApi();
@@ -36,7 +79,7 @@ void main() {
       'type': 'text',
       'content': {'text': 'Новое'}
     });
-    await tester.tap(find.text('Все диалоги'));
+    await tester.tap(find.text('Непрочитанные'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Непрочитанные'));
     await tester.pumpAndSettle();

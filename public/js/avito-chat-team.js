@@ -53,6 +53,7 @@
             el('avito-template-form').querySelector('button[type=submit]').disabled = true;
             try {
                 await api(operation, {...values, chat: requested}, true);
+                if (operation === 'assign') document.dispatchEvent(new Event('avito-assignment-changed'));
                 if (operation === 'note') noteDrafts.delete(requested);
                 if (requested === chat) { complete?.(); error(''); }
             }

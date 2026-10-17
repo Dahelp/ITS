@@ -235,15 +235,46 @@ class _ChatListState extends State<ChatListScreen>
   ChatApi get api => widget.session.api;
   List<Json> chats = [];
   bool busy = false, unread = false, more = false;
+  bool filterReady = false;
   int offset = 0;
   String search = '';
+  String assignee = 'all';
+  List<Json> managers = [];
   String? error;
   @override
   void initState() {
     super.initState();
     widget.session.addListener(readChanged);
-    refresh().catchError((_) {});
+    restoreFilter();
     startPolling();
+  }
+
+  Future<void> restoreFilter() async {
+    try {
+      final saved = await widget.session.store
+          .readFilter('${widget.session.user?['id']}');
+      if (mounted &&
+          saved != null &&
+          RegExp(r'^(all|mine|unassigned|[1-9][0-9]*)$').hasMatch(saved)) {
+        setState(() => assignee = saved);
+      }
+    } catch (_) {}
+    if (mounted) {
+      setState(() => filterReady = true);
+      refresh().catchError((_) {});
+    }
+  }
+
+  void changeAssignee(String value) {
+    setState(() {
+      assignee = value;
+      chats = [];
+      offset = 0;
+    });
+    widget.session.store
+        .writeFilter('${widget.session.user?['id']}', value)
+        .catchError((_) {});
+    refresh().catchError((_) {});
   }
 
   @override
@@ -254,18 +285,23 @@ class _ChatListState extends State<ChatListScreen>
   }
 
   Future<void> load({bool next = false}) async {
-    if (busy) return;
+    if (busy || !filterReady) return;
+    var retryWithAll = false;
     final filter = unread;
+    final owner = assignee;
     setState(() => busy = true);
     try {
-      final result = await api.call('chats',
-          query: {'offset': next ? offset : 0, if (filter) 'unread': 1});
-      if (!mounted || filter != unread) return;
+      final result = await api.call('chats', query: {
+        'offset': next ? offset : 0,
+        'assignee': owner,
+        if (filter) 'unread': 1
+      });
+      if (!mounted || filter != unread || owner != assignee) return;
       final page = rows(result['chats']);
       setState(() {
         final combined = next
             ? [...chats, ...page]
-            : filter
+            : filter || owner != 'all'
                 ? page
                 : [...page, ...chats];
         final unique = <String, Json>{};
@@ -273,8 +309,16 @@ class _ChatListState extends State<ChatListScreen>
           unique.putIfAbsent('${row['id']}', () => row);
         }
         chats = unique.values.toList();
-        offset = chats.length;
-        more = page.length == 50;
+        offset = int.tryParse('${result['next_offset']}') ??
+            (next ? offset : 0) + page.length;
+        more = result['has_more'] == true ||
+            (result['has_more'] == null && page.length == 50);
+        managers = rows(result['managers']);
+        if (!['all', 'mine', 'unassigned', ...managers.map((m) => '${m['id']}')]
+            .contains(assignee)) {
+          assignee = 'all';
+          retryWithAll = true;
+        }
         error = null;
       });
     } catch (e) {
@@ -283,6 +327,7 @@ class _ChatListState extends State<ChatListScreen>
     } finally {
       if (mounted) setState(() => busy = false);
     }
+    if (mounted && retryWithAll) await load();
   }
 
   void readChanged() {
@@ -352,22 +397,51 @@ class _ChatListState extends State<ChatListScreen>
               child: Row(children: [
                 Expanded(
                     child: Wrap(spacing: 8, children: [
-                  ChoiceChip(
-                      label: const Text('Все диалоги'),
-                      selected: !unread,
-                      onSelected: busy
-                          ? null
-                          : (_) {
-                              setState(() => unread = false);
-                              refresh().catchError((_) {});
-                            }),
-                  ChoiceChip(
+                  SizedBox(
+                      width: 220,
+                      child: DropdownButton<String>(
+                        value: assignee,
+                        isDense: true,
+                        isExpanded: true,
+                        items: [
+                          const DropdownMenuItem(
+                              value: 'all', child: Text('Все чаты')),
+                          const DropdownMenuItem(
+                              value: 'mine', child: Text('Мои чаты')),
+                          const DropdownMenuItem(
+                              value: 'unassigned',
+                              child: Text('Без ответственного')),
+                          ...managers.map((m) => DropdownMenuItem(
+                              value: '${m['id']}',
+                              child: Text('${m['name']}',
+                                  overflow: TextOverflow.ellipsis))),
+                          if (![
+                            'all',
+                            'mine',
+                            'unassigned',
+                            ...managers.map((m) => '${m['id']}')
+                          ].contains(assignee))
+                            DropdownMenuItem(
+                                value: assignee,
+                                child: const Text('Сотрудник…')),
+                        ],
+                        onChanged: busy
+                            ? null
+                            : (v) {
+                                if (v != null) changeAssignee(v);
+                              },
+                      )),
+                  FilterChip(
                       label: const Text('Непрочитанные'),
                       selected: unread,
                       onSelected: busy
                           ? null
                           : (_) {
-                              setState(() => unread = true);
+                              setState(() {
+                                unread = !unread;
+                                chats = [];
+                                offset = 0;
+                              });
                               refresh().catchError((_) {});
                             }),
                 ])),

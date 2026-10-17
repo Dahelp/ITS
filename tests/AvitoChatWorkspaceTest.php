@@ -11,6 +11,21 @@ foreach ([[1,'Admin','admin'],[2,'Manager','manager'],[3,'Other','manager'],[4,'
 foreach ([1,2,3] as $id) R::exec('INSERT INTO avito_chat_manager VALUES (?)',[$id]);
 function workspaceCheck($ok,$label) { if (!$ok) throw new RuntimeException($label); }
 Workspace::assign('chat-a',2,1); Workspace::assign('chat-b',3,1);
+class FilterMessenger extends \app\services\AvitoMessenger {
+    public function __construct() {}
+    public function chatsWithStatus(int $offset = 0, bool $unreadOnly = false): array {
+        if ($offset === 0) return ['chats'=>array_map(fn($i)=>['id'=>'filler-'.$i,'is_unread'=>false],range(1,50))];
+        return ['chats'=>[['id'=>'chat-a','is_unread'=>true],['id'=>'chat-b','is_unread'=>false]]];
+    }
+}
+$filtered = Workspace::chatPage(new FilterMessenger(),0,false,'mine',2);
+workspaceCheck(count($filtered['chats'])===1 && $filtered['chats'][0]['id']==='chat-a','Mine scans beyond first page');
+workspaceCheck($filtered['next_offset']===52 && !$filtered['has_more'],'Pagination uses scanned offset, not matched count');
+workspaceCheck($filtered['chats'][0]['assignee_id']===2,'Stable assignee id returned');
+workspaceCheck(Workspace::chatPage(new FilterMessenger(),50,false,'3',2)['chats'][0]['id']==='chat-b','Specific employee filter');
+workspaceCheck(count(Workspace::chatPage(new FilterMessenger(),0,false,'unassigned',2)['chats'])===50,'Unassigned filter');
+workspaceCheck(count(Workspace::chatPage(new FilterMessenger(),50,false,'all',2)['chats'])===2,'All resets owner filter');
+try { Workspace::chatPage(new FilterMessenger(),0,false,'bad',2); throw new RuntimeException('Bad filter accepted'); } catch (InvalidArgumentException $expected) {}
 workspaceCheck(Workspace::workspace('chat-a',2)['assignee'] === 2,'Assignment persists per chat');
 workspaceCheck(Workspace::decorateChats(['chats'=>[['id'=>'chat-a']]])['chats'][0]['assigned_to']==='Manager','Responsible staff visible in chat list');
 Workspace::assign('chat-a',0,2);

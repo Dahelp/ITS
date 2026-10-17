@@ -117,7 +117,7 @@
         </dialog>
         <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-media.js?v=20261017-1" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat-team.js?v=20261017-4" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-4" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat-team.js?v=20261017-5" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-5" defer></script>
     <?php endif; ?>
 </section>
