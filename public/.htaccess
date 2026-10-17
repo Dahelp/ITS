@@ -35,6 +35,7 @@ RewriteRule ^ - [R=404,L]
 RewriteRule \.(?:css|js|mjs|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|eot)$ - [L]
 
 # 4) Роутинг приложения
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule (.*) index.php?$1 [L,QSA]

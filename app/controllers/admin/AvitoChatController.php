@@ -63,60 +63,7 @@ class AvitoChatController extends AppController
             elseif (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
                 throw new \InvalidArgumentException('Требуется GET-запрос.');
             }
-            $client = new AvitoMessenger();
-            $offset = max(0, min(100000, (int)($_GET['offset'] ?? 0)));
-            switch ($operation) {
-                case 'workspace': $result = \app\services\AvitoChatWorkspace::workspace((string)($_GET['chat']??''),(int)$_SESSION['user']['id']); break;
-                case 'assign': \app\services\AvitoChatWorkspace::assign((string)($_POST['chat']??''),(int)($_POST['manager']??0),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
-                case 'note': \app\services\AvitoChatWorkspace::addNote((string)($_POST['chat']??''),(string)($_POST['body']??''),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
-                case 'template-save': \app\services\AvitoChatWorkspace::saveTemplate((int)($_POST['id']??0),(string)($_POST['title']??''),(string)($_POST['body']??''),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
-                case 'template-delete': \app\services\AvitoChatWorkspace::deleteTemplate((int)($_POST['id']??0),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
-                case 'events': $result = (new \app\services\AvitoWebhook())->status(); break;
-                case 'upload-document':
-                    $file = $_FILES['document'] ?? [];
-                    if (!is_array($file) || ($file['error'] ?? null) !== UPLOAD_ERR_OK || !is_string($file['tmp_name'] ?? null) || !is_uploaded_file($file['tmp_name'])) {
-                        throw new \InvalidArgumentException('Не удалось загрузить документ. Проверьте размер и выберите файл заново.');
-                    }
-                    $result = (new AvitoDocumentStore())->store($file['tmp_name'], (string)($file['name'] ?? ''), (string)($_POST['chat'] ?? ''), (int)$_SESSION['user']['id']);
-                    break;
-                case 'send-document':
-                    $token = (string)($_POST['token'] ?? ''); $chat = (string)($_POST['chat'] ?? '');
-                    $store = new AvitoDocumentStore();
-                    try { $document = $store->forChat($token, $chat); }
-                    catch (\RuntimeException $e) { throw new \InvalidArgumentException('Ссылка не действует. Подготовьте документ заново.'); }
-                    $expires = (new \DateTimeImmutable('@'.$document['expires_at']))->setTimezone(new \DateTimeZone('Europe/Moscow'))->format('d.m.Y H:i');
-                    $result = $client->send($chat, 'Документ: '.$document['name']."\n".AvitoDocumentStore::url($token)."\nСсылка действует до ".$expires.' (МСК).');
-                    break;
-                case 'revoke-document':
-                    try { (new AvitoDocumentStore())->revoke((string)($_POST['token'] ?? ''), (string)($_POST['chat'] ?? '')); }
-                    catch (\RuntimeException $e) { throw new \InvalidArgumentException('Ссылка уже не действует.'); }
-                    $result = ['revoked'=>true];
-                    break;
-                case 'voice': $result = $client->voiceUrl((string)($_GET['voice_id'] ?? '')); break;
-                case 'send-image':
-                    $file = $_FILES['image'] ?? [];
-                    if (!is_array($file) || !isset($file['error']) || !is_int($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-                        throw new \InvalidArgumentException('Не удалось загрузить фото. Проверьте размер файла и выберите его заново.');
-                    }
-                    if (!is_string($file['tmp_name'] ?? null) || !is_uploaded_file($file['tmp_name'])) {
-                        throw new \InvalidArgumentException('Выберите фотографию для отправки.');
-                    }
-                    $result = $client->sendPhoto((string)($_POST['chat'] ?? ''), $file['tmp_name']);
-                    break;
-                case 'unread':
-                    $unreadChats = $client->chats(0, true);
-                    if (!isset($unreadChats['chats']) || !is_array($unreadChats['chats'])) {
-                        throw new \RuntimeException('Unexpected unread response');
-                    }
-                    $count = count($unreadChats['chats']);
-                    $result = ['count' => $count, 'has_more' => $count >= 50];
-                    break;
-                case 'check': $result = $client->diagnose(); break;
-                case 'chats': $result = \app\services\AvitoChatWorkspace::decorateChats($client->chatsWithStatus($offset, !empty($_GET['unread']))); break;
-                case 'messages': $result = $client->messages((string)($_GET['chat'] ?? ''), $offset); break;
-                case 'send': $result = $client->send((string)($_POST['chat'] ?? ''), (string)($_POST['text'] ?? '')); break;
-                case 'read': $result = $client->read((string)($_POST['chat'] ?? '')); break;
-            }
+            $result = (new \app\services\AvitoChatOperations())->execute($operation, $_GET, $_POST, $_FILES, (int)$_SESSION['user']['id']);
             echo json_encode(['data' => $result], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
         } catch (\InvalidArgumentException $e) {
             http_response_code(400);
