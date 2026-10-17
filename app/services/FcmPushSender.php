@@ -34,7 +34,7 @@ class FcmPushSender
         $collapse=substr(hash('sha256',$event['chat_id']),0,32);
         $message=['token'=>$deviceToken,'notification'=>['title'=>'ИТС · Авито','body'=>'Новое сообщение покупателя. Откройте чат.'],
             'data'=>['type'=>'avito_message','chat_id'=>$event['chat_id'],'message_id'=>$event['message_id']],
-            'android'=>['priority'=>'high','ttl'=>'3600s','notification'=>['channel_id'=>'avito_messages','tag'=>$collapse,'sound'=>'default']],
+            'android'=>['priority'=>'high','ttl'=>'3600s','notification'=>['channel_id'=>'avito_messages','icon'=>'ic_notification','color'=>'#003B4D','tag'=>$collapse,'sound'=>'default']],
             'apns'=>['headers'=>['apns-priority'=>'10','apns-push-type'=>'alert','apns-collapse-id'=>$collapse,'apns-expiration'=>(string)(time()+3600)],'payload'=>['aps'=>['sound'=>'default']]]];
         [$status,$response]=($this->http)('https://fcm.googleapis.com/v1/projects/'.rawurlencode($this->credentials['project_id']).'/messages:send',['Content-Type: application/json','Authorization: Bearer '.$this->token()],json_encode(['message'=>$message],JSON_THROW_ON_ERROR));
         if($status===200 && !empty($response['name'])) return 'sent';

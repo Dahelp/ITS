@@ -238,6 +238,13 @@ class _ChatListState extends State<ChatListScreen>
   String search = '';
   String assignee = 'all';
   List<Json> managers = [];
+  Map<String, String> get ownerChoices => {
+        'all': 'Все чаты',
+        'mine': 'Мои чаты',
+        'unassigned': 'Без ответственного',
+        for (final manager in managers)
+          '${manager['id']}': '${manager['name']}',
+      };
   String? error;
   @override
   void initState() {
@@ -382,6 +389,10 @@ class _ChatListState extends State<ChatListScreen>
             ]),
             actions: [
               IconButton(
+                  tooltip: 'Обновить',
+                  onPressed: busy ? null : () => refresh().catchError((_) {}),
+                  icon: const Icon(Icons.refresh_rounded)),
+              IconButton(
                   tooltip: 'Профиль',
                   onPressed: account,
                   icon: const Icon(Icons.account_circle_outlined))
@@ -407,65 +418,85 @@ class _ChatListState extends State<ChatListScreen>
                   decoration: const InputDecoration(
                       hintText: 'Поиск в загруженных чатах',
                       prefixIcon: Icon(Icons.search),
+                      fillColor: Color(0xfff1f2f3),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
+                          borderSide: BorderSide.none),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
+                          borderSide: BorderSide.none),
                       isDense: true))),
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(children: [
-                Expanded(
-                    child: Wrap(spacing: 8, children: [
-                  SizedBox(
-                      width: 220,
-                      child: DropdownButton<String>(
-                        value: assignee,
-                        isDense: true,
-                        isExpanded: true,
-                        items: [
-                          const DropdownMenuItem(
-                              value: 'all', child: Text('Все чаты')),
-                          const DropdownMenuItem(
-                              value: 'mine', child: Text('Мои чаты')),
-                          const DropdownMenuItem(
-                              value: 'unassigned',
-                              child: Text('Без ответственного')),
-                          ...managers.map((m) => DropdownMenuItem(
-                              value: '${m['id']}',
-                              child: Text('${m['name']}',
-                                  overflow: TextOverflow.ellipsis))),
-                          if (![
-                            'all',
-                            'mine',
-                            'unassigned',
-                            ...managers.map((m) => '${m['id']}')
-                          ].contains(assignee))
-                            DropdownMenuItem(
-                                value: assignee,
-                                child: const Text('Сотрудник…')),
-                        ],
-                        onChanged: busy
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: [
+                    PopupMenuButton<String>(
+                      tooltip: 'Ответственный за чат',
+                      enabled: !busy,
+                      initialValue: assignee,
+                      onSelected: changeAssignee,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      itemBuilder: (_) => ownerChoices.entries
+                          .map((entry) => PopupMenuItem<String>(
+                                value: entry.key,
+                                child: Row(children: [
+                                  SizedBox(
+                                      width: 28,
+                                      child: assignee == entry.key
+                                          ? const Icon(Icons.check_rounded,
+                                              size: 18, color: itsNavy)
+                                          : null),
+                                  Flexible(child: Text(entry.value))
+                                ]),
+                              ))
+                          .toList(),
+                      child: Container(
+                        constraints: const BoxConstraints(minHeight: 48),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        decoration: BoxDecoration(
+                            color: assignee == 'all'
+                                ? const Color(0xfff1f2f3)
+                                : const Color(0xffdcecf2),
+                            borderRadius: BorderRadius.circular(14)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 155),
+                              child: Text(
+                                  ownerChoices[assignee] ?? 'Сотрудник…',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600))),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.keyboard_arrow_down_rounded,
+                              size: 20),
+                        ]),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    FilterChip(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 8),
+                        backgroundColor: const Color(0xfff1f2f3),
+                        selectedColor: const Color(0xffdcecf2),
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        label: const Text('Непрочитанные'),
+                        selected: unread,
+                        onSelected: busy
                             ? null
-                            : (v) {
-                                if (v != null) changeAssignee(v);
-                              },
-                      )),
-                  FilterChip(
-                      label: const Text('Непрочитанные'),
-                      selected: unread,
-                      onSelected: busy
-                          ? null
-                          : (_) {
-                              setState(() {
-                                unread = !unread;
-                                chats = [];
-                                offset = 0;
-                              });
-                              refresh().catchError((_) {});
-                            }),
-                ])),
-                IconButton(
-                    tooltip: 'Обновить',
-                    onPressed: busy ? null : () => refresh().catchError((_) {}),
-                    icon: const Icon(Icons.refresh))
-              ])),
+                            : (_) {
+                                setState(() {
+                                  unread = !unread;
+                                  chats = [];
+                                  offset = 0;
+                                });
+                                refresh().catchError((_) {});
+                              }),
+                  ]))),
           if (const bool.fromEnvironment('DEMO'))
             const Text('ДЕМО · Тестовые диалоги',
                 style: TextStyle(color: Colors.orange)),
