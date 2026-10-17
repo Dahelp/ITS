@@ -6,6 +6,47 @@ import 'package:its_avito/main.dart';
 import 'package:its_avito/push.dart';
 
 void main() {
+  testWidgets('Push opens product title and clears unread before polling',
+      (tester) async {
+    final api = DemoApi();
+    final session = ChatSession(api, MemoryTokenStore())
+      ..user = {'id': 1}
+      ..restoring = false;
+    final push = PushController(session);
+    await tester.pumpWidget(AvitoApp(session: session, push: push));
+    await tester.pumpAndSettle();
+    push.receiveTap({'type': 'avito_message', 'chat_id': 'demo-1'});
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(
+        find.descendant(
+            of: find.byType(AppBar),
+            matching: find.text('Шины 18x7-8 NHS EKKA')),
+        findsOneWidget);
+    expect(session.readMessages['demo-1'], '3');
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Непрочитанные'));
+    await tester.pumpAndSettle();
+    expect(find.text('Шины 18x7-8 NHS EKKA'), findsNothing);
+    api.messages.add({
+      'id': '4',
+      'created': 9999999999,
+      'type': 'text',
+      'content': {'text': 'Новое'}
+    });
+    await tester.tap(find.text('Все диалоги'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Непрочитанные'));
+    await tester.pumpAndSettle();
+    expect(find.text('Шины 18x7-8 NHS EKKA'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    push.dispose();
+    session.dispose();
+    api.close();
+  });
   testWidgets('Profile explains missing Firebase and cannot enable fake push',
       (tester) async {
     final api = DemoApi();

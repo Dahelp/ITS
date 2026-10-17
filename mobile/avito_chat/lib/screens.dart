@@ -241,12 +241,14 @@ class _ChatListState extends State<ChatListScreen>
   @override
   void initState() {
     super.initState();
+    widget.session.addListener(readChanged);
     refresh().catchError((_) {});
     startPolling();
   }
 
   @override
   void dispose() {
+    widget.session.removeListener(readChanged);
     stopPolling();
     super.dispose();
   }
@@ -283,6 +285,15 @@ class _ChatListState extends State<ChatListScreen>
     }
   }
 
+  void readChanged() {
+    if (mounted) setState(() {});
+  }
+
+  bool isUnread(Json chat) =>
+      chat['is_unread'] == true &&
+      widget.session.readMessages['${chat['id']}'] !=
+          '${object(chat['last_message'])['id']}';
+
   @override
   Future<void> refresh() => load();
   Future<void> open(Json chat) async {
@@ -305,6 +316,7 @@ class _ChatListState extends State<ChatListScreen>
   @override
   Widget build(BuildContext context) {
     final visible = chats
+        .where((c) => !unread || isUnread(c))
         .where((c) =>
             ('${chatTitle(c)} ${preview(object(c['last_message']))} ${c['assigned_to'] ?? ''}')
                 .toLowerCase()
@@ -400,7 +412,7 @@ class _ChatListState extends State<ChatListScreen>
                         }
                         final chat = visible[i],
                             message = object(chat['last_message']);
-                        final fresh = chat['is_unread'] == true;
+                        final fresh = isUnread(chat);
                         return Card(
                             elevation: 0,
                             color:
@@ -553,6 +565,10 @@ class _ConversationState extends State<ConversationScreen>
       });
       if (foreground && (ModalRoute.of(context)?.isCurrent ?? false)) {
         await api.call('read', body: {'chat': chat});
+        if (mounted && !older) {
+          widget.session.chatRead(chat,
+              '${page.isEmpty ? object(widget.chat['last_message'])['id'] : mergeMessages([], page).last['id']}');
+        }
       }
     } catch (e) {
       if (mounted) setState(() => error = '$e');
@@ -1273,7 +1289,7 @@ class _AccountState extends State<AccountScreen> {
                         Text(push.status),
                         const SizedBox(height: 12),
                         OutlinedButton(
-                      onPressed: push.configured && !push.busy
+                            onPressed: push.configured && !push.busy
                                 ? (push.registered ? push.disable : push.enable)
                                 : null,
                             child: Text(push.registered
