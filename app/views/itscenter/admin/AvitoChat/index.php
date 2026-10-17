@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261017-2">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261017-4">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
@@ -17,18 +17,61 @@
                         </label>
                         <button id="avito-chat-refresh" class="btn btn-sm btn-default" type="button">Обновить</button>
                     </div>
+                    <label class="sr-only" for="avito-chat-search">Поиск по загруженным диалогам</label>
+                    <input id="avito-chat-search" class="form-control mb-2" type="search" placeholder="Поиск по загруженным диалогам">
                     <div id="avito-chat-list" class="list-group" aria-label="Диалоги"></div>
+                    <small id="avito-chat-search-empty" class="text-muted" hidden>Совпадений нет. Загрузите ещё диалоги или измените запрос.</small>
                     <button id="avito-chat-more" class="btn btn-default mt-2" type="button" hidden>Ещё диалоги</button>
                 </div></div></div>
                 <div class="col-md-8"><div class="card"><div class="card-body">
                     <h2 id="avito-chat-title" class="h5">Выберите диалог</h2>
+                    <div id="avito-chat-workspace" class="avito-chat-workspace" hidden>
+                        <div class="avito-photo-actions">
+                            <label for="avito-chat-assignee" class="mb-0">Ответственный</label>
+                            <select id="avito-chat-assignee" class="form-control form-control-sm" disabled></select>
+                            <button id="avito-chat-assign" class="btn btn-sm btn-outline-primary" type="button" disabled>Сохранить</button>
+                        </div>
+                        <details>
+                            <summary>Внутренние заметки — покупатель их не видит</summary>
+                            <small class="text-muted">Показаны последние 100 заметок.</small>
+                            <div id="avito-chat-notes" class="avito-chat-notes"></div>
+                            <form id="avito-note-form">
+                                <label class="sr-only" for="avito-note-text">Внутренняя заметка</label>
+                                <textarea id="avito-note-text" class="form-control" maxlength="5000" rows="2" placeholder="Информация для коллег" required disabled></textarea>
+                                <button id="avito-note-save" class="btn btn-sm btn-secondary mt-2" type="submit" disabled>Добавить заметку</button>
+                            </form>
+                        </details>
+                    </div>
                     <button id="avito-messages-more" class="btn btn-sm btn-default" type="button" hidden>Предыдущие сообщения</button>
                     <div id="avito-chat-messages" style="height:55vh;overflow:auto;padding:12px" aria-live="polite"></div>
                     <form id="avito-chat-send">
+                        <div class="avito-template-picker">
+                            <label for="avito-template-select">Шаблон ответа</label>
+                            <div class="avito-photo-actions">
+                                <select id="avito-template-select" class="form-control form-control-sm" disabled><option value="">Выберите шаблон</option></select>
+                                <button id="avito-template-insert" class="btn btn-sm btn-outline-primary" type="button" disabled>Вставить в сообщение</button>
+                            </div>
+                        </div>
                         <label for="avito-chat-text">Сообщение</label>
                         <textarea id="avito-chat-text" class="form-control" maxlength="1000" rows="3" required disabled></textarea>
                         <button id="avito-chat-submit" class="btn btn-primary mt-2" type="submit" disabled>Отправить</button>
                     </form>
+                    <details class="avito-template-editor">
+                        <summary>Управление шаблонами ответов</summary>
+                        <div class="avito-photo-actions mt-2">
+                            <button id="avito-template-new" class="btn btn-sm btn-default" type="button">Новый</button>
+                            <button id="avito-template-edit" class="btn btn-sm btn-default" type="button" disabled>Изменить выбранный</button>
+                            <button id="avito-template-delete" class="btn btn-sm btn-outline-danger" type="button" disabled>Убрать из списка</button>
+                        </div>
+                        <form id="avito-template-form">
+                            <p id="avito-template-editor-title">Новый шаблон</p>
+                            <label for="avito-template-title">Название</label>
+                            <input id="avito-template-title" class="form-control mb-2" maxlength="120" required>
+                            <label for="avito-template-body">Текст ответа</label>
+                            <textarea id="avito-template-body" class="form-control" rows="3" maxlength="1000" required></textarea>
+                            <button class="btn btn-sm btn-primary mt-2" type="submit">Сохранить шаблон</button>
+                        </form>
+                    </details>
                     <div class="avito-photo-compose">
                         <label for="avito-chat-image">Фотография</label>
                         <div class="avito-photo-actions">
@@ -74,6 +117,7 @@
         </dialog>
         <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-media.js?v=20261017-1" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-3" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat-team.js?v=20261017-4" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-4" defer></script>
     <?php endif; ?>
 </section>

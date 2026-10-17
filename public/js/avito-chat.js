@@ -15,6 +15,21 @@
     const drafts = new Map();
     const {formatChatDate, fullDate, chatStatus, safeMediaUrl} = window.AvitoChatUI;
     el('avito-chat-unread').checked = new URLSearchParams(location.search).get('unread') === '1';
+    const team = window.AvitoChatTeam.init({api, error, insert(body) {
+        if (busy || !selected || text.disabled) return;
+        const next = text.value ? text.value + '\n' + body : body;
+        if ([...next].length > 1000) { error('Сообщение с шаблоном превышает 1000 символов.'); return; }
+        text.value = next; drafts.set(selected, next); text.focus();
+    }});
+    function filterChats() {
+        const query = el('avito-chat-search').value.trim().toLocaleLowerCase('ru'); let matches = 0;
+        list.querySelectorAll('[data-chat-id]').forEach(button => {
+            button.hidden = query !== '' && !button.dataset.search.includes(query);
+            if (!button.hidden) matches++;
+        });
+        el('avito-chat-search-empty').hidden = !query || matches > 0;
+    }
+    el('avito-chat-search').addEventListener('input', filterChats);
     function error(message) {
         el('avito-chat-error').textContent = message || '';
         el('avito-chat-error').hidden = !message;
@@ -163,6 +178,7 @@
         }
         if (selected) drafts.set(selected, text.value);
         selected = chat; ++messageVersion; history = new Map(); messageOffset = 0;
+        team.select(chat);
         renderDocument();
         list.querySelectorAll('[data-chat-id]').forEach(button => button.classList.toggle('avito-chat-selected', button.dataset.chatId === selected));
         text.value = drafts.get(chat) || '';
@@ -202,15 +218,24 @@
             const preview = document.createElement('span'); preview.className = 'avito-chat-preview';
             preview.textContent = chat.last_message?.content?.text || ({image: 'Изображение', voice: 'Голосовое сообщение'}[chat.last_message?.type]) || '';
             button.append(preview);
+            if (chat.assigned_to) {
+                const owner = document.createElement('small'); owner.className = 'text-muted d-block mt-1'; owner.textContent = 'Ответственный: ' + chat.assigned_to; button.append(owner);
+            }
+            button.dataset.search = (title + ' ' + preview.textContent + ' ' + (chat.users || []).map(user => user.name || '').join(' ')).toLocaleLowerCase('ru');
             button.addEventListener('click', () => selectChat(chat.id, title)); list.append(button);
         });
         if (!list.children.length) list.textContent = 'Диалогов нет.';
         chatOffset = offset + rows.length; el('avito-chat-more').hidden = rows.length < 50;
+        filterChats();
     }
     async function refresh() {
         if (refreshing || document.hidden || busy) return;
         refreshing = true;
-        try { await loadChats(); if (selected) await loadMessages(); error(''); }
+        try {
+            if (!el('avito-chat-search').value.trim()) await loadChats();
+            if (selected) { await loadMessages(); team.refresh(); }
+            error('');
+        }
         catch (e) { error(e.message); }
         finally { refreshing = false; }
     }
