@@ -428,75 +428,97 @@ class _ChatListState extends State<ChatListScreen>
                       isDense: true))),
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(children: [
-                    PopupMenuButton<String>(
-                      tooltip: 'Ответственный за чат',
-                      enabled: !busy,
-                      initialValue: assignee,
-                      onSelected: changeAssignee,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      itemBuilder: (_) => ownerChoices.entries
-                          .map((entry) => PopupMenuItem<String>(
-                                value: entry.key,
-                                child: Row(children: [
-                                  SizedBox(
-                                      width: 28,
-                                      child: assignee == entry.key
-                                          ? const Icon(Icons.check_rounded,
-                                              size: 18, color: itsNavy)
-                                          : null),
-                                  Flexible(child: Text(entry.value))
-                                ]),
-                              ))
-                          .toList(),
-                      child: Container(
-                        constraints: const BoxConstraints(minHeight: 48),
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        decoration: BoxDecoration(
-                            color: assignee == 'all'
-                                ? const Color(0xfff1f2f3)
-                                : const Color(0xffdcecf2),
-                            borderRadius: BorderRadius.circular(14)),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 155),
-                              child: Text(
-                                  ownerChoices[assignee] ?? 'Сотрудник…',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600))),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.keyboard_arrow_down_rounded,
-                              size: 20),
-                        ]),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    FilterChip(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 8),
-                        backgroundColor: const Color(0xfff1f2f3),
-                        selectedColor: const Color(0xffdcecf2),
-                        side: BorderSide.none,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14)),
-                        label: const Text('Непрочитанные'),
-                        selected: unread,
-                        onSelected: busy
-                            ? null
-                            : (_) {
-                                setState(() {
-                                  unread = !unread;
-                                  chats = [];
-                                  offset = 0;
-                                });
-                                refresh().catchError((_) {});
-                              }),
-                  ]))),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(children: [
+                        PopupMenuButton<String>(
+                          tooltip: 'Ответственный за чат',
+                          enabled: !busy,
+                          initialValue: assignee,
+                          onSelected: changeAssignee,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          itemBuilder: (_) => ownerChoices.entries
+                              .map((entry) => PopupMenuItem<String>(
+                                    value: entry.key,
+                                    child: Row(children: [
+                                      SizedBox(
+                                          width: 28,
+                                          child: assignee == entry.key
+                                              ? const Icon(Icons.check_rounded,
+                                                  size: 18, color: itsNavy)
+                                              : null),
+                                      Flexible(child: Text(entry.value))
+                                    ]),
+                                  ))
+                              .toList(),
+                          child: Container(
+                            constraints: const BoxConstraints(minHeight: 48),
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            decoration: BoxDecoration(
+                                color: assignee == 'all'
+                                    ? const Color(0xfff1f2f3)
+                                    : const Color(0xffdcecf2),
+                                borderRadius: BorderRadius.circular(14)),
+                            child:
+                                Row(mainAxisSize: MainAxisSize.min, children: [
+                              ConstrainedBox(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 155),
+                                  child: Text(
+                                      ownerChoices[assignee] ?? 'Сотрудник…',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600))),
+                              const SizedBox(width: 4),
+                              const Icon(Icons.keyboard_arrow_down_rounded,
+                                  size: 20),
+                            ]),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Semantics(
+                            toggled: unread,
+                            button: true,
+                            child: InkWell(
+                                borderRadius: BorderRadius.circular(14),
+                                onTap: busy
+                                    ? null
+                                    : () {
+                                        setState(() {
+                                          unread = !unread;
+                                          chats = [];
+                                          offset = 0;
+                                        });
+                                        refresh().catchError((_) {});
+                                      },
+                                child: Container(
+                                  constraints:
+                                      const BoxConstraints(minHeight: 48),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14),
+                                  decoration: BoxDecoration(
+                                      color: unread
+                                          ? const Color(0xffdcecf2)
+                                          : const Color(0xfff1f2f3),
+                                      borderRadius: BorderRadius.circular(14)),
+                                  child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (unread) ...[
+                                          const Icon(Icons.check_rounded,
+                                              size: 18, color: itsNavy),
+                                          const SizedBox(width: 4)
+                                        ],
+                                        const Text('Непрочитанные',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600))
+                                      ]),
+                                ))),
+                      ])))),
           if (const bool.fromEnvironment('DEMO'))
             const Text('ДЕМО · Тестовые диалоги',
                 style: TextStyle(color: Colors.orange)),
