@@ -4,6 +4,7 @@ import 'api.dart';
 import 'screens.dart';
 import 'demo.dart';
 import 'push.dart';
+import 'brand.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,9 +93,9 @@ class _AvitoAppState extends State<AvitoApp> with WidgetsBindingObserver {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             useMaterial3: true,
-            colorScheme:
-                ColorScheme.fromSeed(seedColor: const Color(0xff146b60)),
-            scaffoldBackgroundColor: const Color(0xfff3f6f5),
+            colorScheme: ColorScheme.fromSeed(seedColor: itsNavy)
+                .copyWith(primary: itsNavy, secondary: itsRed),
+            scaffoldBackgroundColor: Colors.white,
             appBarTheme: const AppBarTheme(
                 backgroundColor: Colors.white,
                 surfaceTintColor: Colors.transparent),

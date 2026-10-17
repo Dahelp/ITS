@@ -1,7 +1,7 @@
 name: its_avito
 description: Внутренний чат Авито для сотрудников ИТС-Центр.
 publish_to: none
-version: 0.3.0+4
+version: 0.4.0+5
 environment:
   sdk: '>=3.5.3 <4.0.0'
 dependencies:
@@ -20,3 +20,5 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 flutter:
   uses-material-design: true
+  assets:
+    - assets/its-center.jpg

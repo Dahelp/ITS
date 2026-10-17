@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'api.dart';
 import 'models.dart';
 import 'push.dart';
+import 'brand.dart';
 
 void showError(BuildContext context, Object error) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -135,10 +136,7 @@ class _LoginState extends State<LoginScreen> {
                               children: [
                             const Align(
                                 alignment: Alignment.centerLeft,
-                                child: CircleAvatar(
-                                    radius: 32,
-                                    child:
-                                        Icon(Icons.forum_outlined, size: 32))),
+                                child: BrandMark(size: 72)),
                             const SizedBox(height: 28),
                             const Text('ИТС-Центр',
                                 style: TextStyle(
@@ -369,19 +367,37 @@ class _ChatListState extends State<ChatListScreen>
         .toList();
     return Scaffold(
         appBar: AppBar(
-            title: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Чат Авито',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('ИТС-Центр · Покупатели',
-                      style: TextStyle(fontSize: 12, color: Colors.black54))
-                ]),
+            title: const Row(children: [
+              BrandMark(size: 36),
+              SizedBox(width: 10),
+              Flexible(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Text('Сообщения',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('ИТС-Центр · Авито',
+                        style: TextStyle(fontSize: 12, color: Colors.black54))
+                  ]))
+            ]),
             actions: [
               IconButton(
                   tooltip: 'Профиль',
                   onPressed: account,
                   icon: const Icon(Icons.account_circle_outlined))
+            ]),
+        bottomNavigationBar: NavigationBar(
+            selectedIndex: 0,
+            onDestinationSelected: (index) {
+              if (index == 1) account();
+            },
+            destinations: const [
+              NavigationDestination(
+                  icon: Icon(Icons.chat_bubble_outline_rounded),
+                  selectedIcon: Icon(Icons.chat_bubble_rounded),
+                  label: 'Сообщения'),
+              NavigationDestination(
+                  icon: Icon(Icons.person_outline_rounded), label: 'Кабинет')
             ]),
         body: Column(children: [
           Padding(
@@ -490,25 +506,23 @@ class _ChatListState extends State<ChatListScreen>
                         return Card(
                             elevation: 0,
                             color:
-                                fresh ? const Color(0xffe2f2ec) : Colors.white,
-                            margin: const EdgeInsets.only(bottom: 8),
+                                fresh ? const Color(0xfff0f6f8) : Colors.white,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                                side: BorderSide(
+                                    color: Color(0xffedf0f2), width: .5)),
+                            margin: EdgeInsets.zero,
                             child: InkWell(
                                 borderRadius: BorderRadius.circular(12),
                                 onTap: () => open(chat),
                                 child: Padding(
-                                    padding: const EdgeInsets.all(16),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4, vertical: 16),
                                     child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          CircleAvatar(
-                                              backgroundColor:
-                                                  const Color(0xffe9eeeb),
-                                              child: Icon(
-                                                  Icons.chat_bubble_outline,
-                                                  color: fresh
-                                                      ? const Color(0xff146b60)
-                                                      : Colors.grey)),
+                                          ProductAvatar(chat: chat),
                                           const SizedBox(width: 12),
                                           Expanded(
                                               child: Column(
@@ -560,6 +574,7 @@ class _ChatListState extends State<ChatListScreen>
                                                 const SizedBox(height: 8),
                                                 if (fresh)
                                                   const Badge(
+                                                      backgroundColor: itsRed,
                                                       label: Text('Новое'))
                                                 else if (message['direction'] ==
                                                     'out')
@@ -570,7 +585,7 @@ class _ChatListState extends State<ChatListScreen>
                                                           ? Icons.done_all
                                                           : Icons.done,
                                                       size: 17,
-                                                      color: Colors.teal)
+                                                      color: itsNavy)
                                               ]),
                                         ]))));
                       }))),
@@ -732,8 +747,23 @@ class _ConversationState extends State<ConversationScreen>
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-          title: Text(chatTitle(widget.chat),
-              style: const TextStyle(fontSize: 16), maxLines: 2),
+          titleSpacing: 0,
+          title: Row(children: [
+            ProductAvatar(chat: widget.chat, size: 40),
+            const SizedBox(width: 10),
+            Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                  Text(chatTitle(widget.chat),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w700),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                  const Text('ИТС-Центр · Авито',
+                      style: TextStyle(fontSize: 11, color: Colors.black54)),
+                ]))
+          ]),
           actions: [
             IconButton(
                 tooltip: 'Заметки и ответственный',
@@ -777,12 +807,29 @@ class _ConversationState extends State<ConversationScreen>
                                             fontSize: 12,
                                             color: Colors.black45)));
                           }
-                          return MessageBubble(
-                              chat: chat,
-                              key: ValueKey(
-                                  messages[messages.length - 1 - i]['id']),
-                              api: api,
-                              message: messages[messages.length - 1 - i]);
+                          final index = messages.length - 1 - i;
+                          final message = messages[index];
+                          final heading = dayHeading(message['created']);
+                          final newDay = index == 0 ||
+                              heading !=
+                                  dayHeading(messages[index - 1]['created']);
+                          return Column(children: [
+                            if (newDay && heading.isNotEmpty)
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20, bottom: 20),
+                                  child: Text(heading,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 13,
+                                          color: itsNavy))),
+                            MessageBubble(
+                                chat: chat,
+                                key: ValueKey(
+                                    messages[messages.length - 1 - i]['id']),
+                                api: api,
+                                message: message)
+                          ]);
                         }))),
             if (uncertain)
               MaterialBanner(
@@ -854,10 +901,16 @@ class MessageBubble extends StatelessWidget {
                 maxWidth:
                     math.min(540, MediaQuery.sizeOf(context).width * .85)),
             margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
             decoration: BoxDecoration(
-                color: outgoing ? const Color(0xffdcefe5) : Colors.white,
-                borderRadius: BorderRadius.circular(16)),
+                color: outgoing
+                    ? const Color(0xffdcecf2)
+                    : const Color(0xfff1f2f3),
+                borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(18),
+                    topRight: const Radius.circular(18),
+                    bottomLeft: Radius.circular(outgoing ? 18 : 5),
+                    bottomRight: Radius.circular(outgoing ? 5 : 18))),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               if (image != null)
@@ -921,7 +974,7 @@ class MessageBubble extends StatelessWidget {
                     }),
               const SizedBox(height: 6),
               Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(dateLabel(message['created'], full: true),
+                Text(clockLabel(message['created']),
                     style:
                         const TextStyle(fontSize: 10, color: Colors.black45)),
                 if (outgoing)
@@ -932,7 +985,7 @@ class MessageBubble extends StatelessWidget {
                               ? Icons.done_all
                               : Icons.done,
                           size: 14,
-                          color: Colors.teal))
+                          color: itsNavy))
               ]),
             ])));
   }
@@ -1319,8 +1372,31 @@ class _AccountState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('Профиль')),
+      appBar: AppBar(title: const Text('Кабинет')),
       body: ListView(padding: const EdgeInsets.all(24), children: [
+        const Row(children: [
+          BrandMark(size: 64),
+          SizedBox(width: 16),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text('ИТС-Центр',
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: itsNavy,
+                        fontWeight: FontWeight.w800)),
+                Text('АВИТО · КАБИНЕТ СОТРУДНИКА',
+                    style: TextStyle(
+                        fontSize: 10,
+                        letterSpacing: 1,
+                        color: itsRed,
+                        fontWeight: FontWeight.w700)),
+              ]))
+        ]),
+        const SizedBox(height: 24),
+        const Divider(),
+        const SizedBox(height: 20),
         Text('${widget.session.user?['name'] ?? ''}',
             style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
         const SizedBox(height: 6),

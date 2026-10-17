@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#003b4d"/>
+  <path d="M220 235Q220 185 270 185H754Q804 185 804 235V675Q804 725 754 725H428L290 831V725H270Q220 725 220 675Z" fill="#fff"/>
+  <text x="512" y="432" text-anchor="middle" font-family="Arial, sans-serif" font-size="206" font-weight="900" fill="#ff3525">ИТС</text>
+  <rect x="280" y="480" width="464" height="160" rx="30" fill="#003b4d"/>
+  <text x="512" y="588" text-anchor="middle" font-family="Arial, sans-serif" font-size="101" font-weight="700" fill="#fff">АВИТО</text>
+</svg>
