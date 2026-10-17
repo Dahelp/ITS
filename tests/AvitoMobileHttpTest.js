@@ -13,6 +13,7 @@ R::exec('CREATE TABLE user (id INTEGER PRIMARY KEY,email TEXT,name TEXT,role TEX
 R::exec('CREATE TABLE avito_chat_manager (user_id INTEGER PRIMARY KEY)');
 R::exec('CREATE TABLE avito_mobile_session (token_hash TEXT PRIMARY KEY,user_id INTEGER,password_stamp TEXT,device_name TEXT,created_at INTEGER,expires_at INTEGER)');
 R::exec('CREATE TABLE avito_mobile_throttle (bucket TEXT PRIMARY KEY,attempts INTEGER,expires_at INTEGER)');
+R::exec('CREATE TABLE avito_push_device (token_hash TEXT PRIMARY KEY,session_hash TEXT,user_id INTEGER,push_token TEXT,platform TEXT,updated_at INTEGER)');
 R::exec('INSERT INTO user VALUES (1,?,?,?,?)',['test@example.test','Test manager','manager',password_hash('secret',PASSWORD_DEFAULT)]);
 R::exec('INSERT INTO avito_chat_manager VALUES (1)');`;
 const env = {...process.env,AVITO_MOBILE_TEST_DB:db};
@@ -41,6 +42,8 @@ let server;
     assert.equal(login.status,200); const token=login.body.data.access_token;
     assert.equal((await call('me','GET',undefined,token)).body.data.role,'manager');
     assert.equal((await call('capabilities','GET',undefined,token)).body.data.version,1);
+    assert.equal((await call('push-status','GET',undefined,token)).body.data.registered,false);
+    assert.equal((await call('push-unregister','POST',{},token)).body.data.registered,false);
     assert.equal((await call('sessions','GET',undefined,token)).body.data.sessions[0].current,true);
     assert.equal((await call('send','GET',undefined,token)).status,405);
     assert.equal((await call('send','POST',{chat:'chat',text:''},token)).status,400);

@@ -4,7 +4,11 @@ namespace app\services;
 class AvitoWebhook
 {
     private string $directory;
-    public function __construct(?string $directory = null) { $this->directory = $directory ?: ROOT.'/storage/avito-webhook'; }
+    private ?AvitoPushConfig $push;
+    public function __construct(?string $directory = null,?AvitoPushConfig $push = null) {
+        $this->directory = $directory ?: ROOT.'/storage/avito-webhook';
+        $this->push=$push ?: (defined('ROOT') ? new AvitoPushConfig() : null);
+    }
 
     private function config(): array
     {
@@ -92,6 +96,11 @@ class AvitoWebhook
             $state = is_file($statePath) ? json_decode((string)file_get_contents($statePath), true) : null;
             $state = $state ?: ['revision'=>0,'seen'=>[],'events'=>[]];
             if (isset($state['seen'][$key])) return 'duplicate';
+            // Persist push work BEFORE acknowledging/deduplicating the webhook. No DB or HTTP here.
+            $author=(string)($value['author_id']??'');
+            if($this->push && $this->push->ready() && ctype_digit($author) && $author!=='0' && $author!==(string)$config['account_id']) {
+                (new AvitoPushQueue($this->push->directory().'/spool'))->enqueue(['chat_id'=>$chat,'message_id'=>$message,'created_at'=>(int)($value['created']??time())]);
+            }
             $state['revision']++; $state['last_received_at'] = time(); $state['seen'][$key] = true;
             $state['seen'] = array_slice($state['seen'], -1024, null, true);
             $state['events'][] = ['revision'=>$state['revision'], 'chat_id'=>$chat, 'message_id'=>$message, 'created'=>(int)($value['created'] ?? 0)];

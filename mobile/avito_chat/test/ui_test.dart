@@ -3,8 +3,41 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:its_avito/api.dart';
 import 'package:its_avito/demo.dart';
 import 'package:its_avito/main.dart';
+import 'package:its_avito/push.dart';
 
 void main() {
+  testWidgets('Profile explains missing Firebase and cannot enable fake push',
+      (tester) async {
+    final api = DemoApi();
+    final session = ChatSession(api, MemoryTokenStore())
+      ..user = {'id': 1}
+      ..restoring = false;
+    final push = PushController(session);
+    await push.initialize();
+    await tester.pumpWidget(AvitoApp(session: session, push: push));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Профиль'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Включить уведомления'), 200,
+        scrollable: find
+            .descendant(
+                of: find.byType(ListView).last,
+                matching: find.byType(Scrollable))
+            .first);
+    expect(
+        find.textContaining('Требуется подключение Firebase'), findsOneWidget);
+    expect(
+        tester
+            .widget<OutlinedButton>(
+                find.widgetWithText(OutlinedButton, 'Включить уведомления'))
+            .onPressed,
+        null);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    push.dispose();
+    session.dispose();
+    api.close();
+  });
   testWidgets('Chat list and conversation fit a small phone', (tester) async {
     tester.view.physicalSize = const Size(320, 700);
     tester.view.devicePixelRatio = 1;
