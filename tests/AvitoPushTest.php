@@ -72,6 +72,7 @@ try {
         }
         $message=json_decode($body,true)['message'];pushCheck($message['data']['chat_id']==='chat-a'&&!str_contains($body,'Private buyer'),'Generic notification with deep link');
         pushCheck($message['android']['notification']['channel_id']==='avito_messages'&&$message['apns']['headers']['apns-push-type']==='alert','Native channel and APNs alert');
+        pushCheck($message['android']['notification']['icon']==='ic_notification'&&$message['android']['notification']['color']==='#003B4D','Branded Android small icon and accent');
         return [200,['name'=>'projects/test-project/messages/test']];
     });
     pushCheck($real->send($token1,$event)==='sent'&&$real->send($token2,$event)==='sent','FCM accepted');

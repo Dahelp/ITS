@@ -17,7 +17,7 @@ void main() {
     await tester.pumpWidget(AvitoApp(session: session));
     await tester.pumpAndSettle();
     Future<void> select(String title) async {
-      await tester.tap(find.byType(DropdownButton<String>));
+      await tester.tap(find.byType(PopupMenuButton<String>));
       await tester.pumpAndSettle();
       await tester.tap(find.text(title).last);
       await tester.pumpAndSettle();
