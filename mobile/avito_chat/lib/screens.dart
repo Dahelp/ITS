@@ -1273,7 +1273,7 @@ class _AccountState extends State<AccountScreen> {
                         Text(push.status),
                         const SizedBox(height: 12),
                         OutlinedButton(
-                            onPressed: push.configured
+                      onPressed: push.configured && !push.busy
                                 ? (push.registered ? push.disable : push.enable)
                                 : null,
                             child: Text(push.registered

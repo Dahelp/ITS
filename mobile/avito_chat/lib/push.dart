@@ -55,6 +55,7 @@ class PushController extends ChangeNotifier {
   void Function(String chat)? foregroundMessage;
   String? _pending;
   bool _busy = false;
+  bool get busy => _busy;
   bool _resync = false;
   bool registered = false;
   String status = 'Push не настроен. Требуется подключение Firebase.';
@@ -131,7 +132,10 @@ class PushController extends ChangeNotifier {
   }
 
   Future<void> enable() async {
-    if (_messaging == null) return;
+    if (_messaging == null || _busy) return;
+    _busy = true;
+    notifyListeners();
+    bool allowed = false;
     try {
       final result = await _messaging!.requestPermission(
           alert: true, badge: true, sound: true, provisional: false);
@@ -143,11 +147,14 @@ class PushController extends ChangeNotifier {
         return;
       }
       await _messaging!.setAutoInitEnabled(true);
-      await synchronize();
+      allowed = true;
     } catch (_) {
       status = 'Не удалось включить уведомления. Повторите позже.';
+    } finally {
+      _busy = false;
       notifyListeners();
     }
+    if (allowed) await synchronize();
   }
 
   Future<void> synchronize() async {
@@ -156,6 +163,7 @@ class PushController extends ChangeNotifier {
         session.user == null ||
         session.api.token == null) return;
     _busy = true;
+    notifyListeners();
     final owner = session.api.token;
     try {
       final server = await session.api.call('push-status');
@@ -211,7 +219,9 @@ class PushController extends ChangeNotifier {
   }
 
   Future<void> disable() async {
-    if (_messaging == null) return;
+    if (_messaging == null || _busy) return;
+    _busy = true;
+    notifyListeners();
     try {
       await session.api.call('push-unregister', body: {});
       await _messaging!.setAutoInitEnabled(false);
@@ -222,8 +232,10 @@ class PushController extends ChangeNotifier {
     } catch (_) {
       status =
           'Не удалось отключить уведомления. Повторите при подключении к сети.';
+    } finally {
+      _busy = false;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   @override
