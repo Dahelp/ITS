@@ -9,6 +9,10 @@ on:
         description: Build unsigned iOS app on macOS
         type: boolean
         default: false
+      ios_firebase:
+        description: Include registered iOS Firebase config from repository secret
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -41,19 +45,37 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.ios
     runs-on: macos-15
     env:
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     defaults:
       run:
         working-directory: mobile/avito_chat
     steps:
       - uses: actions/checkout@v4
+      - name: Verify Apple SDK
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.3'
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter build ios --debug --no-codesign
+      - name: Configure registered Firebase iOS app
+        if: inputs.ios_firebase
+        env:
+          FIREBASE_IOS_PLIST_BASE64: ${{ secrets.FIREBASE_IOS_PLIST_BASE64 }}
+        run: |
+          test -n "$FIREBASE_IOS_PLIST_BASE64" || { echo 'Missing FIREBASE_IOS_PLIST_BASE64 secret'; exit 1; }
+          printf '%s' "$FIREBASE_IOS_PLIST_BASE64" | base64 --decode > "$RUNNER_TEMP/GoogleService-Info.plist"
+          python3 tool/configure_ios_firebase.py "$RUNNER_TEMP/GoogleService-Info.plist"
+      - name: Build unsigned iPhone app
+        run: |
+          if [ "${{ inputs.ios_firebase }}" = "true" ]; then
+            flutter build ios --release --no-codesign --dart-define-from-file=firebase.local.json
+          else
+            flutter build ios --release --no-codesign
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: its-avito-ios-unsigned
