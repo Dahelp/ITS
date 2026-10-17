@@ -35,12 +35,36 @@ class AvitoChatWorkspace
         foreach ($response['chats'] ?? [] as $chat) $keys[] = self::key((string)$chat['id']);
         if (!$keys) return $response;
         $marks = implode(',',array_fill(0,count($keys),'?'));
-        $assignments = \R::getAll("SELECT a.chat_key, u.name FROM avito_chat_assignment a LEFT JOIN user u ON u.id=a.user_id WHERE a.user_id IS NOT NULL AND a.chat_key IN ($marks)",$keys);
+        $assignments = \R::getAll("SELECT a.chat_key, a.user_id, u.name FROM avito_chat_assignment a LEFT JOIN user u ON u.id=a.user_id WHERE a.user_id IS NOT NULL AND a.chat_key IN ($marks)",$keys);
         $names = [];
         foreach ($assignments as $assignment) $names[$assignment['chat_key']] = $assignment['name'] ?: 'Сотрудник недоступен';
-        foreach ($response['chats'] as &$chat) $chat['assigned_to'] = $names[self::key((string)$chat['id'])] ?? '';
+        $ids = [];
+        foreach ($assignments as $assignment) $ids[$assignment['chat_key']] = (int)$assignment['user_id'];
+        foreach ($response['chats'] as &$chat) {
+            $key = self::key((string)$chat['id']);
+            $chat['assigned_to'] = $names[$key] ?? '';
+            $chat['assignee_id'] = $ids[$key] ?? 0;
+        }
         unset($chat);
         return $response;
+    }
+
+    public static function chatPage(AvitoMessenger $client, int $offset, bool $unread, string $filter, int $actor): array
+    {
+        if (!in_array($filter, ['all','mine','unassigned'], true) && !preg_match('/^[1-9][0-9]*$/D', $filter)) throw new \InvalidArgumentException('Некорректный фильтр ответственного.');
+        $owner = $filter === 'mine' ? $actor : (int)$filter;
+        $matches = []; $more = false;
+        for ($page = 0; $page < 5; $page++) {
+            $data = self::decorateChats($client->chatsWithStatus($offset, $unread));
+            $rows = $data['chats'] ?? [];
+            $offset += count($rows); $more = count($rows) === 50;
+            foreach ($rows as $chat) {
+                if ($filter === 'all' || (int)($chat['assignee_id'] ?? 0) === $owner) $matches[] = $chat;
+            }
+            if ($matches || !$more || $filter === 'all') break;
+        }
+        return ['chats'=>$matches,'next_offset'=>$offset,'has_more'=>$more,'actor_id'=>$actor,
+            'managers'=>\R::getAll("SELECT u.id,u.name FROM user u INNER JOIN avito_chat_manager m ON m.user_id=u.id WHERE u.role IN ('admin','manager') ORDER BY u.name,u.id")];
     }
 
     public static function assign(string $chat, int $manager, int $actor): void

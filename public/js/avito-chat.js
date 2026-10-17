@@ -15,6 +15,19 @@
     const drafts = new Map();
     const {formatChatDate, fullDate, chatStatus, safeMediaUrl} = window.AvitoChatUI;
     el('avito-chat-unread').checked = new URLSearchParams(location.search).get('unread') === '1';
+    const ownerFilter = document.createElement('select');
+    ownerFilter.id = 'avito-chat-owner-filter'; ownerFilter.className = 'form-control mb-2';
+    ownerFilter.setAttribute('aria-label', 'Ответственный за чат');
+    el('avito-chat-search').before(ownerFilter);
+    let owner = 'all';
+    let filterKey = '';
+    let restoredOwner = false;
+    ownerFilter.addEventListener('change', () => {
+        owner = ownerFilter.value;
+        try { if (filterKey) localStorage.setItem(filterKey, owner); } catch (_) {}
+        loadChats().catch(e => error(e.message));
+    });
+    document.addEventListener('avito-assignment-changed', () => loadChats().catch(e => error(e.message)));
     const team = window.AvitoChatTeam.init({api, error, insert(body) {
         if (busy || !selected || text.disabled) return;
         const next = text.value ? text.value + '\n' + body : body;
@@ -191,8 +204,18 @@
     }
     async function loadChats(more = false) {
         const version = ++chatVersion, offset = more ? chatOffset : 0;
-        const data = await api('chats', {offset, unread: el('avito-chat-unread').checked ? 1 : 0});
+        const data = await api('chats', {offset, assignee: owner, unread: el('avito-chat-unread').checked ? 1 : 0});
         if (version !== chatVersion) return;
+        const choices = [['all','Все чаты'],['mine','Мои чаты'],['unassigned','Без ответственного'], ...(data.managers || []).map(m => [String(m.id),m.name])];
+        filterKey = 'its.avito.owner.' + data.actor_id;
+        if (!restoredOwner) {
+            restoredOwner = true;
+            let saved; try { saved = localStorage.getItem(filterKey); } catch (_) {}
+            if (saved && saved !== owner && choices.some(c => c[0] === saved)) { owner = saved; await loadChats(); return; }
+        }
+        if (!choices.some(c => c[0] === owner)) { owner = 'all'; await loadChats(); return; }
+        ownerFilter.replaceChildren(...choices.map(([value,label]) => new Option(label,value)));
+        ownerFilter.value = owner;
         const rows = data.chats || [];
         if (!more) list.replaceChildren();
         rows.forEach(chat => {
@@ -225,7 +248,7 @@
             button.addEventListener('click', () => selectChat(chat.id, title)); list.append(button);
         });
         if (!list.children.length) list.textContent = 'Диалогов нет.';
-        chatOffset = offset + rows.length; el('avito-chat-more').hidden = rows.length < 50;
+        chatOffset = data.next_offset ?? offset + rows.length; el('avito-chat-more').hidden = !(data.has_more ?? rows.length === 50);
         filterChats();
     }
     async function refresh() {

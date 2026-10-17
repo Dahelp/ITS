@@ -72,6 +72,7 @@ class DemoApi extends ChatApi {
             'title': 'Шины 18x7-8 NHS EKKA',
             'is_unread': true,
             'assigned_to': assignee == 1 ? 'Юрий' : '',
+            'assignee_id': assignee,
             'last_message': messages.last
           },
           {
@@ -101,8 +102,20 @@ class DemoApi extends ChatApi {
             }
           },
         ];
+        final owner = '${query['assignee'] ?? 'all'}';
         return {
-          'chats': query['unread'] == 1 ? [data.first] : data
+          'chats': (query['unread'] == 1 ? [data.first] : data)
+              .where((c) =>
+                  owner == 'all' ||
+                  (c['assignee_id'] ?? 0) ==
+                      (owner == 'mine' ? 1 : int.tryParse(owner) ?? 0))
+              .toList(),
+          'next_offset': 3,
+          'has_more': false,
+          'actor_id': 1,
+          'managers': [
+            {'id': 1, 'name': 'Юрий'}
+          ]
         };
       case 'messages':
         return {'messages': messages.reversed.toList()};

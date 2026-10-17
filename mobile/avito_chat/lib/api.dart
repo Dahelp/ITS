@@ -19,12 +19,26 @@ class ApiFailure implements Exception {
 }
 
 abstract class TokenStore {
+  final Map<String, String> preferences = {};
+  Future<String?> readFilter(String user) async => preferences[user];
+  Future<void> writeFilter(String user, String value) async {
+    preferences[user] = value;
+  }
+
   Future<String?> read();
-  Future<void> write(String token);
+  Future<void> write(String value);
   Future<void> clear();
 }
 
 class DeviceTokenStore implements TokenStore {
+  @override
+  final Map<String, String> preferences = {};
+  @override
+  Future<String?> readFilter(String user) =>
+      _storage.read(key: 'its.avito.filter.$user');
+  @override
+  Future<void> writeFilter(String user, String value) =>
+      _storage.write(key: 'its.avito.filter.$user', value: value);
   final _storage = const FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions:
@@ -34,12 +48,12 @@ class DeviceTokenStore implements TokenStore {
   @override
   Future<String?> read() => _storage.read(key: _key);
   @override
-  Future<void> write(String token) => _storage.write(key: _key, value: token);
+  Future<void> write(String value) => _storage.write(key: _key, value: value);
   @override
   Future<void> clear() => _storage.delete(key: _key);
 }
 
-class MemoryTokenStore implements TokenStore {
+class MemoryTokenStore extends TokenStore {
   String? token;
   @override
   Future<String?> read() async => token;

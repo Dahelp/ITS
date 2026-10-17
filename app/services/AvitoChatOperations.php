@@ -60,7 +60,7 @@ class AvitoChatOperations
                     $result = ['count' => $count, 'has_more' => $count >= 50];
                     break;
                 case 'check': $result = $client->diagnose(); break;
-                case 'chats': $result = \app\services\AvitoChatWorkspace::decorateChats($client->chatsWithStatus($offset, !empty($query['unread']))); break;
+                case 'chats': $result = AvitoChatWorkspace::chatPage($client, $offset, !empty($query['unread']), (string)($query['assignee'] ?? 'all'), $actor); break;
                 case 'messages': $result = $client->messages((string)($query['chat'] ?? ''), $offset); break;
                 case 'send': $result = $client->send((string)($input['chat'] ?? ''), (string)($input['text'] ?? '')); break;
                 case 'read': $result = $client->read((string)($input['chat'] ?? '')); break;
