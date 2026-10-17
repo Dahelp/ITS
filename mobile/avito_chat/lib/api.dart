@@ -122,6 +122,24 @@ class ChatApi {
 }
 
 class ChatSession extends ChangeNotifier {
+  final Map<String, String> readMessages = {};
+  void chatRead(String chat, String message) {
+    readMessages[chat] = message;
+    notifyListeners();
+  }
+
+  Future<Json> resolveChat(String id) async {
+    for (var offset = 0; offset <= 100000; offset += 50) {
+      final result = await api.call('chats', query: {'offset': offset});
+      final page = rows(result['chats']);
+      for (final chat in page) {
+        if ('${chat['id']}' == id) return chat;
+      }
+      if (page.length < 50) break;
+    }
+    throw const ApiFailure(404, 'Диалог не найден. Обновите список чатов.');
+  }
+
   final ChatApi api;
   final TokenStore store;
   Json? user;
@@ -177,6 +195,7 @@ class ChatSession extends ChangeNotifier {
   }
 
   Future<void> forget() async {
+    readMessages.clear();
     api.token = null;
     user = null;
     try {

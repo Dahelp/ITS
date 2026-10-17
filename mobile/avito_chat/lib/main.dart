@@ -47,14 +47,13 @@ class _AvitoAppState extends State<AvitoApp> with WidgetsBindingObserver {
     final token = session.api.token;
     try {
       await session.api.call('me');
+      final details = await session.resolveChat(chat);
       if (!mounted || token != session.api.token || session.user == null) {
         return;
       }
       navigator.currentState!.popUntil((r) => r.isFirst);
       await navigator.currentState!.push(MaterialPageRoute(
-          builder: (_) => ConversationScreen(
-              session: session,
-              chat: {'id': chat, 'title': 'Сообщение Авито'})));
+          builder: (_) => ConversationScreen(session: session, chat: details)));
     } catch (_) {
       messenger.currentState?.showSnackBar(const SnackBar(
           content: Text(
