@@ -4,6 +4,7 @@ declare(strict_types=1);
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit("CLI only\n"); }
 
 $root = dirname(__DIR__);
+require_once $root . '/vendor/autoload.php';
 $directories = [
     $root . '/public/xls/nalichie',
     '/home/s/shinaspec/its50.ru/public_html/xls/nalichie',
@@ -70,10 +71,12 @@ foreach ($logs as $log) {
         'tail' => [],
     ];
     if (is_file($log)) {
-        $lines = @file($log, FILE_IGNORE_NEW_LINES);
-        if (is_array($lines)) $entry['tail'] = array_slice($lines, -80);
+        $tail = \app\services\BoundedLogTail::read($log);
+        $entry['tail'] = $tail['lines'];
+        $entry['tail_bytes_read'] = $tail['bytes_read'];
+        $entry['tail_truncated'] = $tail['truncated'];
     }
     $result['logs'][] = $entry;
 }
 
-echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL;
+echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_INVALID_UTF8_SUBSTITUTE) . PHP_EOL;
