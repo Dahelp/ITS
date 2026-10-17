@@ -34,3 +34,10 @@
 .avito-document-prepared{margin-top:12px;padding:14px;background:#edf5ff;border-radius:8px;overflow-wrap:anywhere}
 .avito-document-prepared[hidden]{display:none}
 .avito-document-prepared>strong,.avito-document-prepared>a,.avito-document-prepared>small{display:block;margin-bottom:6px}
+.avito-chat-workspace{padding:12px;margin:12px 0;background:#f3f6fa;border-radius:8px}
+.avito-chat-workspace[hidden],#avito-chat-list [hidden]{display:none!important}
+#avito-chat-assignee,#avito-template-select{width:auto;max-width:100%;min-width:160px;flex:1}
+.avito-chat-notes{max-height:240px;overflow:auto;padding:10px 0}
+.avito-note{padding:8px 0;border-bottom:1px solid #dfe4eb;overflow-wrap:anywhere}
+.avito-template-picker{margin:12px 0}
+.avito-template-editor{margin:16px 0;padding:12px;background:#f7f9fb;border-radius:8px}

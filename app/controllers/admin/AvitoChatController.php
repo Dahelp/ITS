@@ -28,6 +28,7 @@ class AvitoChatController extends AppController
     {
         if (($_SESSION['user']['role'] ?? '') === 'manager') { $this->layout = 'avito-chat'; }
         AvitoMessenger::ensureSchema();
+        \app\services\AvitoChatWorkspace::ensureSchema();
         $allowed = AvitoMessenger::allowed((int)$_SESSION['user']['id']);
         $csrf = $this->csrf();
         $maxImageBytes = AvitoMessenger::maxUploadBytes();
@@ -55,16 +56,21 @@ class AvitoChatController extends AppController
                 echo json_encode(['error' => 'Доступ к чату отключён в настройках.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
-            if (!in_array($operation, ['events', 'upload-document', 'send-document', 'revoke-document', 'voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
+            if (!in_array($operation, ['workspace','assign','note','template-save','template-delete','events', 'upload-document', 'send-document', 'revoke-document', 'voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
                 throw new \InvalidArgumentException('Неизвестная операция.');
             }
-            if (in_array($operation, ['upload-document', 'send-document', 'revoke-document', 'send', 'send-image', 'read'], true)) { $this->checkPost(); }
+            if (in_array($operation, ['assign','note','template-save','template-delete','upload-document', 'send-document', 'revoke-document', 'send', 'send-image', 'read'], true)) { $this->checkPost(); }
             elseif (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
                 throw new \InvalidArgumentException('Требуется GET-запрос.');
             }
             $client = new AvitoMessenger();
             $offset = max(0, min(100000, (int)($_GET['offset'] ?? 0)));
             switch ($operation) {
+                case 'workspace': $result = \app\services\AvitoChatWorkspace::workspace((string)($_GET['chat']??''),(int)$_SESSION['user']['id']); break;
+                case 'assign': \app\services\AvitoChatWorkspace::assign((string)($_POST['chat']??''),(int)($_POST['manager']??0),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
+                case 'note': \app\services\AvitoChatWorkspace::addNote((string)($_POST['chat']??''),(string)($_POST['body']??''),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
+                case 'template-save': \app\services\AvitoChatWorkspace::saveTemplate((int)($_POST['id']??0),(string)($_POST['title']??''),(string)($_POST['body']??''),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
+                case 'template-delete': \app\services\AvitoChatWorkspace::deleteTemplate((int)($_POST['id']??0),(int)$_SESSION['user']['id']); $result=['ok'=>true]; break;
                 case 'events': $result = (new \app\services\AvitoWebhook())->status(); break;
                 case 'upload-document':
                     $file = $_FILES['document'] ?? [];
@@ -106,7 +112,7 @@ class AvitoChatController extends AppController
                     $result = ['count' => $count, 'has_more' => $count >= 50];
                     break;
                 case 'check': $result = $client->diagnose(); break;
-                case 'chats': $result = $client->chatsWithStatus($offset, !empty($_GET['unread'])); break;
+                case 'chats': $result = \app\services\AvitoChatWorkspace::decorateChats($client->chatsWithStatus($offset, !empty($_GET['unread']))); break;
                 case 'messages': $result = $client->messages((string)($_GET['chat'] ?? ''), $offset); break;
                 case 'send': $result = $client->send((string)($_POST['chat'] ?? ''), (string)($_POST['text'] ?? '')); break;
                 case 'read': $result = $client->read((string)($_POST['chat'] ?? '')); break;
