@@ -5,6 +5,15 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def pushEnabled = (project.findProperty('dart-defines') ?: '').split(',').any {
+    new String(it.decodeBase64(), 'UTF-8') == 'PUSH_ENABLED=true'
+}
+if (file('google-services.json').exists()) {
+    apply plugin: 'com.google.gms.google-services'
+} else if (pushEnabled) {
+    throw new GradleException('PUSH_ENABLED requires android/app/google-services.json from your Firebase project')
+}
+
 android {
     namespace = "ru.itscenter.its_avito"
     compileSdk = 35

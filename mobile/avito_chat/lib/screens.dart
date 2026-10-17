@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'api.dart';
 import 'models.dart';
+import 'push.dart';
 
 void showError(BuildContext context, Object error) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -222,7 +223,8 @@ class _LoginState extends State<LoginScreen> {
 
 class ChatListScreen extends StatefulWidget {
   final ChatSession session;
-  const ChatListScreen({super.key, required this.session});
+  final PushController? push;
+  const ChatListScreen({super.key, required this.session, this.push});
   @override
   State<ChatListScreen> createState() => _ChatListState();
 }
@@ -296,7 +298,8 @@ class _ChatListState extends State<ChatListScreen>
     await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => AccountScreen(session: widget.session)));
+            builder: (_) =>
+                AccountScreen(session: widget.session, push: widget.push)));
   }
 
   @override
@@ -1168,7 +1171,8 @@ class _WorkspaceState extends State<WorkspaceScreen> {
 
 class AccountScreen extends StatefulWidget {
   final ChatSession session;
-  const AccountScreen({super.key, required this.session});
+  final PushController? push;
+  const AccountScreen({super.key, required this.session, this.push});
   @override
   State<AccountScreen> createState() => _AccountState();
 }
@@ -1256,8 +1260,25 @@ class _AccountState extends State<AccountScreen> {
             onPressed: busy ? null : () => logout(true),
             child: const Text('Выйти на всех телефонах')),
         const SizedBox(height: 24),
-        const Text(
-            'Уведомления при закрытом приложении появятся после подключения push. Сейчас чаты обновляются, пока приложение открыто.',
-            style: TextStyle(fontSize: 12, color: Colors.black54, height: 1.5)),
+        if (widget.push case final PushController push)
+          AnimatedBuilder(
+              animation: push,
+              builder: (context, _) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text('Уведомления',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Text(push.status),
+                        const SizedBox(height: 12),
+                        OutlinedButton(
+                            onPressed: push.configured
+                                ? (push.registered ? push.disable : push.enable)
+                                : null,
+                            child: Text(push.registered
+                                ? 'Отключить на этом телефоне'
+                                : 'Включить уведомления')),
+                      ])),
       ]));
 }

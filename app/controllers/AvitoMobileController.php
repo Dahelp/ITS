@@ -15,8 +15,8 @@ class AvitoMobileController extends \ishop\base\Controller
         $operation = (string)($this->route['operation'] ?? '');
         try {
             if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') throw new \RuntimeException('Требуется HTTPS.',400);
-            $reads = array_merge(['me','sessions','capabilities'],AvitoChatOperations::READS);
-            $writes = array_merge(['login','logout','logout-all'],AvitoChatOperations::WRITES);
+            $reads = array_merge(['me','sessions','capabilities','push-status'],AvitoChatOperations::READS);
+            $writes = array_merge(['login','logout','logout-all','push-register','push-unregister'],AvitoChatOperations::WRITES);
             if (!in_array($operation,array_merge($reads,$writes),true)) throw new \RuntimeException('Метод не найден.',404);
             $expected = in_array($operation,$writes,true) ? 'POST' : 'GET';
             if (($_SERVER['REQUEST_METHOD'] ?? '') !== $expected) { header('Allow: '.$expected); throw new \RuntimeException('Неверный HTTP-метод.',405); }
@@ -44,6 +44,12 @@ class AvitoMobileController extends \ishop\base\Controller
                 if (!preg_match('/\ABearer ([a-f0-9]{64})\z/iD',$header,$match)) throw new \RuntimeException('Требуется Bearer-токен.',401);
                 $token = $match[1]; $user = $auth->authenticate($token);
                 if ($operation === 'me') $result = $user;
+                elseif ($operation === 'push-status') $result = ['enabled'=>(new \app\services\AvitoPushConfig())->ready()] + \app\services\AvitoPushDevices::status($token);
+                elseif ($operation === 'push-register') {
+                    if(!(new \app\services\AvitoPushConfig())->ready()) throw new \RuntimeException('Push ещё не настроен администратором.',400);
+                    \app\services\AvitoPushDevices::register($token,$user['id'],(string)($input['push_token']??''),(string)($input['platform']??''));$result=['registered'=>true];
+                }
+                elseif ($operation === 'push-unregister') { \app\services\AvitoPushDevices::unregister($token);$result=['registered'=>false]; }
                 elseif ($operation === 'sessions') $result = ['sessions'=>$auth->sessions($user['id'],$token)];
                 elseif ($operation === 'logout' || $operation === 'logout-all') { $auth->logout($token,$user['id'],$operation === 'logout-all'); $result = ['ok'=>true]; }
                 elseif ($operation === 'capabilities') $result = ['version'=>1,'timezone'=>'Europe/Moscow','token_ttl'=>AvitoMobileAuth::TTL,'read_operations'=>AvitoChatOperations::READS,'write_operations'=>AvitoChatOperations::WRITES,'max_text_length'=>1000,'max_image_bytes'=>\app\services\AvitoMessenger::maxUploadBytes(),'max_document_bytes'=>\app\services\AvitoDocumentStore::maxUploadBytes(),'document_types'=>['pdf','docx'],'events_poll_seconds'=>5];
