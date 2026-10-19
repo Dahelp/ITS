@@ -107,11 +107,6 @@ class Cart extends AppModel {
 		$priceInCurrency = (float)$price * (float)($_SESSION['cart.currency']['value'] ?? 1);
 		$priceInCurrency = (float)$priceInCurrency;
 
-		// ✅ если промокод уже активен — применяем к добавляемому товару (только если нет акции)
-		// (акцию мы тут точно не проверяем второй раз — просто применим, а на промо-apply всё равно всё выровняется)
-		if (!empty($_SESSION['promocart'])) {
-			$priceInCurrency = $priceInCurrency * 0.98;
-		}
 
 		if (isset($_SESSION['cart'][$ID])) {
 			$_SESSION['cart'][$ID]['qty'] += $qty;
@@ -224,6 +219,16 @@ class Cart extends AppModel {
 		$this->refreshCompleteState($completeId);
 	}
 
+    private function promoSettings(string $code): array
+    {
+        $promo = \R::getRow("SELECT * FROM plagins_promocode WHERE promocode = ? AND hide = 'show'", [$code]);
+        $rate = str_replace(',', '.', (string)($promo['value'] ?? ''));
+        if (!$promo || !is_numeric($rate) || (float)$rate <= 0 || (float)$rate > 100) return [];
+        $categories = array_map('intval', \R::getCol('SELECT category_id FROM plagins_promocode_category WHERE promocode_id = ?', [(int)$promo['id']]));
+        if (!$categories) return [];
+        return ['rate' => (float)$rate, 'categories' => $categories];
+    }
+
 	private function reapplyPromocodeAfterCartChange(): void
 {
     $code = trim((string)($_SESSION['promocart'] ?? ''));
@@ -231,13 +236,20 @@ class Cart extends AppModel {
         return;
     }
 
-    $factor = 0.98;
+    $settings = $this->promoSettings($code);
+    if (!$settings) {
+        $this->clearpromoItem(true);
+        $_SESSION['promo_state'] = ['ok' => 0, 'msg' => 'Промокод больше не действует. Стоимость пересчитана без него.'];
+        return;
+    }
+    $factor = 1 - $settings['rate'] / 100;
     $dateNow = date("Y-m-d H:i:s");
 
     foreach ($_SESSION['cart'] as $k => $item) {
         // сначала сбрасываем следы промокода
         $_SESSION['cart'][$k]['promo_applied'] = 0;
         $_SESSION['cart'][$k]['promo_discount'] = 0.0;
+        $_SESSION['cart'][$k]['promo_rate'] = 0.0;
 
         $productId = (int)($_SESSION['cart'][$k]['product_id'] ?? $this->getProductIdFromKey((string)$k));
         if ($productId <= 0) {
@@ -276,8 +288,11 @@ class Cart extends AppModel {
             continue;
         }
 
-        // применяем промокод
-        $new = ceil(($base * $factor) / 10) * 10;
+        $categoryId = (int)\R::getCell('SELECT category_id FROM product WHERE id = ?', [$productId]);
+        if (!in_array($categoryId, $settings['categories'], true)) continue;
+        // Apply the configured percentage exactly, to currency precision.
+        $new = round($base * $factor, 2);
+        $_SESSION['cart'][$k]['promo_rate'] = $settings['rate'];
 
         $_SESSION['cart'][$k]['price'] = $new;
         $_SESSION['cart'][$k]['promo_applied'] = 1;
@@ -501,12 +516,14 @@ class Cart extends AppModel {
 
     public function reconcileAvailability(): bool
     {
+        $beforeSum = (float)($_SESSION['cart.sum'] ?? 0);
         $before = array_map(static function($row){ return (int)$row['qty']; }, $_SESSION['cart'] ?? []);
         foreach (array_keys($_SESSION['cart'] ?? []) as $id) {
             $this->setQuantity($id, (int)$_SESSION['cart'][$id]['qty']);
         }
         $after = array_map(static function($row){ return (int)$row['qty']; }, $_SESSION['cart'] ?? []);
-        return $before !== $after;
+        if (!empty($_SESSION['promocart'])) $this->reapplyPromocodeAfterCartChange();
+        return $before !== $after || abs($beforeSum - (float)($_SESSION['cart.sum'] ?? 0)) > 0.005;
     }
 
     public function setQuantity($id, int $qty): void
@@ -529,6 +546,8 @@ class Cart extends AppModel {
         $_SESSION['cart'][$id]['qty'] = min($qty, $max);
         if (!empty($item['set'])) {
             $this->refreshCompleteState((int)$item['set']);
+        } elseif (!empty($_SESSION['promocart'])) {
+            $this->reapplyPromocodeAfterCartChange();
         } else {
             $this->recalcTotalsFromCart();
         }
@@ -545,7 +564,6 @@ class Cart extends AppModel {
     $code = trim((string)$val);
 
     if ($code === '') {
-        unset($_SESSION['promocart'], $_SESSION['promo_state']);
         $_SESSION['promo_state'] = ['ok' => 0, 'msg' => 'Введите промокод'];
         return $_SESSION['promo_state'];
     }
@@ -556,15 +574,15 @@ class Cart extends AppModel {
         return $_SESSION['promo_state'];
     }
 
-    $promo = \R::getRow('SELECT * FROM plagins_promocode WHERE promocode = ?', [$code]);
-    if (!$promo) {
-        unset($_SESSION['promocart']);
+    $settings = $this->promoSettings($code);
+    if (!$settings) {
         $_SESSION['promo_state'] = ['ok' => 0, 'msg' => '❌ Промокод не найден или недействителен'];
         $_SESSION['cart.notice'] = 'Промокод не найден или недействителен.';
         return $_SESSION['promo_state'];
     }
 
     if (!empty($_SESSION['promocart']) && (string)$_SESSION['promocart'] === $code) {
+        $this->reapplyPromocodeAfterCartChange();
         $_SESSION['promo_state'] = ['ok' => 1, 'msg' => '✅ Промокод уже применён'];
         return $_SESSION['promo_state'];
     }
@@ -572,8 +590,6 @@ class Cart extends AppModel {
     // Сначала сбрасываем старый промокод
     $this->clearpromoItem(true);
 
-    $factor = 0.98; // -2%
-    $dateNow = date("Y-m-d H:i:s");
 
     $_SESSION['promocart'] = $code;
 	$this->reapplyPromocodeAfterCartChange();
@@ -612,6 +628,7 @@ class Cart extends AppModel {
 
 			$_SESSION['cart'][$k]['promo_applied'] = 0;
 			$_SESSION['cart'][$k]['promo_discount'] = 0.0;
+        $_SESSION['cart'][$k]['promo_rate'] = 0.0;
 		}
 
 		unset($_SESSION['promocart']);

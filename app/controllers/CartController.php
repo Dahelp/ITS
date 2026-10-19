@@ -798,7 +798,7 @@ class CartController extends AppController {
 
     // Токен одноразовый
     if ((new Cart())->reconcileAvailability()) {
-        $_SESSION['error'] = 'Наличие изменилось. Количество скорректировано по свободному остатку. Проверьте корзину перед оформлением.';
+        $_SESSION['error'] = 'Наличие или условия скидки изменились. Стоимость и количество обновлены. Проверьте корзину перед оформлением.';
         $_SESSION['form_data'] = $_POST;
         $this->redirectCartView(303);
     }

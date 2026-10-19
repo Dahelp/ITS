@@ -79,16 +79,13 @@ class Order extends AppModel {
 			}
 			if ($pid <= 0) continue;
 
-			if ($promoCode !== '') {
-				$prods = \R::getRow('SELECT * FROM product WHERE id = ?', [$pid]);
-				$promo = \R::getRow('SELECT * FROM plagins_promocode WHERE promocode = ?', [$promoCode]);
-
-				$promoVal = (float)($promo['value'] ?? 0);
+			if ($promoCode !== '' && !empty($product['promo_applied'])) {
+				$promoVal = (float)($product['promo_rate'] ?? 0);
 
 				// ВАЖНО: базовая цена для расчёта промо (до скидки)
 				$base = (float)($product['base_price'] ?? $product['price'] ?? 0);
 
-				$discount = ($base / 100) * $promoVal;
+				$discount = max(0, round($base - (float)$product['price'], 2));
 				$discount_amount = $discount * (int)($product['qty'] ?? 0);
 
 				$sql_part .= "('".$order_id."', '".$pid."', '".$product['article']."', '".$product['qty']."', '".$product['unit']."', '".$product['name']."', '".$base."', '".$promoVal."', '3', '".$discount."', '".$product['price']."', '".$discount_amount."'),";
