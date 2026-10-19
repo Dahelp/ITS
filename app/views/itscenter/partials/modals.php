@@ -179,12 +179,17 @@ defined('WWW') or die('Access denied');
                     </div>
 
                     <div class="mb-3">
-                        <label for="callback-comment" class="form-label">Комментарий</label>
+                        <label for="callback-comment" class="form-label">Ваш вопрос или задача <span class="text-danger">*</span></label>
                         <textarea name="comment"
                                   id="callback-comment"
                                   class="form-control"
                                   rows="4"
-                                  placeholder="Напишите тему звонка. Оставьте комментарий"></textarea>
+                                  required
+                                  data-request-question
+                                  aria-describedby="callback-question-help callback-question-error"
+                                  placeholder="Например: подберите шины для погрузчика JCB 3CX. Нужны 4 шт., доставка в Казань."></textarea>
+                        <div class="form-text" id="callback-question-help">Расскажите, что хотите заказать или уточнить. Менеджер заранее подготовит ответ или предложение.</div>
+                        <div class="invalid-feedback" id="callback-question-error">Напишите ваш вопрос или задачу.</div>
                     </div>
 
                     <div class="form-check callback-agree">

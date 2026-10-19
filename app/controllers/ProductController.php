@@ -101,9 +101,7 @@ class ProductController extends AppController
 
         if ($oneclick === $dtmd) {
             if ($politika === 'pk') {
-                if (!Product::hasRequestDetails($prim_modal)) {
-                    $this->errors['unique'][] = 'Опишите, что вас интересует: какие товары и в каком количестве нужны, что необходимо уточнить. Это поможет менеджеру подготовить ответ.';
-                } elseif (!$isValidRuMobile($tell_modal)) {
+                if (!$isValidRuMobile($tell_modal)) {
                     $this->errors['unique'][] = "Запрос не обработан! Некорректный номер телефона. Укажите номер мобильного РФ в формате +7 9ХХ ХХХ-ХХ-ХХ.";
                 } else {
                     Product::mailZakazClick($name_tovar, $fio_modal, $tell_modal, $email_modal, $prim_modal);

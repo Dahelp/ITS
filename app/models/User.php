@@ -3,6 +3,11 @@ namespace app\models;
 
 class User extends AppModel {
 
+    public static function hasCallbackQuestion(string $text): bool
+    {
+        return preg_match('/[^\s\p{Z}\x{200B}\x{FEFF}]/u', $text) === 1;
+    }
+
     public $attributes = [
         'password' => '',
         'name' => '',

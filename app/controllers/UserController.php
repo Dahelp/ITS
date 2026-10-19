@@ -893,6 +893,13 @@ class UserController extends AppController {
 			$title   = trim($_POST['title'] ?? 'Заказ обратного звонка');
 			$agree   = !empty($_POST['agree']);
 
+            if (!User::hasCallbackQuestion($comment)) {
+                $this->sessWriteOpen();
+                $_SESSION['error'] = 'Опишите ваш вопрос или задачу, чтобы менеджер подготовил ответ или предложение.';
+                $this->sessClose();
+                redirect();
+            }
+
 			if (!$agree) {
 				$this->sessWriteOpen();
 				$_SESSION['error'] = 'Необходимо согласие на обработку персональных данных.';
