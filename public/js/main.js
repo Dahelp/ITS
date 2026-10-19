@@ -1613,6 +1613,7 @@ document.addEventListener('click', function(e){
       var rows = activeStep.getBoundingClientRect();
       var button = original.getBoundingClientRect();
       document.getElementById('btnDockToStep2').textContent = original.textContent.trim();
+      document.getElementById('btnDockToStep2').className = original.className;
       var bottom = 0;
       ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
         var blocker = document.querySelector(selector);
