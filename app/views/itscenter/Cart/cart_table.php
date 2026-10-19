@@ -253,8 +253,8 @@ $rrs       = $p ? (float)($p->price_rrs ?? 0) : 0.0;
         $setNum = (int)($item['set'] ?? 0);
 
         // наличие: приоритет БД, fallback на max
-        $stockQty = $p ? (int)($p->quantity ?? 0) : (($max === PHP_INT_MAX) ? 0 : (int)$max);
-        $plusDisabled = ($stockQty > 0 && $qty >= $stockQty);
+        $stockQty = (new \app\models\Cart())->availableForRow($rowKey, $item);
+        $plusDisabled = ($qty >= $stockQty);
 
         // сохраняем “витринные” признаки, чтобы Step2 мог показать то же самое без БД
         $_SESSION['cart'][$rowKey]['old_price']   = (float)$oldPrice;

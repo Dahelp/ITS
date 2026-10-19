@@ -1,3 +1,6 @@
+<?php if (!empty($_SESSION['cart.quantity_notice'])): ?>
+<span class="cart-feedback d-none"><?= htmlspecialchars((string)$_SESSION['cart.quantity_notice'], ENT_QUOTES, 'UTF-8') ?></span>
+<?php unset($_SESSION['cart.quantity_notice']); endif; ?>
 <?php if(!empty($_SESSION['cart'])): ?>
     <div id="prodcart" class="table-responsive">
         <table class="table table-hover table-striped">

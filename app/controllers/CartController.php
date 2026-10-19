@@ -253,6 +253,7 @@ class CartController extends AppController {
             $this->redirectCartView(302);
         }
 
+        (new Cart())->reconcileAvailability();
         $this->loadView('cart_modal');
         $this->sessClose();
         return;
@@ -595,6 +596,7 @@ class CartController extends AppController {
     public function viewAction()
     {
         $this->sessOpenRW();
+        (new Cart())->reconcileAvailability();
 
         if (empty($_SESSION['checkout_token'])) {
             $_SESSION['checkout_token'] = bin2hex(random_bytes(32));
@@ -717,6 +719,11 @@ class CartController extends AppController {
 	}
 
     // Токен одноразовый
+    if ((new Cart())->reconcileAvailability()) {
+        $_SESSION['error'] = 'Наличие изменилось. Количество скорректировано по свободному остатку. Проверьте корзину перед оформлением.';
+        $_SESSION['form_data'] = $_POST;
+        $this->redirectCartView(303);
+    }
     unset($_SESSION['checkout_token']);
 
     // ========= ANTI-BOT: honeypot =========

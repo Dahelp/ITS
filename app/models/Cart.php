@@ -137,6 +137,8 @@ class Cart extends AppModel {
 		$_SESSION['cart.sum']    = isset($_SESSION['cart.sum']) ? $_SESSION['cart.sum'] + $qty * $priceInCurrency : $qty * $priceInCurrency;
 		$_SESSION['cart.weight'] = isset($_SESSION['cart.weight']) ? $_SESSION['cart.weight'] + $qty * (float)$weight : $qty * (float)$weight;
 		$_SESSION['cart.volume'] = isset($_SESSION['cart.volume']) ? $_SESSION['cart.volume'] + $qty * (float)$volume : $qty * (float)$volume;
+
+        $this->setQuantity($ID, (int)$_SESSION['cart'][$ID]['qty']);
 	}
 
 	private function makeCompleteRowKey(int $completeId, int $productId, $mod = null): string
@@ -218,6 +220,7 @@ class Cart extends AppModel {
 			];
 		}
 
+		$this->setQuantity($rowKey, (int)$_SESSION['cart'][$rowKey]['qty']);
 		$this->refreshCompleteState($completeId);
 	}
 
@@ -440,21 +443,52 @@ class Cart extends AppModel {
 		$this->refreshCompleteState($completeId);
 	}
 	
+    public function availableForRow($id, array $item): int
+    {
+        $productId = (int)($item['product_id'] ?? $this->getProductIdFromKey((string)$id));
+        $product = \R::findOne('product', 'id = ?', [$productId]);
+        if (!$product) return 0;
+        $free = max(0, (int)$product->quantity - max(0, (int)($product->reserve ?? 0)));
+        $variant = preg_match('/-(\d+)$/', (string)$id, $match) ? (int)$match[1] : null;
+        if ($variant === 0) {
+            foreach (\R::findAll('modification', 'product_id = ?', [$productId]) as $mod) {
+                $free += max(0, (int)$mod->quantity - max(0, (int)($mod->reserve ?? 0)));
+            }
+        } elseif ($variant !== null) {
+            $mod = \R::findOne('modification', 'id = ? AND product_id = ?', [$variant, $productId]);
+            $free = $mod ? max(0, (int)$mod->quantity - max(0, (int)($mod->reserve ?? 0))) : 0;
+        }
+        // The same stock must not be sold twice via a separate item and a set.
+        foreach ($_SESSION['cart'] ?? [] as $key => $other) {
+            if ((string)$key === (string)$id || (int)($other['product_id'] ?? 0) !== $productId) continue;
+            $otherVariant = preg_match('/-(\d+)$/', (string)$key, $m) ? (int)$m[1] : null;
+            if ($variant === 0 || $otherVariant === 0 || $variant === $otherVariant) {
+                $free -= max(0, (int)($other['qty'] ?? 0));
+            }
+        }
+        return max(0, $free);
+    }
+
+    public function reconcileAvailability(): bool
+    {
+        $before = array_map(static function($row){ return (int)$row['qty']; }, $_SESSION['cart'] ?? []);
+        foreach (array_keys($_SESSION['cart'] ?? []) as $id) {
+            $this->setQuantity($id, (int)$_SESSION['cart'][$id]['qty']);
+        }
+        $after = array_map(static function($row){ return (int)$row['qty']; }, $_SESSION['cart'] ?? []);
+        return $before !== $after;
+    }
+
     public function setQuantity($id, int $qty): void
     {
         if (empty($_SESSION['cart'][$id]) || $qty < 1) return;
 
         $item = $_SESSION['cart'][$id];
-        $max = max(0, (int)($item['max'] ?? PHP_INT_MAX));
-        $productId = (int)($item['product_id'] ?? $this->getProductIdFromKey((string)$id));
-        // Base products and set components use the current warehouse stock.
-        // Modification rows retain their own configured availability limit.
-        if (!preg_match('/-\d+$/', (string)$id)) {
-            $product = \R::findOne('product', 'id = ?', [$productId]);
-            $max = $product ? max(0, (int)$product->quantity) : 0;
-        }
+        $max = $this->availableForRow($id, $item);
         if ($max < 1) {
-            $_SESSION['cart.quantity_notice'] = 'Товар сейчас недоступен. Удалите его из корзины или уточните поставку у менеджера.';
+            $_SESSION['cart.quantity_notice'] = 'Свободного остатка нет. Товар удалён из корзины. Уточните поставку у менеджера.';
+            $this->deleteItem($id);
+            if (!empty($item['set'])) $this->refreshCompleteState((int)$item['set']);
             return;
         }
         if ($qty > $max) {
