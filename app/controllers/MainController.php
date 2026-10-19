@@ -8,6 +8,7 @@ class MainController extends AppController
 {
     public function indexAction()
     {
+        $homeCatalog = \app\services\HomeCatalog::load();
         $brands = \R::find('brand', 'LIMIT 3');
         $hitCandidates = \R::getAll("
             SELECT p.*
@@ -91,7 +92,7 @@ class MainController extends AppController
         );
         /* SEO */
 
-        $this->set(compact('brands', 'hits', 'articles', 'hitsWidgetContext'));
+        $this->set(compact('brands', 'hits', 'articles', 'hitsWidgetContext', 'homeCatalog'));
     }
 
     private function diversifyHits(array $products, int $limit): array
