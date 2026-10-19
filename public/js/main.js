@@ -2373,14 +2373,14 @@ document.addEventListener('DOMContentLoaded', function () {
           0: {
             slidesPerView: 1,
             spaceBetween: 12,
-            slidesOffsetBefore: 12,
-            slidesOffsetAfter: 12
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0
           },
           481: {
             slidesPerView: 2,
             spaceBetween: 14,
-            slidesOffsetBefore: 12,
-            slidesOffsetAfter: 12
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0
           },
           640: {
             slidesPerView: 3,
