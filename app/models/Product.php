@@ -10,6 +10,11 @@ use app\services\TrafficSource;
 
 class Product extends AppModel {
 
+    public static function hasRequestDetails(string $text): bool
+    {
+        return preg_match('/[^\s\p{Z}\x{200B}\x{FEFF}]/u', $text) === 1;
+    }
+
     public function setRecentlyViewed($id){
         $recentlyViewed = $this->getAllRecentlyViewed();
         if(!$recentlyViewed){

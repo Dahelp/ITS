@@ -1555,7 +1555,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                     <div class="mb-3">
                         <label for="oneclick-comment-<?= (int)$product->id ?>" class="form-label">
-                            Комментарий к заказу
+                            Что вас интересует? <span class="text-danger">*</span>
                         </label>
 
                         <textarea
@@ -1563,8 +1563,13 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             id="oneclick-comment-<?= (int)$product->id ?>"
                             class="form-control"
                             rows="4"
-                            placeholder="Комментарий к заказу (количество, время для обратного звонка или другую необходимую информацию)"
-                        ></textarea>
+                            required
+                            data-request-question
+                            aria-describedby="oneclick-question-help-<?= (int)$product->id ?> oneclick-question-error-<?= (int)$product->id ?>"
+                            placeholder="Например: нужны 4 шины, доставка в Казань. Уточните срок поставки и подготовьте счёт."
+                        ><?= h(is_string($_POST['prim_modal'] ?? null) ? $_POST['prim_modal'] : '') ?></textarea>
+                        <div class="form-text" id="oneclick-question-help-<?= (int)$product->id ?>">Опишите вашу задачу или вопрос, чтобы менеджер заранее подготовил ответ или предложение.</div>
+                        <div class="invalid-feedback" id="oneclick-question-error-<?= (int)$product->id ?>">Напишите, что вы хотите заказать или уточнить.</div>
                     </div>
 
                     <div class="form-check callback-agree">

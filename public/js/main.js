@@ -2513,6 +2513,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       function updateFieldState(field) {
+        if (field.hasAttribute('data-request-question')) {
+          field.setCustomValidity(/[^\s\u200B\uFEFF]/u.test(field.value) ? '' : 'Напишите, что вы хотите заказать или уточнить.');
+        }
         var valid = field.checkValidity();
 
         if (field.name === 'phone') {
