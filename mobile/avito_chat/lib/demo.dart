@@ -70,6 +70,9 @@ class DemoApi extends ChatApi {
           {
             'id': 'demo-1',
             'title': 'Шины 18x7-8 NHS EKKA',
+            'context': {
+              'value': {'id': '2443938038', 'title': 'Шины 18x7-8 NHS EKKA'}
+            },
             'is_unread': true,
             'assigned_to': assignee == 1 ? 'Юрий' : '',
             'assignee_id': assignee,
@@ -119,6 +122,18 @@ class DemoApi extends ChatApi {
         };
       case 'messages':
         return {'messages': messages.reversed.toList()};
+      case 'listing':
+        return {
+          'id': 198,
+          'title': 'Шины 18x7-8 NHS EKKA',
+          'description': 'Новые шины для квадроцикла. Цена указана за штуку.',
+          'price': 10600,
+          'stock': 14,
+          'reserve': 4,
+          'available': 10,
+          'images': const [],
+          'edit_url': 'https://its-center.ru/admin/avito/edit?id=198'
+        };
       case 'read':
         return {'ok': true};
       case 'send':

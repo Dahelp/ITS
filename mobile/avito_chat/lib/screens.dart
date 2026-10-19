@@ -663,6 +663,7 @@ class _ConversationState extends State<ConversationScreen>
   final text = TextEditingController();
   List<Json> messages = [];
   bool loading = false, sending = false, more = false, uncertain = false;
+  bool listingLoading = false;
   int offset = 0;
   String? error;
   @override
@@ -797,6 +798,28 @@ class _ConversationState extends State<ConversationScreen>
     if (result != null && mounted) text.text = result;
   }
 
+  Future<void> showListing() async {
+    final itemId = chatItemId(widget.chat);
+    if (itemId.isEmpty) {
+      showError(context, 'Avito не передал ID объявления для этого диалога.');
+      return;
+    }
+    setState(() => listingLoading = true);
+    try {
+      final listing = await api.call('listing', query: {'item_id': itemId});
+      if (!mounted) return;
+      await showModalBottomSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          useSafeArea: true,
+          builder: (_) => ListingDetailsSheet(listing: listing));
+    } catch (e) {
+      if (mounted) showError(context, e);
+    } finally {
+      if (mounted) setState(() => listingLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
@@ -818,6 +841,15 @@ class _ConversationState extends State<ConversationScreen>
                 ]))
           ]),
           actions: [
+            IconButton(
+                tooltip: 'Объявление и наличие',
+                onPressed: listingLoading ? null : showListing,
+                icon: listingLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.inventory_2_outlined)),
             IconButton(
                 tooltip: 'Заметки и ответственный',
                 onPressed: tools,
@@ -931,6 +963,83 @@ class _ConversationState extends State<ConversationScreen>
                       icon: const Icon(Icons.send_rounded)),
                 ])),
           ])));
+}
+
+class ListingDetailsSheet extends StatelessWidget {
+  final Json listing;
+  const ListingDetailsSheet({super.key, required this.listing});
+
+  @override
+  Widget build(BuildContext context) {
+    final images = (listing['images'] is List ? listing['images'] as List : [])
+        .map(safeUrl)
+        .whereType<Uri>()
+        .toList();
+    final price = num.tryParse('${listing['price']}') ?? 0;
+    final available = int.tryParse('${listing['available']}') ?? 0;
+    final stock = int.tryParse('${listing['stock']}') ?? 0;
+    final reserve = int.tryParse('${listing['reserve']}') ?? 0;
+    final editUrl = '${listing['edit_url'] ?? ''}';
+    return DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: .88,
+        minChildSize: .55,
+        maxChildSize: .96,
+        builder: (context, controller) => ListView(
+                controller: controller,
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+                children: [
+                  Center(
+                      child: Container(
+                          width: 42,
+                          height: 4,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(4)))),
+                  if (images.isNotEmpty)
+                    SizedBox(
+                        height: 280,
+                        child: PageView(
+                            children: images
+                                .map((url) => InteractiveViewer(
+                                    child: Image.network('$url',
+                                        fit: BoxFit.contain,
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(
+                                                Icons.broken_image_outlined,
+                                                size: 64))))
+                                .toList())),
+                  const SizedBox(height: 14),
+                  Text('${listing['title'] ?? 'Объявление Avito'}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700, color: itsNavy)),
+                  const SizedBox(height: 12),
+                  Wrap(spacing: 10, runSpacing: 8, children: [
+                    Chip(label: Text('${price.round()} ₽')),
+                    Chip(
+                        avatar: Icon(
+                            available > 0
+                                ? Icons.check_circle_outline
+                                : Icons.remove_circle_outline,
+                            color: available > 0 ? Colors.green : Colors.red),
+                        label: Text('Свободно: $available шт.')),
+                  ]),
+                  Text('На складе: $stock · в резерве: $reserve',
+                      style: const TextStyle(color: Colors.black54)),
+                  const Divider(height: 28),
+                  SelectableText(
+                      '${listing['description'] ?? 'Описание не заполнено.'}',
+                      style: const TextStyle(height: 1.45)),
+                  const SizedBox(height: 20),
+                  FilledButton.icon(
+                      onPressed: safeUrl(editUrl) == null
+                          ? null
+                          : () => openLink(context, editUrl),
+                      icon: const Icon(Icons.edit_outlined),
+                      label: const Text('Открыть и редактировать объявление')),
+                ]));
+  }
 }
 
 class MessageBubble extends StatelessWidget {

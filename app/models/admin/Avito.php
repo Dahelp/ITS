@@ -808,7 +808,8 @@ class Avito extends AppModel
     {
         self::ensureSchema();
 
-        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) <= 0 THEN 'archived'\n                WHEN a.review_status = 'needs_review' THEN 'archived'\n                ELSE 'active'\n            END\n        ");
+        // Availability exposed to Avito must never include units already reserved.
+        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                WHEN a.review_status = 'needs_review' THEN 'archived'\n                ELSE 'active'\n            END\n        ");
 
         // Категория каталога 2 — шины для квадроциклов (ATV). Ранее созданные
         // объявления могли остаться в профиле грузовых шин, поэтому приводим
@@ -817,6 +818,7 @@ class Avito extends AppModel
 
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
+        $availableByProduct = \R::getAssoc('SELECT id, GREATEST(0, COALESCE(quantity, rest, 0) - COALESCE(reserve, 0)) FROM product');
         $updated = 0;
         foreach ($rows as $row) {
             $ad = \R::load('avito_ad', (int)$row['ad_id']);
@@ -824,7 +826,7 @@ class Avito extends AppModel
                 continue;
             }
 
-            $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
+            $quantity = (int)($availableByProduct[(int)$row['product_id']] ?? 0);
             $price = (int)round((float)($row['price'] ?? 0));
 
             if (empty($ad->uuid)) {
@@ -1559,6 +1561,10 @@ class Avito extends AppModel
             return $stats;
         }
 
+        $availableByAd = \R::getAssoc("SELECT a.id,
+            GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0))
+            FROM avito_ad a LEFT JOIN product p ON p.article = a.article");
+
         $client = new \app\services\AvitoApiClient();
         $client->getAccessToken();
 
@@ -1568,7 +1574,7 @@ class Avito extends AppModel
         foreach ($rows as $row) {
             $itemId = self::apiItemId($row);
             $price = (int)round((float)($row['price_rub'] ?? 0));
-            $quantity = max(0, (int)($row['rest'] ?? $row['quantity'] ?? 0));
+            $quantity = (int)($availableByAd[(int)$row['ad_id']] ?? 0);
             if ($quantity > 0) {
                 $stats['status_active']++;
             } else {

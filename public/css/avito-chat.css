@@ -41,3 +41,13 @@
 .avito-note{padding:8px 0;border-bottom:1px solid #dfe4eb;overflow-wrap:anywhere}
 .avito-template-picker{margin:12px 0}
 .avito-template-editor{margin:16px 0;padding:12px;background:#f7f9fb;border-radius:8px}
+.avito-listing-card{position:sticky;top:16px;max-height:calc(100vh - 120px);overflow:auto}
+.avito-listing-card[hidden],#avito-listing-content[hidden],#avito-listing-empty[hidden]{display:none!important}
+.avito-listing-main-image{display:block;width:100%;height:300px;object-fit:contain;background:#f4f6f8;border-radius:10px}
+.avito-listing-gallery{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px}
+.avito-listing-thumb{flex:0 0 64px;width:64px;height:52px;padding:2px;border:2px solid transparent;border-radius:7px;background:#fff;cursor:pointer}
+.avito-listing-thumb.is-active{border-color:#007bff}
+.avito-listing-thumb img{width:100%;height:100%;object-fit:cover;border-radius:4px}
+.avito-listing-facts{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0 4px;font-size:20px}
+.avito-listing-description{max-height:32vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45;padding-top:12px;border-top:1px solid #e2e6ea}
+@media(max-width:767.98px){.avito-listing-card{position:static;max-height:none;margin-top:16px}.avito-listing-main-image{height:240px}.avito-listing-description{max-height:none}}

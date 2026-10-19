@@ -2,6 +2,16 @@ import 'api.dart';
 
 String chatTitle(Json chat) =>
     '${object(object(chat['context'])['value'])['title'] ?? chat['title'] ?? 'Диалог Авито'}';
+
+String chatItemId(Json chat) {
+  final value = object(object(chat['context'])['value']);
+  final direct = value['id'] ?? value['item_id'] ?? object(value['item'])['id'];
+  if (RegExp(r'^\d{1,32}$').hasMatch('$direct')) return '$direct';
+  final match = RegExp(r'(?:^|\D)(\d{6,32})(?:\D|$)')
+      .firstMatch('${value['url'] ?? value['item_url'] ?? ''}');
+  return match?.group(1) ?? '';
+}
+
 String preview(Json message) {
   final content = object(message['content']);
   return switch (message['type']) {

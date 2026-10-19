@@ -5,7 +5,7 @@ namespace app\services;
 class AvitoChatOperations
 {
     public const WRITES = ['assign','note','template-save','template-delete','upload-document','send-document','revoke-document','send','send-image','read'];
-    public const READS = ['workspace','events','voice','unread','check','chats','messages'];
+    public const READS = ['workspace','listing','events','voice','unread','check','chats','messages'];
     private AvitoMessenger $client;
     public function __construct(?AvitoMessenger $client = null) { $this->client = $client ?: new AvitoMessenger(); }
     public function execute(string $operation, array $query, array $input, array $files, int $actor): array
@@ -15,6 +15,7 @@ class AvitoChatOperations
             $offset = max(0, min(100000, (int)($query['offset'] ?? 0)));
             switch ($operation) {
                 case 'workspace': $result = \app\services\AvitoChatWorkspace::workspace((string)($query['chat']??''),$actor); break;
+                case 'listing': $result = AvitoListingCard::find((string)($query['item_id'] ?? '')); break;
                 case 'assign': \app\services\AvitoChatWorkspace::assign((string)($input['chat']??''),(int)($input['manager']??0),$actor); $result=['ok'=>true]; break;
                 case 'note': \app\services\AvitoChatWorkspace::addNote((string)($input['chat']??''),(string)($input['body']??''),$actor); $result=['ok'=>true]; break;
                 case 'template-save': \app\services\AvitoChatWorkspace::saveTemplate((int)($input['id']??0),(string)($input['title']??''),(string)($input['body']??''),$actor); $result=['ok'=>true]; break;

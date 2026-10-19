@@ -137,6 +137,12 @@ void main() {
     await tester.tap(find.text('Шины 18x7-8 NHS EKKA'));
     await tester.pumpAndSettle();
     expect(tester.takeException(), null);
+    await tester.tap(find.byTooltip('Объявление и наличие'));
+    await tester.pump(const Duration(milliseconds: 700));
+    expect(find.text('Свободно: 10 шт.'), findsOneWidget);
+    expect(find.text('На складе: 14 · в резерве: 4'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
     await tester.pumpWidget(const SizedBox());
     await tester.pumpAndSettle();
     session.dispose();

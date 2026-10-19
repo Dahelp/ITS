@@ -56,7 +56,7 @@ class AvitoChatController extends AppController
                 echo json_encode(['error' => 'Доступ к чату отключён в настройках.'], JSON_UNESCAPED_UNICODE);
                 exit;
             }
-            if (!in_array($operation, ['workspace','assign','note','template-save','template-delete','events', 'upload-document', 'send-document', 'revoke-document', 'voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
+            if (!in_array($operation, ['workspace','listing','assign','note','template-save','template-delete','events', 'upload-document', 'send-document', 'revoke-document', 'voice', 'send-image', 'unread', 'check', 'chats', 'messages', 'send', 'read'], true)) {
                 throw new \InvalidArgumentException('Неизвестная операция.');
             }
             if (in_array($operation, ['assign','note','template-save','template-delete','upload-document', 'send-document', 'revoke-document', 'send', 'send-image', 'read'], true)) { $this->checkPost(); }

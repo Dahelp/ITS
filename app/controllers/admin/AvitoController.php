@@ -96,7 +96,7 @@ class AvitoController extends AppController
             a.title          AS title,
             a.category       AS category,
             a.manager_name   AS manager_name,
-            p.rest           AS rest,           -- наличие из product.rest
+            GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) AS rest,
             a.status         AS status
         FROM avito_ad a
         LEFT JOIN product p ON p.article = a.article

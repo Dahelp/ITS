@@ -11,7 +11,7 @@
     let documentFile = null;
     let photoFile = null, photoPreviewUrl = '', messageRows = new Map();
     let selected = '', chatOffset = 0, messageOffset = 0, busy = false, refreshing = false;
-    let chatVersion = 0, messageVersion = 0, history = new Map();
+    let chatVersion = 0, messageVersion = 0, listingVersion = 0, history = new Map();
     const drafts = new Map();
     const {formatChatDate, fullDate, chatStatus, safeMediaUrl} = window.AvitoChatUI;
     el('avito-chat-unread').checked = new URLSearchParams(location.search).get('unread') === '1';
@@ -100,6 +100,63 @@
         el('avito-photo-preview').hidden = true;
         el('avito-photo-name').textContent = ''; photoSend.disabled = true;
     }
+    function chatItemId(chat) {
+        const value = chat?.context?.value || {};
+        const direct = value.id ?? value.item_id ?? value.item?.id;
+        if (/^\d{1,32}$/.test(String(direct ?? ''))) return String(direct);
+        const url = String(value.url || value.item_url || '');
+        const match = url.match(/(?:^|\D)(\d{6,32})(?:\D|$)/);
+        return match ? match[1] : '';
+    }
+    function clearListing(message = '') {
+        el('avito-listing-card').hidden = false;
+        el('avito-listing-loading').hidden = true;
+        el('avito-listing-content').hidden = true;
+        el('avito-listing-empty').hidden = false;
+        el('avito-listing-empty').textContent = message || 'Для этого диалога связанное объявление не найдено.';
+    }
+    function renderListing(data) {
+        el('avito-listing-card').hidden = false;
+        el('avito-listing-loading').hidden = true;
+        el('avito-listing-empty').hidden = true;
+        el('avito-listing-content').hidden = false;
+        el('avito-listing-title').textContent = data.title || 'Объявление Avito';
+        el('avito-listing-price').textContent = Number(data.price || 0).toLocaleString('ru-RU') + ' ₽';
+        el('avito-listing-stock').textContent = 'Свободно: ' + Number(data.available || 0) + ' шт.';
+        el('avito-listing-stock').className = 'badge ' + (Number(data.available) > 0 ? 'badge-success' : 'badge-danger');
+        el('avito-listing-stock-details').textContent = 'На складе: ' + Number(data.stock || 0) + ' · в резерве: ' + Number(data.reserve || 0);
+        el('avito-listing-description').textContent = data.description || 'Описание не заполнено.';
+        const edit = new URL(data.edit_url || '', location.origin);
+        el('avito-listing-edit').href = edit.origin === location.origin && edit.pathname === '/admin/avito/edit' ? edit.href : '/admin/avito';
+        const main = el('avito-listing-main-image'), gallery = el('avito-listing-gallery');
+        gallery.replaceChildren(); main.hidden = true; main.removeAttribute('src');
+        const images = Array.isArray(data.images) ? data.images.map(safeMediaUrl).filter(Boolean) : [];
+        const choose = (url, button) => {
+            main.src = url; main.hidden = false;
+            gallery.querySelectorAll('.avito-listing-thumb').forEach(node => node.classList.toggle('is-active', node === button));
+        };
+        images.forEach((url, index) => {
+            const button = document.createElement('button'); button.type = 'button'; button.className = 'avito-listing-thumb';
+            button.setAttribute('aria-label', 'Показать фото ' + (index + 1));
+            const image = document.createElement('img'); image.src = url; image.alt = ''; image.loading = 'lazy'; button.append(image);
+            button.addEventListener('click', () => choose(url, button)); gallery.append(button);
+            if (index === 0) choose(url, button);
+        });
+    }
+    async function loadListing(chat) {
+        const version = ++listingVersion, itemId = chatItemId(chat);
+        el('avito-listing-card').hidden = false;
+        el('avito-listing-loading').hidden = false;
+        el('avito-listing-content').hidden = true;
+        el('avito-listing-empty').hidden = true;
+        if (!itemId) { clearListing('Avito не передал ID объявления для этого диалога.'); return; }
+        try {
+            const data = await api('listing', {item_id: itemId});
+            if (version === listingVersion) renderListing(data);
+        } catch (e) {
+            if (version === listingVersion) clearListing(e.message);
+        }
+    }
     function renderMessages() {
         const nearBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 60;
         const previousHeight = messages.scrollHeight, previousTop = messages.scrollTop;
@@ -183,7 +240,8 @@
             window.dispatchEvent(new Event('avito-chat-read'));
         }
     }
-    async function selectChat(chat, title) {
+    async function selectChat(chatData, title) {
+        const chat = String(chatData.id || '');
         if (busy) return;
         if (selected !== chat) {
             clearPhoto(); el('avito-photo-status').textContent = '';
@@ -192,6 +250,7 @@
         if (selected) drafts.set(selected, text.value);
         selected = chat; ++messageVersion; history = new Map(); messageOffset = 0;
         team.select(chat);
+        loadListing(chatData);
         renderDocument();
         list.querySelectorAll('[data-chat-id]').forEach(button => button.classList.toggle('avito-chat-selected', button.dataset.chatId === selected));
         text.value = drafts.get(chat) || '';
@@ -245,7 +304,7 @@
                 const owner = document.createElement('small'); owner.className = 'text-muted d-block mt-1'; owner.textContent = 'Ответственный: ' + chat.assigned_to; button.append(owner);
             }
             button.dataset.search = (title + ' ' + preview.textContent + ' ' + (chat.users || []).map(user => user.name || '').join(' ')).toLocaleLowerCase('ru');
-            button.addEventListener('click', () => selectChat(chat.id, title)); list.append(button);
+            button.addEventListener('click', () => selectChat(chat, title)); list.append(button);
         });
         if (!list.children.length) list.textContent = 'Диалогов нет.';
         chatOffset = data.next_offset ?? offset + rows.length; el('avito-chat-more').hidden = !(data.has_more ?? rows.length === 50);
