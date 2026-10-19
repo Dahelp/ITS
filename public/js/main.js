@@ -1610,7 +1610,6 @@ document.addEventListener('click', function(e){
       var step = form.getAttribute('data-current-step') || '1';
       original = document.getElementById(step === '3' ? 'btnSubmitOrder' : (step === '2' ? 'btnToStep3' : 'btnToStep2'));
       var activeStep = form.querySelector('[data-step="' + step + '"]');
-      var rows = activeStep.getBoundingClientRect();
       var button = original.getBoundingClientRect();
       document.getElementById('btnDockToStep2').textContent = original.textContent.trim();
       document.getElementById('btnDockToStep2').className = original.className;
@@ -1624,7 +1623,7 @@ document.addEventListener('click', function(e){
       dock.style.setProperty('--cart-dock-bottom', bottom + 'px');
       var buttonVisible = button.top >= 0 && button.bottom <= window.innerHeight - bottom;
       dock.hidden = !activeStep.offsetHeight ||
-        readCartTableState().qty <= 0 || rows.bottom <= 0 || rows.top >= window.innerHeight ||
+        readCartTableState().qty <= 0 ||
         buttonVisible || bottom > window.innerHeight * .45;
     }
     function schedule(){ if (!scheduled) { scheduled = true; requestAnimationFrame(update); } }
