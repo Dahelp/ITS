@@ -6340,6 +6340,25 @@ body.catalog-open {
 .store-quantity input::-webkit-inner-spin-button,
 .store-quantity input::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
 .store-quantity :focus-visible{ outline:2px solid #198754; outline-offset:-3px; }
+.product-card .pc-buy,
+.product-card .pc-in-cart,
+.product-card .store-quantity{
+  box-sizing:border-box;
+  height:36px;
+  min-height:36px;
+  padding:0;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+}
+.product-card .pc-buy,
+.product-card .pc-in-cart{ display:flex; }
+.product-card .store-quantity button{
+  flex-basis:36px;
+  height:100%;
+  line-height:1;
+}
+.product-card .store-quantity input{ height:100%; }
 @keyframes store-quantity-in{
   from{ opacity:0; transform:translateY(5px) scale(.98); }
   to{ opacity:1; transform:translateY(0) scale(1); }
