@@ -124,7 +124,7 @@
 	<link rel="stylesheet" href="/css/bootstrap.css">
 	<link rel="stylesheet" href="/css/flexslider.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="/css/aiz-core.css">
-	<link rel="stylesheet" href="<?= PATH ?>/css/style.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="<?= PATH ?>/css/style.css?v=<?= (int) @filemtime(WWW . '/css/style.css') ?>" type="text/css" media="all" />
 	<link rel="stylesheet" href="/public/adminlte/plugins/fontawesome-free/css/all.min.css" />
 	<link rel="stylesheet" href="/public/adminlte/plugins/select2/css/select2.min.css" />
 	<link rel="stylesheet" href="/public/adminlte/plugins/select2-bootstrap5-theme/select2-bootstrap-5-theme.min.css" />

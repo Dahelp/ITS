@@ -125,10 +125,8 @@ if ($isAuth) {
 						<?php endif; ?>
 
 						<div class="header-actions__item">
-							<a href="javascript:void(0);"
-							   class="header-action-link js-open-cart"
-							   data-bs-toggle="modal"
-							   data-bs-target="#exampleModalLive">
+							<a href="<?= PATH ?>/cart/view"
+							   class="header-action-link js-open-cart">
 								<i class="fas fa-shopping-cart"></i>
 								<span>Корзина</span>
 								<span class="header-action-link__count" id="cart-total"><?= $cartQty ?></span>

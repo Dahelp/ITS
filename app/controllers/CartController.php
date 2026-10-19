@@ -422,6 +422,21 @@ class CartController extends AppController {
         return;
     }
 
+    public function quantityAction(): void
+    {
+        $this->sessOpenRW();
+        if (!$this->isAjax()) {
+            $this->redirectCartView(302);
+        }
+        $id = (string)($_GET['id'] ?? '');
+        $qty = filter_var($_GET['qty'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($qty !== false && isset($_SESSION['cart'][$id])) {
+            (new Cart())->setQuantity($id, $qty);
+        }
+        $this->loadView(($_GET['ctx'] ?? '') === 'product' ? 'cart_modal' : 'cart_table');
+        $this->sessClose();
+    }
+
     public function pluscartAction()
     {
         $this->sessOpenRW();

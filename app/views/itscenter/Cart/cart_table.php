@@ -167,6 +167,12 @@ if ($discountServer < 0.01) $discountServer = 0.0;
       data-msg="<?= htmlspecialchars($promoMsg, ENT_QUOTES, 'UTF-8') ?>"></span>
 
 <div class="cart-list">
+  <?php if (!empty($_SESSION['cart.quantity_notice'])): ?>
+    <div class="alert alert-warning" role="status">
+      <?= htmlspecialchars((string)$_SESSION['cart.quantity_notice'], ENT_QUOTES, 'UTF-8') ?>
+    </div>
+    <?php unset($_SESSION['cart.quantity_notice']); ?>
+  <?php endif; ?>
   <?php if (empty($cart)): ?>
 
     <div class="cart-empty text-center py-5">
@@ -342,7 +348,11 @@ $rrs       = $p ? (float)($p->price_rrs ?? 0) : 0.0;
               <?php if ($isSet): ?>data-complete-id="<?= $setNum ?>"<?php endif; ?>
               aria-label="Уменьшить">–</button>
 
-            <span class="qty-item"><?= $qty ?></span>
+            <input type="number" class="qty-item js-cart-quantity"
+                   value="<?= $qty ?>" min="1" step="1"
+                   max="<?= max($qty, min($max, max(0, $stockQty))) ?>"
+                   data-id="<?= htmlspecialchars((string)$id, ENT_QUOTES, 'UTF-8') ?>"
+                   aria-label="Количество товара" inputmode="numeric">
 
             <button type="button"
               class="qty-btn <?= !$isSet ? 'my-plus-cart' : 'my-plus-complete-cart' ?><?= $plusDisabled ? ' is-disabled' : '' ?>"

@@ -440,22 +440,42 @@ class Cart extends AppModel {
 		$this->refreshCompleteState($completeId);
 	}
 	
-	public function pluscartItem($id)
-	{
-		if (empty($_SESSION['cart'][$id])) return;
+    public function setQuantity($id, int $qty): void
+    {
+        if (empty($_SESSION['cart'][$id]) || $qty < 1) return;
 
-		$price  = (float)($_SESSION['cart'][$id]['price'] ?? 0);
-		$weight = (float)($_SESSION['cart'][$id]['weight'] ?? 0);
-		$volume = (float)($_SESSION['cart'][$id]['volume'] ?? 0);
+        $item = $_SESSION['cart'][$id];
+        $max = max(0, (int)($item['max'] ?? PHP_INT_MAX));
+        $productId = (int)($item['product_id'] ?? $this->getProductIdFromKey((string)$id));
+        // Base products and set components use the current warehouse stock.
+        // Modification rows retain their own configured availability limit.
+        if (!preg_match('/-\d+$/', (string)$id)) {
+            $product = \R::findOne('product', 'id = ?', [$productId]);
+            $max = $product ? max(0, (int)$product->quantity) : 0;
+        }
+        if ($max < 1) {
+            $_SESSION['cart.quantity_notice'] = 'Товар сейчас недоступен. Удалите его из корзины или уточните поставку у менеджера.';
+            return;
+        }
+        if ($qty > $max) {
+            $_SESSION['cart.quantity_notice'] = 'Количество скорректировано по доступному остатку: ' . $max . ' шт.';
+        }
 
-		$_SESSION['cart.qty']    = (int)($_SESSION['cart.qty'] ?? 0) + 1;
-		$_SESSION['cart.sum']    = (float)($_SESSION['cart.sum'] ?? 0) + $price;
-		$_SESSION['cart.weight'] = (float)($_SESSION['cart.weight'] ?? 0) + $weight;
-		$_SESSION['cart.volume'] = (float)($_SESSION['cart.volume'] ?? 0) + $volume;
+        $_SESSION['cart'][$id]['max'] = $max;
+        $_SESSION['cart'][$id]['qty'] = min($qty, $max);
+        if (!empty($item['set'])) {
+            $this->refreshCompleteState((int)$item['set']);
+        } else {
+            $this->recalcTotalsFromCart();
+        }
+    }
 
-		$_SESSION['cart'][$id]['qty'] = (int)($_SESSION['cart'][$id]['qty'] ?? 0) + 1;
-	}
-		
+    public function pluscartItem($id)
+    {
+        if (empty($_SESSION['cart'][$id])) return;
+        $this->setQuantity($id, (int)$_SESSION['cart'][$id]['qty'] + 1);
+    }
+
 	public function promocartItem($val): array
 {
     $code = trim((string)$val);
@@ -540,24 +560,11 @@ class Cart extends AppModel {
 		}
 	}
 	
-	public function pluscartcompleteItem($id, $completeId)
-	{
-		if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) return;
-
-		$id = (string)$id;
-		$completeId = (int)$completeId;
-
-		if (empty($_SESSION['cart'][$id])) return;
-
-		$currentQty = (int)($_SESSION['cart'][$id]['qty'] ?? 0);
-		$max = (int)($_SESSION['cart'][$id]['max'] ?? PHP_INT_MAX);
-
-		if ($currentQty >= $max) return;
-
-		$_SESSION['cart'][$id]['qty'] = $currentQty + 1;
-
-		$this->refreshCompleteState($completeId);
-	}
+    public function pluscartcompleteItem($id, $completeId)
+    {
+        if (empty($_SESSION['cart'][$id])) return;
+        $this->setQuantity($id, (int)$_SESSION['cart'][$id]['qty'] + 1);
+    }
 
 	public function minuscartItem($id)
 	{

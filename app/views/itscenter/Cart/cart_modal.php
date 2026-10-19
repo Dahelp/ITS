@@ -22,7 +22,10 @@
             ?>
 
 
-                <tr data-product-id="<?= $pid ?>">
+                <tr data-product-id="<?= $pid ?>"
+                    data-cart-key="<?= htmlspecialchars((string)$id, ENT_QUOTES, 'UTF-8') ?>"
+                    data-qty="<?= (int)($item['qty'] ?? 0) ?>"
+                    data-max="<?= $max ?>">
                     <td><a href="product/<?=$item['alias'];?>"><img src="images/product/mini/<?=$item['img'];?>" alt="" width="250" height="250"></a></td>
                     <td><a href="product/<?=$item['alias'];?>"><?=$item['name'];?></a><?php if($isSet) { ?><br />Комплект № <?=$item['set'];?><?php } ?></td>
                     <td style="text-align:center;width:72px">
