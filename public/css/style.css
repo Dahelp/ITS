@@ -6377,12 +6377,12 @@ body.catalog-open {
   min-height:36px;
   height:36px;
   font-size:13px;
-  background:#fff;
-  border:1px solid #d8dfe6;
-  color:#334155;
+  background:#fff8dc;
+  border:1px solid #e8b931;
+  color:#755500;
   box-shadow:none;
 }
-.product-order-actions .one-click:hover{ background:#f3f5f7; border-color:#9ba7b5; color:#1e293b; }
+.product-order-actions .one-click:hover{ background:#ffefb3; border-color:#d8a715; color:#614600; }
 .product-buy-card .product-kp-btn{
   min-height:36px;
   height:36px;
