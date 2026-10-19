@@ -974,7 +974,7 @@ document.addEventListener('click', function(e){
         else if (endpointStr === '/cart/quantity') showAddedNotice('Количество обновлено');
 
         // если после обновления корзина пуста — переключаем пустое состояние страницы
-        if (!$.trim(res)) {
+        if (readCartTableState().qty <= 0) {
           $('.cart-block').hide();
           $('.cart-no-product').show();
         } else {
@@ -1362,6 +1362,7 @@ document.addEventListener('click', function(e){
   };
 
   window.clearCart = function(){
+    if (!window.confirm('Удалить все товары из корзины?')) return;
     requestCart('/cart/clear', { ctx: 'modal' });
   };
 
@@ -1405,6 +1406,7 @@ document.addEventListener('click', function(e){
 	  e.preventDefault();
 	  e.stopPropagation();
 
+	  if (!window.confirm('Удалить все товары из корзины?')) return;
 	  var ctx = $(this).closest('#exampleModalLive').length ? 'modal' : 'page';
 	  requestCart('/cart/clear', { ctx: ctx });
 	});
@@ -3065,4 +3067,14 @@ $(function () {
             window.location.href = url;
         }, 0);
     });
+});
+
+// Confirm bulk cart actions before native POST, without checkout validation.
+document.addEventListener('click', function(event){
+  var button = event.target.closest('button[data-cart-confirm]');
+  if (button && !window.confirm(button.getAttribute('data-cart-confirm'))) event.preventDefault();
+});
+document.addEventListener('submit', function(event){
+  var message = event.target.getAttribute('data-cart-confirm');
+  if (message && !window.confirm(message)) event.preventDefault();
 });

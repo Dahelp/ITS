@@ -24,6 +24,23 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 <!--prdt-starts-->
 <div class="prdt">
     <div class="container">
+        <?php if (!empty($_SESSION['cart.action_notice'])): ?>
+            <div class="alert alert-info" role="status"><?= htmlspecialchars((string)$_SESSION['cart.action_notice'], ENT_QUOTES, 'UTF-8') ?></div>
+            <?php if ($userId): ?><a href="<?= PATH ?>/user/wishlist">Открыть избранное</a><?php endif; ?>
+            <?php unset($_SESSION['cart.action_notice']); ?>
+        <?php endif; ?>
+        <?php if ($userId): ?>
+            <form id="saveCartLater" method="post" action="<?= PATH ?>/cart/save-later">
+                <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($_SESSION['checkout_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+            </form>
+        <?php endif; ?>
+        <?php if ($userId && \R::count('order', 'user_id = ?', [$userId])): ?>
+            <form method="post" action="<?= PATH ?>/cart/repeat" class="mb-3" data-cart-confirm="Добавить товары из последнего заказа к текущей корзине? Цены и доступное количество будут актуальными. Комплекты добавляются отдельными товарами.">
+                <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($_SESSION['checkout_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                <button type="submit" class="btn btn-outline-primary">Повторить прошлый заказ</button>
+                <div class="small text-muted mt-2">Товары добавятся по текущим ценам и свободным остаткам. Комплекты — отдельными товарами.</div>
+            </form>
+        <?php endif; ?>
 		<div class="col-md-12 cart-block" <?php if(!empty($_SESSION['cart'])){ ?>style="display:block"<?php }else{ ?>style="display:none"<?php } ?>>
 			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm">
 				<div class="checkout-steps mb-3">
@@ -54,6 +71,14 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 								<?php unset($_SESSION['cart.notice']); ?>
 							<?php endif; ?>
 
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button type="button" class="btn btn-outline-secondary js-clear-cart">Очистить корзину</button>
+                                <?php if ($userId): ?>
+                                    <button type="submit" class="btn btn-outline-primary" form="saveCartLater" data-cart-confirm="Перенести все товары в избранное и очистить корзину? В избранном сохраняются товары без количества и состава комплектов.">Сохранить для позже</button>
+                                <?php else: ?>
+                                    <a class="btn btn-outline-primary" href="<?= PATH ?>/user/login">Войти и сохранить для позже</a>
+                                <?php endif; ?>
+                            </div>
 							<!-- сюда будет подмена HTML при +/- -->
 							<div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
 								<?php require __DIR__ . '/cart_table.php'; ?>
@@ -104,9 +129,10 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 								<hr>
 
 								<div class="d-flex justify-content-between align-items-center" style="font-size:18px;">
-									<span><b>Итого</b></span>
-									<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b>
+									<span><b>Стоимость товаров</b></span>
+									<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b><span class="visually-hidden"> — стоимость товаров</span>
 								</div>
+<div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
 								</div>
 
@@ -120,7 +146,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 
                         <div id="cartCheckoutDock" class="cart-checkout-dock" hidden aria-label="Оформление заказа">
                             <div class="cart-checkout-dock__total">
-                                <span>Итого</span>
+                                <span>Товары</span>
                                 <strong class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></strong>
                             </div>
                             <button type="button" class="btn btn-success" id="btnDockToStep2">К оформлению</button>
@@ -276,9 +302,10 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 									<hr>
 
 									<div class="d-flex justify-content-between align-items-center" style="font-size:18px;">
-										<span><b>Итого</b></span>
-										<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b>
+										<span><b>Стоимость товаров</b></span>
+										<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b><span class="visually-hidden"> — стоимость товаров</span>
 									</div>
+<div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
 									</div>
 
@@ -530,9 +557,10 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
           <hr>
 
           <div class="d-flex justify-content-between align-items-center" style="font-size:18px;">
-            <span><b>Итого</b></span>
-            <b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b>
+            <span><b>Стоимость товаров</b></span>
+            <b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b><span class="visually-hidden"> — стоимость товаров</span>
           </div>
+<div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
         </div>
 
