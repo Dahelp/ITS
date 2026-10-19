@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261019-2">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261019-3">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
