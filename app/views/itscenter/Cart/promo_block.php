@@ -44,6 +44,9 @@
 										Промокод применён
 									</div>
                                     <div class="small text-success mt-2 js-promo-savings" hidden></div>
+                                    <div class="small mt-2">
+                                      <a href="<?= PATH ?>/promo/hochesh-2-skidki-na-ves-zakaz-zhmi" target="_blank" rel="noopener">Где взять промокод? Условия акции</a>
+                                    </div>
                                     <?php if ($compusers && (int)$compusers->tip === 2): ?>
                                       <div class="small text-muted mt-2">Цены для вашей компании уже учтены в стоимости товаров.</div>
                                     <?php endif; ?>

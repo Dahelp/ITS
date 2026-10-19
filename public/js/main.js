@@ -700,7 +700,7 @@ document.addEventListener('click', function(e){
       block.find('.js-apply-promo').toggle(!applied).prop('disabled', applied);
       block.find('.js-clear-promo').toggle(applied).prop('disabled', !applied);
       var message = st.promoMsg || (applied ? 'Промокод «' + st.promoCode + '» применён' : '');
-      block.find('.js-promo-message').toggle(!!message).css('color', applied ? '#16834b' : '#b42318').text(message);
+      block.find('.js-promo-message').toggle(!!message).css('color', applied && !(st.promoMsg && !st.promoOk) ? '#16834b' : '#b42318').text(message);
       block.find('.js-promo-savings').prop('hidden', !applied).text(
         savings > 0 ? 'Скидка по промокоду: ' + formatMoneyWithCurrency(savings, st.sumText) :
         'Для текущих товаров дополнительная скидка по промокоду не начислена.'

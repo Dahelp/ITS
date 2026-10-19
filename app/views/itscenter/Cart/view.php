@@ -76,7 +76,6 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 							<div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
 								<?php require __DIR__ . '/cart_table.php'; ?>
 							</div>
-                            <?php require __DIR__ . '/promo_block.php'; ?>
 
 							</div>
 
@@ -129,6 +128,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 <div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
 								</div>
+                                <?php require __DIR__ . '/promo_block.php'; ?>
 
 							</div>
 							</aside>
