@@ -384,8 +384,6 @@ $categoryName = htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8');
                        class="btn btn-danger pc-buy <?= !empty($modification) ? 'add-to-cart-mod' : 'add-to-cart-link' ?> korzina-<?= $pid ?> clear-korzina"
                        href="cart/add?id=<?= $pid ?>"
                        data-max="<?= $quantity ?>"
-                       data-bs-toggle="modal"
-                       data-bs-target="#exampleModalLive"
                        onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                         Купить
                     </a>
@@ -402,8 +400,6 @@ $categoryName = htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8');
                        class="btn btn-danger pc-buy <?= !empty($modification) ? 'add-to-cart-mod' : 'add-to-cart-link' ?> korzina-<?= $pid ?> clear-korzina"
                        href="cart/add?id=<?= $pid ?>"
                        data-max="<?= $quantity ?>"
-                       data-bs-toggle="modal"
-                       data-bs-target="#exampleModalLive"
                        onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                        style="display:none;">
                         Купить

@@ -65,7 +65,7 @@
 										</td>
 										<td style="display: table-cell;" class="btn-korz">
 											<?php if($item["quantity"]>0) { ?>
-												<a data-id="<?=$item["product_id"]?>" class="btn btn-danger btn-shadow btn-cart add-to-cart-link korzina-<?=$item["product_id"]?> clear-korzina" href="cart/add?id=<?=$item["product_id"]?>" data-max="<?=$item["quantity"]?>" data-toggle="modal" data-target="#exampleModalLive">В корзину</a>
+												<a data-id="<?=$item["product_id"]?>" class="btn btn-danger btn-shadow btn-cart add-to-cart-link korzina-<?=$item["product_id"]?> clear-korzina" href="cart/add?id=<?=$item["product_id"]?>" data-max="<?=$item["quantity"]?>">В корзину</a>
 											<?php }else{ 
 												if($item["stock_status_id"]=="3") {
 											?>

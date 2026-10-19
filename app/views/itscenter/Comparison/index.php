@@ -305,9 +305,7 @@ if (!empty($activeCategoryIds)) {
                                                        class="btn btn-danger pc-buy add-to-cart-link korzina-<?= $pid; ?> clear-korzina"
                                                        style="display:none;"
                                                        href="cart/add?id=<?= $pid; ?>"
-                                                       data-max="<?= $qty ?>"
-                                                       data-toggle="modal"
-                                                       data-target="#exampleModalLive">
+                                                       data-max="<?= $qty ?>">
                                                         <i class="fas fa-cart-plus fs-base"></i> Купить
                                                     </a>
                                                     <button type="button"
@@ -320,9 +318,7 @@ if (!empty($activeCategoryIds)) {
                                                     <a data-id="<?= $pid; ?>"
                                                        class="btn btn-danger pc-buy add-to-cart-link korzina-<?= $pid; ?> clear-korzina"
                                                        href="cart/add?id=<?= $pid; ?>"
-                                                       data-max="<?= $qty ?>"
-                                                       data-toggle="modal"
-                                                       data-target="#exampleModalLive">
+                                                       data-max="<?= $qty ?>">
                                                         <i class="fas fa-cart-plus fs-base"></i> Купить
                                                     </a>
                                                     <button type="button"

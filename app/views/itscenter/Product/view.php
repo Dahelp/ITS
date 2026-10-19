@@ -443,8 +443,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            style="display:none;"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -476,8 +474,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?= $product->id; ?> clear-korzina"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -581,8 +577,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            style="display:none;"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -617,8 +611,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            class="btn btn-soft-primary me-2 add-to-cart-mod korzina-<?= $product->id; ?> clear-korzina"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -869,8 +861,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             data-complete-id="<?=$cpl["id"];?>"
                             class="btn btn-danger add-to-cart-complete korzina-<?=$cpl["id"];?> clear-korzina"
                             href="cart/addcomplete?id=<?=$prodid;?>"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLive"
                             onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                           >
                             <i class="fas fa-cart-plus"></i> Купить комплект
@@ -883,8 +873,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             data-complete-id="<?=$cpl["id"];?>"
                             class="btn btn-warning add-to-cart-complete korzina-<?=$cpl["id"];?> clear-korzina"
                             href="cart/addcomplete?id=<?=$prodid;?>"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLive"
                             onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                           >
                             <i class="fas fa-cart-plus"></i> Купить неполный комплект

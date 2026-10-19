@@ -274,8 +274,6 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                                     data-set="<?=(int)$complete->id?>"
                                                     class="btn btn-soft-primary me-2 add-to-cart-complete korzina-<?=(int)$complete->id?> clear-korzina"
                                                     href="cart/addcomplete?id=<?=htmlspecialchars($prodid ?? '', ENT_QUOTES)?>"
-                                                    data-toggle="modal"
-                                                    data-target="#exampleModalLive"
                                                     onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                                                 >
                                                     <i class="fas fa-cart-plus"></i> Купить комплект
@@ -288,8 +286,6 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                                     data-set="<?=(int)$complete->id?>"
                                                     class="btn btn-warning me-2 add-to-cart-complete korzina-<?=(int)$complete->id?> clear-korzina"
                                                     href="cart/addcomplete?id=<?=htmlspecialchars($prodid ?? '', ENT_QUOTES)?>"
-                                                    data-toggle="modal"
-                                                    data-target="#exampleModalLive"
                                                     onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                                                 >
                                                     <i class="fas fa-cart-plus"></i> Купить не полный комплект

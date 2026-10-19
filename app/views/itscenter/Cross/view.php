@@ -359,12 +359,12 @@ if (property_exists($product, 'reserve')) {
 							<?php if($product->quantity > 0): ?>
 							<?php if(isset($cart[$product->id])): ?>
 								<input class="form-control detail-quantity me-2 korzina-<?=$product->id;?> clear-korzina" style="display:none;caret-color:transparent;" name="quantity" type="number" value="1" min="1" max="<?=$product->quantity?>" data-max="<?=$product->quantity?>" data-min="1">
-								<a data-id="<?=$product->id;?>" class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?=$product->id;?> clear-korzina" style="display:none;" href="cart/add?id=<?=$product->id;?>" data-max="<?=$product->quantity?>" data-toggle="modal" data-target="#exampleModalLive"><i class="fas fa-cart-plus"></i> В корзину</a>
+								<a data-id="<?=$product->id;?>" class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?=$product->id;?> clear-korzina" style="display:none;" href="cart/add?id=<?=$product->id;?>" data-max="<?=$product->quantity?>"><i class="fas fa-cart-plus"></i> В корзину</a>
 								<button class="btn btn-warning one-click korzina-<?=$product->id;?> clear-korzina" style="display:none;" type="submit">Купить в 1 клик</button>
 								<button href="cart/show" onclick="getCart(); return false;" class="btn btn-success vkorzine-<?=$product->id;?> clear-vkorzine">В корзине</button>
 							<?php else: ?>
 								<input class="form-control detail-quantity me-2 korzina-<?=$product->id;?> clear-korzina" name="quantity" type="number" value="1" min="1" max="<?=$product->quantity?>" data-max="<?=$product->quantity?>" data-min="1">
-								<a data-id="<?=$product->id;?>" class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?=$product->id;?> clear-korzina" href="cart/add?id=<?=$product->id;?>" data-max="<?=$product->quantity?>" data-toggle="modal" data-target="#exampleModalLive"><i class="fas fa-cart-plus"></i> В корзину</a>
+								<a data-id="<?=$product->id;?>" class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?=$product->id;?> clear-korzina" href="cart/add?id=<?=$product->id;?>" data-max="<?=$product->quantity?>"><i class="fas fa-cart-plus"></i> В корзину</a>
 								<button class="btn btn-warning one-click korzina-<?=$product->id;?> clear-korzina" type="submit" data-toggle="modal" data-target="#Modalclick">Купить в 1 клик</button>
 								<button href="cart/show" onclick="getCart(); return false;" class="btn btn-success vkorzine-<?=$product->id;?> clear-vkorzine" style="display:none;">В корзине</button>
 							<?php endif; ?>

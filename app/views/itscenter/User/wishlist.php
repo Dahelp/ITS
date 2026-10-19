@@ -87,8 +87,6 @@ $companyTip = $comp_priceopt['tip'] ?? null;
 												class="btn btn-danger pc-buy add-to-cart-link korzina-<?=$item["product_id"]?> clear-korzina"
 												href="<?=PATH?>/cart/add?id=<?=$item["product_id"]?>"
 												data-max="<?=$item["quantity"]?>"
-												data-bs-toggle="modal"
-												data-bs-target="#exampleModalLive"
 												style="<?= $inCart ? 'display:none;' : '' ?>">
 												В корзину
 												</a>

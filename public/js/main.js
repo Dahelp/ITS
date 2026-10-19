@@ -516,14 +516,8 @@ document.addEventListener('click', function(e){
 
   var NS = '.cartStable';
   var inFlight = false;
-  // Bootstrap handles modal triggers during capture, before delegated jQuery handlers.
-  // Remove only cart-add modal triggers, including cards loaded after page startup.
+  // Legacy cart links also navigate directly to the cart page.
   window.addEventListener('click', function(e){
-    var addButton = e.target.closest('.add-to-cart-link, .add-to-cart-mod, .add-to-cart-complete');
-    if (addButton) {
-      addButton.removeAttribute('data-bs-toggle');
-      addButton.removeAttribute('data-bs-target');
-    }
     var cartLink = e.target.closest('.js-open-cart, #getCart, [onclick*="getCart("]');
     if (cartLink) {
       e.preventDefault();
