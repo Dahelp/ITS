@@ -1612,7 +1612,7 @@ document.addEventListener('click', function(e){
       var activeStep = form.querySelector('[data-step="' + step + '"]');
       var rows = activeStep.getBoundingClientRect();
       var button = original.getBoundingClientRect();
-      document.getElementById('btnDockToStep2').textContent = step === '3' ? 'Подтвердить заказ' : (step === '2' ? 'Далее' : 'К оформлению');
+      document.getElementById('btnDockToStep2').textContent = original.textContent.trim();
       var bottom = 0;
       ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
         var blocker = document.querySelector(selector);
