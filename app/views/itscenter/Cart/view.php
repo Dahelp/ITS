@@ -76,6 +76,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 							<div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
 								<?php require __DIR__ . '/cart_table.php'; ?>
 							</div>
+                            <?php require __DIR__ . '/promo_block.php'; ?>
 
 							</div>
 
@@ -304,52 +305,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 
 
 								<!-- промокод ниже -->
-								<div class="bg-light rounded-3 py-4 px-4 mt-3" id="promoBlock">
-									<div class="fw-semibold mb-2">Промокод</div>
-
-									<?php $promoApplied = trim((string)($_SESSION['promocart'] ?? '')); ?>
-
-									<div class="input-group">
-										<input
-										type="text"
-										class="form-control"
-										id="promoCodeInput"
-										placeholder="Введите промокод"
-										value="<?= htmlspecialchars($promoApplied, ENT_QUOTES, 'UTF-8') ?>"
-										<?= $promoApplied !== '' ? 'readonly' : '' ?>
-										>
-
-										<button
-										class="btn btn-outline-secondary"
-										type="button"
-										id="btnApplyPromo"
-										<?= $promoApplied !== '' ? 'disabled' : '' ?>
-										>
-										Применить
-										</button>
-
-										<button
-										class="btn btn-outline-danger"
-										type="button"
-										id="btnClearPromo"
-										style="<?= $promoApplied !== '' ? '' : 'display:none' ?>"
-										>
-										Сбросить
-										</button>
-									</div>
-
-									<div class="small text-muted mt-2">
-										Промокод не суммируется со скидкой на комплект.
-									</div>
-
-									<div
-										class="small mt-2"
-										id="promoMsg"
-										style="<?= $promoApplied !== '' ? '' : 'display:none' ?>; color:#16a34a;"
-									>
-										✅ Промокод применён
-									</div>
-								</div>
+                                <?php require __DIR__ . '/promo_block.php'; ?>
 
 							</div>
 							</aside>

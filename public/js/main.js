@@ -688,31 +688,24 @@ document.addEventListener('click', function(e){
   // Promo UI sync (Step2)
   // -------------------------
   function updatePromoUiFromCartTable(){
-    var $input = $('#promoCodeInput');
-    var $apply = $('#btnApplyPromo');
-    var $clear = $('#btnClearPromo');
-    var $msg   = $('#promoMsg');
-
-    if (!$input.length || !$apply.length) return;
     if (!$('#cartTableWrap').length) return;
-
     var st = readCartTableState();
-
-    if (st.promoApplied && st.promoCode){
-      $input.val(st.promoCode).prop('readonly', true);
-      $apply.prop('disabled', true);
-      if ($clear.length) $clear.show().prop('disabled', false);
-
-      if ($msg.length){
-        var m = st.promoMsg || '✅ Промокод применён';
-        $msg.show().css('color', st.promoOk ? '#16a34a' : '#ef4444').text(m);
-      }
-    } else {
-      $input.prop('readonly', false);
-      $apply.prop('disabled', false);
-      if ($clear.length) $clear.hide().prop('disabled', true);
-      if ($msg.length) $msg.hide().text('');
-    }
+    var applied = st.promoApplied && !!st.promoCode;
+    var savings = parseFloatSafe($('#cartTableWrap .promo-savings').text());
+    $('.js-promo-block').each(function(){
+      var block = $(this);
+      var input = block.find('.js-promo-code');
+      if (applied) input.val(st.promoCode);
+      input.prop('readonly', applied);
+      block.find('.js-apply-promo').toggle(!applied).prop('disabled', applied);
+      block.find('.js-clear-promo').toggle(applied).prop('disabled', !applied);
+      var message = st.promoMsg || (applied ? 'Промокод «' + st.promoCode + '» применён' : '');
+      block.find('.js-promo-message').toggle(!!message).css('color', applied ? '#16834b' : '#b42318').text(message);
+      block.find('.js-promo-savings').prop('hidden', !applied).text(
+        savings > 0 ? 'Скидка по промокоду: ' + formatMoneyWithCurrency(savings, st.sumText) :
+        'Для текущих товаров дополнительная скидка по промокоду не начислена.'
+      );
+    });
   }
 
   var cartUndoTimer;
@@ -980,6 +973,7 @@ document.addEventListener('click', function(e){
 
       // cart_table -> только wrap
       if (isCartTableHtml(res)){
+        if (endpointStr === '/cart/clearpromo') $('.js-promo-code').val('');
         if ($('#cartTableWrap').length){
           $('#cartTableWrap').html(res);
         }
@@ -1611,13 +1605,16 @@ document.addEventListener('click', function(e){
       requestCart(isComplete ? '/cart/deletecomplete' : '/cart/delete', payload);
     });
 
+    $('body').on('keydown' + NS, '.js-promo-code', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); $(this).closest('.js-promo-block').find('.js-apply-promo').trigger('click'); }
+    });
     // PROMO
-    $('body').on('click' + NS, '#btnApplyPromo', function(){
-      var code = $.trim($('#promoCodeInput').val() || '');
+    $('body').on('click' + NS, '.js-apply-promo', function(){
+      var code = $.trim($(this).closest('.js-promo-block').find('.js-promo-code').val() || '');
       requestCart('/cart/promocart', { val: code });
     });
 
-    $('body').on('click' + NS, '#btnClearPromo', function(){
+    $('body').on('click' + NS, '.js-clear-promo', function(){
       requestCart('/cart/clearpromo', {});
     });
   }

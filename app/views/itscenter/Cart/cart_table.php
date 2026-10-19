@@ -163,6 +163,8 @@ if ($discountServer < 0.01) $discountServer = 0.0;
 
 <span class="promo-code d-none"><?= htmlspecialchars((string)($_SESSION['promocart'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
 <span class="promo-code-val d-none"><?= htmlspecialchars((string)($_SESSION['promocart'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
+<?php $promoSavings = 0.0; foreach ($cart as $promoRow) { $promoSavings += max(0.0, (float)($promoRow['promo_discount'] ?? 0)) * (int)$promoRow['qty']; } ?>
+<span class="promo-savings d-none"><?= $promoSavings ?></span>
 <span class="promo-applied d-none"><?= !empty($_SESSION['promocart']) ? '1' : '0' ?></span>
 
 <span class="promo-state d-none"
