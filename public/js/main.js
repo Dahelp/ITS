@@ -1607,8 +1607,12 @@ document.addEventListener('click', function(e){
     var scheduled = false;
     function update(){
       scheduled = false;
-      var rows = table.getBoundingClientRect();
+      var step = form.getAttribute('data-current-step') || '1';
+      original = document.getElementById(step === '3' ? 'btnSubmitOrder' : (step === '2' ? 'btnToStep3' : 'btnToStep2'));
+      var activeStep = form.querySelector('[data-step="' + step + '"]');
+      var rows = activeStep.getBoundingClientRect();
       var button = original.getBoundingClientRect();
+      document.getElementById('btnDockToStep2').textContent = step === '3' ? 'Подтвердить заказ' : (step === '2' ? 'Далее' : 'К оформлению');
       var bottom = 0;
       ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
         var blocker = document.querySelector(selector);
@@ -1618,7 +1622,7 @@ document.addEventListener('click', function(e){
       });
       dock.style.setProperty('--cart-dock-bottom', bottom + 'px');
       var buttonVisible = button.top >= 0 && button.bottom <= window.innerHeight - bottom;
-      dock.hidden = form.getAttribute('data-current-step') !== '1' || !table.offsetHeight ||
+      dock.hidden = !activeStep.offsetHeight ||
         readCartTableState().qty <= 0 || rows.bottom <= 0 || rows.top >= window.innerHeight ||
         buttonVisible || bottom > window.innerHeight * .45;
     }
@@ -1635,10 +1639,53 @@ document.addEventListener('click', function(e){
     });
     document.getElementById('btnDockToStep2').addEventListener('click', function(){
       if (inFlight) return;
-      $('#btnToStep2').trigger('click');
+      var previousStep = form.getAttribute('data-current-step');
+      original.click();
       update();
-      document.getElementById('step2_delivery').scrollIntoView({ behavior:'smooth', block:'start' });
+      var nextStep = form.getAttribute('data-current-step');
+      if (previousStep !== nextStep) form.querySelector('[data-step="' + nextStep + '"]').scrollIntoView({ behavior:'smooth', block:'start' });
     });
+    schedule();
+  }
+
+  function initMobileCartAccess(){
+    var header = document.getElementById('headerShell');
+    var menu = document.querySelector('.right-menu');
+    var dock = null;
+    if (!document.getElementById('checkoutForm') && document.querySelector('.product-card, .product-order-actions')) {
+      dock = $('<div>', { id:'catalogCartDock', 'class':'cart-checkout-dock catalog-cart-dock', hidden:true, 'aria-label':'Ваша корзина' })
+        .append($('<div>', { 'class':'cart-checkout-dock__total' }).append($('<span>').text('В корзине, шт.')).append($('<strong>', { 'class':'js-catalog-cart-count' })))
+        .append($('<a>', { href:url('/cart/view'), 'class':'btn btn-success' }).text('Перейти в корзину'))
+        .appendTo('body')[0];
+    }
+    var scheduled = false;
+    function update(){
+      scheduled = false;
+      var mobile = window.matchMedia('(max-width: 992px)').matches;
+      var pastHeader = !header || header.getBoundingClientRect().bottom <= 0;
+      if (menu) menu.classList.toggle('is-past-header', pastHeader);
+      if (!dock) return;
+      var qty = parseIntSafe($('#cart-total').text());
+      dock.querySelector('.js-catalog-cart-count').textContent = String(qty);
+      var bottom = 0;
+      ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
+        var blocker = document.querySelector(selector);
+        if (!blocker || !blocker.offsetHeight || getComputedStyle(blocker).visibility === 'hidden') return;
+        var rect = blocker.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) bottom = Math.max(bottom, window.innerHeight - rect.top + 8);
+      });
+      dock.style.setProperty('--cart-dock-bottom', bottom + 'px');
+      dock.hidden = !mobile || qty <= 0 || bottom > window.innerHeight * .45;
+      document.body.classList.toggle('has-catalog-cart-dock', !dock.hidden);
+    }
+    function schedule(){ if (!scheduled) { scheduled = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', schedule, {passive:true});
+    window.addEventListener('resize', schedule);
+    $(document).on('cart:updated.mobileAccess', schedule);
+    var cookie = document.getElementById('cookie-bar');
+    if (cookie) new MutationObserver(schedule).observe(cookie,{ attributes:true, attributeFilter:['style','class'] });
+    if (dock && document.getElementById('cart-total')) new MutationObserver(schedule).observe(document.getElementById('cart-total'),{ childList:true,subtree:true });
+    if (window.ResizeObserver && header) new ResizeObserver(schedule).observe(header);
     schedule();
   }
 
@@ -1648,6 +1695,7 @@ document.addEventListener('click', function(e){
     bindHandlersOnce();
     initCheckoutSteps();
     initCartCheckoutDock();
+    initMobileCartAccess();
     if ($('.product-card, .product-order-actions').length && !$('#cartTableWrap').length) {
       requestCart('/cart/show', { ctx:'product' });
     }
