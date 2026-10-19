@@ -118,6 +118,14 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 
 
 
+                        <div id="cartCheckoutDock" class="cart-checkout-dock" hidden aria-label="Оформление заказа">
+                            <div class="cart-checkout-dock__total">
+                                <span>Итого</span>
+                                <strong class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></strong>
+                            </div>
+                            <button type="button" class="btn btn-success" id="btnDockToStep2">К оформлению</button>
+                        </div>
+
 						<!-- STEP 2 -->
 						<section id="step2_delivery" data-step="2" style="display:none">
 
