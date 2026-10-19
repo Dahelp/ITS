@@ -607,7 +607,7 @@ document.addEventListener('click', function(e){
   function setHeader(qty, sumText){
     qty = parseIntSafe(qty);
 
-    $('#cart-total').text(String(qty));
+    $('#cart-total').attr('data-sum', sumText || '0 ₽').text(String(qty));
 
     if ($('.cart-block').length && $('.cart-no-product').length){
       if (qty > 0){
@@ -1624,7 +1624,7 @@ document.addEventListener('click', function(e){
       });
       dock.style.setProperty('--cart-dock-bottom', bottom + 'px');
       var buttonVisible = button.top >= 0 && button.bottom <= window.innerHeight - bottom;
-      dock.hidden = !activeStep.offsetHeight ||
+      dock.hidden = !window.matchMedia('(max-width: 992px)').matches || !activeStep.offsetHeight ||
         readCartTableState().qty <= 0 ||
         buttonVisible || bottom > window.innerHeight * .45;
     }
@@ -1656,7 +1656,7 @@ document.addEventListener('click', function(e){
     var dock = null;
     if (!document.getElementById('checkoutForm') && document.querySelector('.product-card, .product-order-actions')) {
       dock = $('<div>', { id:'catalogCartDock', 'class':'cart-checkout-dock catalog-cart-dock', hidden:true, 'aria-label':'Ваша корзина' })
-        .append($('<div>', { 'class':'cart-checkout-dock__total' }).append($('<span>').text('В корзине, шт.')).append($('<strong>', { 'class':'js-catalog-cart-count' })))
+        .append($('<div>', { 'class':'cart-checkout-dock__total' }).append($('<span>').append('В корзине: ').append($('<b>', { 'class':'js-catalog-cart-count' })).append(' шт.')).append($('<strong>', { 'class':'js-catalog-cart-sum', 'aria-label':'Стоимость товаров' })))
         .append($('<a>', { href:url('/cart/view'), 'class':'btn btn-success' }).text('Перейти в корзину'))
         .appendTo('body')[0];
     }
@@ -1669,6 +1669,7 @@ document.addEventListener('click', function(e){
       if (!dock) return;
       var qty = parseIntSafe($('#cart-total').text());
       dock.querySelector('.js-catalog-cart-count').textContent = String(qty);
+      dock.querySelector('.js-catalog-cart-sum').textContent = $('#cart-total').attr('data-sum') || '0 ₽';
       var bottom = 0;
       ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
         var blocker = document.querySelector(selector);

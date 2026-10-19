@@ -129,7 +129,7 @@ if ($isAuth) {
 							   class="header-action-link js-open-cart">
 								<i class="fas fa-shopping-cart"></i>
 								<span>Корзина</span>
-								<span class="header-action-link__count" id="cart-total"><?= $cartQty ?></span>
+								<span class="header-action-link__count" id="cart-total" data-sum="<?= htmlspecialchars((string)($_SESSION['cart.currency']['symbol_left'] ?? '') . number_format((float)($_SESSION['cart.sum'] ?? 0), 0, '.', ' ') . (string)($_SESSION['cart.currency']['symbol_right'] ?? '₽'), ENT_QUOTES, 'UTF-8') ?>"><?= $cartQty ?></span>
 							</a>
 						</div>
 

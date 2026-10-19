@@ -74,9 +74,9 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                             <div class="d-flex flex-wrap gap-2 mb-3">
                                 <button type="button" class="btn btn-outline-secondary js-clear-cart">Очистить корзину</button>
                                 <?php if ($userId): ?>
-                                    <button type="submit" class="btn btn-outline-primary" form="saveCartLater" data-cart-confirm="Перенести все товары в избранное и очистить корзину? В избранном сохраняются товары без количества и состава комплектов.">Сохранить для позже</button>
+                                    <button type="submit" class="btn btn-outline-primary" form="saveCartLater" data-cart-confirm="Перенести все товары в избранное и очистить корзину? В избранном сохраняются товары без количества и состава комплектов.">Перенести товары в избранное</button>
                                 <?php else: ?>
-                                    <a class="btn btn-outline-primary" href="<?= PATH ?>/user/login">Войти и сохранить для позже</a>
+                                    <a class="btn btn-outline-primary" href="<?= PATH ?>/user/login">Войти для сохранения в избранное</a>
                                 <?php endif; ?>
                             </div>
 							<!-- сюда будет подмена HTML при +/- -->
@@ -146,8 +146,8 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 
                         <div id="cartCheckoutDock" class="cart-checkout-dock" hidden aria-label="Оформление заказа">
                             <div class="cart-checkout-dock__total">
-                                <span>Товары</span>
-                                <strong class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></strong>
+                                <span>В корзине: <b class="js-qty">0</b> шт.</span>
+                                <strong class="js-total" aria-label="Стоимость товаров"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></strong>
                             </div>
                             <button type="button" class="btn btn-success" id="btnDockToStep2">К оформлению</button>
                         </div>
