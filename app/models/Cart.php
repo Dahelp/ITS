@@ -443,6 +443,36 @@ class Cart extends AppModel {
 		$this->refreshCompleteState($completeId);
 	}
 	
+    public function rememberRemoved(string $key): void
+    {
+        if (empty($_SESSION['cart'][$key])) return;
+        $_SESSION['cart.undo'] = [
+            'key' => $key, 'row' => $_SESSION['cart'][$key],
+            'currency' => $_SESSION['cart.currency'] ?? [],
+            'promo' => $_SESSION['promocart'] ?? null,
+            'checkout' => $_SESSION['checkout_token'] ?? '',
+            'token' => bin2hex(random_bytes(24)), 'expires' => time() + 20,
+        ];
+    }
+
+    public function restoreRemoved(string $token): bool
+    {
+        $saved = $_SESSION['cart.undo'] ?? null;
+        if (!$saved || !hash_equals($saved['token'], $token)) return false;
+        unset($_SESSION['cart.undo']);
+        if ($saved['expires'] < time() || $saved['checkout'] !== ($_SESSION['checkout_token'] ?? '')) return false;
+        $key = $saved['key'];
+        // Do not overwrite a row that the buyer has already added again.
+        if (isset($_SESSION['cart'][$key])) return false;
+        if (empty($_SESSION['cart'])) {
+            $_SESSION['cart.currency'] = $saved['currency'];
+            if ($saved['promo'] !== null) $_SESSION['promocart'] = $saved['promo'];
+        }
+        $_SESSION['cart'][$key] = $saved['row'];
+        $this->setQuantity($key, (int)$saved['row']['qty']);
+        return isset($_SESSION['cart'][$key]);
+    }
+
     public function availableForRow($id, array $item): int
     {
         $productId = (int)($item['product_id'] ?? $this->getProductIdFromKey((string)$id));

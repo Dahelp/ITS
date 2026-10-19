@@ -341,6 +341,16 @@ class CartController extends AppController {
         return;
     }
 
+    public function restoreAction(): void
+    {
+        $this->sessOpenRW();
+        if (!$this->isAjax()) $this->redirectCartView(302);
+        $restored = (new Cart())->restoreRemoved((string)($_GET['token'] ?? ''));
+        if (!$restored) $_SESSION['cart.quantity_notice'] = 'Не удалось восстановить товар. Проверьте наличие и добавьте его из каталога.';
+        $this->loadView('cart_table');
+        $this->sessClose();
+    }
+
     public function deletecartAction()
     {
         $this->sessOpenRW();
@@ -353,6 +363,7 @@ class CartController extends AppController {
 
         if ($id !== null && isset($_SESSION['cart'][$id])) {
             $cart = new Cart();
+            $cart->rememberRemoved((string)$id);
             $cart->deleteItem($id);
         }
 
@@ -374,6 +385,7 @@ class CartController extends AppController {
 
         if ($id !== null && isset($_SESSION['cart'][$id])) {
             $cart = new Cart();
+            $cart->rememberRemoved((string)$id);
             $cart->deletecompleteItem($id, $completeId);
         }
 
@@ -632,7 +644,7 @@ class CartController extends AppController {
     private function emptyCart(): void
     {
         foreach (['cart', 'cart.qty', 'cart.sum', 'cart.weight', 'cart.volume', 'cart.currency',
-                  'promocart', 'promo_state', 'cart.notice', 'cart.quantity_notice'] as $key) {
+                  'promocart', 'promo_state', 'cart.notice', 'cart.quantity_notice', 'cart.undo'] as $key) {
             unset($_SESSION[$key]);
         }
     }

@@ -715,10 +715,29 @@ document.addEventListener('click', function(e){
     }
   }
 
+  var cartUndoTimer;
+  function syncCartUndo(){
+    clearTimeout(cartUndoTimer);
+    $('#cartUndoNotice').remove();
+    var marker = $('#cartTableWrap .cart-undo-data').first();
+    var remaining = Number(marker.attr('data-expires')) * 1000 - Date.now();
+    if (!marker.length || remaining <= 0) return;
+    var notice = $('<div>', { id:'cartUndoNotice', 'class':'cart-undo-notice', role:'status' })
+      .append($('<span>').text('Товар удалён'))
+      .append($('<button>', { type:'button', 'class':'btn btn-light btn-sm' }).text('Восстановить'))
+      .appendTo('body');
+    notice.find('button').on('click', function(){
+      if (inFlight) return;
+      requestCart('/cart/restore', { token:marker.attr('data-token') });
+    });
+    cartUndoTimer = setTimeout(function(){ notice.remove(); }, remaining);
+  }
+
   function syncAllFromCartTable(){
     updateHeaderFromCartTable();
     updateSummaryFromCartTable();
     updatePromoUiFromCartTable();
+    syncCartUndo();
   }
 
   // -------------------------
@@ -972,6 +991,10 @@ document.addEventListener('click', function(e){
         if (endpointStr.indexOf('/cart/pluscart') !== -1) showAddedNotice('Количество увеличено');
         else if (endpointStr.indexOf('/cart/minuscart') !== -1) showAddedNotice('Количество уменьшено');
         else if (endpointStr === '/cart/quantity') showAddedNotice('Количество обновлено');
+        else if (endpointStr === '/cart/restore') {
+          var restoreWarning = $.trim($('#cartTableWrap .alert-warning').text());
+          showAddedNotice(restoreWarning || 'Товар восстановлен', !!restoreWarning);
+        }
 
         // если после обновления корзина пуста — переключаем пустое состояние страницы
         if (readCartTableState().qty <= 0) {
@@ -1528,6 +1551,7 @@ document.addEventListener('click', function(e){
       e.preventDefault();
       var $btn = $(this);
       var isComplete = $btn.hasClass('del-item-complete-cart');
+      if (!window.confirm('Удалить этот товар из корзины?')) return;
 
       var payload = { id: $btn.data('id') };
       if (isComplete){

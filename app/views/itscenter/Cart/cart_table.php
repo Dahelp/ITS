@@ -150,6 +150,9 @@ if ($discountServer < 0.01) $discountServer = 0.0;
 // HIDDEN MARKERS (РОВНО 1 РАЗ)
 // -------------------------
 ?>
+<?php if (!empty($_SESSION['cart.undo']) && $_SESSION['cart.undo']['expires'] >= time()): ?>
+<span class="cart-undo-data d-none" data-token="<?= htmlspecialchars($_SESSION['cart.undo']['token'], ENT_QUOTES, 'UTF-8') ?>" data-expires="<?= (int)$_SESSION['cart.undo']['expires'] ?>"></span>
+<?php endif; ?>
 <!-- скрытые значения для JS пересчёта -->
 <span class="cart-qty d-none"><?= $cartQty ?></span>
 <span class="cart-sum d-none"><?= htmlspecialchars($curL . $cartSum . $curR, ENT_QUOTES, 'UTF-8') ?></span>
