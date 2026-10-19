@@ -605,10 +605,13 @@ class CartController extends AppController {
     public function repeatAction(): void
     {
         $userId = $this->requireCartActionUser();
-        // Never trust a client-supplied order or its historical prices.
-        $orderId = (int)\R::getCell('SELECT id FROM `order` WHERE user_id = ? ORDER BY id DESC LIMIT 1', [$userId]);
+        // Accept a selected order only after checking ownership; prices remain current.
+        $selectedId = (int)($_POST['order_id'] ?? 0);
+        $orderId = $selectedId > 0 ? (int)\R::getCell(
+            'SELECT id FROM `order` WHERE user_id = ? AND id = ?', [$userId, $selectedId]
+        ) : 0;
         if (!$orderId) {
-            $_SESSION['cart.action_notice'] = 'У вас пока нет прошлых заказов.';
+            $_SESSION['cart.action_notice'] = 'Заказ не найден или недоступен для повторения.';
             $this->redirectCartView(303);
         }
         $snapshot = $_SESSION;

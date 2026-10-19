@@ -1,11 +1,15 @@
 <?php
 declare(strict_types=1);
+namespace app\models { class Cart {} }
+namespace {
 // Run each scenario in its own PHP process: controller redirects intentionally exit.
 require dirname(__DIR__) . '/vendor/autoload.php';
 define('PATH', 'https://example.test');
 $scenario = $argv[1] ?? 'save';
 class R {
     public static $inserts = [];
+    public static $orderRead = false;
+    public static $ownerChecked = false;
     public static $rolledBack = false;
     public static function begin() {}
     public static function commit() {}
@@ -16,8 +20,15 @@ class R {
         self::$inserts[] = $args;
     }
     public static function getCell($sql, $args) {
-        if ($args !== [42] || strpos($sql, 'WHERE user_id = ?') === false) throw new RuntimeException('Order owner filter missing');
-        return 0;
+        $expected = $GLOBALS['scenario'] === 'foreign' ? [42, 999] : [42, 7312];
+        if ($args !== $expected || strpos($sql, 'WHERE user_id = ? AND id = ?') === false) throw new RuntimeException('Selected order owner filter missing');
+        self::$ownerChecked = true;
+        return $GLOBALS['scenario'] === 'foreign' ? 0 : 7312;
+    }
+    public static function getAll($sql, $args) {
+        if ($args !== [7312] || !self::$ownerChecked) throw new RuntimeException('Wrong order repeated');
+        self::$orderRead = true;
+        return [];
     }
 }
 // No real session files or database writes in this isolated controller test.
@@ -36,14 +47,21 @@ $_SESSION = ['user' => ['id' => 42], 'checkout_token' => 'token', 'cart.qty' => 
 $_POST = ['checkout_token' => 'token'];
 if ($scenario === 'guest') unset($_SESSION['user']);
 if ($scenario === 'csrf') $_POST['checkout_token'] = 'wrong';
+if ($scenario === 'repeat') $_POST['order_id'] = 7312;
+if ($scenario === 'foreign') $_POST['order_id'] = 999;
 register_shutdown_function(static function() use ($scenario) {
     $ok = false;
     if ($scenario === 'save') $ok = !isset($_SESSION['cart']) && R::$inserts === [[1, 42]];
     if ($scenario === 'failure') $ok = isset($_SESSION['cart']['s5_2']) && R::$rolledBack;
-    if (in_array($scenario, ['guest', 'csrf', 'get', 'repeat'], true)) $ok = isset($_SESSION['cart']['s5_2']) && R::$inserts === [];
+    if (in_array($scenario, ['guest', 'csrf', 'get', 'repeat', 'foreign', 'missing'], true)) $ok = isset($_SESSION['cart']['s5_2']) && R::$inserts === [];
+    if ($scenario === 'repeat') $ok = $ok && R::$ownerChecked && R::$orderRead && strpos($_SESSION['cart.action_notice'], 'Заказ №7312:') === 0;
+    if ($scenario === 'foreign') $ok = $ok && R::$ownerChecked && !R::$orderRead;
+    if ($scenario === 'missing') $ok = $ok && !R::$ownerChecked && !R::$orderRead;
     if (!$ok) { fwrite(STDERR, 'FAILED: ' . $scenario . "\n"); exit(1); }
     echo 'CartActionsTest ' . $scenario . " OK\n";
 });
 $controller = (new ReflectionClass(app\controllers\CartController::class))->newInstanceWithoutConstructor();
-if ($scenario === 'repeat') $controller->repeatAction();
+if (in_array($scenario, ['repeat', 'foreign', 'missing'], true)) $controller->repeatAction();
 else $controller->saveLaterAction();
+
+}

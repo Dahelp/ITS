@@ -34,13 +34,6 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                 <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($_SESSION['checkout_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
             </form>
         <?php endif; ?>
-        <?php if ($userId && \R::count('order', 'user_id = ?', [$userId])): ?>
-            <form method="post" action="<?= PATH ?>/cart/repeat" class="mb-3" data-cart-confirm="Добавить товары из последнего заказа к текущей корзине? Цены и доступное количество будут актуальными. Комплекты добавляются отдельными товарами.">
-                <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($_SESSION['checkout_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-                <button type="submit" class="btn btn-outline-primary">Повторить прошлый заказ</button>
-                <div class="small text-muted mt-2">Товары добавятся по текущим ценам и свободным остаткам. Комплекты — отдельными товарами.</div>
-            </form>
-        <?php endif; ?>
 		<div class="col-md-12 cart-block" <?php if(!empty($_SESSION['cart'])){ ?>style="display:block"<?php }else{ ?>style="display:none"<?php } ?>>
 			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm">
 				<div class="checkout-steps mb-3">

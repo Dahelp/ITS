@@ -411,8 +411,20 @@ class UserController extends AppController {
         
     }
 
+    private function orderRepeatToken(): string
+    {
+        $this->sessWriteOpen();
+        if (empty($_SESSION['checkout_token'])) {
+            $_SESSION['checkout_token'] = bin2hex(random_bytes(32));
+        }
+        $token = (string)$_SESSION['checkout_token'];
+        $this->sessClose();
+        return $token;
+    }
+
 	public function ordersAction(){
 		if (!User::checkAuth()) redirect('');
+        $cartActionToken = $this->orderRepeatToken();
 
 		$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 		$perpage = \ishop\App::$app->getProperty('pagination');
@@ -445,11 +457,12 @@ class UserController extends AppController {
 		);
 
 		$this->setMeta('История заказов');
-		$this->set(compact('orders', 'pagination', 'total', 'page'));
+		$this->set(compact('orders', 'pagination', 'total', 'page', 'cartActionToken'));
 	}
 	
 	public function orderAction(){
 		if (!User::checkAuth()) redirect('');
+        $cartActionToken = $this->orderRepeatToken();
 
 		$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 		if ($id <= 0) {
@@ -485,7 +498,7 @@ class UserController extends AppController {
 		$status = \R::findOne('order_status', 'id = ?', [$order_info->status]);
 
 		$this->setMeta('Просмотр заказа');
-		$this->set(compact('order', 'order_info', 'status', 'id'));
+		$this->set(compact('order', 'order_info', 'status', 'id', 'cartActionToken'));
 	}
 	
 	public function wishlistAction() {

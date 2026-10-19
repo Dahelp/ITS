@@ -65,6 +65,11 @@
                                                 <?= $curr['symbol_left']; ?> <?= number_format((float)$order['sum'], 2, '.', ' '); ?> <?= $curr['symbol_right']; ?>
                                             </td>
                                             <td class="text-right footable-last-visible" style="display: table-cell;">
+                                                <form method="post" action="<?= PATH ?>/cart/repeat" class="d-inline-block" data-cart-confirm="Добавить товары из этого заказа к текущей корзине? Цены и свободные остатки будут актуальными. Комплекты добавятся отдельными товарами.">
+    <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($cartActionToken, ENT_QUOTES, 'UTF-8') ?>">
+    <input type="hidden" name="order_id" value="<?= (int)$order['id'] ?>">
+    <button type="submit" class="btn btn-outline-primary btn-sm">Повторить заказ</button>
+</form>
                                                 <a href="<?= PATH ?>/user/order?id=<?= (int)$order['id']; ?>" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="Детали заказа">
                                                     <i class="far fa-eye"></i>
                                                 </a>
