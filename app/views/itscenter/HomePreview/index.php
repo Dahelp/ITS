@@ -6,9 +6,9 @@
 		<div class="row">
 			<div class="uslugi-name"><h3>Услуги</h3></div>
 			<div class="uslugi-block">
-				<div class="dostavka">					
+				<div class="dostavka">
 					<div class="uls-nm">Доставка товаров по РФ</div>
-					<a class="btn" href="services/dostavka">Подробнее</a>					
+					<a class="btn" href="services/dostavka">Подробнее</a>
 				</div>
 				<div class="shinamontazh">
 					<div class="uls-nm">Шиномонтаж шин для спецтехники</div>
@@ -16,7 +16,7 @@
 				</div>
 				<div class="oshipovka">
 					<div class="uls-nm">Ошиповка и нарезка протектора шин для спецтехники</div>
-					<a class="btn" href="services/oshipovka-i-narezka-protektora-shin-dlya-spectehniki">Подробнее</a>					
+					<a class="btn" href="services/oshipovka-i-narezka-protektora-shin-dlya-spectehniki">Подробнее</a>
 				</div>
 			</div>
 		</div>
@@ -45,21 +45,21 @@
 			<div class="col-md-4 pch_img">
 				<img src="images/advantages.webp" width="487" height="534" alt="Почему клиенты выбирают ИТС-ЦЕНТР?" title="Почему клиенты выбирают ИТС-ЦЕНТР?">
 			</div>
-			<div class="pch_b col-md-8">				
-				<div class="pch_info">				
+			<div class="pch_b col-md-8">
+				<div class="pch_info">
 					<div class="pch_info_1 col-md-12">
-						<div class="pch_td_1 col-md-6">							
+						<div class="pch_td_1 col-md-6">
 							<div class="pch_td_2"><h4>Сотрудничаем с компаниями</h4><p>Работаем на рынке более 15 лет. Более 25000 довольных клиентов. Заключаем договора. Предзаказ на любые объемы продукции.</p></div>
 						</div>
-						<div class="pch_td_1 col-md-6">							
+						<div class="pch_td_1 col-md-6">
 							<div class="pch_td_2"><h4>Акции и скидки</h4><p>Мы поставщики, по-этому у нас низкие цены. Скидки постоянным и оптовым клиентам. Большой ассортимент товаров по акционной цене.</p></div>
 						</div>
 					</div>
 					<div class="pch_info_1 col-md-12">
-						<div class="pch_td_1 col-md-6">							
+						<div class="pch_td_1 col-md-6">
 							<div class="pch_td_2"><h4>Доставка по России</h4><p>Ежедневные отправки транспортными компаниями. Бесплатная доставка до ТК. Самовывоз: Климовск (Московская область).</p></div>
 						</div>
-						<div class="pch_td_1 col-md-6">						
+						<div class="pch_td_1 col-md-6">
 							<div class="pch_td_2"><h4>Оплата</h4><p>Вы можете оплатить выбранный вами товар наличными в пункте самовывоза. От организаций принимаем безналичные переводы.</p></div>
 						</div>
 					</div>
