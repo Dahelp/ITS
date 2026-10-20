@@ -1,0 +1,54 @@
+<?php
+namespace app\services;
+
+class HomePreviewCatalog
+{
+    public static function tree(array $categories, array $counts): array
+    {
+        $map = $children = $direct = [];
+        foreach ($categories as $category) {
+            $map[(int)$category['id']] = $category;
+            $children[(int)$category['parent_id']][] = (int)$category['id'];
+        }
+        foreach ($counts as $count) $direct[(int)$count['category_id']] = (int)$count['total'];
+        foreach ($map as $root => &$category) {
+            $pending = [$root]; $seen = []; $total = 0;
+            while ($pending) {
+                $id = array_pop($pending);
+                if (isset($seen[$id])) continue;
+                $seen[$id] = $id;
+                $total += $direct[$id] ?? 0;
+                foreach ($children[$id] ?? [] as $child) $pending[] = $child;
+            }
+            $category['total'] = $total;
+            $category['ids'] = array_values($seen);
+        }
+        unset($category);
+        return $map;
+    }
+
+    public static function load(): array
+    {
+        $groups = self::tree(
+            \R::getAll("SELECT id, parent_id, name, alias, img FROM category WHERE hide = 'show' OR hide = '' OR hide IS NULL ORDER BY position, id"),
+            \R::getAll("SELECT category_id, COUNT(*) AS total FROM product WHERE hide = 'show' GROUP BY category_id")
+        );
+        foreach ([1, 2] as $root) {
+            if (empty($groups[$root])) continue;
+            $ids = implode(',', array_map('intval', $groups[$root]['ids']));
+            $groups[$root]['sizes'] = \R::getAll("SELECT av.id, av.value, av.alias, COUNT(DISTINCT p.id) AS total
+                FROM attribute_value av JOIN attribute_product ap ON ap.attr_id = av.id JOIN product p ON p.id = ap.product_id
+                WHERE av.attr_group_id = 2 AND av.hide = 'show' AND av.alias <> '' AND p.hide = 'show' AND p.category_id IN ($ids)
+                GROUP BY av.id, av.value, av.alias ORDER BY total DESC, av.id LIMIT 8");
+        }
+        if (!empty($groups[2])) {
+            // Every ATV card is a real tread-pattern filter with a real product image.
+            $groups[2]['patterns'] = \R::getAll("SELECT av.id, av.value, av.alias, COUNT(DISTINCT p.id) AS total,
+                MIN(NULLIF(p.img, '')) AS img
+                FROM attribute_value av JOIN attribute_product ap ON ap.attr_id = av.id JOIN product p ON p.id = ap.product_id
+                WHERE av.attr_group_id = 3 AND av.hide = 'show' AND av.alias <> '' AND p.hide = 'show' AND p.category_id = 2
+                GROUP BY av.id, av.value, av.alias ORDER BY total DESC, av.id LIMIT 4");
+        }
+        return $groups;
+    }
+}
