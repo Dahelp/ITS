@@ -3,10 +3,13 @@ namespace app\controllers;
 
 class HomePreviewController extends MainController
 {
+    public $layout = 'home-preview';
+
     public function indexAction()
     {
         header('X-Robots-Tag: noindex, nofollow, noarchive', true);
         parent::indexAction();
+        $this->data['metaRobots'] = 'noindex, nofollow';
         $this->data['previewCatalog'] = \app\services\HomePreviewCatalog::load();
         $this->setMeta('Тестовая главная — ИТС-Центр', 'Предварительная версия каталога шин', '', 'ИТС-Центр', '', PATH . '/');
     }

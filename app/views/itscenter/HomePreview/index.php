@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/home-preview.css?v=<?= (int)filemtime(WWW . '/css/home-preview.css') ?>">
 <?php require __DIR__ . '/catalog.php'; ?>
 <script src="<?= PATH ?>/js/home-preview.js?v=<?= (int)filemtime(WWW . '/js/home-preview.js') ?>" defer></script>
 <div class="uslugi-inner">

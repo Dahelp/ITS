@@ -36,10 +36,13 @@ class HomePreviewCatalog
         foreach ([1, 2] as $root) {
             if (empty($groups[$root])) continue;
             $ids = implode(',', array_map('intval', $groups[$root]['ids']));
+            $sizeOrder = $root === 1
+                ? "CASE av.value WHEN '10-16.5' THEN 1 WHEN '12-16.5' THEN 2 WHEN '12.5/80-18' THEN 3 WHEN '16.9-28' THEN 4 WHEN '11-16.5' THEN 5 WHEN '14-17.5' THEN 6 ELSE 7 END, "
+                : '';
             $groups[$root]['sizes'] = \R::getAll("SELECT av.id, av.value, av.alias, COUNT(DISTINCT p.id) AS total
                 FROM attribute_value av JOIN attribute_product ap ON ap.attr_id = av.id JOIN product p ON p.id = ap.product_id
                 WHERE av.attr_group_id = 2 AND av.hide = 'show' AND av.alias <> '' AND p.hide = 'show' AND p.category_id IN ($ids)
-                GROUP BY av.id, av.value, av.alias ORDER BY total DESC, av.id LIMIT 8");
+                GROUP BY av.id, av.value, av.alias ORDER BY {$sizeOrder}total DESC, av.id LIMIT 8");
         }
         if (!empty($groups[2])) {
             // Every ATV card is a real tread-pattern filter with a real product image.

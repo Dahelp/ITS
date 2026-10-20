@@ -4,7 +4,7 @@
     var root = document.querySelector('.hp-catalog');
     if (!root) return;
     var tabs = Array.from(root.querySelectorAll('[data-hp-tab]'));
-    var sectionLink = root.querySelector('[data-hp-section-link]');
+    var sectionLinks = root.querySelectorAll('[data-hp-section-link]');
     function activate(tab, focus){
       var active = tab.getAttribute('data-hp-tab');
       tabs.forEach(function(item){
@@ -15,9 +15,11 @@
       root.querySelectorAll('[data-hp-panel]').forEach(function(panel){
         panel.hidden = panel.getAttribute('data-hp-panel') !== active;
       });
+      sectionLinks.forEach(function(sectionLink){
       sectionLink.href = active === 'atv' ? '/category/atv' : '/category/industrialnye-shiny';
       sectionLink.replaceChildren(document.createTextNode(active === 'atv' ? 'Все шины для квадроциклов ' : 'Все индустриальные шины '));
       var arrow = document.createElement('span'); arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = '→'; sectionLink.appendChild(arrow);
+      });
       if (focus) tab.focus();
     }
     tabs.forEach(function(tab, index){
