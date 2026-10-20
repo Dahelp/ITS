@@ -44,7 +44,7 @@ $industrialCards = [9 => ['Для минипогрузчиков', 'skid-steer.w
         <?php foreach ($previewCatalog[2]['patterns'] ?? [] as $pattern): ?>
         <a class="hp-tile hp-tile--atv" href="<?= PATH ?>/category/atv/<?= $escape($pattern['alias']) ?>">
           <div class="hp-tile__heading"><div><h2><?= $escape($pattern['value']) ?></h2><span class="hp-tile__count"><?= $escape($countLabel($pattern['total'])) ?></span></div><span class="hp-arrow" aria-hidden="true">→</span></div>
-          <span class="hp-tile__visual"><img class="hp-tile__image" src="<?= PATH ?><?= $escape($pattern['image_url']) ?>" width="400" height="400" alt="Шины ATV <?= $escape($pattern['value']) ?>" loading="lazy" decoding="async"></span>
+          <span class="hp-tile__visual"><svg class="hp-tile__image hp-tire-studio" viewBox="<?= $escape($pattern['image_viewbox']) ?>" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Шина ATV <?= $escape($pattern['value']) ?>"><image href="<?= PATH ?><?= $escape($pattern['image_url']) ?>" width="800" height="800"/></svg></span>
         </a>
         <?php endforeach; ?>
       </div>
@@ -58,7 +58,7 @@ $industrialCards = [9 => ['Для минипогрузчиков', 'skid-steer.w
 
     <div class="hp-accessories"><div class="hp-accessories__heading"><h2>Сопутствующие товары</h2></div><div class="hp-accessories__grid">
       <?php foreach ([25 => ['Камеры и ободные ленты', 'cat-5.webp'], 3 => ['Диски', 'cat-3.webp'], 4 => ['Фильтры', 'cat-4.jpg']] as $id => $item): if (empty($previewCatalog[$id])) continue; ?>
-      <a class="hp-accessory" href="<?= PATH ?>/category/<?= $escape($previewCatalog[$id]['alias']) ?>"><?php if ($id === 3): ?><img class="hp-accessory__image hp-accessory__image--rims" src="<?= PATH ?>/images/home-preview/wheel-rims.webp" width="800" height="533" alt="" loading="lazy"><?php else: ?><span class="hp-accessory__image hp-accessory__image--<?= $id ?>" aria-hidden="true"></span><?php endif; ?><span><strong><?= $item[0] ?></strong><small><?= $escape($countLabel($previewCatalog[$id]['total'])) ?></small><span class="hp-arrow" aria-hidden="true">→</span></span></a>
+      <a class="hp-accessory" href="<?= PATH ?>/category/<?= $escape($previewCatalog[$id]['alias']) ?>"><span class="hp-accessory__media"><?php if ($id === 3): ?><img class="hp-accessory__image hp-accessory__image--rims" src="<?= PATH ?>/images/home-preview/wheel-rims.webp" width="800" height="533" alt="" loading="lazy"><?php else: ?><span class="hp-accessory__image hp-accessory__image--<?= $id ?>" aria-hidden="true"></span><?php endif; ?></span><span class="hp-accessory__text"><strong><?= $item[0] ?></strong><small><?= $escape($countLabel($previewCatalog[$id]['total'])) ?></small><span class="hp-arrow" aria-hidden="true">→</span></span></a>
       <?php endforeach; ?>
     </div></div>
   </div>
