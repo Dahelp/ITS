@@ -3,8 +3,6 @@ namespace app\controllers;
 
 class HomePreviewController extends MainController
 {
-    public $layout = 'home-preview';
-
     public function indexAction()
     {
         header('X-Robots-Tag: noindex, nofollow, noarchive', true);
