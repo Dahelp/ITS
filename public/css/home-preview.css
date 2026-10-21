@@ -136,6 +136,17 @@
 .decide.decide--pro .decide-figure img.decide-right-wm[src$="callback-mascot-red.webp"]{opacity:1;height:auto}
 /* Phone spacing and touch targets for the approved homepage catalogue. */
 .home-help-toggle{display:none}
+.hp-services>.container,.hp-company>.container{padding:40px;box-sizing:border-box}
+.hp-services>.container>.row{margin:0}
+.hp-services>.container>.row>.uslugi-name,.hp-services>.container>.row>.uslugi-block{padding-left:0;padding-right:0}
+.hp-services .uslugi-name h3{margin:0;padding-bottom:20px}
+.hp-company>.container>h3{margin:0}
+.hp-company .ocomp_info{padding:20px 24px 0 0;min-width:0}
+.hp-company .ocomp_info p:last-child{margin-bottom:0}
+@media(max-width:767px){
+ .hp-services>.container,.hp-company>.container{padding:28px}
+ .hp-company .ocomp_info{padding:20px 0 0}
+}
 @media(max-width:767px){
  .right-menu.home-help-menu{top:auto!important;right:12px!important;bottom:calc(14px + env(safe-area-inset-bottom));transform:none!important;background:transparent;border-radius:0;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:1000}
  .home-help-menu .home-help-toggle{display:block;margin-left:auto;min-height:44px;padding:10px 16px;border:0;border-radius:24px;background:#b93429;color:#fff;font:600 14px/24px Arial,sans-serif;box-shadow:0 4px 16px #172a4040}

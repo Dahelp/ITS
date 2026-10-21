@@ -1,7 +1,7 @@
 <?php
 $tell_zv = $tell_zv ?? \ishop\App::options('option_telefon');
 $telefon_href = str_replace(['(', ')', ' ', '-'], '', (string)$tell_zv);
-$callbackMascot = in_array($this->route['controller'] ?? '', ['Main', 'HomePreview'], true)
+$callbackMascot = ($this->route['controller'] ?? '') === 'Main'
     ? 'images/home-preview/callback-mascot-red.webp'
     : 'images/w.png';
 
