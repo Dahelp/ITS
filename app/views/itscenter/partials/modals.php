@@ -311,3 +311,7 @@ defined('WWW') or die('Access denied');
         </div>
     </div>
 </div>
+
+<?php require __DIR__ . '/availability-modal.php'; ?>
+<link rel="stylesheet" href="<?= PATH ?>/css/stock-notify.css?v=<?= (int)filemtime(WWW . '/css/stock-notify.css') ?>">
+<script src="<?= PATH ?>/js/stock-notify.js?v=<?= (int)filemtime(WWW . '/js/stock-notify.js') ?>" defer></script>
