@@ -134,3 +134,16 @@
 @media(max-width:575.98px){.hp-benefits .pch_info{grid-template-rows:none;gap:14px}.hp-benefits .pch_info_1{grid-template-columns:minmax(0,1fr);gap:14px}.hp-benefits .pch_td_2{padding:18px}.hp-benefits .hp-benefit-heading{min-height:40px;gap:12px}.hp-benefits .hp-benefit-heading h4{font-size:16px}.hp-benefits .hp-benefit-icon{flex-basis:40px;width:40px;height:40px}.hp-benefits .hp-benefit-icon svg{width:24px;height:24px}.hp-benefits .pch_td_2 p{margin-top:12px;font-size:14px;line-height:1.55}}
 @media(max-width:575.98px){.hp-benefits .pch_td_2{padding-right:42px}.hp-benefits .pch_name{padding-right:28px}}
 .decide.decide--pro .decide-figure img.decide-right-wm[src$="callback-mascot-red.webp"]{opacity:1;height:auto}
+/* Phone spacing and touch targets for the approved homepage catalogue. */
+.hit-inner .recomend-1 .swiper-button-inner{display:flex;justify-content:center;gap:12px;margin-top:12px}
+.hit-inner .recomend-1 .swiper-button-next,.hit-inner .recomend-1 .swiper-button-prev{position:static!important;inset:auto!important;margin:0;flex:0 0 42px}
+.hit-inner .recomend-1 .swiper-button-prev{order:-1}
+@media(max-width:767px){
+ .hp-catalog .hp-grid{gap:12px}
+ .hp-catalog .hp-sizes{margin-top:24px}
+ .hp-catalog .hp-chips{gap:10px}
+ .hp-catalog .hp-chips a{min-height:44px}
+ .hp-catalog .hp-tabs button{min-height:44px}
+ .hp-catalog .hp-primary{min-height:44px}
+ .hp-catalog .hp-bottom-action{margin-top:24px}
+}
