@@ -12,40 +12,35 @@ use ishop\libs\Pagination;
 class CompleteController extends AppController {
 
     public function indexAction(){
-        
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $perpage = App::$app->getProperty('pagination');
-
-        $sql_part = '';
-
-		if(!empty($_GET['sort'])){
-			if($_GET['sort'] == "price") { $sql_sort = "ORDER BY price ASC"; }
-			if($_GET['sort'] == "nal") { $sql_sort = "ORDER BY stock_status_id DESC"; }
-			if($_GET['sort'] == "rate") { $sql_sort = "ORDER BY hit DESC"; }
-		}else{
-			$sql_sort = "ORDER BY name ASC";
-		}
-
-        $total = \R::count('plagins_complete', "hide = 'show' $sql_part $sql_sort");
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        $perpage = max(1, (int)App::$app->getProperty('pagination'));
+        $completeCategories = \R::getAll("SELECT c.id, c.name, COUNT(*) AS total FROM plagins_complete pc JOIN category c ON c.id = pc.category_id WHERE pc.hide = 'show' GROUP BY c.id, c.name ORDER BY c.name");
+        $categoryId = (int)filter_var($_GET['category'] ?? 0, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+        $categoryName = '';
+        foreach ($completeCategories as $category) {
+            if ((int)$category['id'] === $categoryId) $categoryName = $category['name'];
+        }
+        if ($categoryId && $categoryName === '') throw new \Exception('Категория комплектов не найдена', 404);
+        $sort = is_string($_GET['sort'] ?? null) ? $_GET['sort'] : 'name';
+        $orders = ['name' => 'name ASC, id ASC', 'price' => 'price ASC, id ASC', 'nal' => 'stock_status_id DESC, name ASC', 'rate' => 'hit DESC, name ASC'];
+        if (!isset($orders[$sort])) $sort = 'name';
+        $where = "hide = 'show'";
+        $params = [];
+        if ($categoryId) { $where .= ' AND category_id = ?'; $params[] = $categoryId; }
+        $total = \R::count('plagins_complete', $where, $params);
         $pagination = new Pagination($page, $perpage, $total);
         $start = $pagination->getStart();
-
-        $completes = \R::find('plagins_complete', "hide = 'show' $sql_part $sql_sort LIMIT $start, $perpage");
-		$title = "Комплекты шин, фильтров, дисков. Купить комплекты для ТО";
-		$description = "Ищите комплект шин для своей колёсной техники? Хотите подобрать комплект для ТО? Нужна консультация? Вы там, где надо. На этих страницах вы сможете выбрать комплект товаров для своего квадроцикла, купить комплект для ТО на спецтехнику, найти аналоги фильтров и дисков.";
-		$keywords = "";
-
-		if($this->route["controller"]){ $path_controller = "/".mb_strtolower($this->route["controller"]).""; }else{ $path_controller = ""; }
-		if($this->route["alias"]){ $path_alias = "/".$this->route["alias"].""; }else{ $path_alias = ""; }		
-		$this->setMeta($title, $description, $keywords, '' . App::$app->getProperty('shop_name') . '', ''.PATH.'/images/' . App::$app->getProperty('og_logo') . '', ''.PATH.''.$path_controller.''.$path_alias.'');
-		$jsonLdBreadcrumbs = SchemaHelper::renderBreadcrumbsJsonLd([
-			['name' => 'Главная', 'link' => rtrim(PATH, '/') . '/'],
-			['name' => 'Комплекты товаров', 'link' => rtrim(PATH, '/') . '/complete'],
-		]);
-		/*SEO*/
-        $this->set(compact('completes', 'pagination', 'jsonLdBreadcrumbs'));
+        $completes = \R::find('plagins_complete', $where . ' ORDER BY ' . $orders[$sort] . " LIMIT $start, $perpage", $params);
+        $title = 'Комплекты шин, фильтров, дисков. Купить комплекты для ТО';
+        $description = "Ищите комплект шин для своей колёсной техники? Хотите подобрать комплект для ТО? Нужна консультация? Вы там, где надо. На этих страницах вы сможете выбрать комплект товаров для своего квадроцикла, купить комплект для ТО на спецтехнику, найти аналоги фильтров и дисков.";
+        $this->setMeta($title, $description, '', App::$app->getProperty('shop_name'), PATH . '/images/' . App::$app->getProperty('og_logo'), PATH . '/complete');
+        $jsonLdBreadcrumbs = SchemaHelper::renderBreadcrumbsJsonLd([
+            ['name' => 'Главная', 'link' => rtrim(PATH, '/') . '/'],
+            ['name' => 'Комплекты товаров', 'link' => rtrim(PATH, '/') . '/complete'],
+        ]);
+        $this->set(compact('completes', 'pagination', 'jsonLdBreadcrumbs', 'completeCategories', 'categoryId', 'categoryName', 'total', 'sort'));
     }
-	
+
 	public function viewAction()
 	{
 		$alias = $this->route['alias'];

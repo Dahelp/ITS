@@ -63,6 +63,9 @@ jobs:
             --filter='protect public/css/home-preview.css' \
             --filter='protect public/js/home-preview.js' \
             --filter='protect public/images/home-preview/***' \
+            --filter='protect public/images/complete/baseimg/***' \
+            --filter='protect public/images/complete/mini/***' \
+            --filter='protect public/images/complete/gallery/***' \
             --filter='protect public/images/contents/baseimg/***' \
             --filter='protect public/images/contents/mini/***' \
             --filter='protect public/images/contents/tmp/***' \
