@@ -703,6 +703,15 @@ class Avito extends AppModel
     }
     public static function ensureSchema(): void
     {
+        // Cleanup of an orphan that could be left by the legacy failed insert
+        // path. Never touch a populated row, even if its historical ID is 0.
+        \R::exec("DELETE FROM avito_ad
+            WHERE id = 0
+              AND COALESCE(ad_external_id, '') = ''
+              AND COALESCE(avito_id, '') = ''
+              AND COALESCE(article, '') = ''
+              AND COALESCE(title, '') = ''");
+
         $hasAvitoUrl = \R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'avito_url'");
         if (!$hasAvitoUrl) {
             \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
