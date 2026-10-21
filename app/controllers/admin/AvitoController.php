@@ -469,7 +469,7 @@ class AvitoController extends AppController
 
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
                 . ', старых объявлений обновлено по остатку API: ' . (int)$legacyUpdated
-                . ', ссылок из API: ' . (int)$urlsUpdated
+                . ', ID/ссылок/статусов получено из API: ' . (int)$urlsUpdated
                 . ', цен отправлено: ' . (int)$apiStats['price_success']
                 . ', остатков отправлено: ' . (int)$apiStats['stock_success']
                 . ', ненулевых отправлено: ' . (int)$apiStats['stock_sent_positive']

@@ -1729,7 +1729,7 @@ class Avito extends AppModel
         } catch (\Throwable $e) {
             return 0;
         }
-        $updated = 0;
+        $updated = self::syncAvitoIdsFromExternalIds($client);
         $page = 1;
         $perPage = 100;
 
@@ -1768,6 +1768,42 @@ class Avito extends AppModel
             $returnedPerPage = (int)($meta['per_page'] ?? $perPage);
             $page++;
         } while (count($items) >= max(1, $returnedPerPage) && $page <= $currentPage + 100);
+
+        return $updated;
+    }
+
+    private static function syncAvitoIdsFromExternalIds(\app\services\AvitoApiClient $client): int
+    {
+        $externalIds = \R::getCol("SELECT DISTINCT ad_external_id
+            FROM avito_ad
+            WHERE (avito_id IS NULL OR avito_id = '')
+              AND ad_external_id IS NOT NULL AND ad_external_id != ''
+              AND ad_external_id NOT REGEXP '^[0-9]+$'");
+        $updated = 0;
+
+        foreach (array_chunk($externalIds, 50) as $chunk) {
+            $query = implode('|', array_map('strval', $chunk));
+            try {
+                $response = $client->api('GET', '/autoload/v2/items/avito_ids?query=' . rawurlencode($query));
+            } catch (\Throwable $e) {
+                continue;
+            }
+            $items = $response['items'] ?? [];
+            if (!is_array($items)) {
+                continue;
+            }
+            foreach ($items as $item) {
+                $externalId = trim((string)($item['ad_id'] ?? ''));
+                $avitoId = trim((string)($item['avito_id'] ?? ''));
+                if ($externalId === '' || !ctype_digit($avitoId)) {
+                    continue;
+                }
+                $updated += (int)\R::exec(
+                    'UPDATE avito_ad SET avito_id = ? WHERE ad_external_id = ? AND (avito_id IS NULL OR avito_id = ?)',
+                    [$avitoId, $externalId, '']
+                );
+            }
+        }
 
         return $updated;
     }
@@ -1938,8 +1974,8 @@ class Avito extends AppModel
     private static function apiItemId(array $row): int
     {
         foreach (['avito_id', 'ad_external_id'] as $field) {
-            $value = preg_replace('~\D+~', '', (string)($row[$field] ?? ''));
-            if ($value !== '') {
+            $value = trim((string)($row[$field] ?? ''));
+            if ($value !== '' && ctype_digit($value)) {
                 return (int)$value;
             }
         }
