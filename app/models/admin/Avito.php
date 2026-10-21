@@ -740,6 +740,15 @@ class Avito extends AppModel
             }
         }
 
+        // До появления покомпонентной истории отличить вручную заменённые фото
+        // от исходных было невозможно. Сохраняем текущий медианабор существующих
+        // объявлений как исходную администраторскую версию; новые изменения
+        // дальше фиксируются по каждому полю при сохранении формы.
+        \R::exec("UPDATE avito_ad
+            SET manual_fields_json = '[\"images_json\"]'
+            WHERE (manual_fields_json IS NULL OR manual_fields_json = '')
+              AND images_json IS NOT NULL AND images_json != ''");
+
         $wheelAxleColumn = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE 'wheel_axle'");
         $wheelAxleType = (string)($wheelAxleColumn['Type'] ?? '');
         if ($wheelAxleColumn
