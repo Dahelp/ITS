@@ -20,6 +20,23 @@ class Avito extends AppModel
         return explode(',', self::RIM_DIA_VALUES);
     }
 
+    /**
+     * RedBean rejects underscored bean types in dispense(), while the legacy
+     * table is physically named avito_ad. Create the row with SQL and then
+     * load it through the query API, which safely supports that table name.
+     */
+    public static function createAdBean()
+    {
+        $uuid = self::uuidV4();
+        \R::exec('INSERT INTO avito_ad (uuid) VALUES (?)', [$uuid]);
+        $id = (int)\R::getCell('SELECT LAST_INSERT_ID()');
+        $ad = \R::findOne('avito_ad', 'id = ?', [$id]);
+        if (!$ad) {
+            throw new \RuntimeException('Не удалось создать запись объявления Avito');
+        }
+        return $ad;
+    }
+
     public $attributes = [
 
         'avito_id'       => '',
@@ -506,7 +523,7 @@ class Avito extends AppModel
                 // ищем по ad_external_id — либо обновляем, либо создаём
                 $ad = \R::findOne('avito_ad', 'ad_external_id = ?', [$externalId]);
                 if (!$ad) {
-                    $ad = \R::dispense('avito_ad');
+                    $ad = self::createAdBean();
                     $ad->uuid           = self::uuid4();
                     $ad->ad_external_id = $externalId;
                 }
@@ -1508,7 +1525,7 @@ class Avito extends AppModel
             return (int)$existing->id;
         }
 
-        $ad = \R::dispense('avito_ad');
+        $ad = self::createAdBean();
         $ad->uuid = self::uuidV4();
         $ad->ad_external_id = self::externalIdFromArticle($article);
         $ad->article = $article;

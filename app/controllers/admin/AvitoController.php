@@ -317,7 +317,7 @@ class AvitoController extends AppController
             }
 
             // создаём Bean RedBean
-            $ad = \R::dispense('avito_ad');
+            $ad = Avito::createAdBean();
 
             // UUID только при создании
             $ad->uuid = $this->generateUuidV4();
@@ -339,7 +339,7 @@ class AvitoController extends AppController
         }
 
         // для view передаём ПУСТОЙ bean
-        $ad = \R::dispense('avito_ad');
+        $ad = new \stdClass();
 
         $this->setMeta('AVITO — добавить объявление');
         $this->set(compact('ad'));
