@@ -1,0 +1,5 @@
+.btn.btn-stock-notify{background:#084a7e;border:1px solid #084a7e;color:#fff;box-shadow:0 4px 10px rgba(8,74,126,.14);font-weight:600;white-space:normal;line-height:1.3}
+.btn.btn-stock-notify:hover,.btn.btn-stock-notify:active{background:#063b65;border-color:#063b65;color:#fff}
+.btn.btn-stock-notify:focus-visible{outline:3px solid #8cbade;outline-offset:3px;color:#fff}
+.product-card .btn.btn-stock-notify{min-height:36px;padding:7px 10px;font-size:13px}
+.product-order-actions .btn.btn-stock-notify{width:100%;min-height:48px}

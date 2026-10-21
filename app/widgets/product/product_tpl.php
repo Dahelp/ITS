@@ -422,7 +422,11 @@ $categoryName = htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8');
 
             <?php else: ?>
                 <link itemprop="availability" href="http://schema.org/OutOfStock">
-                <button class="btn btn-outline-secondary pc-buy" type="button" disabled>Нет в наличии</button>
+                <button class="btn btn-stock-notify pc-buy" type="button"
+                        data-bs-toggle="modal" data-bs-target="#ModalAvailability"
+                        data-product-id="<?= $pid ?>"
+                        data-product-name="<?= htmlspecialchars($seoName, ENT_QUOTES, 'UTF-8') ?>"
+                        data-product-url="<?= PATH ?>/product/<?= $alias ?>">Сообщить о поступлении</button>
             <?php endif; ?>
         </div>
 
