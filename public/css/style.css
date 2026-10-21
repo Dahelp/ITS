@@ -6315,7 +6315,7 @@ body.catalog-open {
   .checkout-side{ position:static; top:auto; }
   #checkoutForm [data-step]{ padding-bottom:calc(112px + env(safe-area-inset-bottom)); }
   body.has-catalog-cart-dock{ padding-bottom:calc(112px + env(safe-area-inset-bottom)); }
-  .right-menu:not(.is-past-header){ visibility:hidden; opacity:0; pointer-events:none; }
+
 }
 
 .cart-added-notice{
@@ -7899,3 +7899,7 @@ input:checked + .quiz__final__agreement__check {background-image: url("data:imag
 
 .cart-undo-notice{position:fixed;z-index:1080;left:50%;top:90px;transform:translateX(-50%);display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:calc(100% - 24px);width:360px;padding:14px 16px;border-radius:12px;background:#243444;color:#fff;box-shadow:0 8px 24px rgba(15,23,42,.2);}
 .cart-undo-notice .btn{white-space:nowrap;}
+
+/* Shared floating actions stay above the header on every page. */
+.right-menu{z-index:1900;visibility:visible;opacity:1;pointer-events:auto}
+.decide.decide--pro .decide-figure img.decide-right-wm[src$="callback-mascot-red.webp"]{opacity:1;height:auto}

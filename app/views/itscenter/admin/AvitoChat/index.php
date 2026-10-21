@@ -1,12 +1,19 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261017-4">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=<?= (int)filemtime(WWW . '/css/avito-chat.css') ?>">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
-    <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
+    <div class="d-flex flex-wrap align-items-center mb-3">
+        <?php if (\app\models\User::isAdmin()): ?>
+            <a class="btn btn-primary mr-2 mb-2" href="<?= ADMIN ?>/avito"><i class="fas fa-list"></i> К списку объявлений</a>
+        <?php endif; ?>
+        <?php if ($allowed): ?>
+            <button id="avito-chat-check" class="btn btn-info mr-2 mb-2" type="button">Проверить подключение к Авито</button>
+            <span id="avito-chat-check-result" class="mb-2" role="status"></span>
+        <?php endif; ?>
+    </div>
     <?php if (!$allowed): ?>
         <div class="alert alert-info">Для вашей учётной записи доступ к переписке отключён. Администратор может включить его в разделе «Пользователи», в карточке сотрудника.</div>
     <?php else: ?>
         <div id="avito-chat" data-endpoint="<?= htmlspecialchars(ADMIN.'/avito-chat/api', ENT_QUOTES, 'UTF-8') ?>" data-csrf="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>" data-max-image-bytes="<?= (int)$maxImageBytes ?>" data-max-document-bytes="<?= (int)$maxDocumentBytes ?>">
-            <p><button id="avito-chat-check" class="btn btn-info" type="button">Проверить подключение к Авито</button> <span id="avito-chat-check-result" role="status"></span></p>
             <div id="avito-chat-error" class="alert alert-danger" role="alert" hidden></div>
             <div class="row">
                 <div class="col-md-4"><div class="card"><div class="card-body">
@@ -23,7 +30,7 @@
                     <small id="avito-chat-search-empty" class="text-muted" hidden>Совпадений нет. Загрузите ещё диалоги или измените запрос.</small>
                     <button id="avito-chat-more" class="btn btn-default mt-2" type="button" hidden>Ещё диалоги</button>
                 </div></div></div>
-                <div class="col-md-8"><div class="card"><div class="card-body">
+                <div class="col-md-4"><div class="card"><div class="card-body">
                     <h2 id="avito-chat-title" class="h5">Выберите диалог</h2>
                     <div id="avito-chat-workspace" class="avito-chat-workspace" hidden>
                         <div class="avito-photo-actions">
@@ -106,6 +113,29 @@
                     </div>
                     <small class="text-muted">Обновление каждые 15 секунд. Нажмите на изображение для увеличения, на «Прослушать» — для голосового.</small>
                 </div></div></div>
+                <div class="col-md-4">
+                    <div id="avito-listing-card" class="card avito-listing-card" hidden>
+                        <div class="card-body">
+                            <div id="avito-listing-loading" class="text-muted">Загружаем объявление…</div>
+                            <div id="avito-listing-content" hidden>
+                                <img id="avito-listing-main-image" class="avito-listing-main-image" alt="Фото товара" hidden>
+                                <div id="avito-listing-gallery" class="avito-listing-gallery" aria-label="Галерея товара"></div>
+                                <h2 id="avito-listing-title" class="h5 mt-3"></h2>
+                                <div class="avito-listing-facts">
+                                    <strong id="avito-listing-price"></strong>
+                                    <span id="avito-listing-stock" class="badge badge-success"></span>
+                                </div>
+                                <small id="avito-listing-stock-details" class="text-muted d-block mb-3"></small>
+                                <div id="avito-listing-description" class="avito-listing-description"></div>
+                                <div class="avito-listing-links mt-3">
+                                    <a id="avito-listing-edit" class="btn btn-sm btn-primary" target="_blank" rel="noopener noreferrer">Открыть объявление</a>
+                                    <a id="avito-listing-product" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer">Открыть товар</a>
+                                </div>
+                            </div>
+                            <div id="avito-listing-empty" class="text-muted" hidden>Для этого диалога связанное объявление не найдено.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <dialog id="avito-image-dialog" class="avito-image-dialog" aria-label="Просмотр фотографии">
@@ -118,6 +148,6 @@
         <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-media.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-team.js?v=20261017-5" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat.js?v=20261017-5" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=<?= (int)filemtime(WWW . '/js/avito-chat.js') ?>" defer></script>
     <?php endif; ?>
 </section>

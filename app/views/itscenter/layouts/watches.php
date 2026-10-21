@@ -41,6 +41,8 @@
 		$robots = 'noindex, nofollow';
 	} elseif ($controller === 'Cart' && $action === 'view') {
 		$robots = 'noindex, follow';
+	} elseif ($controller === 'Complete' && $action === 'index' && (isset($_GET['category']) || isset($_GET['sort']))) {
+		$robots = 'noindex, follow';
 	} elseif ($controller === 'Product' && !empty($product) && ($product->hide ?? '') === 'lock') {
 		$robots = 'noindex, nofollow';
 	} elseif ($isLegacyFilterGroupController) {

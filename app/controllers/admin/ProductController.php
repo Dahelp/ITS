@@ -12,6 +12,7 @@ use DataTables\Database;
 use app\models\admin\PlaginsIndexnow;
 use app\helpers\TireSize;
 use app\models\admin\Certificate;
+use app\models\admin\Avito;
 use app\services\ProductCertificationService;
 
 class ProductController extends AppController {
@@ -25,6 +26,7 @@ class ProductController extends AppController {
     }
 	
 	public function serverProcessingAction(){		
+		Avito::ensureSchema();
 		//datatables server-side
 		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
 		$badge = isset($_GET['badge']) ? $_GET['badge'] : '';
@@ -44,7 +46,9 @@ class ProductController extends AppController {
 			: "CONCAT(a.hide, '|')";
 		$table = <<<EOT
 		 (
-			SELECT a.id, a.img, a.article, a.name as cat, a.price, {$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where
+			SELECT a.id, a.img, a.article, a.name as cat, a.price,
+			CONCAT(COALESCE((SELECT CONCAT(aa.id, '|', aa.status, '|', COALESCE(aa.review_status, 'confirmed')) FROM avito_ad aa WHERE aa.article = a.article ORDER BY aa.id DESC LIMIT 1), ''), '|', COALESCE(a.rest, a.quantity, 0)) AS avito_state,
+			{$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where
 		 ) temp
 		EOT;
 		$primaryKey = 'id';	 
@@ -263,6 +267,27 @@ class ProductController extends AppController {
 						<i class="fas fa-recycle"></i>
 					</a>'; 
 					}
+			),
+			array('db' => 'avito_state', 'dt' => 12,
+				'formatter' => function($d, $row) {
+					$productId = (int)($row['id'] ?? 0);
+					[$adId, $status, $review, $stock] = array_pad(explode('|', (string)$d, 4), 4, '');
+					$stock = (int)$stock;
+					if ($adId !== '') {
+						$label = $review === 'needs_review' ? 'Требует проверки' : ($status === 'active' ? 'Есть активное' : 'Есть в архиве');
+						$class = $review === 'needs_review' ? 'warning' : ($status === 'active' ? 'success' : 'secondary');
+						return '<span class="badge badge-' . $class . '"><i class="fas fa-bullhorn"></i> ' . $label . '</span><br>'
+							. '<a href="' . ADMIN . '/avito/edit?id=' . (int)$adId . '">Открыть объявление</a>';
+					}
+					$warning = $stock > 0
+						? '<span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> Есть остаток, нет объявления</span>'
+						: '<span class="badge badge-light">Объявления нет</span>';
+					return $warning
+						. '<form method="post" action="' . ADMIN . '/product/create-avito" target="_blank" class="mt-1">'
+						. '<input type="hidden" name="id" value="' . $productId . '">'
+						. '<button class="btn btn-xs btn-outline-primary" type="submit"><i class="fas fa-magic"></i> Создать по шаблону</button>'
+						. '</form>';
+				}
 			)
 		);
 		 
@@ -278,6 +303,21 @@ class ProductController extends AppController {
 			$spp::simple( $_GET, $sql_details, $table, $primaryKey, $columns, null, "" )
 		);
 		die;
+	}
+
+	public function createAvitoAction(){
+		if (empty($_POST['id'])) {
+			$_SESSION['error'] = 'Не выбран товар';
+			redirect(ADMIN . '/product');
+		}
+		try {
+			$adId = Avito::createArchivedForProduct((int)$_POST['id']);
+			$_SESSION['success'] = 'Объявление Avito создано по шаблону товарной группы и сохранено в архиве. Проверьте поля и подтвердите готовность.';
+			redirect(ADMIN . '/avito/edit?id=' . $adId);
+		} catch (\Throwable $e) {
+			$_SESSION['error'] = 'Не удалось создать объявление Avito: ' . $e->getMessage();
+			redirect(ADMIN . '/product');
+		}
 	}
 
 	public function badgeToggleAction(){
@@ -426,184 +466,16 @@ class ProductController extends AppController {
         }
     }
 	
-	public function deleteAction(){
-        $id = $this->getRequestID();        
-        $product = \R::load('product', $id);
-		@unlink(WWW . "/images/product/baseimg/".$product["img"]."");
-		@unlink(WWW . "/images/product/mini/".$product["img"]."");
-		\R::trash($product);
-		$gallery = \R::findOne('gallery', 'product_id = ?', [$id]);		
-		@unlink(WWW . "/images/product/gallery/".$gallery["img"]."");
-        $del_gallery = \R::load('gallery', $gallery["id"]);
-		\R::trash($del_gallery);
-		
-		$find_filter = \R::findAll('attribute_product', 'product_id = ?', [$id]);
-		if($find_filter){
-			foreach($find_filter as $filt) {
-				$delete_filt = \R::load('attribute_product', $filt->id);
-				\R::trash($delete_filt);
-			}
-		}
-		$find_modific = \R::findAll('modification', 'product_id = ?', [$id]);
-		if($find_modific){
-			foreach($find_modific as $modific) {
-				$delete_modific = \R::load('modification', $modific->id);
-				\R::trash($delete_modific);
-			}
-		}
-		$find_relate = \R::findAll('related_product', 'product_id = ?', [$id]);
-		if($find_relate){
-			foreach($find_relate as $relate) {
-				$delete_relate = \R::load('related_product', $relate->id);
-				\R::trash($delete_relate);
-			}
-		}
-		$find_similar = \R::findAll('similar_product', 'product_id = ?', [$id]);
-		if($find_similar){
-			foreach($find_similar as $similar) {
-				$delete_similar = \R::load('similar_product', $similar->id);
-				\R::trash($delete_similar);
-			}
-		}
-		$find_service = \R::findAll('service_product', 'product_id = ?', [$id]);
-		if($find_service){
-			foreach($find_service as $service) {
-				$delete_service = \R::load('service_product', $service->id);
-				\R::trash($delete_service);
-			}
-		}
-		$find_attribute = \R::findAll('product_attribute', 'product_id = ?', [$id]);
-		if($find_attribute){
-			foreach($find_attribute as $attribute) {
-				$delete_attribute = \R::load('product_attribute', $attribute->id);
-				\R::trash($delete_attribute);
-			}
-		}
-		$find_tags = \R::findAll('product_tags', 'product_id = ?', [$id]);
-		if($find_tags){
-			foreach($find_tags as $tags) {
-				$delete_tags = \R::load('product_tags', $tags->id);
-				\R::trash($delete_tags);
-			}
-		}
-		$find_bookmarks = \R::findAll('product_bookmarks', 'product_id = ?', [$id]);
-		if($find_bookmarks){
-			foreach($find_bookmarks as $bookmarks) {
-				$delete_bookmarks = \R::load('product_bookmarks', $bookmarks->id);
-				\R::trash($delete_bookmarks);
-			}
-		}
-		$find_content = \R::findAll('content_related', 'related_id = ?', [$id]);
-		if($find_content){
-			foreach($find_content as $content) {
-				$delete_content = \R::load('content_related', $content->id);
-				\R::trash($delete_content);
-			}
-		}
-		$find_actions = \R::findAll('actions', 'product_id = ?', [$id]);
-		if($find_actions){
-			foreach($find_actions as $actions) {
-				$delete_actions = \R::load('actions', $actions->id);
-				\R::trash($delete_actions);
-			}
-		}
-		$find_instock = \R::findAll('in_stock', 'product_id = ?', [$id]);
-		if($find_instock){
-			foreach($find_instock as $instock) {
-				$delete_instock = \R::load('in_stock', $instock->stock_id);
-				\R::trash($delete_instock);
-			}
-		}
-		$find_oneclick = \R::findAll('mail_oneclick', 'product_id = ?', [$id]);
-		if($find_oneclick){
-			foreach($find_oneclick as $oneclick) {
-				$delete_oneclick = \R::load('mail_oneclick', $oneclick->id);
-				\R::trash($delete_oneclick);
-			}
-		}
-		$find_request = \R::findAll('mail_request', 'product_id = ?', [$id]);
-		if($find_request){
-			foreach($find_request as $request) {
-				$delete_request = \R::load('mail_request', $request->id);
-				\R::trash($delete_request);
-			}
-		}
-		$find_abbreviated = \R::findAll('product_abbreviated', 'product_id = ?', [$id]);
-		if($find_abbreviated){
-			foreach($find_abbreviated as $abbreviated) {
-				$delete_abbreviated = \R::load('product_abbreviated', $abbreviated->id);
-				\R::trash($delete_abbreviated);
-			}
-		}		
-		$find_cross = \R::findAll('plagins_cross', 'product_id = ?', [$id]);
-		if($find_cross){
-			foreach($find_cross as $cross) {
-				$delete_cross = \R::load('plagins_cross', $cross->id);
-				\R::trash($delete_cross);
-			}
-		}
-		//Отзывы
-		$find_review = \R::findAll('review_product', 'product_id = ?', [$id]);
-			if($find_review){
-			foreach($find_review as $review) {
-				
-				// удаление связей отзывов и товаров
-				$delete_review = \R::load('review_product', $review->id);
-				\R::trash($delete_review);
-				
-				//удаление отзывов
-				$find_review2 = \R::findAll('review', 'id = ?', [$review->review_id]);
-				foreach($find_review2 as $review2) {
-					$delete_review2 = \R::load('review', $review2->id);
-					\R::trash($delete_review2);
-				}
-				
-				//удаление галереи отзывов
-				$find_review3 = \R::findAll('review_gallery', 'review_id = ?', [$review->review_id]);
-				foreach($find_review3 as $review3) {
-					$delete_review3 = \R::load('review_gallery', $review3->id);
-					\R::trash($delete_review3);
-				}
-				
-			}
-		}
-		//Комплекты
-		$find_complete_product = \R::findAll('plagins_complete_product', 'product_id = ?', [$id]);
-		if($find_complete_product){
-			foreach($find_complete_product as $complete_product) {
-				
-				// удаление связей комплектов и товаров
-				$delete_complete_product = \R::load('plagins_complete_product', $complete_product->id);
-				\R::trash($delete_complete_product);
-				
-				//удаление комплектов
-				$find_complete = \R::findAll('plagins_complete', 'id = ?', [$complete_product->complete_id]);
-				foreach($find_complete as $complete) {
-					$delete_complete = \R::load('plagins_complete', $complete->id);
-					\R::trash($delete_complete);
-				}
-				
-				//удаление галереи комплектов
-				$find_complete_gallery = \R::findAll('plagins_complete_gallery', 'complete_id = ?', [$complete_product->complete_id]);
-				foreach($find_complete_gallery as $complete_gallery) {
-					$delete_complete_gallery = \R::load('plagins_complete_gallery', $complete_gallery->id);
-					\R::trash($delete_complete_gallery);
-				}
-				
-			}
-		}
-		
-		//сохранение истории
-		AdminActivityLogger::admin(12, 'product', (int)$id);
-        
-		// API IndexNow
-		$indexnow = new PlaginsIndexnow();
-		$inw = \R::findAll('plagins_indexnow', 'hide = ?', ['show']);
-		foreach($inw as $in){					
-			$search_engine .= $indexnow->indexNowEngine($in->url, 'product', $product["alias"], $in->verification);
-		}
-				
-        $_SESSION['success'] = 'Товар ID '.$id.' удален.'.$search_engine.'';
+    public function deleteAction(){
+        $id = $this->getRequestID();
+        $product = (new \app\services\ProductDeletion())->delete((int)$id);
+        AdminActivityLogger::admin(12, 'product', (int)$id);
+        $search_engine = '';
+        $indexnow = new PlaginsIndexnow();
+        foreach (\R::findAll('plagins_indexnow', 'hide = ?', ['show']) as $in) {
+            $search_engine .= $indexnow->indexNowEngine($in->url, 'product', $product['alias'], $in->verification);
+        }
+        $_SESSION['success'] = 'Товар ID '.$id.' удален.'.$search_engine;
         redirect();
     }
 
