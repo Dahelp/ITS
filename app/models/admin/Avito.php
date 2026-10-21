@@ -697,6 +697,18 @@ class Avito extends AppModel
     }
     public static function ensureSchema(): void
     {
+        $idColumn = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE 'id'");
+        if ($idColumn && stripos((string)($idColumn['Extra'] ?? ''), 'auto_increment') === false) {
+            $idType = strtolower(trim((string)($idColumn['Type'] ?? 'int(11)')));
+            if (!preg_match('~^(?:tinyint|smallint|mediumint|int|bigint)(?:\(\d+\))?(?: unsigned)?$~', $idType)) {
+                $idType = 'int(11)';
+            }
+            if (strtoupper((string)($idColumn['Key'] ?? '')) !== 'PRI') {
+                \R::exec('ALTER TABLE avito_ad ADD PRIMARY KEY (`id`)');
+            }
+            \R::exec("ALTER TABLE avito_ad MODIFY `id` {$idType} NOT NULL AUTO_INCREMENT");
+        }
+
         $hasAvitoUrl = \R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'avito_url'");
         if (!$hasAvitoUrl) {
             \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
