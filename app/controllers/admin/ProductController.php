@@ -283,7 +283,7 @@ class ProductController extends AppController {
 						? '<span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> Есть остаток, нет объявления</span>'
 						: '<span class="badge badge-light">Объявления нет</span>';
 					return $warning
-						. '<form method="post" action="' . ADMIN . '/product/create-avito" class="mt-1">'
+						. '<form method="post" action="' . ADMIN . '/product/create-avito" target="_blank" class="mt-1">'
 						. '<input type="hidden" name="id" value="' . $productId . '">'
 						. '<button class="btn btn-xs btn-outline-primary" type="submit"><i class="fas fa-magic"></i> Создать по шаблону</button>'
 						. '</form>';
