@@ -15,7 +15,7 @@
 <?php if ($completes): ?>
 <div class="complete-catalog-grid">
  <?php $curr = \ishop\App::$app->getProperty('currency'); foreach ($completes as $complete): ?>
- <?php new \app\widgets\complete\Complete($complete, $curr, 'catalog_tpl.php'); ?>
+ <?php new \app\widgets\complete\Complete($complete, $curr); ?>
  <?php endforeach; ?>
 </div>
 <?php if ($pagination->countPages > 1): ?><div class="complete-catalog-pagination"><?= $pagination ?></div><?php endif; ?>
