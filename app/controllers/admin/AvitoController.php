@@ -97,7 +97,8 @@ class AvitoController extends AppController
             a.category       AS category,
             a.manager_name   AS manager_name,
             GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) AS rest,
-            a.status         AS status
+            a.status         AS status,
+            CONCAT(COALESCE(a.avito_publication_status, ''), '|', COALESCE(DATE_FORMAT(a.avito_status_updated_at, '%d.%m.%Y %H:%i'), '')) AS avito_publication_state
         FROM avito_ad a
         LEFT JOIN product p ON p.article = a.article
         ) temp
@@ -196,25 +197,40 @@ class AvitoController extends AppController
                 }
             ),
 
-            // 8: Статус
+            // 8: Статус в нашей XML-выгрузке
             array(
                 'db' => 'status',
                 'dt' => 8,
                 'formatter' => function ($d, $row) {
                     if ($d === 'active') {
-                        return 'Активно';
+                        return '<span class="badge badge-primary">В выгрузке</span>';
                     }
                     if ($d === 'archived') {
-                        return 'Архив';
+                        return '<span class="badge badge-secondary">Не выгружается</span>';
                     }
-                    return 'Черновик';
+                    return '<span class="badge badge-light">Черновик</span>';
                 }
             ),
 
-            // 9: Действия
+            // 9: Фактическое состояние объявления на Avito
+            array(
+                'db' => 'avito_publication_state',
+                'dt' => 9,
+                'formatter' => function ($d, $row) {
+                    [$status, $updatedAt] = array_pad(explode('|', (string)$d, 2), 2, '');
+                    [$label, $class] = Avito::avitoPublicationPresentation($status);
+                    $html = '<span class="badge badge-' . $class . '">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
+                    if ($updatedAt !== '') {
+                        $html .= '<div class="small text-muted mt-1">Проверено: ' . htmlspecialchars($updatedAt, ENT_QUOTES, 'UTF-8') . '</div>';
+                    }
+                    return $html;
+                }
+            ),
+
+            // 10: Готовность объявления
             array(
                 'db' => 'id',
-                'dt' => 9,
+                'dt' => 10,
                 'formatter' => function ($id, $row) {
                     $adRow = \R::getRow('SELECT * FROM avito_ad WHERE id = ? LIMIT 1', [(int)$id]);
                     $analysis = Avito::analyzeRow($adRow);
@@ -230,10 +246,10 @@ class AvitoController extends AppController
                 }
             ),
 
-            // 10: Действия
+            // 11: Действия
             array(
                 'db' => 'id',
-                'dt' => 10,
+                'dt' => 11,
                 'formatter' => function ($id, $row) {
                     $id   = (int)$id;
                     $edit = ADMIN . '/avito/edit?id=' . $id;
@@ -456,6 +472,19 @@ class AvitoController extends AppController
             $_SESSION['success'] = $message;
         } catch (\Throwable $e) {
             $_SESSION['error'] = 'Avito: ошибка синхронизации: ' . $e->getMessage();
+        }
+        redirect(ADMIN . '/avito');
+    }
+
+    public function syncStatusesAction()
+    {
+        @set_time_limit(0);
+        try {
+            $updated = Avito::syncUrlsFromApi();
+            $_SESSION['success'] = 'Статусы публикации Avito обновлены: ' . (int)$updated
+                . '. Поле «На Avito» показывает фактическое состояние, полученное из API.';
+        } catch (\Throwable $e) {
+            $_SESSION['error'] = 'Не удалось обновить статусы Avito: ' . $e->getMessage();
         }
         redirect(ADMIN . '/avito');
     }

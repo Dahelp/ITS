@@ -30,6 +30,9 @@
         <a href="<?=ADMIN;?>/avito/sync-products" class="btn btn-info">
             <i class="fas fa-sync-alt"></i> Синхронизировать с товарами
         </a>
+        <a href="<?=ADMIN;?>/avito/sync-statuses" class="btn btn-outline-info">
+            <i class="fas fa-cloud-download-alt"></i> Обновить статусы Avito
+        </a>
         <a target="_blank" href="<?=PATH;?>/avito/refresh-tovars" class="btn btn-secondary">
             <i class="fas fa-rss"></i> XML-фид
         </a>
@@ -51,7 +54,8 @@
                 <th>Категория</th>
                 <th>Менеджер</th>
                 <th>Наличие</th>
-                <th>Статус</th>
+                <th>В нашей выгрузке</th>
+                <th>На Avito</th>
                 <th>Готовность Avito</th>
                 <th>Действия</th>
               </tr>
@@ -67,22 +71,22 @@
 
 <script>
 $(function () {
-  // Фото (1) и Действия (10) не экспортируем
-  var hideFromExport = [1, 10];
+  // Фото (1) и Действия (11) не экспортируем
+  var hideFromExport = [1, 11];
 
   var table = $('#avito-table').DataTable({
     processing: true,
     serverSide: true,
     stateSave: true,
     stateLoadParams: function (settings, data) {
-      if (!data.columns || data.columns.length !== 11) {
+      if (!data.columns || data.columns.length !== 12) {
         return false;
       }
     },
     lengthChange: true,
     lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "Все"]],
     aoColumnDefs: [
-      { 'bSortable': false, 'aTargets': [1, 9, 10] }
+      { 'bSortable': false, 'aTargets': [1, 9, 10, 11] }
     ],
     dom: '<"blok-bottoms"B><"blok-table"lfrtip>',
     ajax: { url: adminpath + '/avito/server-processing' },
@@ -125,9 +129,8 @@ $(function () {
       { extend: 'colvis', text: 'Настроить колонки' }
     ],
     createdRow: function(row, data){
-      // data[8] — «Статус» (после добавления новых колонок)
-      if (data[8] === 'Черновик') $(row).css('background-color', '#fff7da');
-      if (data[8] === 'Архив')    $(row).css('background-color', '#d7d6d6');
+      if (data[8].indexOf('Черновик') !== -1) $(row).css('background-color', '#fff7da');
+      if (data[8].indexOf('Не выгружается') !== -1) $(row).css('background-color', '#d7d6d6');
     }
   });
 });

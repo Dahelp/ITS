@@ -17,6 +17,19 @@ if (Avito::publicationStatus(1) !== 'active' || Avito::publicationStatus(0) !== 
     exit(1);
 }
 
+if (Avito::extractAvitoPublicationStatus(['status' => 'active']) !== 'active'
+    || Avito::extractAvitoPublicationStatus(['status' => ['value' => 'blocked']]) !== 'blocked') {
+    fwrite(STDERR, "FAILED: Avito API publication status extraction\n");
+    exit(1);
+}
+
+if (Avito::avitoPublicationPresentation('active')[0] !== 'Опубликовано'
+    || Avito::avitoPublicationPresentation('removed')[0] !== 'Снято с публикации'
+    || Avito::avitoPublicationPresentation(null)[0] !== 'Не проверено') {
+    fwrite(STDERR, "FAILED: Avito publication status presentation\n");
+    exit(1);
+}
+
 foreach (['НДС 20%', 'включая НДС: 20 %', 'НДС&nbsp;20%'] as $description) {
     if (!str_contains(Avito::normalizeDescriptionNds($description), 'НДС 22%')) {
         fwrite(STDERR, "FAILED: NDS 20% description was not normalized\n");

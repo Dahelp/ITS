@@ -686,6 +686,8 @@ class Avito extends AppModel
         }
 
         $columns = [
+            'avito_publication_status' => 'VARCHAR(64)',
+            'avito_status_updated_at' => 'DATETIME',
             'rim_bolts' => 'VARCHAR(16)',
             'rim_bolts_diameter' => 'VARCHAR(32)',
             'rim_type' => 'VARCHAR(64)',
@@ -869,6 +871,56 @@ class Avito extends AppModel
     public static function publicationStatus(int $availableQuantity): string
     {
         return $availableQuantity > 0 ? 'active' : 'archived';
+    }
+
+    public static function extractAvitoPublicationStatus(array $item): string
+    {
+        foreach (['status', 'state'] as $field) {
+            if (!array_key_exists($field, $item)) {
+                continue;
+            }
+            if (is_scalar($item[$field])) {
+                return trim((string)$item[$field]);
+            }
+            if (is_array($item[$field])) {
+                foreach (['value', 'code', 'name', 'title'] as $key) {
+                    if (isset($item[$field][$key]) && is_scalar($item[$field][$key])) {
+                        return trim((string)$item[$field][$key]);
+                    }
+                }
+            }
+        }
+        return '';
+    }
+
+    public static function avitoPublicationPresentation(?string $status): array
+    {
+        $raw = trim((string)$status);
+        $normalized = function_exists('mb_strtolower')
+            ? mb_strtolower($raw, 'UTF-8')
+            : strtolower($raw);
+
+        $map = [
+            'active' => ['Опубликовано', 'success'],
+            'published' => ['Опубликовано', 'success'],
+            'moderation' => ['На проверке Avito', 'info'],
+            'pending' => ['Ожидает публикации', 'info'],
+            'processing' => ['Обрабатывается Avito', 'info'],
+            'blocked' => ['Заблокировано Avito', 'danger'],
+            'banned' => ['Заблокировано Avito', 'danger'],
+            'rejected' => ['Отклонено Avito', 'danger'],
+            'declined' => ['Отклонено Avito', 'danger'],
+            'removed' => ['Снято с публикации', 'secondary'],
+            'archived' => ['В архиве Avito', 'secondary'],
+            'closed' => ['Завершено на Avito', 'secondary'],
+            'expired' => ['Истёк срок публикации', 'warning'],
+            'old' => ['Истёк срок публикации', 'warning'],
+        ];
+
+        if ($normalized === '') {
+            return ['Не проверено', 'light'];
+        }
+        return $map[$normalized] ?? [$raw, 'secondary'];
     }
 
     public static function getFeedRows(int $id = 0, bool $onlyActive = false): array
@@ -1577,13 +1629,18 @@ class Avito extends AppModel
             foreach ($items as $item) {
                 $itemId = (string)($item['id'] ?? '');
                 $url = trim((string)($item['url'] ?? ''));
-                if ($itemId === '' || $url === '') {
+                $publicationStatus = self::extractAvitoPublicationStatus($item);
+                if ($itemId === '') {
                     continue;
                 }
 
                 $count = \R::exec(
-                    "UPDATE avito_ad SET avito_url = ? WHERE avito_id = ? OR ad_external_id = ?",
-                    [$url, $itemId, $itemId]
+                    "UPDATE avito_ad
+                     SET avito_url = CASE WHEN ? != '' THEN ? ELSE avito_url END,
+                         avito_publication_status = CASE WHEN ? != '' THEN ? ELSE avito_publication_status END,
+                         avito_status_updated_at = NOW()
+                     WHERE avito_id = ? OR ad_external_id = ?",
+                    [$url, $url, $publicationStatus, $publicationStatus, $itemId, $itemId]
                 );
                 $updated += (int)$count;
             }
