@@ -42,6 +42,18 @@
           <h3 class="card-title p-3">Мои объявления</h3>
         </div>
         <div class="card-body">
+          <?php $summary = $publicationSummary ?? []; ?>
+          <div class="row mb-3">
+            <div class="col-lg-2 col-6"><div class="small-box bg-light"><div class="inner"><h3><?= (int)($summary['total'] ?? 0); ?></h3><p>Всего в базе</p></div></div></div>
+            <div class="col-lg-2 col-6"><div class="small-box bg-primary"><div class="inner"><h3><?= (int)($summary['feed_active'] ?? 0); ?></h3><p>В XML-выгрузке</p></div></div></div>
+            <div class="col-lg-2 col-6"><div class="small-box bg-success"><div class="inner"><h3><?= (int)($summary['avito_published'] ?? 0); ?></h3><p>Опубликовано на Avito</p></div></div></div>
+            <div class="col-lg-2 col-6"><div class="small-box bg-secondary"><div class="inner"><h3><?= (int)($summary['avito_not_published'] ?? 0); ?></h3><p>Не опубликовано</p></div></div></div>
+            <div class="col-lg-2 col-6"><div class="small-box bg-warning"><div class="inner"><h3><?= (int)($summary['avito_unchecked'] ?? 0); ?></h3><p>Не проверено API</p></div></div></div>
+            <div class="col-lg-2 col-6"><div class="small-box bg-info"><div class="inner"><h3><?= (int)($summary['with_avito_id'] ?? 0); ?></h3><p>Связано по Avito ID</p></div></div></div>
+          </div>
+          <?php if (!empty($summary['without_avito_id'])): ?>
+            <div class="alert alert-warning py-2"><strong><?= (int)$summary['without_avito_id']; ?></strong> объявлений пока без числового Avito ID — их фактический статус нельзя сверить с API.</div>
+          <?php endif; ?>
           <div class="table-responsive">
             <table id="avito-table" class="table table-bordered display" width="100%">
               <thead>

@@ -285,7 +285,7 @@ class ProductController extends AppController {
 					return $warning
 						. '<form method="post" action="' . ADMIN . '/product/create-avito" class="mt-1">'
 						. '<input type="hidden" name="id" value="' . $productId . '">'
-						. '<button class="btn btn-xs btn-outline-primary" type="submit"><i class="fas fa-plus"></i> Создать в архиве</button>'
+						. '<button class="btn btn-xs btn-outline-primary" type="submit"><i class="fas fa-magic"></i> Создать по шаблону</button>'
 						. '</form>';
 				}
 			)
@@ -312,7 +312,7 @@ class ProductController extends AppController {
 		}
 		try {
 			$adId = Avito::createArchivedForProduct((int)$_POST['id']);
-			$_SESSION['success'] = 'Объявление Avito создано в архиве. Проверьте обязательные поля и подтвердите готовность.';
+			$_SESSION['success'] = 'Объявление Avito создано по шаблону товарной группы и сохранено в архиве. Проверьте поля и подтвердите готовность.';
 			redirect(ADMIN . '/avito/edit?id=' . $adId);
 		} catch (\Throwable $e) {
 			$_SESSION['error'] = 'Не удалось создать объявление Avito: ' . $e->getMessage();

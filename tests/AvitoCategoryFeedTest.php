@@ -30,6 +30,25 @@ if (Avito::avitoPublicationPresentation('active')[0] !== 'Опубликован
     exit(1);
 }
 
+$generated = Avito::buildGeneratedDescription([
+    'name' => 'Фильтр гидравлический ABC',
+    'content' => 'Для погрузчика',
+    'attribute_text' => 'Бренд: EKKA Артикул: ABC',
+]);
+if (Avito::generatedProductType(['name' => 'Фильтр гидравлический ABC']) !== 'Фильтры и фильтроэлементы'
+    || !str_contains($generated, 'Работаем с НДС 22%')
+    || !str_contains($generated, 'Характеристики:')) {
+    fwrite(STDERR, "FAILED: generated Avito product template\n");
+    exit(1);
+}
+
+$manualAd = (object)['manual_fields_json' => '["title"]'];
+Avito::rememberManualFields($manualAd, ['description', 'title']);
+if (Avito::manualFields($manualAd) !== ['description', 'title']) {
+    fwrite(STDERR, "FAILED: manually edited Avito fields must be preserved\n");
+    exit(1);
+}
+
 foreach (['НДС 20%', 'включая НДС: 20 %', 'НДС&nbsp;20%'] as $description) {
     if (!str_contains(Avito::normalizeDescriptionNds($description), 'НДС 22%')) {
         fwrite(STDERR, "FAILED: NDS 20% description was not normalized\n");

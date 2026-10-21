@@ -688,6 +688,7 @@ class Avito extends AppModel
         $columns = [
             'avito_publication_status' => 'VARCHAR(64)',
             'avito_status_updated_at' => 'DATETIME',
+            'manual_fields_json' => 'TEXT',
             'rim_bolts' => 'VARCHAR(16)',
             'rim_bolts_diameter' => 'VARCHAR(32)',
             'rim_type' => 'VARCHAR(64)',
@@ -813,11 +814,6 @@ class Avito extends AppModel
         // Availability exposed to Avito must never include units already reserved.
         \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                ELSE 'active'\n            END\n        ");
 
-        // Категория каталога 2 — шины для квадроциклов (ATV). Ранее созданные
-        // объявления могли остаться в профиле грузовых шин, поэтому приводим
-        // весь связанный набор к официальному типу Avito «Мотошины».
-        \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.goods_type = 'Шины, диски и колёса',\n                a.product_type = 'Мотошины',\n                a.wheel_axle = CASE\n                    WHEN a.wheel_axle IN ('Передняя', 'Задняя', 'Любая') THEN a.wheel_axle\n                    ELSE 'Любая'\n                END\n            WHERE p.category_id = 2\n        ");
-
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
         $availableByProduct = \R::getAssoc('SELECT id, GREATEST(0, COALESCE(quantity, rest, 0) - COALESCE(reserve, 0)) FROM product');
@@ -830,6 +826,7 @@ class Avito extends AppModel
 
             $quantity = (int)($availableByProduct[(int)$row['product_id']] ?? 0);
             $price = (int)round((float)($row['price'] ?? 0));
+            $manualFields = self::manualFields($ad);
 
             if (empty($ad->uuid)) {
                 $ad->uuid = self::uuidV4();
@@ -838,7 +835,9 @@ class Avito extends AppModel
                 $ad->ad_external_id = self::externalIdFromArticle((string)$row['article']);
             }
 
-            $ad->price_rub = $price > 0 ? $price : null;
+            if (!in_array('price_rub', $manualFields, true)) {
+                $ad->price_rub = $price > 0 ? $price : null;
+            }
             // Quantity в XML Avito — это цена «за N шт.», а не складской остаток.
             $ad->quantity = 'за 1 шт.';
             $ad->status = self::publicationStatus($quantity);
@@ -857,7 +856,7 @@ class Avito extends AppModel
             self::fillDefaults($ad);
 
             $images = self::productImageUrls($row);
-            if ($images) {
+            if ($images && !in_array('images_json', $manualFields, true)) {
                 $ad->images_json = json_encode($images, JSON_UNESCAPED_UNICODE);
             }
 
@@ -871,6 +870,38 @@ class Avito extends AppModel
     public static function publicationStatus(int $availableQuantity): string
     {
         return $availableQuantity > 0 ? 'active' : 'archived';
+    }
+
+    public static function manualFields($ad): array
+    {
+        $fields = json_decode((string)($ad->manual_fields_json ?? ''), true);
+        return is_array($fields) ? array_values(array_unique(array_filter(array_map('strval', $fields)))) : [];
+    }
+
+    public static function rememberManualFields($ad, array $fields): void
+    {
+        $protected = array_values(array_unique(array_merge(self::manualFields($ad), $fields)));
+        sort($protected);
+        $ad->manual_fields_json = json_encode($protected, JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function publicationSummary(): array
+    {
+        self::ensureSchema();
+        $row = \R::getRow("SELECT
+            COUNT(*) AS total,
+            SUM(status = 'active') AS feed_active,
+            SUM(LOWER(COALESCE(avito_publication_status, '')) IN ('active', 'published')) AS avito_published,
+            SUM(avito_publication_status IS NOT NULL AND avito_publication_status != ''
+                AND LOWER(avito_publication_status) NOT IN ('active', 'published')) AS avito_not_published,
+            SUM(avito_publication_status IS NULL OR avito_publication_status = '') AS avito_unchecked,
+            SUM((avito_id IS NOT NULL AND avito_id != '') OR (ad_external_id REGEXP '^[0-9]+$')) AS with_avito_id,
+            SUM(NOT ((avito_id IS NOT NULL AND avito_id != '') OR (ad_external_id REGEXP '^[0-9]+$'))) AS without_avito_id
+            FROM avito_ad");
+        foreach ($row as $key => $value) {
+            $row[$key] = (int)$value;
+        }
+        return $row;
     }
 
     public static function extractAvitoPublicationStatus(array $item): string
@@ -1209,8 +1240,8 @@ class Avito extends AppModel
             // Avito has no outer-diameter field, so the complete size stays in Title,
             // while supported structured fields receive width and rim. Profile is selected manually.
             if (preg_match('~\b\d+(?:[.,]\d+)?\s*[xх×]\s*(\d+(?:[.,]\d+)?)\s*-\s*(\d+(?:[.,]\d+)?)\b~iu', $text, $m)) {
-                $ad->tire_section_width = str_replace(',', '.', $m[1]);
-                $ad->rim_diameter = str_replace(',', '.', $m[2]);
+                if (empty($ad->tire_section_width)) $ad->tire_section_width = str_replace(',', '.', $m[1]);
+                if (empty($ad->rim_diameter)) $ad->rim_diameter = str_replace(',', '.', $m[2]);
             }
             if (empty($ad->wheel_axle)) $ad->wheel_axle = 'Любая';
         } elseif ($productType === 'Шины для грузовиков и спецтехники') {
@@ -1475,13 +1506,11 @@ class Avito extends AppModel
         $ad->status = 'archived';
         $ad->review_status = 'needs_review';
         $ad->title = self::limitText((string)($row['name'] ?? ''), 50);
-        $ad->description = self::buildDescription($row);
+        $ad->description = self::buildGeneratedDescription($row);
         $ad->price_rub = (int)round((float)($row['price'] ?? 0));
         $ad->quantity = 'за 1 шт.';
         $name = mb_strtolower((string)($row['name'] ?? ''), 'UTF-8');
-        $ad->product_type = (int)($row['category_id'] ?? 0) === 2
-            ? 'Мотошины'
-            : (preg_match('~\bдиск~u', $name) ? 'Диски' : 'Шины для грузовиков и спецтехники');
+        $ad->product_type = self::generatedProductType($row);
         self::fillDefaults($ad);
         self::normalizeCatalogFields($ad, $row);
         if (!empty($row['weight'])) $ad->weight_kg = (string)$row['weight'];
@@ -1527,6 +1556,63 @@ class Avito extends AppModel
         }
         $text = preg_replace('~\s+~u', ' ', $text);
         return self::limitText($text, 7500);
+    }
+
+    public static function buildGeneratedDescription(array $row): string
+    {
+        $name = trim((string)($row['name'] ?? ''));
+        $source = self::buildDescription($row);
+        $attributes = trim((string)($row['attribute_text'] ?? ''));
+        $type = self::generatedProductType($row);
+
+        if ($type === 'Мотошины') {
+            $intro = 'Новая шина для квадроцикла, ATV или другой мототехники.';
+        } elseif ($type === 'Диски') {
+            $intro = 'Новый колёсный диск для грузовой или специальной техники.';
+        } elseif ($type === 'Фильтры и фильтроэлементы') {
+            $intro = 'Новый фильтр или фильтроэлемент для обслуживания техники.';
+        } elseif ($type === 'Система охлаждения ДВС') {
+            $intro = 'Новая деталь системы охлаждения двигателя.';
+        } elseif ($type === 'Система смазки') {
+            $intro = 'Новая деталь системы смазки двигателя.';
+        } elseif ($type === 'Система выпуска') {
+            $intro = 'Новая деталь системы выпуска.';
+        } elseif ($type === 'Топливная система') {
+            $intro = 'Новая деталь топливной системы.';
+        } elseif ($type === 'Детали салона') {
+            $intro = 'Новая деталь кабины или салона.';
+        } else {
+            $intro = 'Новая шина для грузовиков, погрузчиков или специальной техники.';
+        }
+
+        $parts = [$name, $intro];
+        if ($source !== '' && $source !== $name) {
+            $parts[] = $source;
+        }
+        if ($attributes !== '') {
+            $parts[] = "Характеристики:\n" . preg_replace('~\s+(?=[^:]{1,40}:)~u', "\n", $attributes);
+        }
+        $parts[] = "Товар в наличии на складе ИТС-Центр. Цена указана за 1 шт.\nРаботаем с НДС 22%. Предоставляем документы.\nОтправляем транспортными компаниями по России. Возможен самовывоз.";
+
+        return self::limitText(implode("\n\n", array_values(array_filter($parts))), 7500);
+    }
+
+    public static function generatedProductType(array $row): string
+    {
+        $name = mb_strtolower(implode(' ', [
+            (string)($row['name'] ?? ''),
+            (string)($row['description'] ?? ''),
+            (string)($row['attribute_text'] ?? ''),
+        ]), 'UTF-8');
+        if ((int)($row['category_id'] ?? 0) === 2 || preg_match('~\b(?:atv|квадроцикл)~u', $name)) return 'Мотошины';
+        if (preg_match('~\bдиск\w*\b~u', $name)) return 'Диски';
+        if (preg_match('~\bфильтр\w*\b~u', $name)) return 'Фильтры и фильтроэлементы';
+        if (preg_match('~радиатор|помпа|термостат|охлажден~u', $name)) return 'Система охлаждения ДВС';
+        if (preg_match('~маслян|масляный насос|смазк~u', $name)) return 'Система смазки';
+        if (preg_match('~глушител|выхлоп|выпускн~u', $name)) return 'Система выпуска';
+        if (preg_match('~топлив|форсунк|тнвд|бензонасос~u', $name)) return 'Топливная система';
+        if (preg_match('~сидень|кресл|зеркал|стеклоподъем|салон~u', $name)) return 'Детали салона';
+        return 'Шины для грузовиков и спецтехники';
     }
 
     private static function descriptionValue(array $row): string

@@ -11,7 +11,10 @@ class AvitoController extends AppController
 {
     public function indexAction()
     {
+        Avito::ensureSchema();
+        $publicationSummary = Avito::publicationSummary();
         $this->setMeta('AVITO — мои объявления');
+        $this->set(compact('publicationSummary'));
         // рендерит app/views/admin/Avito/index.php
     }
 
@@ -324,6 +327,10 @@ class AvitoController extends AppController
                 // пустые строки превращаем в NULL, чтобы не плодить ''
                 $ad->$k = ($v === '' ? null : $v);
             }
+            Avito::rememberManualFields($ad, array_values(array_diff(
+                array_intersect(array_keys($_POST), array_keys($attrs)),
+                ['status', 'avito_id', 'avito_url']
+            )));
 
             \R::store($ad);
 
@@ -355,6 +362,7 @@ class AvitoController extends AppController
         $model = new Avito();
 
         if (!empty($_POST)) {
+            $before = $ad->export();
             $model->load($_POST);
             $attrs = $model->attributes;
 
@@ -367,6 +375,18 @@ class AvitoController extends AppController
             foreach ($attrs as $k => $v) {
                 $ad->$k = ($v === '' ? null : $v);
             }
+
+            $manualFields = [];
+            foreach (array_keys($_POST) as $field) {
+                if (!array_key_exists($field, $attrs) || in_array($field, ['status', 'avito_id', 'avito_url'], true)) {
+                    continue;
+                }
+                $newValue = $attrs[$field] ?? null;
+                if ((string)($before[$field] ?? '') !== (string)$newValue) {
+                    $manualFields[] = $field;
+                }
+            }
+            Avito::rememberManualFields($ad, $manualFields);
 
             // UUID на всякий случай
             if (empty($ad->uuid)) {
