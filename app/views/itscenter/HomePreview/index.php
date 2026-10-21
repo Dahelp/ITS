@@ -38,29 +38,29 @@
 		</div>
 	</div>
 </div>
-<div class="advantages-inner">
+<div class="advantages-inner hp-benefits">
 	<div class="container">
 		<div class="pch_name"><h3>Почему клиенты выбирают ИТС-ЦЕНТР?</h3></div>
 		<div class="pch_m">
 			<div class="col-md-4 pch_img">
-				<img src="images/advantages.webp" width="487" height="534" alt="Почему клиенты выбирают ИТС-ЦЕНТР?" title="Почему клиенты выбирают ИТС-ЦЕНТР?">
+				<img src="images/home-preview/advantages-team.webp" width="600" height="750" alt="Команда консультантов ИТС-Центр" loading="lazy" decoding="async">
 			</div>
 			<div class="pch_b col-md-8">
 				<div class="pch_info">
 					<div class="pch_info_1 col-md-12">
 						<div class="pch_td_1 col-md-6">
-							<div class="pch_td_2"><h4>Сотрудничаем с компаниями</h4><p>Работаем на рынке более 15 лет. Более 25000 довольных клиентов. Заключаем договора. Предзаказ на любые объемы продукции.</p></div>
+							<div class="pch_td_2"><div class="hp-benefit-heading"><h4>Сотрудничаем с компаниями</h4><span class="hp-benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V5a1 1 0 011-1h9a1 1 0 011 1v16M14 9h5a1 1 0 011 1v11M1.5 21h21M7 8h3M7 12h3M7 16h3M17 13h.01M17 17h.01"/></svg></span></div><p>Работаем на рынке более 15 лет. Более 25000 довольных клиентов. Заключаем договора. Предзаказ на любые объемы продукции.</p></div>
 						</div>
 						<div class="pch_td_1 col-md-6">
-							<div class="pch_td_2"><h4>Акции и скидки</h4><p>Мы поставщики, по-этому у нас низкие цены. Скидки постоянным и оптовым клиентам. Большой ассортимент товаров по акционной цене.</p></div>
+							<div class="pch_td_2"><div class="hp-benefit-heading"><h4>Акции и скидки</h4><span class="hp-benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 16l8-8"/><circle cx="8" cy="8" r="1.3"/><circle cx="16" cy="16" r="1.3"/></svg></span></div><p>Мы поставщики, по-этому у нас низкие цены. Скидки постоянным и оптовым клиентам. Большой ассортимент товаров по акционной цене.</p></div>
 						</div>
 					</div>
 					<div class="pch_info_1 col-md-12">
 						<div class="pch_td_1 col-md-6">
-							<div class="pch_td_2"><h4>Доставка по России</h4><p>Ежедневные отправки транспортными компаниями. Бесплатная доставка до ТК. Самовывоз: Климовск (Московская область).</p></div>
+							<div class="pch_td_2"><div class="hp-benefit-heading"><h4>Доставка по России</h4><span class="hp-benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17H2V6a1 1 0 011-1h11v12h-3M14 9h4l4 5v3h-2M14 17h1M18 9v5h4"/><circle cx="7" cy="17" r="3"/><circle cx="18" cy="17" r="3"/></svg></span></div><p>Ежедневные отправки транспортными компаниями. Бесплатная доставка до ТК. Самовывоз: Климовск (Московская область).</p></div>
 						</div>
 						<div class="pch_td_1 col-md-6">
-							<div class="pch_td_2"><h4>Оплата</h4><p>Вы можете оплатить выбранный вами товар наличными в пункте самовывоза. От организаций принимаем безналичные переводы.</p></div>
+							<div class="pch_td_2"><div class="hp-benefit-heading"><h4>Оплата</h4><span class="hp-benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h3M12 15h2"/></svg></span></div><p>Вы можете оплатить выбранный вами товар наличными в пункте самовывоза. От организаций принимаем безналичные переводы.</p></div>
 						</div>
 					</div>
 				</div>
