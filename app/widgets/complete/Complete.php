@@ -22,7 +22,7 @@ class Complete
             if ((float)$item['quantity'] + (float)$item['modification_quantity'] - (float)$item['reserve'] >= (int)$item['qty']) $available++;
         }
         $quantity = count($items) > 0 && $available === count($items) ? 1 : 0;
-        $stockText = $quantity ? 'В наличии' : ($available > 0 ? 'Неполный комплект' : 'Нет в наличии');
+        $stockText = $quantity ? 'В наличии' : 'Нет в наличии';
         $categoryName = htmlspecialchars((string)\R::getCell('SELECT name FROM category WHERE id = ?', [(int)$complete['category_id']]), ENT_QUOTES, 'UTF-8');
         $seoName = (string)$complete['name'];
         $cardUrl = htmlspecialchars(PATH . '/complete/' . (string)$complete['alias'], ENT_QUOTES, 'UTF-8');
