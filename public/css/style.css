@@ -7703,3 +7703,7 @@ input:checked + .quiz__final__agreement__check {background-image: url("data:imag
 	.top-header-left {padding: 0;}#logo img {width: 130px;padding: 20px 0;}#logo {width: 150px;}.menu-inner-navbar {display: block;padding: 7px 0 0 0;}.m-cart {padding: 22px 10px 0 10px;}.m-tel {width: 25px;padding: 22px 0 0 0;}.navbar {padding-top: .3rem;}	
 }
 
+
+/* Shared floating actions stay above the header on every page. */
+.right-menu{z-index:1900;visibility:visible;opacity:1;pointer-events:auto}
+.decide.decide--pro .decide-figure img.decide-right-wm[src$="callback-mascot-red.webp"]{opacity:1;height:auto}

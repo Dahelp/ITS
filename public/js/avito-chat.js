@@ -122,15 +122,15 @@
         el('avito-listing-content').hidden = false;
         el('avito-listing-title').textContent = data.title || 'Объявление Avito';
         el('avito-listing-price').textContent = Number(data.price || 0).toLocaleString('ru-RU') + ' ₽';
-        el('avito-listing-stock').textContent = 'Свободно: ' + Number(data.available || 0) + ' шт.';
+        el('avito-listing-stock').textContent = 'Свободно: ' + Number(data.available || 0) + ' ' + (data.stock_unit === 'компл.' ? 'компл.' : 'шт.');
         el('avito-listing-stock').className = 'badge ' + (Number(data.available) > 0 ? 'badge-success' : 'badge-danger');
-        el('avito-listing-stock-details').textContent = 'На складе: ' + Number(data.stock || 0) + ' · в резерве: ' + Number(data.reserve || 0);
+        el('avito-listing-stock-details').textContent = 'На складе: ' + Number(data.stock || 0) + (data.stock_unit === 'компл.' ? ' компл.' : ' шт.') + ' · в резерве: ' + Number(data.reserve || 0);
         el('avito-listing-description').textContent = data.description || 'Описание не заполнено.';
         const edit = new URL(data.edit_url || '', location.origin);
         el('avito-listing-edit').href = edit.origin === location.origin && edit.pathname === '/admin/avito/edit' ? edit.href : '/admin/avito';
         const product = new URL(data.product_url || '', location.origin);
         const productLink = el('avito-listing-product');
-        const hasProduct = product.origin === location.origin && product.pathname === '/admin/product/edit' && product.searchParams.has('id');
+        const hasProduct = product.origin === location.origin && /^\/(product|complete)\/[^/]+$/.test(product.pathname);
         productLink.hidden = !hasProduct;
         if (hasProduct) productLink.href = product.href;
         const main = el('avito-listing-main-image'), gallery = el('avito-listing-gallery');

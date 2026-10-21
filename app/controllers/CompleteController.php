@@ -22,7 +22,10 @@ class CompleteController extends AppController {
         }
         if ($categoryId && $categoryName === '') throw new \Exception('Категория комплектов не найдена', 404);
         $sort = is_string($_GET['sort'] ?? null) ? $_GET['sort'] : 'name';
-        $orders = ['name' => 'name ASC, id ASC', 'price' => 'price ASC, id ASC', 'nal' => 'stock_status_id DESC, name ASC', 'rate' => 'hit DESC, name ASC'];
+        $orders = [
+            'name' => 'name ASC, id ASC',
+            'price' => '(SELECT GREATEST(0, COALESCE(SUM(cp.qty * (cp.price - cp.discount)), 0)) FROM plagins_complete_product cp WHERE cp.complete_id = plagins_complete.id) ASC, id ASC',
+        ];
         if (!isset($orders[$sort])) $sort = 'name';
         $where = "hide = 'show'";
         $params = [];

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261021-1">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=<?= (int)filemtime(WWW . '/css/avito-chat.css') ?>">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <div class="d-flex flex-wrap align-items-center mb-3">
@@ -128,8 +128,8 @@
                                 <small id="avito-listing-stock-details" class="text-muted d-block mb-3"></small>
                                 <div id="avito-listing-description" class="avito-listing-description"></div>
                                 <div class="avito-listing-links mt-3">
-                                    <a id="avito-listing-product" class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer">Открыть товар</a>
-                                    <a id="avito-listing-edit" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Открыть и редактировать объявление</a>
+                                    <a id="avito-listing-edit" class="btn btn-sm btn-primary" target="_blank" rel="noopener noreferrer">Открыть объявление</a>
+                                    <a id="avito-listing-product" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer">Открыть товар</a>
                                 </div>
                             </div>
                             <div id="avito-listing-empty" class="text-muted" hidden>Для этого диалога связанное объявление не найдено.</div>
@@ -148,6 +148,6 @@
         <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-media.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-team.js?v=20261017-5" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat.js?v=20261021-1" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=<?= (int)filemtime(WWW . '/js/avito-chat.js') ?>" defer></script>
     <?php endif; ?>
 </section>
