@@ -59,6 +59,12 @@ jobs:
             --exclude='public/xml/' \
             --exclude='public/storage/' \
             --exclude='public/uploads/' \
+            --filter='protect app/controllers/HomePreviewController.php' \
+            --filter='protect app/services/HomePreviewCatalog.php' \
+            --filter='protect app/views/itscenter/HomePreview/***' \
+            --filter='protect public/css/home-preview.css' \
+            --filter='protect public/js/home-preview.js' \
+            --filter='protect public/images/home-preview/***' \
             --filter='protect public/images/contents/baseimg/***' \
             --filter='protect public/images/contents/mini/***' \
             --filter='protect public/images/contents/tmp/***' \
