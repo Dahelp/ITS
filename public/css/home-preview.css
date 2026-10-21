@@ -115,3 +115,4 @@
  .hp-catalog .hp-accessory:nth-child(-n+2)>.hp-accessory__text{padding-top:8px}
  .hp-catalog .hp-accessory .hp-accessory__image--25{width:min(100%,calc(148px * var(--sw) / var(--sh)))}
 }
+.ocomp_img img.hp-company-illustration{width:auto;height:300px;max-width:100%;object-fit:contain}
