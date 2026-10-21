@@ -1,7 +1,9 @@
 <link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261021-1">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
-    <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
+    <?php if (\app\models\User::isAdmin()): ?>
+        <p><a class="btn btn-primary" href="<?= ADMIN ?>/avito"><i class="fas fa-list"></i> К списку объявлений</a></p>
+    <?php endif; ?>
     <?php if (!$allowed): ?>
         <div class="alert alert-info">Для вашей учётной записи доступ к переписке отключён. Администратор может включить его в разделе «Пользователи», в карточке сотрудника.</div>
     <?php else: ?>

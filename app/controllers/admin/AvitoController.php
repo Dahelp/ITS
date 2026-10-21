@@ -426,11 +426,13 @@ class AvitoController extends AppController
 
         try {
             $updated = Avito::syncLinkedAdsFromProducts();
+            $legacyUpdated = Avito::syncLegacyStatusesFromApi();
             $urlsUpdated = Avito::syncUrlsFromApi();
             $apiStats = Avito::pushLinkedAdsToApi();
             $autoload = Avito::triggerAutoloadUpload();
 
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
+                . ', старых объявлений обновлено по остатку API: ' . (int)$legacyUpdated
                 . ', ссылок из API: ' . (int)$urlsUpdated
                 . ', цен отправлено: ' . (int)$apiStats['price_success']
                 . ', остатков отправлено: ' . (int)$apiStats['stock_success']

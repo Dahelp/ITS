@@ -809,7 +809,7 @@ class Avito extends AppModel
         self::ensureSchema();
 
         // Availability exposed to Avito must never include units already reserved.
-        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                ELSE 'active'\n            END\n        ");
+        \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                ELSE 'active'\n            END\n        ");
 
         // Категория каталога 2 — шины для квадроциклов (ATV). Ранее созданные
         // объявления могли остаться в профиле грузовых шин, поэтому приводим
@@ -874,6 +874,7 @@ class Avito extends AppModel
     public static function getFeedRows(int $id = 0, bool $onlyActive = false): array
     {
         self::syncLinkedAdsFromProducts();
+        self::syncLegacyStatusesFromApi();
         if ($id > 0) {
             return \R::getAll("SELECT * FROM avito_ad WHERE id = ? LIMIT 1", [$id]);
         }
@@ -881,6 +882,63 @@ class Avito extends AppModel
             return \R::getAll("SELECT * FROM avito_ad WHERE status = 'active' ORDER BY id DESC");
         }
         return \R::getAll("SELECT * FROM avito_ad ORDER BY id DESC");
+    }
+
+    /**
+     * Legacy Avito ads can predate the product/article link. Keep their feed
+     * status in sync with the stock Avito already stores for that item ID.
+     */
+    public static function syncLegacyStatusesFromApi(): int
+    {
+        self::ensureSchema();
+        $rows = \R::getAll("SELECT a.id, a.avito_id, a.ad_external_id
+            FROM avito_ad a
+            LEFT JOIN product p ON p.article = a.article
+            WHERE p.id IS NULL
+              AND (a.avito_id REGEXP '^[0-9]+$' OR a.ad_external_id REGEXP '^[0-9]+$')");
+        if (!$rows) {
+            return 0;
+        }
+
+        try {
+            $client = new \app\services\AvitoApiClient();
+            $client->getAccessToken();
+        } catch (\Throwable $e) {
+            return 0;
+        }
+
+        $byItemId = [];
+        foreach ($rows as $row) {
+            $itemId = self::apiItemId($row);
+            if ($itemId > 0) {
+                $byItemId[$itemId][] = (int)$row['id'];
+            }
+        }
+
+        $updated = 0;
+        foreach (array_chunk(array_keys($byItemId), 10) as $chunk) {
+            try {
+                $response = $client->api('POST', '/stock-management/1/info', [
+                    'json' => [
+                        'item_ids' => array_map('intval', $chunk),
+                        'strong_consistency' => true,
+                    ],
+                ]);
+            } catch (\Throwable $e) {
+                continue;
+            }
+            foreach (($response['stocks'] ?? []) as $stock) {
+                $itemId = (int)($stock['item_id'] ?? 0);
+                if ($itemId <= 0 || empty($byItemId[$itemId])) {
+                    continue;
+                }
+                $status = self::publicationStatus((int)($stock['quantity'] ?? 0));
+                foreach ($byItemId[$itemId] as $adId) {
+                    $updated += (int)\R::exec('UPDATE avito_ad SET status = ? WHERE id = ? AND status != ?', [$status, $adId, $status]);
+                }
+            }
+        }
+        return $updated;
     }
 
     public static function buildFeedXml(int $id = 0, bool $onlyActive = true): string
