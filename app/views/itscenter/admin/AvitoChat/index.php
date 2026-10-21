@@ -1,14 +1,19 @@
 <link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261021-1">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
-    <?php if (\app\models\User::isAdmin()): ?>
-        <p><a class="btn btn-primary" href="<?= ADMIN ?>/avito"><i class="fas fa-list"></i> К списку объявлений</a></p>
-    <?php endif; ?>
+    <div class="d-flex flex-wrap align-items-center mb-3">
+        <?php if (\app\models\User::isAdmin()): ?>
+            <a class="btn btn-primary mr-2 mb-2" href="<?= ADMIN ?>/avito"><i class="fas fa-list"></i> К списку объявлений</a>
+        <?php endif; ?>
+        <?php if ($allowed): ?>
+            <button id="avito-chat-check" class="btn btn-info mr-2 mb-2" type="button">Проверить подключение к Авито</button>
+            <span id="avito-chat-check-result" class="mb-2" role="status"></span>
+        <?php endif; ?>
+    </div>
     <?php if (!$allowed): ?>
         <div class="alert alert-info">Для вашей учётной записи доступ к переписке отключён. Администратор может включить его в разделе «Пользователи», в карточке сотрудника.</div>
     <?php else: ?>
         <div id="avito-chat" data-endpoint="<?= htmlspecialchars(ADMIN.'/avito-chat/api', ENT_QUOTES, 'UTF-8') ?>" data-csrf="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>" data-max-image-bytes="<?= (int)$maxImageBytes ?>" data-max-document-bytes="<?= (int)$maxDocumentBytes ?>">
-            <p><button id="avito-chat-check" class="btn btn-info" type="button">Проверить подключение к Авито</button> <span id="avito-chat-check-result" role="status"></span></p>
             <div id="avito-chat-error" class="alert alert-danger" role="alert" hidden></div>
             <div class="row">
                 <div class="col-md-4"><div class="card"><div class="card-body">
