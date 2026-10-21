@@ -1521,7 +1521,7 @@ class Avito extends AppModel
     {
         self::ensureSchema();
         $row = \R::getRow("SELECT p.*, b.name AS brand_name,
-            (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')
+            (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR '\n')
                FROM attribute_product ap
                INNER JOIN attribute_value av ON av.id = ap.attr_id
                INNER JOIN attribute_group ag ON ag.id = av.attr_group_id
@@ -1626,16 +1626,55 @@ class Avito extends AppModel
             $intro = 'Новая шина для грузовиков, погрузчиков или специальной техники.';
         }
 
-        $parts = [$name, $intro];
+        $html = '<p><strong>' . self::descriptionHtml($name) . '</strong></p>';
+        $html .= '<p>' . self::descriptionHtml($intro) . '</p>';
         if ($source !== '' && $source !== $name) {
-            $parts[] = $source;
+            $sentences = preg_split('~(?<=[.!?])\s+(?=[А-ЯA-Z0-9])~u', $source, -1, PREG_SPLIT_NO_EMPTY);
+            if (!$sentences) $sentences = [$source];
+            foreach (array_chunk($sentences, 3) as $paragraph) {
+                $html .= '<p>' . self::descriptionHtml(implode(' ', $paragraph)) . '</p>';
+            }
         }
-        if ($attributes !== '') {
-            $parts[] = "Характеристики:\n" . preg_replace('~\s+(?=[^:]{1,40}:)~u', "\n", $attributes);
+        $attributeRows = preg_split('~\R+~u', $attributes, -1, PREG_SPLIT_NO_EMPTY);
+        if ($attributeRows) {
+            $html .= '<h3>Характеристики</h3><ul>';
+            foreach ($attributeRows as $attribute) {
+                $html .= '<li>' . self::descriptionHtml(trim($attribute)) . '</li>';
+            }
+            $html .= '</ul>';
         }
-        $parts[] = "Товар в наличии на складе ИТС-Центр. Цена указана за 1 шт.\nРаботаем с НДС 22%. Предоставляем документы.\nОтправляем транспортными компаниями по России. Возможен самовывоз.";
+        $html .= '<h3>Покупка и доставка</h3><ul>'
+            . '<li>Товар в наличии на складе ИТС-Центр.</li>'
+            . '<li>Цена указана за 1 шт.</li>'
+            . '<li>Работаем с НДС 22%, предоставляем документы.</li>'
+            . '<li>Отправляем транспортными компаниями по России.</li>'
+            . '<li>Возможен самовывоз.</li>'
+            . '</ul>';
+        return self::limitText($html, 7500);
+    }
 
-        return self::limitText(implode("\n\n", array_values(array_filter($parts))), 7500);
+    private static function descriptionHtml(string $value): string
+    {
+        return htmlspecialchars(trim($value), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
+    public static function applyGeneratedTemplateToAd(int $adId): void
+    {
+        self::ensureSchema();
+        $ad = \R::findOne('avito_ad', 'id = ?', [$adId]);
+        if (!$ad) throw new \RuntimeException('Объявление не найдено');
+        $row = \R::getRow("SELECT p.*, b.name AS brand_name,
+            (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR '\n')
+               FROM attribute_product ap
+               INNER JOIN attribute_value av ON av.id = ap.attr_id
+               INNER JOIN attribute_group ag ON ag.id = av.attr_group_id
+              WHERE ap.product_id = p.id) AS attribute_text
+            FROM product p LEFT JOIN brand b ON b.id = p.brand_id
+            WHERE p.article = ? LIMIT 1", [trim((string)$ad->article)]);
+        if (!$row) throw new \RuntimeException('Связанный товар не найден');
+        $ad->description = self::buildGeneratedDescription($row);
+        self::rememberManualFields($ad, ['description']);
+        \R::store($ad);
     }
 
     public static function generatedProductType(array $row): string

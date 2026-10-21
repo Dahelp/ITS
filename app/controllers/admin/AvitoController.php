@@ -508,6 +508,18 @@ class AvitoController extends AppController
         }
         redirect(ADMIN . '/avito');
     }
+
+    public function applyTemplateAction()
+    {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        try {
+            Avito::applyGeneratedTemplateToAd($id);
+            $_SESSION['success'] = 'Оформленный шаблон описания применён.';
+        } catch (\Throwable $e) {
+            $_SESSION['error'] = 'Не удалось применить шаблон: ' . $e->getMessage();
+        }
+        redirect(ADMIN . '/avito/edit?id=' . $id);
+    }
     /**
      * Удаление
      */

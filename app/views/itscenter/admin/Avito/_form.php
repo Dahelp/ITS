@@ -92,6 +92,14 @@ if (!function_exists('avito_h')) {
           </a>
         <?php endif; ?>
 
+        <?php if (!empty($isEdit) && !empty($ad->id) && $linkedProductId): ?>
+          <a href="<?=ADMIN;?>/avito/apply-template?id=<?= (int)$ad->id ?>"
+             class="btn btn-warning"
+             onclick="return confirm('Заменить текущее описание оформленным шаблоном из товара? Остальные поля объявления не изменятся.');">
+            <i class="fas fa-magic"></i> Применить оформленный шаблон
+          </a>
+        <?php endif; ?>
+
         <a id="avito-open-product"
            class="btn btn-outline-primary<?=$linkedProductId ? '' : ' d-none'?>"
            href="<?=$linkedProductId ? ADMIN . '/product/edit?id=' . $linkedProductId : '#'?>"
