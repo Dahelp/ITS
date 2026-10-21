@@ -1457,6 +1457,20 @@ class Avito extends AppModel
             }
         }
 
+        $provisionalRequired = [];
+        $provisionalTitle = trim((string)($row['title'] ?? ''));
+        foreach ($required as $field => $label) {
+            if (mb_strtolower(trim((string)($row[$field] ?? '')), 'UTF-8') !== 'другое') {
+                continue;
+            }
+            $detail = $label . ': выбрано «Другое»';
+            if ($field === 'tire_aspect_ratio'
+                && preg_match('~(?<!\d)(\d+(?:[.,]\d+)?)\s*[xх×]\s*\d+(?:[.,]\d+)?\s*[-xх×]\s*\d+(?:[.,]\d+)?~ui', $provisionalTitle, $match)) {
+                $detail .= ' (ожидаемое значение ' . str_replace(',', '.', $match[1]) . ')';
+            }
+            $provisionalRequired[$field] = $detail;
+        }
+
         $warnings = [];
         $title = trim((string)($row['title'] ?? ''));
         $description = trim(strip_tags((string)($row['description'] ?? '')));
@@ -1481,6 +1495,9 @@ class Avito extends AppModel
                 $warnings[] = 'DIA «' . $rimDia . '» отсутствует в справочнике Avito — выберите допустимое значение';
             }
         }
+        foreach ($provisionalRequired as $detail) {
+            $warnings[] = $detail . ' — проверить справочник Avito и заменить точным значением, когда оно появится';
+        }
 
         $requiredTotal = count($required);
         $requiredFilled = $requiredTotal - count($missingRequired);
@@ -1500,6 +1517,9 @@ class Avito extends AppModel
         if ($missingRequired) {
             $status = 'error';
             $label = 'Нужно исправить';
+        } elseif ($provisionalRequired) {
+            $status = 'warning';
+            $label = 'Заполнено временно — требуется уточнение';
         } elseif ($reviewStatus === 'needs_review') {
             $status = 'warning';
             $label = 'Требует проверки';
@@ -1512,7 +1532,7 @@ class Avito extends AppModel
         }
 
         return compact(
-            'status', 'label', 'missingRequired', 'missingOptional', 'warnings',
+            'status', 'label', 'missingRequired', 'provisionalRequired', 'missingOptional', 'warnings',
             'requiredScore', 'optionalScore', 'textScore', 'requiredTotal', 'optionalTotal'
         );
     }

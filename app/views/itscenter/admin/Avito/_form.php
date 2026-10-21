@@ -138,6 +138,7 @@ if (!function_exists('avito_h')) {
               <?php
                 $analysisClass = $avitoAnalysis['status'] === 'ready' ? 'success' : ($avitoAnalysis['status'] === 'warning' ? 'warning' : 'danger');
                 $missingRequiredText = implode(', ', array_values($avitoAnalysis['missingRequired']));
+                $provisionalRequiredText = implode('; ', array_values($avitoAnalysis['provisionalRequired'] ?? []));
                 $missingOptionalText = implode(', ', array_values($avitoAnalysis['missingOptional']));
               ?>
               <div class="alert alert-<?=$analysisClass?>">
@@ -148,6 +149,7 @@ if (!function_exists('avito_h')) {
                   <div class="col-md-4"><strong>Качество текста:</strong> <?=$avitoAnalysis['textScore']?>%</div>
                 </div>
                 <?php if ($missingRequiredText): ?><div class="mt-2"><strong>Нужно исправить:</strong> <?=avito_h($missingRequiredText)?></div><?php endif; ?>
+                <?php if ($provisionalRequiredText): ?><div class="mt-2"><strong>Заполнено временно:</strong> <?=avito_h($provisionalRequiredText)?>. Проверьте справочник Avito позже и замените «Другое» точным значением.</div><?php endif; ?>
                 <?php if ($missingOptionalText): ?><div class="mt-1"><strong>Можно дополнить:</strong> <?=avito_h($missingOptionalText)?></div><?php endif; ?>
                 <?php if ($avitoAnalysis['warnings']): ?>
                   <div class="mt-1"><strong>Предупреждения:</strong> <?=avito_h(implode('; ', $avitoAnalysis['warnings']))?></div>
@@ -685,6 +687,9 @@ if (!function_exists('avito_h')) {
                               <option value="<?=avito_h($value)?>" <?php if ((string)($ad->$field ?? '') === $value) echo 'selected'; ?>><?=avito_h($value)?></option>
                             <?php endforeach; ?>
                           </select>
+                          <?php if ($field === 'tire_aspect_ratio'): ?>
+                            <small class="form-text text-muted">Список взят из шаблона Avito «Мотошины» от 15.10.2026 и не обновляется с сайта Avito автоматически. Если нужного значения нет, выберите «Другое»: объявление можно выгрузить, но оно останется жёлтым до замены на точное значение.</small>
+                          <?php endif; ?>
                         </div>
                       </div>
                     <?php endforeach; ?>

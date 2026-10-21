@@ -240,10 +240,12 @@ class AvitoController extends AppController
                     $class = $analysis['status'] === 'ready' ? 'success' : ($analysis['status'] === 'warning' ? 'warning' : 'danger');
                     $details = [];
                     if ($analysis['missingRequired']) $details[] = 'Обязательные: ' . implode(', ', $analysis['missingRequired']);
+                    if ($analysis['provisionalRequired']) $details[] = 'Временно заполнено: ' . implode(', ', $analysis['provisionalRequired']);
                     if ($analysis['warnings']) $details[] = implode('; ', $analysis['warnings']);
                     $title = htmlspecialchars(implode(' | ', $details), ENT_QUOTES, 'UTF-8');
                     return '<span class="badge badge-' . $class . '" title="' . $title . '">' . htmlspecialchars($analysis['label'], ENT_QUOTES, 'UTF-8') . '</span>'
                         . '<div class="small mt-1">Обязательные: <strong>' . $analysis['requiredScore'] . '%</strong> (' . count($analysis['missingRequired']) . ' не заполнено)</div>'
+                        . ($analysis['provisionalRequired'] ? '<div class="small text-warning"><strong>Уточнить: ' . count($analysis['provisionalRequired']) . '</strong></div>' : '')
                         . '<div class="small">Доп.: ' . $analysis['optionalScore'] . '% (' . count($analysis['missingOptional']) . ')</div>'
                         . '<div class="small">Текст: ' . $analysis['textScore'] . '%</div>';
                 }

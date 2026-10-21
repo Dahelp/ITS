@@ -131,6 +131,21 @@ if (!str_contains($motoFlotationXml, '<RimDiameter>5</RimDiameter>')
     fwrite(STDERR, "FAILED: ATV flotation size is not exported correctly\n");
     exit(1);
 }
+$motoProvisionalAnalysis = Avito::analyzeRow(array_merge($base, [
+    'title' => 'Шина 20x10-10 P361 EKKA', 'product_type' => 'Мотошины',
+    'ad_external_id' => 'its-9092', 'description' => str_repeat('Описание товара ', 50),
+    'price_rub' => 5500, 'goods_type' => 'Шины, диски и колёса',
+    'manager_name' => 'ИТС-Центр', 'contact_phone' => '8 495 424-98-90',
+    'address' => 'Подольск', 'images_json' => json_encode(['https://example.test/1.jpg', 'https://example.test/2.jpg']),
+    'rim_diameter' => '10', 'tire_section_width' => '10',
+    'tire_aspect_ratio' => 'Другое', 'wheel_axle' => 'Любая',
+]));
+if ($motoProvisionalAnalysis['status'] !== 'warning'
+    || $motoProvisionalAnalysis['label'] !== 'Заполнено временно — требуется уточнение'
+    || !str_contains($motoProvisionalAnalysis['provisionalRequired']['tire_aspect_ratio'] ?? '', 'ожидаемое значение 20')) {
+    fwrite(STDERR, "FAILED: provisional Avito dictionary value must stay visible as a warning\n");
+    exit(1);
+}
 
 $partXml = Avito::buildXml([$base + [
     'goods_type' => 'Запчасти', 'product_type' => 'Для грузовиков и спецтехники',
