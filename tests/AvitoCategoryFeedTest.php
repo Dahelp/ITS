@@ -37,8 +37,10 @@ $generated = Avito::buildGeneratedDescription([
 ]);
 if (Avito::generatedProductType(['name' => 'Фильтр гидравлический ABC']) !== 'Фильтры и фильтроэлементы'
     || !str_contains($generated, 'Работаем с НДС 22%')
-    || !str_contains($generated, '<h3>Характеристики</h3>')
-    || !str_contains($generated, '<ul>')
+    || !str_contains($generated, '<strong>Характеристики:</strong>')
+    || !str_contains($generated, '▶️ ТОЛЬКО НОВЫЕ ТОВАРЫ С ГАРАНТИЕЙ!')
+    || !str_contains($generated, '<strong>Доставка:</strong>')
+    || !str_contains($generated, '✅ Безналичная оплата по счёту.')
     || !str_contains($generated, '<p><strong>Фильтр гидравлический ABC</strong></p>')) {
     fwrite(STDERR, "FAILED: generated Avito product template\n");
     exit(1);

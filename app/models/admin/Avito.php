@@ -1646,30 +1646,46 @@ class Avito extends AppModel
             $intro = 'Новая шина для грузовиков, погрузчиков или специальной техники.';
         }
 
-        $html = '<p><strong>' . self::descriptionHtml($name) . '</strong></p>';
-        $html .= '<p>' . self::descriptionHtml($intro) . '</p>';
+        $productWord = in_array($type, ['Мотошины', 'Шины для грузовиков и спецтехники'], true) ? 'ШИНЫ' : 'ТОВАРЫ';
+        $html = '<p><strong>▶️ ТОЛЬКО НОВЫЕ ' . $productWord . ' С ГАРАНТИЕЙ!</strong><br>'
+            . '◀️ ' . self::descriptionHtml($intro) . ' В наличии на складе.</p>';
+        $html .= '<p><strong>' . self::descriptionHtml($name) . '</strong></p>';
         if ($source !== '' && $source !== $name) {
+            $source = self::limitText($source, 2800);
             $sentences = preg_split('~(?<=[.!?])\s+(?=[А-ЯA-Z0-9])~u', $source, -1, PREG_SPLIT_NO_EMPTY);
             if (!$sentences) $sentences = [$source];
-            foreach (array_chunk($sentences, 3) as $paragraph) {
+            foreach (array_chunk($sentences, 2) as $paragraph) {
                 $html .= '<p>' . self::descriptionHtml(implode(' ', $paragraph)) . '</p>';
             }
         }
         $attributeRows = preg_split('~\R+~u', $attributes, -1, PREG_SPLIT_NO_EMPTY);
         if ($attributeRows) {
-            $html .= '<h3>Характеристики</h3><ul>';
+            $html .= '<p><strong>Характеристики:</strong><br>';
             foreach ($attributeRows as $attribute) {
-                $html .= '<li>' . self::descriptionHtml(trim($attribute)) . '</li>';
+                $attribute = trim($attribute);
+                if (preg_match('~^([^:]{1,80}):\s*(.+)$~u', $attribute, $parts)) {
+                    $html .= '<strong>' . self::descriptionHtml($parts[1]) . ':</strong> '
+                        . self::descriptionHtml($parts[2]) . '<br>';
+                } else {
+                    $html .= self::descriptionHtml($attribute) . '<br>';
+                }
             }
-            $html .= '</ul>';
+            $html .= '</p>';
         }
-        $html .= '<h3>Покупка и доставка</h3><ul>'
-            . '<li>Товар в наличии на складе ИТС-Центр.</li>'
-            . '<li>Цена указана за 1 шт.</li>'
-            . '<li>Работаем с НДС 22%, предоставляем документы.</li>'
-            . '<li>Отправляем транспортными компаниями по России.</li>'
-            . '<li>Возможен самовывоз.</li>'
-            . '</ul>';
+        $html .= '<p><strong>Цена и наличие:</strong><br>'
+            . '<strong>Цена указана за 1 шт.</strong><br>'
+            . 'Актуальное количество смотрите в объявлении.</p>'
+            . '<p><strong>Доставка:</strong><br>'
+            . '▶️ Москва и область: доставка курьером, стоимость рассчитывается по адресу.<br>'
+            . '▶️ По России: отправка транспортными компаниями.<br>'
+            . '👉 Бесплатно довозим товар до терминала транспортной компании.<br>'
+            . 'Возможен самовывоз со склада ИТС-Центр.</p>'
+            . '<p><strong>Оплата:</strong><br>'
+            . '✅ Наличные или карта при самовывозе.<br>'
+            . '✅ Безналичная оплата по счёту.<br>'
+            . '✅ Работаем с НДС 22%, предоставляем документы.</p>'
+            . '<p><strong>Обращайтесь — поможем с выбором и ответим на вопросы!</strong><br>'
+            . '🧡 Добавьте объявление в избранное, чтобы не потерять.</p>';
         return self::limitText($html, 7500);
     }
 
