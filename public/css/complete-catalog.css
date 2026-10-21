@@ -4,7 +4,7 @@
 .complete-catalog-filter>div{flex:1 1 300px;max-width:440px;min-width:0}
 .complete-catalog-filter select{width:100%;min-height:44px}
 .complete-catalog-filter .btn{min-height:44px}
-.complete-catalog-filter>a{align-self:center}
+.complete-catalog-filter>a{align-self:flex-end;display:inline-flex;align-items:center;min-height:44px}
 .complete-catalog-count{margin-left:auto;align-self:center;color:#66768b;font-size:14px}
 .complete-catalog-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;align-items:stretch}
 .complete-catalog-pagination{display:flex;justify-content:center;margin:24px 0}
