@@ -28,8 +28,14 @@ class Avito extends AppModel
     public static function createAdBean()
     {
         $uuid = self::uuidV4();
-        \R::exec('INSERT INTO avito_ad (uuid) VALUES (?)', [$uuid]);
-        $id = (int)\R::getCell('SELECT LAST_INSERT_ID()');
+        $id = 0;
+        \R::exec('LOCK TABLES avito_ad WRITE');
+        try {
+            $id = (int)\R::getCell('SELECT COALESCE(MAX(id), 0) + 1 FROM avito_ad');
+            \R::exec('INSERT INTO avito_ad (id, uuid) VALUES (?, ?)', [$id, $uuid]);
+        } finally {
+            \R::exec('UNLOCK TABLES');
+        }
         $ad = \R::findOne('avito_ad', 'id = ?', [$id]);
         if (!$ad) {
             throw new \RuntimeException('Не удалось создать запись объявления Avito');
@@ -697,18 +703,6 @@ class Avito extends AppModel
     }
     public static function ensureSchema(): void
     {
-        $idColumn = \R::getRow("SHOW COLUMNS FROM avito_ad LIKE 'id'");
-        if ($idColumn && stripos((string)($idColumn['Extra'] ?? ''), 'auto_increment') === false) {
-            $idType = strtolower(trim((string)($idColumn['Type'] ?? 'int(11)')));
-            if (!preg_match('~^(?:tinyint|smallint|mediumint|int|bigint)(?:\(\d+\))?(?: unsigned)?$~', $idType)) {
-                $idType = 'int(11)';
-            }
-            if (strtoupper((string)($idColumn['Key'] ?? '')) !== 'PRI') {
-                \R::exec('ALTER TABLE avito_ad ADD PRIMARY KEY (`id`)');
-            }
-            \R::exec("ALTER TABLE avito_ad MODIFY `id` {$idType} NOT NULL AUTO_INCREMENT");
-        }
-
         $hasAvitoUrl = \R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'avito_url'");
         if (!$hasAvitoUrl) {
             \R::exec("ALTER TABLE avito_ad ADD avito_url VARCHAR(512) NULL DEFAULT NULL AFTER avito_id");
