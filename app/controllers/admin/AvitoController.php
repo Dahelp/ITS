@@ -268,11 +268,19 @@ class AvitoController extends AppController
                     $avitoLink = $avitoUrl !== ''
                         ? '<a target="_blank" rel="noopener" href="' . htmlspecialchars($avitoUrl, ENT_QUOTES, 'UTF-8') . '" title="Открыть/найти объявление на Avito"><i class="fas fa-external-link-alt text-success"></i></a> '
                         : '';
+                    $deletionRequested = (bool)\R::getCell(
+                        'SELECT deletion_requested_at IS NOT NULL FROM avito_ad WHERE id = ? LIMIT 1',
+                        [$id]
+                    );
+                    $deleteTitle = $deletionRequested ? 'Проверить снятие с Avito и удалить' : 'Снять с Avito и удалить';
+                    $deleteConfirm = $deletionRequested
+                        ? 'Проверить статус на Avito и удалить локальную запись, если объявление уже снято?'
+                        : 'Сначала снять объявление с Avito, а после подтверждения удалить из админки?';
 
                     return
                         $avitoLink .
                         '<a href="' . $edit . '" title="Редактировать"><i class="fas fa-pencil-alt"></i></a> ' .
-                        '<a class="delete" href="' . $del . '" onclick="return confirm(\'Удалить объявление?\')" title="Удалить"><i class="fas fa-times-circle text-danger"></i></a> ' .
+                        '<a class="delete" href="' . $del . '" onclick="return confirm(\'' . $deleteConfirm . '\')" title="' . $deleteTitle . '"><i class="fas ' . ($deletionRequested ? 'fa-hourglass-half text-warning' : 'fa-times-circle text-danger') . '"></i></a> ' .
                         '<a href="' . $exp . '" title="Экспорт объявления в XML"><i class="fas fa-file-code"></i></a>';
                 }
             ),
@@ -529,12 +537,55 @@ class AvitoController extends AppController
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($id) {
-            $bean = \R::load('avito_ad', $id);
-            if ($bean && $bean->id) {
-                \R::trash($bean);
-                $_SESSION['success'] = 'Объявление удалено';
-            } else {
+            Avito::ensureSchema();
+            $row = \R::getRow('SELECT * FROM avito_ad WHERE id = ? LIMIT 1', [$id]);
+            if (!$row) {
                 $_SESSION['error'] = 'Объявление не найдено';
+                redirect(ADMIN . '/avito');
+            }
+
+            $itemId = Avito::numericAvitoItemId($row);
+            $remoteStatus = (string)($row['avito_publication_status'] ?? '');
+            $requested = !empty($row['deletion_requested_at']);
+            if ($requested) {
+                Avito::syncUrlsFromApi();
+                $row = \R::getRow('SELECT * FROM avito_ad WHERE id = ? LIMIT 1', [$id]);
+                $itemId = Avito::numericAvitoItemId($row);
+                $remoteStatus = (string)($row['avito_publication_status'] ?? '');
+            }
+            $deletionWaitElapsed = $requested
+                && strtotime((string)($row['deletion_requested_at'] ?? '')) <= time() - 600;
+
+            if (Avito::deletionIsConfirmed($remoteStatus)
+                || ($deletionWaitElapsed && $itemId <= 0
+                    && !in_array(mb_strtolower($remoteStatus, 'UTF-8'), ['active', 'published'], true))) {
+                \R::trash(\R::load('avito_ad', $id));
+                $_SESSION['success'] = $itemId > 0
+                    ? 'Avito подтвердил снятие. Объявление удалено из админки.'
+                    : 'Объявление ещё не имело числового Avito ID и удалено из админки.';
+                redirect(ADMIN . '/avito');
+            }
+
+            if (!$requested) {
+                \R::exec("UPDATE avito_ad SET status = 'archived', deletion_requested_at = NOW() WHERE id = ?", [$id]);
+                $upload = Avito::triggerAutoloadUpload();
+                if (!empty($upload['triggered'])) {
+                    $_SESSION['success'] = 'Объявление исключено из XML. Avito начал снятие с публикации. Запись сохранена до подтверждения; позже нажмите жёлтые часы ещё раз.';
+                } else {
+                    $_SESSION['error'] = 'Объявление исключено из XML, но запуск автозагрузки не подтверждён: '
+                        . (string)($upload['message'] ?? 'неизвестная ошибка') . '. Запись не удалена.';
+                }
+                redirect(ADMIN . '/avito');
+            }
+
+            if (Avito::deletionIsConfirmed($remoteStatus)) {
+                \R::trash(\R::load('avito_ad', $id));
+                $_SESSION['success'] = 'Avito подтвердил снятие. Объявление удалено из админки.';
+            } else {
+                Avito::triggerAutoloadUpload();
+                $_SESSION['error'] = 'Avito ещё не подтвердил снятие (текущий статус: '
+                    . ($remoteStatus !== '' ? $remoteStatus : 'не проверен')
+                    . '). Запись оставлена в админке; повторите проверку позже.';
             }
         }
         redirect(ADMIN . '/avito');

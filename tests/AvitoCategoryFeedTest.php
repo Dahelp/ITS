@@ -30,6 +30,19 @@ if (Avito::avitoPublicationPresentation('active')[0] !== 'Опубликован
     exit(1);
 }
 
+foreach (['old', 'removed', 'archived', 'unpublished', 'deleted'] as $removedStatus) {
+    if (!Avito::deletionIsConfirmed($removedStatus)) {
+        fwrite(STDERR, "FAILED: {$removedStatus} must allow final local deletion\n");
+        exit(1);
+    }
+}
+foreach (['active', 'published', 'blocked', '', null] as $unsafeStatus) {
+    if (Avito::deletionIsConfirmed($unsafeStatus)) {
+        fwrite(STDERR, "FAILED: unconfirmed remote status must keep the local Avito row\n");
+        exit(1);
+    }
+}
+
 $generated = Avito::buildGeneratedDescription([
     'name' => 'Фильтр гидравлический ABC',
     'content' => 'Для погрузчика',

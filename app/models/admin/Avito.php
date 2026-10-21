@@ -720,6 +720,7 @@ class Avito extends AppModel
         $columns = [
             'avito_publication_status' => 'VARCHAR(64)',
             'avito_status_updated_at' => 'DATETIME',
+            'deletion_requested_at' => 'DATETIME',
             'manual_fields_json' => 'TEXT',
             'rim_bolts' => 'VARCHAR(16)',
             'rim_bolts_diameter' => 'VARCHAR(32)',
@@ -854,6 +855,9 @@ class Avito extends AppModel
 
         // Availability exposed to Avito must never include units already reserved.
         \R::exec("\n            UPDATE avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                ELSE 'active'\n            END\n        ");
+        // A deletion request must win over inventory synchronization so the ad
+        // stays absent from the XML feed while Avito processes its removal.
+        \R::exec("UPDATE avito_ad SET status = 'archived' WHERE deletion_requested_at IS NOT NULL");
 
         $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
 
@@ -862,6 +866,9 @@ class Avito extends AppModel
         foreach ($rows as $row) {
             $ad = \R::load('avito_ad', (int)$row['ad_id']);
             if (!$ad || !$ad->id) {
+                continue;
+            }
+            if (!empty($ad->deletion_requested_at)) {
                 continue;
             }
 
@@ -911,6 +918,18 @@ class Avito extends AppModel
     public static function publicationStatus(int $availableQuantity): string
     {
         return $availableQuantity > 0 ? 'active' : 'archived';
+    }
+
+    public static function deletionIsConfirmed(?string $publicationStatus): bool
+    {
+        return in_array(mb_strtolower(trim((string)$publicationStatus), 'UTF-8'), [
+            'old', 'removed', 'archived', 'unpublished', 'deleted',
+        ], true);
+    }
+
+    public static function numericAvitoItemId(array $row): int
+    {
+        return self::apiItemId($row);
     }
 
     public static function manualFields($ad): array
