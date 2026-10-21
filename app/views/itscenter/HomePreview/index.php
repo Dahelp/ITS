@@ -43,7 +43,7 @@
 		<div class="pch_name"><h3>Почему клиенты выбирают ИТС-ЦЕНТР?</h3></div>
 		<div class="pch_m">
 			<div class="col-md-4 pch_img">
-				<img src="images/home-preview/advantages-team.webp" width="600" height="750" alt="Команда консультантов ИТС-Центр" loading="lazy" decoding="async">
+				<img src="images/home-preview/advantages-team-cartoon.webp" width="600" height="659" alt="Команда консультантов ИТС-Центр" loading="lazy" decoding="async">
 			</div>
 			<div class="pch_b col-md-8">
 				<div class="pch_info">
