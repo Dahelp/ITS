@@ -128,6 +128,11 @@
         el('avito-listing-description').textContent = data.description || 'Описание не заполнено.';
         const edit = new URL(data.edit_url || '', location.origin);
         el('avito-listing-edit').href = edit.origin === location.origin && edit.pathname === '/admin/avito/edit' ? edit.href : '/admin/avito';
+        const product = new URL(data.product_url || '', location.origin);
+        const productLink = el('avito-listing-product');
+        const hasProduct = product.origin === location.origin && product.pathname === '/admin/product/edit' && product.searchParams.has('id');
+        productLink.hidden = !hasProduct;
+        if (hasProduct) productLink.href = product.href;
         const main = el('avito-listing-main-image'), gallery = el('avito-listing-gallery');
         gallery.replaceChildren(); main.hidden = true; main.removeAttribute('src');
         const images = Array.isArray(data.images) ? data.images.map(safeMediaUrl).filter(Boolean) : [];

@@ -141,6 +141,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 700));
     expect(find.text('Свободно: 10 шт.'), findsOneWidget);
     expect(find.text('На складе: 14 · в резерве: 4'), findsOneWidget);
+    expect(find.text('Открыть товар'), findsOneWidget);
     await tester.pageBack();
     await tester.pumpAndSettle();
     await tester.pumpWidget(const SizedBox());

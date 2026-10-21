@@ -58,6 +58,9 @@ class AvitoListingCard
             'available' => self::availableQuantity($stock, $reserve),
             'images' => $images,
             'edit_url' => rtrim(PATH, '/') . '/admin/avito/edit?id=' . (int)$row['ad_id'],
+            'product_url' => !empty($row['product_id'])
+                ? rtrim(PATH, '/') . '/admin/product/edit?id=' . (int)$row['product_id']
+                : '',
             'avito_url' => (string)($row['avito_url'] ?? ''),
         ];
     }

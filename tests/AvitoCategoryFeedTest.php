@@ -12,6 +12,11 @@ require $projectRoot . '/app/models/admin/Avito.php';
 
 use app\models\admin\Avito;
 
+if (Avito::publicationStatus(1) !== 'active' || Avito::publicationStatus(0) !== 'archived') {
+    fwrite(STDERR, "FAILED: publication status must follow available stock\n");
+    exit(1);
+}
+
 foreach (['НДС 20%', 'включая НДС: 20 %', 'НДС&nbsp;20%'] as $description) {
     if (!str_contains(Avito::normalizeDescriptionNds($description), 'НДС 22%')) {
         fwrite(STDERR, "FAILED: NDS 20% description was not normalized\n");

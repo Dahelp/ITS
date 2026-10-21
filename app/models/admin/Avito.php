@@ -809,7 +809,7 @@ class Avito extends AppModel
         self::ensureSchema();
 
         // Availability exposed to Avito must never include units already reserved.
-        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                WHEN a.review_status = 'needs_review' THEN 'archived'\n                ELSE 'active'\n            END\n        ");
+        \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) <= 0 THEN 'archived'\n                ELSE 'active'\n            END\n        ");
 
         // Категория каталога 2 — шины для квадроциклов (ATV). Ранее созданные
         // объявления могли остаться в профиле грузовых шин, поэтому приводим
@@ -839,9 +839,7 @@ class Avito extends AppModel
             $ad->price_rub = $price > 0 ? $price : null;
             // Quantity в XML Avito — это цена «за N шт.», а не складской остаток.
             $ad->quantity = 'за 1 шт.';
-            $ad->status = $quantity > 0 && (string)$ad->review_status !== 'needs_review'
-                ? 'active'
-                : 'archived';
+            $ad->status = self::publicationStatus($quantity);
 
             if (empty($ad->title)) {
                 $ad->title = self::limitText((string)$row['name'], 50);
@@ -866,6 +864,11 @@ class Avito extends AppModel
         }
 
         return $updated;
+    }
+
+    public static function publicationStatus(int $availableQuantity): string
+    {
+        return $availableQuantity > 0 ? 'active' : 'archived';
     }
 
     public static function getFeedRows(int $id = 0, bool $onlyActive = false): array

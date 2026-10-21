@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261019-3">
+<link rel="stylesheet" href="<?= PATH ?>/css/avito-chat.css?v=20261021-1">
 <section class="content-header"><h1>Чат Авито</h1></section>
 <section class="content">
     <?php if (\app\models\User::isAdmin()): ?><p><a href="<?= ADMIN ?>/avito">Объявления</a></p><?php endif; ?>
@@ -120,7 +120,10 @@
                                 </div>
                                 <small id="avito-listing-stock-details" class="text-muted d-block mb-3"></small>
                                 <div id="avito-listing-description" class="avito-listing-description"></div>
-                                <a id="avito-listing-edit" class="btn btn-primary btn-block mt-3" target="_blank" rel="noopener noreferrer">Открыть и редактировать объявление</a>
+                                <div class="avito-listing-links mt-3">
+                                    <a id="avito-listing-product" class="btn btn-outline-primary" target="_blank" rel="noopener noreferrer">Открыть товар</a>
+                                    <a id="avito-listing-edit" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Открыть и редактировать объявление</a>
+                                </div>
                             </div>
                             <div id="avito-listing-empty" class="text-muted" hidden>Для этого диалога связанное объявление не найдено.</div>
                         </div>
@@ -138,6 +141,6 @@
         <script src="<?= PATH ?>/js/avito-chat-ui.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-media.js?v=20261017-1" defer></script>
         <script src="<?= PATH ?>/js/avito-chat-team.js?v=20261017-5" defer></script>
-        <script src="<?= PATH ?>/js/avito-chat.js?v=20261019-1" defer></script>
+        <script src="<?= PATH ?>/js/avito-chat.js?v=20261021-1" defer></script>
     <?php endif; ?>
 </section>

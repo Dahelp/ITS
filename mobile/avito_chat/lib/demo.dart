@@ -132,7 +132,8 @@ class DemoApi extends ChatApi {
           'reserve': 4,
           'available': 10,
           'images': const [],
-          'edit_url': 'https://its-center.ru/admin/avito/edit?id=198'
+          'edit_url': 'https://its-center.ru/admin/avito/edit?id=198',
+          'product_url': 'https://its-center.ru/admin/product/edit?id=9538'
         };
       case 'read':
         return {'ok': true};

@@ -980,6 +980,7 @@ class ListingDetailsSheet extends StatelessWidget {
     final stock = int.tryParse('${listing['stock']}') ?? 0;
     final reserve = int.tryParse('${listing['reserve']}') ?? 0;
     final editUrl = '${listing['edit_url'] ?? ''}';
+    final productUrl = '${listing['product_url'] ?? ''}';
     return DraggableScrollableSheet(
         expand: false,
         initialChildSize: .88,
@@ -1038,6 +1039,13 @@ class ListingDetailsSheet extends StatelessWidget {
                           : () => openLink(context, editUrl),
                       icon: const Icon(Icons.edit_outlined),
                       label: const Text('Открыть и редактировать объявление')),
+                  const SizedBox(height: 10),
+                  OutlinedButton.icon(
+                      onPressed: safeUrl(productUrl) == null
+                          ? null
+                          : () => openLink(context, productUrl),
+                      icon: const Icon(Icons.inventory_2_outlined),
+                      label: const Text('Открыть товар')),
                 ]));
   }
 }
