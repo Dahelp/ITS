@@ -1,6 +1,9 @@
 <?php
 $tell_zv = $tell_zv ?? \ishop\App::options('option_telefon');
 $telefon_href = str_replace(['(', ')', ' ', '-'], '', (string)$tell_zv);
+$callbackMascot = ($this->route['controller'] ?? '') === 'HomePreview'
+    ? 'images/home-preview/callback-mascot-red.webp'
+    : 'images/w.png';
 
 if (empty($_SESSION['callback_token'])) {
     $_SESSION['callback_token'] = bin2hex(random_bytes(32));
@@ -179,7 +182,7 @@ if (empty($_SESSION['callback_token'])) {
                         </div>
 
                         <div class="decide-figure">
-                            <img src="images/w.png" width="281" height="449" data-src="images/w.png" alt="Менеджер ИТС-Центр поможет с подбором товара" class="decide-right-wm ls-is-cached lazyloaded">
+                            <img src="<?= $callbackMascot ?>" width="281" height="449" data-src="<?= $callbackMascot ?>" alt="Менеджер ИТС-Центр поможет с подбором товара" class="decide-right-wm ls-is-cached lazyloaded">
                         </div>
                     </div>
                 </div>
