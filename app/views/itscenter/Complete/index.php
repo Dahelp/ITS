@@ -1,44 +1,26 @@
-<!--prdt-starts-->
-<div class="prdt">
-    <div class="container">
-		<!--start-breadcrumbs-->
-		<nav class="pt-4 breadcrumb-blok" aria-label="breadcrumb">
-			<ol class="breadcrumb flex-lg-nowrap">
-				<li class="breadcrumb-item">
-					<span>
-						<a class="text-nowrap" href="<?=h(rtrim(PATH, '/') . '/');?>"><i class="fas fa-home"></i><span class="visually-hidden">Главная</span></a>
-					</span>
-				</li>
-				<li class="breadcrumb-item text-nowrap active" data-id="2">
-					<span>Комплекты товаров</span>
-				</li>
-			</ol>
-		</nav>
-		<!--end-breadcrumbs-->
-		<section class="align-items-center">
-            <h1 class="h2 mb-3 mb-md-0 me-3">Комплекты</h1>			
-        </section>  
-        <div class="prdt-top">
-            <div class="col-md-12">                
-				<?php if(!empty($completes)): ?>
-                    <div class="row g-0 mx-n2 product-one">
-                        <?php $curr = \ishop\App::$app->getProperty('currency'); ?>
-                        <?php foreach($completes as $complete): ?>
-							<div class="col-xl-3 col-lg-6 col-md-4 col-sm-6 mb-3">
-								<?php new \app\widgets\complete\Complete($complete, $curr, 'complete_tpl.php'); ?>
-							</div>
-                        <?php endforeach; ?>
-                        <div class="clearfix"></div>
-                        <div class="text-center">                            
-                            <?php if($pagination->countPages > 1): ?>
-                                <?=$pagination;?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <h3>В этой категории товаров пока нет...</h3>
-                <?php endif; ?>
-				<div class="catalog_text">
+<link rel="stylesheet" href="<?= PATH ?>/css/complete-catalog.css?v=<?= (int)filemtime(WWW . '/css/complete-catalog.css') ?>">
+<div class="prdt complete-catalog"><div class="container">
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?= PATH ?>/">Главная</a></li><li class="breadcrumb-item active">Комплекты товаров</li></ol></nav>
+<h1>Комплекты</h1>
+<form class="complete-catalog-filter" action="<?= PATH ?>/complete" method="get">
+ <div><label for="complete-category">Категория товаров</label><select id="complete-category" name="category" class="form-select">
+ <option value="0">Все категории</option>
+ <?php foreach ($completeCategories as $category): ?><option value="<?= (int)$category['id'] ?>" <?= $categoryId === (int)$category['id'] ? 'selected' : '' ?>><?= h($category['name']) ?> (<?= (int)$category['total'] ?>)</option><?php endforeach; ?>
+ </select></div>
+ <?php if ($sort !== 'name'): ?><input type="hidden" name="sort" value="<?= h($sort) ?>"><?php endif; ?>
+ <button class="btn btn-danger" type="submit">Показать</button>
+ <?php if ($categoryId): ?><a href="<?= PATH ?>/complete">Все комплекты</a><?php endif; ?>
+ <span class="complete-catalog-count">Найдено комплектов: <?= (int)$total ?></span>
+</form>
+<?php if ($completes): ?>
+<div class="complete-catalog-grid">
+ <?php $curr = \ishop\App::$app->getProperty('currency'); foreach ($completes as $complete): ?>
+ <?php new \app\widgets\complete\Complete($complete, $curr, 'catalog_tpl.php'); ?>
+ <?php endforeach; ?>
+</div>
+<?php if ($pagination->countPages > 1): ?><div class="complete-catalog-pagination"><?= $pagination ?></div><?php endif; ?>
+<?php else: ?><p>В этой категории комплектов пока нет.</p><?php endif; ?>
+<div class="catalog_text">
 					<h2>Комплекты шин для квадроциклов: важность и преимущества от ИТС-Центр</h2>
 
 <p>Квадроциклы - это увлекательный и популярный вид транспорта, который предоставляет множество возможностей для активного отдыха и рабочих задач. Вне зависимости от того, используете ли вы свой квадроцикл для внедорожных поездок, охоты, рыбалки или других приключений, безопасность и надежность вашего транспорта всегда на первом месте. Одним из ключевых элементов, влияющих на безопасность и производительность квадроцикла, являются шины. В данной статье мы рассмотрим важность комплектов шин для квадроциклов, почему вам следует приобрести именно комплект, а также почему не стоит менять только одну шину.</p>
@@ -77,10 +59,4 @@
 <p>В заключение, при выборе комплекта шин для вашего квадроцикла помните, что безопасность и производительность зависят от правильного подхода к этому вопросу. Купите комплект шин, который соответствует вашим потребностям и условиям эксплуатации. ИТС-Центр готов предложить вам широкий выбор качественных шин и профессиональную поддержку в выборе и установке. Не жертвуйте безопасностью и комфортом - выбирайте ИТС-Центр и наслаждайтесь надежностью и производительностью вашего квадроцикла.</p>
 
 				</div>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-	<div class="clearfix"></div>
-</div>
-<!--product-end-->
+</div></div>
