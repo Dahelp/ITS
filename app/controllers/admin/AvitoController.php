@@ -11,7 +11,10 @@ class AvitoController extends AppController
 {
     public function indexAction()
     {
+        Avito::ensureSchema();
+        $publicationSummary = Avito::publicationSummary();
         $this->setMeta('AVITO — мои объявления');
+        $this->set(compact('publicationSummary'));
         // рендерит app/views/admin/Avito/index.php
     }
 
@@ -109,8 +112,9 @@ class AvitoController extends AppController
             a.title          AS title,
             a.category       AS category,
             a.manager_name   AS manager_name,
-            p.rest           AS rest,           -- наличие из product.rest
-            a.status         AS status
+            GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) AS rest,
+            a.status         AS status,
+            CONCAT(COALESCE(a.avito_publication_status, ''), '|', COALESCE(DATE_FORMAT(a.avito_status_updated_at, '%d.%m.%Y %H:%i'), '')) AS avito_publication_state
         FROM avito_ad a
         LEFT JOIN product p ON p.article = a.article
         ) temp
@@ -218,25 +222,61 @@ class AvitoController extends AppController
                 }
             ),
 
-            // 8: Статус
+            // 8: Статус в нашей XML-выгрузке
             array(
                 'db' => 'status',
                 'dt' => 8,
                 'formatter' => function ($d, $row) {
                     if ($d === 'active') {
-                        return 'Активно';
+                        return '<span class="badge badge-primary">В выгрузке</span>';
                     }
                     if ($d === 'archived') {
-                        return 'Архив';
+                        return '<span class="badge badge-secondary">Не выгружается</span>';
                     }
-                    return 'Черновик';
+                    return '<span class="badge badge-light">Черновик</span>';
                 }
             ),
 
-            // 9: Действия
+            // 9: Фактическое состояние объявления на Avito
+            array(
+                'db' => 'avito_publication_state',
+                'dt' => 9,
+                'formatter' => function ($d, $row) {
+                    [$status, $updatedAt] = array_pad(explode('|', (string)$d, 2), 2, '');
+                    [$label, $class] = Avito::avitoPublicationPresentation($status);
+                    $html = '<span class="badge badge-' . $class . '">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
+                    if ($updatedAt !== '') {
+                        $html .= '<div class="small text-muted mt-1">Проверено: ' . htmlspecialchars($updatedAt, ENT_QUOTES, 'UTF-8') . '</div>';
+                    }
+                    return $html;
+                }
+            ),
+
+            // 10: Готовность объявления
             array(
                 'db' => 'id',
-                'dt' => 9,
+                'dt' => 10,
+                'formatter' => function ($id, $row) {
+                    $adRow = \R::getRow('SELECT * FROM avito_ad WHERE id = ? LIMIT 1', [(int)$id]);
+                    $analysis = Avito::analyzeRow($adRow);
+                    $class = $analysis['status'] === 'ready' ? 'success' : ($analysis['status'] === 'warning' ? 'warning' : 'danger');
+                    $details = [];
+                    if ($analysis['missingRequired']) $details[] = 'Обязательные: ' . implode(', ', $analysis['missingRequired']);
+                    if ($analysis['provisionalRequired']) $details[] = 'Временно заполнено: ' . implode(', ', $analysis['provisionalRequired']);
+                    if ($analysis['warnings']) $details[] = implode('; ', $analysis['warnings']);
+                    $title = htmlspecialchars(implode(' | ', $details), ENT_QUOTES, 'UTF-8');
+                    return '<span class="badge badge-' . $class . '" title="' . $title . '">' . htmlspecialchars($analysis['label'], ENT_QUOTES, 'UTF-8') . '</span>'
+                        . '<div class="small mt-1">Обязательные: <strong>' . $analysis['requiredScore'] . '%</strong> (' . count($analysis['missingRequired']) . ' не заполнено)</div>'
+                        . ($analysis['provisionalRequired'] ? '<div class="small text-warning"><strong>Уточнить: ' . count($analysis['provisionalRequired']) . '</strong></div>' : '')
+                        . '<div class="small">Доп.: ' . $analysis['optionalScore'] . '% (' . count($analysis['missingOptional']) . ')</div>'
+                        . '<div class="small">Текст: ' . $analysis['textScore'] . '%</div>';
+                }
+            ),
+
+            // 11: Действия
+            array(
+                'db' => 'id',
+                'dt' => 11,
                 'formatter' => function ($id, $row) {
                     $id   = (int)$id;
                     $edit = ADMIN . '/avito/edit?id=' . $id;
@@ -251,11 +291,19 @@ class AvitoController extends AppController
                     $avitoLink = $avitoUrl !== ''
                         ? '<a target="_blank" rel="noopener" href="' . htmlspecialchars($avitoUrl, ENT_QUOTES, 'UTF-8') . '" title="Открыть/найти объявление на Avito"><i class="fas fa-external-link-alt text-success"></i></a> '
                         : '';
+                    $deletionRequested = (bool)\R::getCell(
+                        'SELECT deletion_requested_at IS NOT NULL FROM avito_ad WHERE id = ? LIMIT 1',
+                        [$id]
+                    );
+                    $deleteTitle = $deletionRequested ? 'Проверить снятие с Avito и удалить' : 'Снять с Avito и удалить';
+                    $deleteConfirm = $deletionRequested
+                        ? 'Проверить статус на Avito и удалить локальную запись, если объявление уже снято?'
+                        : 'Сначала снять объявление с Avito, а после подтверждения удалить из админки?';
 
                     return
                         $avitoLink .
                         '<a href="' . $edit . '" title="Редактировать"><i class="fas fa-pencil-alt"></i></a> ' .
-                        '<a class="delete" href="' . $del . '" onclick="return confirm(\'Удалить объявление?\')" title="Удалить"><i class="fas fa-times-circle text-danger"></i></a> ' .
+                        '<a class="delete" href="' . $del . '" onclick="return confirm(\'' . $deleteConfirm . '\')" title="' . $deleteTitle . '"><i class="fas ' . ($deletionRequested ? 'fa-hourglass-half text-warning' : 'fa-times-circle text-danger') . '"></i></a> ' .
                         '<a href="' . $exp . '" title="Экспорт объявления в XML"><i class="fas fa-file-code"></i></a>';
                 }
             ),
@@ -286,6 +334,7 @@ class AvitoController extends AppController
      */
     public function addAction()
     {
+        Avito::ensureSchema();
         $model = new Avito();
 
         if (!empty($_POST)) {
@@ -294,6 +343,17 @@ class AvitoController extends AppController
 
             // берём атрибуты после load()
             $attrs = $model->attributes;
+            $titleError = \app\services\AvitoProductTemplate::titleError((string)($attrs['title'] ?? ''));
+            if ($titleError !== '') {
+                $_SESSION['error'] = $titleError;
+                if (!isset($ad) || !is_object($ad)) $ad = new \stdClass();
+                foreach ($attrs as $field => $value) $ad->$field = $value;
+                if (isset($id)) $ad->id = $id;
+                $this->setMeta('AVITO — исправьте название объявления');
+                $this->set(compact('ad'));
+                return;
+            }
+
 
             // нормализуем images_json: textarea -> JSON
             if (isset($attrs['images_json'])) {
@@ -301,7 +361,7 @@ class AvitoController extends AppController
             }
 
             // создаём Bean RedBean
-            $ad = \R::dispense('avito_ad');
+            $ad = Avito::createAdBean();
 
             // UUID только при создании
             $ad->uuid = $this->generateUuidV4();
@@ -311,15 +371,19 @@ class AvitoController extends AppController
                 // пустые строки превращаем в NULL, чтобы не плодить ''
                 $ad->$k = ($v === '' ? null : $v);
             }
+            Avito::rememberManualFields($ad, array_values(array_diff(
+                array_intersect(array_keys($_POST), array_keys($attrs)),
+                ['status', 'avito_id', 'avito_url']
+            )));
 
             \R::store($ad);
 
-            $_SESSION['success'] = 'Объявление добавлено';
+            $_SESSION['success'] = 'Объявление добавлено. ' . $this->requestAvitoAutoload();
             redirect(ADMIN . '/avito');
         }
 
         // для view передаём ПУСТОЙ bean
-        $ad = \R::dispense('avito_ad');
+        $ad = new \stdClass();
 
         $this->setMeta('AVITO — добавить объявление');
         $this->set(compact('ad'));
@@ -330,6 +394,7 @@ class AvitoController extends AppController
      */
     public function editAction()
     {
+        Avito::ensureSchema();
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         $ad = \R::load('avito_ad', $id);
 
@@ -341,8 +406,20 @@ class AvitoController extends AppController
         $model = new Avito();
 
         if (!empty($_POST)) {
+            $before = $ad->export();
             $model->load($_POST);
             $attrs = $model->attributes;
+            $titleError = \app\services\AvitoProductTemplate::titleError((string)($attrs['title'] ?? ''));
+            if ($titleError !== '') {
+                $_SESSION['error'] = $titleError;
+                if (!isset($ad) || !is_object($ad)) $ad = new \stdClass();
+                foreach ($attrs as $field => $value) $ad->$field = $value;
+                if (isset($id)) $ad->id = $id;
+                $this->setMeta('AVITO — исправьте название объявления');
+                $this->set(compact('ad'));
+                return;
+            }
+
 
             // нормализуем images_json: textarea -> JSON
             if (isset($attrs['images_json'])) {
@@ -354,6 +431,18 @@ class AvitoController extends AppController
                 $ad->$k = ($v === '' ? null : $v);
             }
 
+            $manualFields = [];
+            foreach (array_keys($_POST) as $field) {
+                if (!array_key_exists($field, $attrs) || in_array($field, ['status', 'avito_id', 'avito_url'], true)) {
+                    continue;
+                }
+                $newValue = $attrs[$field] ?? null;
+                if ((string)($before[$field] ?? '') !== (string)$newValue) {
+                    $manualFields[] = $field;
+                }
+            }
+            Avito::rememberManualFields($ad, $manualFields);
+
             // UUID на всякий случай
             if (empty($ad->uuid)) {
                 $ad->uuid = $this->generateUuidV4();
@@ -361,7 +450,7 @@ class AvitoController extends AppController
 
             \R::store($ad);
 
-            $_SESSION['success'] = 'Изменения сохранены';
+            $_SESSION['success'] = 'Изменения сохранены. ' . $this->requestAvitoAutoload();
             redirect(ADMIN . '/avito/edit?id=' . $ad->id);
         }
 
@@ -401,6 +490,7 @@ class AvitoController extends AppController
                 $results[] = [
                     'id'   => $article, // это попадёт в <select name="article">
                     'text' => ($article ? $article . ' — ' : '') . $name,
+                    'product_id' => (int)$row['id'],
                 ];
             }
         }
@@ -409,16 +499,32 @@ class AvitoController extends AppController
         exit;
     }
 
+    private function requestAvitoAutoload(): string
+    {
+        $result = Avito::triggerAutoloadUpload();
+        if (!empty($result['triggered'])) {
+            return 'Обновление отправлено в автозагрузку Avito; обработка выполняется не мгновенно.';
+        }
+
+        return 'Запустить автозагрузку Avito не удалось: ' . (string)($result['message'] ?? 'неизвестная ошибка')
+            . '. Данные сохранены на сайте, повторите синхронизацию позже.';
+    }
+
 
     public function syncProductsAction()
     {
+        @set_time_limit(0);
+
         try {
             $updated = Avito::syncLinkedAdsFromProducts();
+            $legacyUpdated = Avito::syncLegacyStatusesFromApi();
             $urlsUpdated = Avito::syncUrlsFromApi();
             $apiStats = Avito::pushLinkedAdsToApi();
+            $autoload = Avito::triggerAutoloadUpload();
 
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
-                . ', ссылок из API: ' . (int)$urlsUpdated
+                . ', старых объявлений обновлено по остатку API: ' . (int)$legacyUpdated
+                . ', ID/ссылок/статусов получено из API: ' . (int)$urlsUpdated
                 . ', цен отправлено: ' . (int)$apiStats['price_success']
                 . ', остатков отправлено: ' . (int)$apiStats['stock_success']
                 . ', ненулевых отправлено: ' . (int)$apiStats['stock_sent_positive']
@@ -426,9 +532,11 @@ class AvitoController extends AppController
                 . ', активных по статусу: ' . (int)$apiStats['status_active']
                 . ', в архив по статусу: ' . (int)$apiStats['status_archived']
                 . ', остатков проверено в API: ' . (int)$apiStats['stock_checked']
-                . ', с наличием в API: ' . (int)$apiStats['stock_positive'];
+                . ', с наличием в API: ' . (int)$apiStats['stock_positive']
+                . ', несовпадений остатков: ' . (int)$apiStats['stock_mismatch']
+                . ', автозагрузка: ' . (string)$autoload['message'];
 
-            $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'];
+            $failed = (int)$apiStats['price_failed'] + (int)$apiStats['stock_failed'] + (int)$apiStats['stock_mismatch'];
             if ($failed > 0) {
                 $message .= ', ошибок API: ' . $failed;
                 if (!empty($apiStats['errors'])) {
@@ -441,6 +549,31 @@ class AvitoController extends AppController
             $_SESSION['error'] = 'Avito: ошибка синхронизации: ' . $e->getMessage();
         }
         redirect(ADMIN . '/avito');
+    }
+
+    public function syncStatusesAction()
+    {
+        @set_time_limit(0);
+        try {
+            $updated = Avito::syncUrlsFromApi();
+            $_SESSION['success'] = 'Статусы публикации Avito обновлены: ' . (int)$updated
+                . '. Поле «На Avito» показывает фактическое состояние, полученное из API.';
+        } catch (\Throwable $e) {
+            $_SESSION['error'] = 'Не удалось обновить статусы Avito: ' . $e->getMessage();
+        }
+        redirect(ADMIN . '/avito');
+    }
+
+    public function applyTemplateAction()
+    {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        try {
+            Avito::applyGeneratedTemplateToAd($id);
+            $_SESSION['success'] = 'Оформленный шаблон описания применён.';
+        } catch (\Throwable $e) {
+            $_SESSION['error'] = 'Не удалось применить шаблон: ' . $e->getMessage();
+        }
+        redirect(ADMIN . '/avito/edit?id=' . $id);
     }
     /**
      * Удаление
@@ -701,7 +834,7 @@ private function buildAvitoXml($rows)
         }
 
         // Состояние/аудитория
-        $this->xmlAdd($ad, 'ItemCondition',  (string)(isset($r['item_condition']) ? $r['item_condition'] : ''));
+        $this->xmlAdd($ad, 'Condition',  (string)(isset($r['item_condition']) ? $r['item_condition'] : ''));
         $this->xmlAdd($ad, 'TargetAudience', (string)(isset($r['target_audience']) ? $r['target_audience'] : ''));
 
         // Видео
