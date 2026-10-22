@@ -1265,6 +1265,7 @@ class Avito extends AppModel
             (string)($row['attribute_text'] ?? ''),
         ]));
         $productType = trim((string)($ad->product_type ?? ''));
+        \app\services\AvitoTireFields::apply($ad, $row);
 
         $brandPatterns = [
             'Primex' => '~\bprimex\b~iu',
@@ -1503,6 +1504,9 @@ class Avito extends AppModel
         }
         if ($titleError = \app\services\AvitoProductTemplate::titleError($title)) {
             $missingRequired['title'] = $titleError;
+        }
+        foreach (\app\services\AvitoTireFields::validationErrors($row) as $field => $message) {
+            $warnings[] = ($labels[$field] ?? $field).': '.$message.' (справочник от 15.10.2026)';
         }
         $descriptionLength = mb_strlen($description, 'UTF-8');
         if ($descriptionLength < 250) {
