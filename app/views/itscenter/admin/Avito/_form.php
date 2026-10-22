@@ -422,8 +422,8 @@ if (!function_exists('avito_h')) {
                       Адрес показа объявления (Address) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input class="form-control" name="address" value="<?=avito_h($ad->address ?? '')?>">
-                      <small class="form-text text-muted">Полный адрес — обязателен для Авито.</small>
+                      <input readonly class="form-control" name="address" value="<?=avito_h(\app\services\AvitoWarehouse::ADDRESS)?>">
+                      <small class="form-text text-muted">Адрес склада одинаковый для всех объявлений Авито.</small>
                     </div>
                   </div>
 
