@@ -573,13 +573,17 @@ class AvitoController extends AppController
             if ($requested) {
                 Avito::syncUrlsFromApi();
                 $row = \R::getRow('SELECT * FROM avito_ad WHERE id = ? LIMIT 1', [$id]);
+                if (!$row) {
+                    $_SESSION['success'] = 'Снятие с Авито подтверждено. Объявление удалено из админки.';
+                    redirect(ADMIN . '/avito');
+                }
                 $itemId = Avito::numericAvitoItemId($row);
                 $remoteStatus = (string)($row['avito_publication_status'] ?? '');
             }
             $deletionWaitElapsed = $requested
                 && strtotime((string)($row['deletion_requested_at'] ?? '')) <= time() - 600;
 
-            if (Avito::deletionIsConfirmed($remoteStatus)
+            if (($requested && Avito::deletionIsConfirmed($remoteStatus))
                 || ($deletionWaitElapsed && $itemId <= 0
                     && !in_array(mb_strtolower($remoteStatus, 'UTF-8'), ['active', 'published'], true))) {
                 \R::trash(\R::load('avito_ad', $id));
@@ -593,7 +597,7 @@ class AvitoController extends AppController
                 \R::exec("UPDATE avito_ad SET status = 'archived', deletion_requested_at = NOW() WHERE id = ?", [$id]);
                 $upload = Avito::triggerAutoloadUpload();
                 if (!empty($upload['triggered'])) {
-                    $_SESSION['success'] = 'Объявление исключено из XML. Avito начал снятие с публикации. Запись сохранена до подтверждения; позже нажмите жёлтые часы ещё раз.';
+                    $_SESSION['success'] = 'Объявление исключено из XML. Avito начал снятие с публикации. Запись сохранена до подтверждения; подтверждение проверяется автоматически, пока открыт список объявлений.';
                 } else {
                     $_SESSION['error'] = 'Объявление исключено из XML, но запуск автозагрузки не подтверждён: '
                         . (string)($upload['message'] ?? 'неизвестная ошибка') . '. Запись не удалена.';

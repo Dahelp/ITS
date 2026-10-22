@@ -52,6 +52,10 @@ final class AvitoIdSync
         try {
             if (!$force && is_array($cached = $cache->get('avito-id-sync-v1'))) return $cached;
             $stats = self::synchronize($client);
+            $deletions = AvitoDeletion::reconcile($client);
+            $stats['deleted'] = $deletions['deleted'];
+            $stats['deletions_pending'] = $deletions['deletions_pending'];
+            $stats['errors'] = array_merge($stats['errors'], $deletions['errors']);
             $cache->set('avito-id-sync-v1', $stats, 60);
             return $stats;
         } finally {

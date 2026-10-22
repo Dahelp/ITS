@@ -2,8 +2,8 @@
 require dirname(__DIR__).'/vendor/autoload.php';
 define('CACHE',sys_get_temp_dir().'/avito-id-sync-'.bin2hex(random_bytes(5)));mkdir(CACHE);
 class_alias(\RedBeanPHP\R::class,'R');R::setup('sqlite::memory:');R::freeze(true);
-R::exec('CREATE TABLE avito_ad(id INTEGER PRIMARY KEY,ad_external_id TEXT,avito_id TEXT)');
-R::exec("INSERT INTO avito_ad VALUES(1,'its-9328',NULL),(2,'its-complete-26','0'),(3,'existing','1234567890')");
+R::exec('CREATE TABLE avito_ad(id INTEGER PRIMARY KEY,ad_external_id TEXT,avito_id TEXT,deletion_requested_at TEXT)');
+R::exec("INSERT INTO avito_ad(id,ad_external_id,avito_id) VALUES(1,'its-9328',NULL),(2,'its-complete-26','0'),(3,'existing','1234567890')");
 class IdTestClient extends \app\services\AvitoApiClient {
     public int $calls=0;public $result=['items'=>[]];public bool $fail=false;
     public function __construct() {}
@@ -38,7 +38,7 @@ flock($lock,LOCK_UN);fclose($lock);
 $client->result=['items'=>[['ad_id'=>'its-complete-26','avito_id'=>8482968268]]];
 idsCheck(\app\services\AvitoIdSync::synchronize($client)['pending']===0,'Set receives a later assigned ID');
 $calls=$client->calls;\app\services\AvitoIdSync::synchronize($client);idsCheck($client->calls===$calls,'No pending IDs makes no API request');
-R::exec("INSERT INTO avito_ad VALUES(4,'12345',NULL)");$client->result=['items'=>[['ad_id'=>'12345','avito_id'=>1234567891]]];
+R::exec("INSERT INTO avito_ad(id,ad_external_id,avito_id) VALUES(4,'12345',NULL)");$client->result=['items'=>[['ad_id'=>'12345','avito_id'=>1234567891]]];
 idsCheck(\app\services\AvitoIdSync::synchronize($client)['assigned']===1,'Numeric external ID matched exactly');
 foreach(glob(CACHE.'/*') as $file)unlink($file);rmdir(CACHE);
 echo "Avito ID sync: delayed assignment, persistence, reserve IDs, errors, throttle, concurrency OK\n";

@@ -859,7 +859,7 @@ class Avito extends AppModel
         // stays absent from the XML feed while Avito processes its removal.
         \R::exec("UPDATE avito_ad SET status = 'archived' WHERE deletion_requested_at IS NOT NULL");
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR ' ')\n                   FROM attribute_product ap\n                   INNER JOIN attribute_value av ON av.id = ap.attr_id\n                   INNER JOIN attribute_group ag ON ag.id = av.attr_group_id\n                  WHERE ap.product_id = p.id) AS attribute_text,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != '' AND a.deletion_requested_at IS NULL\n        ");
 
         $availableByProduct = \R::getAssoc('SELECT id, GREATEST(0, COALESCE(quantity, rest, 0) - COALESCE(reserve, 0)) FROM product');
         $updated = 0;
@@ -1019,12 +1019,12 @@ class Avito extends AppModel
         self::syncLinkedAdsFromProducts();
         self::syncLegacyStatusesFromApi();
         if ($id > 0) {
-            return \R::getAll("SELECT * FROM avito_ad WHERE id = ? LIMIT 1", [$id]);
+            return \R::getAll("SELECT * FROM avito_ad WHERE id = ? AND deletion_requested_at IS NULL LIMIT 1", [$id]);
         }
         if ($onlyActive) {
-            return \R::getAll("SELECT * FROM avito_ad WHERE status = 'active' ORDER BY id DESC");
+            return \R::getAll("SELECT * FROM avito_ad WHERE status = 'active' AND deletion_requested_at IS NULL ORDER BY id DESC");
         }
-        return \R::getAll("SELECT * FROM avito_ad ORDER BY id DESC");
+        return \R::getAll("SELECT * FROM avito_ad WHERE deletion_requested_at IS NULL ORDER BY id DESC");
     }
 
     /**
@@ -1037,7 +1037,7 @@ class Avito extends AppModel
         $rows = \R::getAll("SELECT a.id, a.avito_id, a.ad_external_id
             FROM avito_ad a
             LEFT JOIN product p ON p.article = a.article
-            WHERE p.id IS NULL
+            WHERE p.id IS NULL AND a.deletion_requested_at IS NULL
               AND (a.avito_id REGEXP '^[0-9]+$' OR a.ad_external_id REGEXP '^[0-9]+$')");
         if (!$rows) {
             return 0;
@@ -1077,7 +1077,7 @@ class Avito extends AppModel
                 }
                 $status = self::publicationStatus((int)($stock['quantity'] ?? 0));
                 foreach ($byItemId[$itemId] as $adId) {
-                    $updated += (int)\R::exec('UPDATE avito_ad SET status = ? WHERE id = ? AND status != ?', [$status, $adId, $status]);
+                    $updated += (int)\R::exec('UPDATE avito_ad SET status = ? WHERE id = ? AND status != ? AND deletion_requested_at IS NULL', [$status, $adId, $status]);
                 }
             }
         }
@@ -1902,7 +1902,7 @@ class Avito extends AppModel
             'errors' => [],
         ];
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE a.article IS NOT NULL AND a.article != '' AND a.deletion_requested_at IS NULL\n        ");
 
         if (!$rows) {
             return $stats;
