@@ -47,6 +47,26 @@ if (!function_exists('avito_h')) {
         return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
     }
 }
+
+$tireSelect = static function(string $field, string $type) use ($ad) {
+    $options = \app\services\AvitoTireFields::options($type, $field);
+    $current = trim((string)($ad->$field ?? ''));
+    $canonical = \app\services\AvitoTireFields::canonical($type, $field, $current);
+    $selected = $canonical !== '' ? $canonical : $current;
+    $html = '<select class="form-control avito-tire-dictionary" name="'.avito_h($field).'"><option value="">Выберите значение</option>';
+    if ($current !== '' && $canonical === '') $html .= '<option value="'.avito_h($current).'" selected>'.avito_h($current).' — текущее, нет в справочнике 15.10.2026</option>';
+    foreach ($options as $value) $html .= '<option value="'.avito_h($value).'"'.($value === $selected ? ' selected' : '').'>'.avito_h($value).'</option>';
+    return $html.'</select>';
+};
+$tireSuggestion = null;
+if ($linkedProductId) {
+    $tireProduct = \app\services\AvitoTireFields::product($linkedProductId);
+    if ($tireProduct) {
+        $tireProductType = \app\models\admin\Avito::generatedProductType($tireProduct);
+        $tireSuggestion = \app\services\AvitoTireFields::suggest($tireProduct, $tireProductType);
+        $tireSuggestion['product_type'] = $tireProductType;
+    }
+}
 ?>
 
 <!-- Content Header (Page header) -->
@@ -478,6 +498,17 @@ if (!function_exists('avito_h')) {
                     Показываются только поля выбранного типа товара. Обязательные параметры отмечены звёздочкой.
                   </div>
 
+                  <?php if ($tireSuggestion && $tireSuggestion['fields']): ?>
+                    <div class="alert alert-light border mb-3">
+                      <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap:10px">
+                        <div><strong>Параметры из товара</strong><?php if ($tireSuggestion['size']): ?> · <?=avito_h($tireSuggestion['size'])?><?php endif; ?></div>
+                        <button type="button" id="avito-fill-tire-fields" class="btn btn-sm btn-outline-primary">Заполнить параметры из товара</button>
+                      </div>
+                      <?php foreach ($tireSuggestion['notes'] as $note): ?><small class="d-block mt-2"><?=avito_h($note)?></small><?php endforeach; ?>
+                      <small class="d-block text-muted mt-2">Списки значений — из шаблонов Авито от 15.10.2026. Кнопка меняет поля формы; сохраните объявление после проверки.</small>
+                    </div>
+                    <script type="application/json" id="avito-tire-suggestion"><?= json_encode($tireSuggestion, JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?></script>
+                  <?php endif; ?>
                   <div class="avito-profile avito-profile-tires">
 
                   <div class="form-group row">
@@ -507,7 +538,7 @@ if (!function_exists('avito_h')) {
                       Ширина профиля (Section) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input class="form-control" name="tire_section_width" value="<?=avito_h($ad->tire_section_width ?? '')?>">
+                      <?= $tireSelect('tire_section_width', 'Шины для грузовиков и спецтехники') ?>
                     </div>
                   </div>
 
@@ -516,7 +547,7 @@ if (!function_exists('avito_h')) {
                       Высота профиля (Aspect) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input class="form-control" name="tire_aspect_ratio" value="<?=avito_h($ad->tire_aspect_ratio ?? '')?>">
+                      <?= $tireSelect('tire_aspect_ratio', 'Шины для грузовиков и спецтехники') ?>
                     </div>
                   </div>
 
@@ -525,12 +556,12 @@ if (!function_exists('avito_h')) {
                       Диаметр диска (Rim) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input class="form-control" name="rim_diameter" value="<?=avito_h($ad->rim_diameter ?? '')?>">
+                      <?= $tireSelect('rim_diameter', 'Шины для грузовиков и спецтехники') ?>
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Тип шин (TireType)</label>
+                    <label class="col-sm-3 col-form-label">Сезонность (TireType)</label>
                     <div class="col-sm-9">
                       <?php $tt = ['Всесезонные','Зимние нешипованные','Зимние шипованные','Летние']; ?>
                       <select class="form-control" name="tire_type">
@@ -644,15 +675,9 @@ if (!function_exists('avito_h')) {
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Тип техники (VehicleType)</label>
+                    <label class="col-sm-3 col-form-label">Тип шины (VehicleType)</label>
                     <div class="col-sm-9">
-                      <?php $vt = ['Грузовая','Для спецтехники']; ?>
-                      <select class="form-control" name="vehicle_type">
-                        <option value=""></option>
-                        <?php foreach ($vt as $v): ?>
-                          <option value="<?=$v?>" <?php if (($ad->vehicle_type ?? '') === $v) echo 'selected'; ?>><?=$v?></option>
-                        <?php endforeach; ?>
-                      </select>
+                      <?= $tireSelect('vehicle_type', 'Шины для грузовиков и спецтехники') ?>
                     </div>
                   </div>
 
@@ -660,7 +685,7 @@ if (!function_exists('avito_h')) {
 
                   <div class="avito-profile avito-profile-moto">
                     <div class="alert alert-warning py-2">
-                      Для шин ATV выберите тип «Мотошины». Для размера <strong>13×6-5</strong>: ширина — <strong>6</strong>, диаметр диска — <strong>5</strong>, а в поле высоты профиля вручную выберите <strong>Другое</strong>. Полный размер сохраняйте в названии и описании.
+                      Для шин ATV выберите тип «Мотошины». Для размера <strong>13×6-5</strong>: ширина — <strong>6</strong>, диаметр диска — <strong>5</strong>, высота профиля — <strong>Другое</strong>, поскольку в этой маркировке она не указана. Полный размер сохраняйте в названии и описании.
                     </div>
                     <div class="form-group row">
                       <label class="col-sm-3 col-form-label">Бренд (Brand)</label>
@@ -671,13 +696,10 @@ if (!function_exists('avito_h')) {
                       <div class="col-sm-9"><input class="form-control" name="model" value="<?=avito_h($ad->model ?? '')?>"></div>
                     </div>
                     <?php
-                      $motoRims = ['5','6','7','8','9','10','11','12','13','14','15','16','16.5','17','18','19','20','21','22','23','24'];
-                      $motoWidths = ['2.5','2.75','3','3.5','3.25','3.75','4','4.1','4.5','4.6','5','6','6.5','7','7.1','8','8.5','9','10','11','12','16','18','19','20','21','22','25','26','27','28','29','30','60','70','80','90','100','110','120','125','130','140','145','150','160','170','180','190','200','205','210','215','220','225','230','240','250','260','270','280','290','300','310','320','330','340','350','360','370','380','390','MT90','MU85'];
-                      $motoAspects = ['7','8','9','9.5','10','11.0','12','25','26','27','28','29','29.5','30','35','40','45','50','55','60','65','70','75','80','85','90','95','100','105','110','Другое'];
                       $motoSelects = [
-                        'rim_diameter' => ['Диаметр диска (RimDiameter)', $motoRims],
-                        'tire_section_width' => ['Ширина профиля (TireSectionWidth)', $motoWidths],
-                        'tire_aspect_ratio' => ['Высота профиля (TireAspectRatio)', $motoAspects],
+                        'rim_diameter' => ['Диаметр диска (RimDiameter)', null],
+                        'tire_section_width' => ['Ширина профиля (TireSectionWidth)', null],
+                        'tire_aspect_ratio' => ['Высота профиля (TireAspectRatio)', null],
                         'wheel_axle' => ['Ось установки (WheelAxle)', ['Передняя','Задняя','Любая']],
                       ];
                     ?>
@@ -685,12 +707,16 @@ if (!function_exists('avito_h')) {
                       <div class="form-group row">
                         <label class="col-sm-3 col-form-label"><?=$label?> <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
+                          <?php if ($values === null): ?>
+                            <?= $tireSelect($field, 'Мотошины') ?>
+                          <?php else: ?>
                           <select class="form-control" name="<?=$field?>">
                             <option value=""></option>
                             <?php foreach ($values as $value): ?>
                               <option value="<?=avito_h($value)?>" <?php if ((string)($ad->$field ?? '') === $value) echo 'selected'; ?>><?=avito_h($value)?></option>
                             <?php endforeach; ?>
                           </select>
+                          <?php endif; ?>
                           <?php if ($field === 'tire_aspect_ratio'): ?>
                             <small class="form-text text-muted">Список взят из шаблона Avito «Мотошины» от 15.10.2026 и не обновляется с сайта Avito автоматически. Если нужного значения нет, выберите «Другое»: объявление можно выгрузить, но оно останется жёлтым до замены на точное значение.</small>
                           <?php endif; ?>
@@ -1113,4 +1139,5 @@ if (!function_exists('avito_h')) {
     </div>
   </div>
 <script src="<?= PATH ?>/js/avito-title-counter.js?v=<?= (int)filemtime(WWW.'/js/avito-title-counter.js') ?>"></script>
+<script src="<?= PATH ?>/js/avito-tire-fields.js?v=<?= (int)filemtime(WWW.'/js/avito-tire-fields.js') ?>"></script>
 </section>

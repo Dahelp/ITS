@@ -343,6 +343,12 @@ class AvitoController extends AppController
 
             // берём атрибуты после load()
             $attrs = $model->attributes;
+            foreach (['tire_section_width','tire_aspect_ratio','rim_diameter'] as $sizeField) {
+                if (!in_array((string)($attrs['product_type'] ?? ''), ['Мотошины','Шины для грузовиков и спецтехники'], true)) break;
+                $canonical = \app\services\AvitoTireFields::canonical((string)$attrs['product_type'], $sizeField, (string)($attrs[$sizeField] ?? ''));
+                if ($canonical !== '') $attrs[$sizeField] = $canonical;
+            }
+
             $titleError = \app\services\AvitoProductTemplate::titleError((string)($attrs['title'] ?? ''));
             if ($titleError !== '') {
                 $_SESSION['error'] = $titleError;
@@ -410,6 +416,12 @@ class AvitoController extends AppController
             $before = $ad->export();
             $model->load($_POST);
             $attrs = $model->attributes;
+            foreach (['tire_section_width','tire_aspect_ratio','rim_diameter'] as $sizeField) {
+                if (!in_array((string)($attrs['product_type'] ?? ''), ['Мотошины','Шины для грузовиков и спецтехники'], true)) break;
+                $canonical = \app\services\AvitoTireFields::canonical((string)$attrs['product_type'], $sizeField, (string)($attrs[$sizeField] ?? ''));
+                if ($canonical !== '') $attrs[$sizeField] = $canonical;
+            }
+
             $titleError = \app\services\AvitoProductTemplate::titleError((string)($attrs['title'] ?? ''));
             if ($titleError !== '') {
                 $_SESSION['error'] = $titleError;
