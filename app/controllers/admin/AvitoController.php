@@ -18,6 +18,19 @@ class AvitoController extends AppController
         // рендерит app/views/admin/Avito/index.php
     }
 
+    public function syncIdentifiersAction()
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Cache-Control: no-store');
+        try {
+            echo json_encode(\app\services\AvitoIdSync::refreshPending(), JSON_UNESCAPED_UNICODE);
+        } catch (\Throwable $e) {
+            http_response_code(502);
+            echo json_encode(['errors'=>['Не удалось проверить номера объявлений Авито.']], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
+
     public function imageAction()
     {
         $this->layout = false;

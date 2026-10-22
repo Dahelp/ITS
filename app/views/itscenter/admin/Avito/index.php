@@ -55,6 +55,7 @@
             <div class="alert alert-warning py-2"><strong><?= (int)$summary['without_avito_id']; ?></strong> объявлений пока без числового Avito ID — их фактический статус нельзя сверить с API.</div>
           <?php endif; ?>
           <div class="table-responsive">
+            <div id="avito-id-sync-status" class="small text-muted mb-3" role="status" aria-live="polite" data-url="<?= ADMIN ?>/avito/sync-identifiers">Номера новых объявлений проверяются автоматически, пока открыт список.</div>
             <table id="avito-table" class="table table-bordered display" width="100%">
               <thead>
               <tr>
@@ -150,3 +151,5 @@ $(function () {
 
 
 
+
+<script src="<?= PATH ?>/js/avito-id-sync.js?v=<?= (int)filemtime(WWW . '/js/avito-id-sync.js') ?>" defer></script>
