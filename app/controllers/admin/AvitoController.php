@@ -90,7 +90,7 @@ class AvitoController extends AppController
         SELECT 
             a.id,
             a.images_json    AS images_json,    -- JSON с фото
-            a.ad_external_id AS ad_external_id,
+            a.avito_id      AS avito_id,
             a.avito_url     AS avito_url,
             a.article        AS article,        -- артикул из avito_ad
             a.title          AS title,
@@ -146,7 +146,16 @@ class AvitoController extends AppController
             ),
 
             // 2: Avito ID
-            array('db' => 'ad_external_id', 'dt' => 2),
+            array(
+                'db' => 'avito_id',
+                'dt' => 2,
+                'formatter' => function ($value, $row) {
+                    $id = trim((string)$value);
+                    return ctype_digit($id) && (int)$id > 0
+                        ? htmlspecialchars($id, ENT_QUOTES, 'UTF-8')
+                        : '<span class="text-muted" title="Авито ещё не присвоил номер объявления">Не присвоен</span>';
+                }
+            ),
 
             // 3: Артикул
             array(
@@ -220,7 +229,8 @@ class AvitoController extends AppController
                     $edit = ADMIN . '/avito/edit?id=' . $id;
                     $del  = ADMIN . '/avito/delete?id=' . $id;
                     $exp  = ADMIN . '/avito/export?id=' . $id;
-                    $avitoItemId = preg_replace('~\D+~', '', (string)($row['ad_external_id'] ?? ''));
+                    $avitoItemId = trim((string)($row['avito_id'] ?? ''));
+                    if (!ctype_digit($avitoItemId) || (int)$avitoItemId <= 0) $avitoItemId = '';
                     $avitoUrl = trim((string)($row['avito_url'] ?? ''));
                     if ($avitoUrl === '' && $avitoItemId !== '') {
                         $avitoUrl = self::buildAvitoItemUrl($row, $avitoItemId);
