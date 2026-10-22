@@ -376,6 +376,7 @@ class AvitoController extends AppController
                 ['status', 'avito_id', 'avito_url']
             )));
 
+            \app\services\AvitoWarehouse::apply($ad);
             \R::store($ad);
 
             $_SESSION['success'] = 'Объявление добавлено. ' . $this->requestAvitoAutoload();
@@ -448,6 +449,7 @@ class AvitoController extends AppController
                 $ad->uuid = $this->generateUuidV4();
             }
 
+            \app\services\AvitoWarehouse::apply($ad);
             \R::store($ad);
 
             $_SESSION['success'] = 'Изменения сохранены. ' . $this->requestAvitoAutoload();
@@ -757,6 +759,7 @@ private function buildAvitoXml($rows)
     $xml->addAttribute('target', 'Avito.ru');
 
     foreach ($rows as $r) {
+        $r = \app\services\AvitoWarehouse::normalize($r);
         $ad = $xml->addChild('Ad');
 
         // Идентификаторы / статусы

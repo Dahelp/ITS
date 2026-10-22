@@ -30,3 +30,16 @@ Checks:
 
 Production verification covered an actual tyre misclassified as a rim, generation
 of the tyre description, full title storage, and rendering its 70/50 counter.
+
+## Warehouse address
+
+`AvitoWarehouse::ADDRESS` is the shared warehouse location for every product and
+complete-set advertisement. Configuration, draft defaults, imports, editor saves
+and both XML exporters use it. The editor displays this common address read-only.
+When correcting a different address, stale coordinates and SellerAddressId are
+cleared so they cannot override the warehouse text. References already attached
+to the correct warehouse address are preserved. Legal company details elsewhere
+in the site are independent of the Avito pickup location.
+
+Run `php tests/AvitoWarehouseTest.php` to check normalization of existing product
+and set ads, empty/new drafts, stale references and idempotent migration.

@@ -610,6 +610,7 @@ class Avito extends AppModel
                     }
                 }
 
+                \app\services\AvitoWarehouse::apply($ad);
                 \R::store($ad);
                 $inserted++;
 
@@ -909,6 +910,7 @@ class Avito extends AppModel
                 $ad->images_json = json_encode($images, JSON_UNESCAPED_UNICODE);
             }
 
+            \app\services\AvitoWarehouse::apply($ad);
             \R::store($ad);
             $updated++;
         }
@@ -1096,6 +1098,7 @@ class Avito extends AppModel
         $xml->addAttribute('target', 'Avito.ru');
 
         foreach ($rows as $r) {
+            $r = \app\services\AvitoWarehouse::normalize($r);
             $ad = $xml->addChild('Ad');
             self::xmlAdd($ad, 'Id', !empty($r['ad_external_id']) ? (string)$r['ad_external_id'] : (string)$r['id']);
             self::xmlAdd($ad, 'AvitoId', (string)($r['avito_id'] ?? ''));
@@ -1227,6 +1230,7 @@ class Avito extends AppModel
 
     private static function fillDefaults($ad): void
     {
+        \app\services\AvitoWarehouse::apply($ad);
         $cfg = (array)(\ishop\App::$app->getProperty('avito') ?? []);
         $defaults = [
             'manager_name' => self::MANAGER_NAME,
@@ -1600,6 +1604,7 @@ class Avito extends AppModel
         if (!empty($row['weight'])) $ad->weight_kg = (string)$row['weight'];
         $images = self::productImageUrls($row);
         if ($images) $ad->images_json = json_encode($images, JSON_UNESCAPED_UNICODE);
+        \app\services\AvitoWarehouse::apply($ad);
         return (int)\R::store($ad);
     }
 
@@ -1733,6 +1738,7 @@ class Avito extends AppModel
         if (!$row) throw new \RuntimeException('Связанный товар не найден');
         $ad->description = self::buildGeneratedDescription($row);
         self::rememberManualFields($ad, ['description']);
+        \app\services\AvitoWarehouse::apply($ad);
         \R::store($ad);
     }
 
