@@ -20,20 +20,22 @@ class ProductController extends AppController {
     public function indexAction(){
 		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
 		$category = $category_id ? \R::findOne('category', 'id = ?', [$category_id]) : null;
-		$badge = isset($_GET['badge']) ? $_GET['badge'] : '';
+		$badge = is_string($_GET['badge'] ?? null) && in_array($_GET['badge'], ['new_product','hit','sale'], true) ? $_GET['badge'] : '';
+        $insight = \app\services\ProductAnalytics::normalize($_GET['insight'] ?? 'all');
+        Avito::ensureSchema();
+        $analytics = \app\services\ProductAnalytics::summary($category_id, $badge);
         $this->setMeta('Список товаров');
-		$this->set(compact('category', 'badge'));
+		$this->set(compact('category', 'badge', 'insight', 'analytics'));
     }
 	
 	public function serverProcessingAction(){		
 		Avito::ensureSchema();
 		//datatables server-side
 		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
-		$badge = isset($_GET['badge']) ? $_GET['badge'] : '';
-		$whereParts = [];
-		if($category_id){ $whereParts[] = "a.category_id = '".$category_id."'"; }
-		if(in_array($badge, ['new_product', 'hit', 'sale'], true)){ $whereParts[] = "a.".$badge." = '1'"; }
-		$where = $whereParts ? " WHERE ".implode(' AND ', $whereParts) : '';
+		$badge = is_string($_GET['badge'] ?? null) && in_array($_GET['badge'], ['new_product','hit','sale'], true) ? $_GET['badge'] : '';
+        $insight = \app\services\ProductAnalytics::normalize($_GET['insight'] ?? 'all');
+        $analyticsSql = \app\services\ProductAnalytics::query($category_id, $badge);
+        $where = ' WHERE '.\app\services\ProductAnalytics::where($insight, 'a');
 		$complianceSql = ProductCertificationService::hasProductFields()
 			? "CONCAT(a.hide, '|', IF(EXISTS (
 				SELECT 1 FROM certificate_assignments ca
@@ -47,8 +49,9 @@ class ProductController extends AppController {
 		$table = <<<EOT
 		 (
 			SELECT a.id, a.img, a.article, a.name as cat, a.price,
-			CONCAT(COALESCE((SELECT CONCAT(aa.id, '|', aa.status, '|', COALESCE(aa.review_status, 'confirmed')) FROM avito_ad aa WHERE aa.article = a.article ORDER BY aa.id DESC LIMIT 1), ''), '|', COALESCE(a.rest, a.quantity, 0)) AS avito_state,
-			{$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM product a LEFT JOIN category b ON a.category_id = b.id$where
+			CONCAT(COALESCE((SELECT CONCAT(aa.id, '|', aa.status, '|', COALESCE(aa.review_status, 'confirmed')) FROM avito_ad aa WHERE aa.id = a.avito_ad_id), '||'), '|', a.free_stock, '|', COALESCE((SELECT CASE WHEN aa.deletion_requested_at IS NOT NULL THEN 'deleting' ELSE aa.avito_publication_status END FROM avito_ad aa WHERE aa.id = a.avito_ad_id), '')) AS avito_state,
+			a.free_stock, a.seo_score, a.inseo_score, a.related_count, a.similar_count, a.content_count, a.incoming_count,
+			{$complianceSql} AS compliance_status, CONCAT(a.new_product, '|', a.hit, '|', a.sale) AS badges, b.name FROM ($analyticsSql) a LEFT JOIN category b ON a.category_id = b.id$where
 		 ) temp
 		EOT;
 		$primaryKey = 'id';	 
@@ -164,36 +167,14 @@ class ProductController extends AppController {
 						return ''.$curr['symbol_left'].''.$product['price'].' '.$curr['symbol_right'].'<br />'.$itog_nalichie.'';
 					}
 			),
-			array( 'db' => 'id',   'dt' => 6, 
-				'formatter' => function( $d, $row ) {
-					$product = \R::findOne('product', 'id=?', [$d]);
-					if($product['title'] !="") { $s1 = "20"; }else{ $s1 = 0; }
-					if($product['description'] !="") { $s2 = "20"; }else{ $s2 = 0; }
-					if($product['keywords'] !="") { $s3 = "20"; }else{ $s3 = 0; }
-					if($product['content'] !="") { $s4 = "20"; }else{ $s4 = 0; }
-					if($product['img'] !="") { $s5 = "20"; }else{ $s5 = 0; }
-					$seo = $s1+$s2+$s3+$s4+$s5; 
-					if($seo == 20) { $itog_seo = "SEO $seo% <div class='progress progress-xs'><div class='progress-bar bg-danger progress-bar-striped' role='progressbar' aria-valuenow='".$seo."' aria-valuemin='0' aria-valuemax='100' style='width: ".$seo."%'><span class='sr-only'>".$seo."% Complete (warning)</span></div></div>"; }
-					if($seo == 40) { $itog_seo = "SEO $seo% <div class='progress progress-xs'><div class='progress-bar bg-danger progress-bar-striped' role='progressbar' aria-valuenow='".$seo."' aria-valuemin='0' aria-valuemax='100' style='width: ".$seo."%'><span class='sr-only'>".$seo."% Complete (warning)</span></div></div>"; }
-					if($seo == 60) { $itog_seo = "SEO $seo% <div class='progress progress-xs'><div class='progress-bar bg-warning progress-bar-striped' role='progressbar' aria-valuenow='".$seo."' aria-valuemin='0' aria-valuemax='100' style='width: ".$seo."%'><span class='sr-only'>".$seo."% Complete (warning)</span></div></div>"; }
-					if($seo == 80) { $itog_seo = "SEO $seo% <div class='progress progress-xs'><div class='progress-bar bg-warning progress-bar-striped' role='progressbar' aria-valuenow='".$seo."' aria-valuemin='0' aria-valuemax='100' style='width: ".$seo."%'><span class='sr-only'>".$seo."% Complete (warning)</span></div></div>"; }
-					if($seo == 100) { $itog_seo = "SEO $seo% <div class='progress progress-xs'><div class='progress-bar bg-success progress-bar-striped' role='progressbar' aria-valuenow='".$seo."' aria-valuemin='0' aria-valuemax='100' style='width: ".$seo."%'><span class='sr-only'>".$seo."% Complete (warning)</span></div></div>"; }
-					$inseo = \R::findOne('plagins_inseo', 'category_id = ?', [$product['category_id']]);
-					if($inseo['title'] !="") { $in1 = "20"; }else{ $in1 = 0; }
-					if($inseo['description'] !="") { $in2 = "20"; }else{ $in2 = 0; }
-					if($inseo['keywords'] !="") { $in3 = "20"; }else{ $in3 = 0; }
-					if($inseo['content'] !="") { $in4 = "20"; }else{ $in4 = 0; }
-					if($inseo['name'] !="") { $in5 = "20"; }else{ $in5 = 0; }
-					$ins = $in1+$in2+$in3+$in4+$in5; 
-					if($ins == 20) { $itog_inseo = "InSEO $ins% <div class='progress progress-xs'><div class='progress-bar bg-danger progress-bar-striped' role='progressbar' aria-valuenow='".$ins."' aria-valuemin='0' aria-valuemax='100' style='width: ".$ins."%'><span class='sr-only'>".$ins."% Complete (warning)</span></div></div>"; }
-					if($ins == 40) { $itog_inseo = "InSEO $ins% <div class='progress progress-xs'><div class='progress-bar bg-danger progress-bar-striped' role='progressbar' aria-valuenow='".$ins."' aria-valuemin='0' aria-valuemax='100' style='width: ".$ins."%'><span class='sr-only'>".$ins."% Complete (warning)</span></div></div>"; }
-					if($ins == 60) { $itog_inseo = "InSEO $ins% <div class='progress progress-xs'><div class='progress-bar bg-warning progress-bar-striped' role='progressbar' aria-valuenow='".$ins."' aria-valuemin='0' aria-valuemax='100' style='width: ".$ins."%'><span class='sr-only'>".$ins."% Complete (warning)</span></div></div>"; }
-					if($ins == 80) { $itog_inseo = "InSEO $ins% <div class='progress progress-xs'><div class='progress-bar bg-warning progress-bar-striped' role='progressbar' aria-valuenow='".$ins."' aria-valuemin='0' aria-valuemax='100' style='width: ".$ins."%'><span class='sr-only'>".$ins."% Complete (warning)</span></div></div>"; }
-					if($ins == 100) { $itog_inseo = "InSEO $ins% <div class='progress progress-xs'><div class='progress-bar bg-success progress-bar-striped' role='progressbar' aria-valuenow='".$ins."' aria-valuemin='0' aria-valuemax='100' style='width: ".$ins."%'><span class='sr-only'>".$ins."% Complete (warning)</span></div></div>"; }
-											
-					return ''.$itog_seo.''.$itog_inseo.''; 
-				}
-			),
+            array('db'=>'id','dt'=>6,'formatter'=>function($d,$row){
+                $render = static function($label,$score){
+                    $score = (int)$score;
+                    $color = $score === 100 ? 'success' : ($score >= 60 ? 'warning' : 'danger');
+                    return $label.' '.$score.'%<div class="progress progress-xs"><div class="progress-bar bg-'.$color.'" role="progressbar" aria-valuenow="'.$score.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$score.'%"></div></div>';
+                };
+                return $render('SEO',$row['seo_score']).$render('InSEO',$row['inseo_score']);
+            }),
 			array( 'db' => 'id',   'dt' => 7, 
 					'formatter' => function( $d, $row ) {
 						$attributes = \R::count('product_attribute', "product_id = ?", [$d]);
@@ -208,9 +189,9 @@ class ProductController extends AppController {
 					} ),
 			array( 'db' => 'id',   'dt' => 8, 
 					'formatter' => function( $d, $row ) {
-						$content_related = \R::count('content_related', "related_id = ?", [$d]);
-						$count_related = \R::count('related_product', "product_id = ?", [$d]);
-						$count_similar = \R::count('similar_product', "product_id = ?", [$d]);
+						$content_related = (int)$row['content_count'];
+						$count_related = (int)$row['related_count'];
+						$count_similar = (int)$row['similar_count'];
 						$perelink = $content_related;
 						if($perelink > 0) { $perelink = "<span class='badge bg-success'>".$perelink."</span>"; }
 						else { $perelink = "<span class='badge bg-danger'>".$perelink."</span>"; }
@@ -271,10 +252,10 @@ class ProductController extends AppController {
 			array('db' => 'avito_state', 'dt' => 12,
 				'formatter' => function($d, $row) {
 					$productId = (int)($row['id'] ?? 0);
-					[$adId, $status, $review, $stock] = array_pad(explode('|', (string)$d, 4), 4, '');
+					[$adId, $status, $review, $stock, $publication] = array_pad(explode('|', (string)$d, 5), 5, '');
 					$stock = (int)$stock;
 					if ($adId !== '') {
-						$label = $review === 'needs_review' ? 'Требует проверки' : ($status === 'active' ? 'Есть активное' : 'Есть в архиве');
+						$label = $publication === 'deleting' ? 'Удаляется' : (in_array($publication, ['active','published'], true) ? 'Опубликовано' : ($review === 'needs_review' ? 'Требует проверки' : ($status === 'active' ? 'В выгрузке' : 'Есть в базе')));
 						$class = $review === 'needs_review' ? 'warning' : ($status === 'active' ? 'success' : 'secondary');
 						return '<span class="badge badge-' . $class . '"><i class="fas fa-bullhorn"></i> ' . $label . '</span><br>'
 							. '<a href="' . ADMIN . '/avito/edit?id=' . (int)$adId . '">Открыть объявление</a>';
@@ -288,7 +269,15 @@ class ProductController extends AppController {
 						. '<button class="btn btn-xs btn-outline-primary" type="submit"><i class="fas fa-magic"></i> Создать по шаблону</button>'
 						. '</form>';
 				}
-			)
+			),
+            array('db'=>'free_stock','dt'=>13),
+            array('db'=>'seo_score','dt'=>14),
+            array('db'=>'related_count','dt'=>15),
+            array('db'=>'similar_count','dt'=>16),
+            array('db'=>'content_count','dt'=>17),
+            array('db'=>'incoming_count','dt'=>18),
+            array('db'=>'inseo_score','dt'=>19),
+
 		);
 		 
 		// SQL server connection information
