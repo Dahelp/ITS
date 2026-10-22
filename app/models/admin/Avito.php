@@ -1675,12 +1675,12 @@ class Avito extends AppModel
         } elseif ($type === 'Детали салона') {
             $intro = 'Новая деталь кабины или салона.';
         } else {
-            $intro = 'Новая шина для грузовиков, погрузчиков или специальной техники.';
+            $intro = ''; // Назначение конкретной шины уже указано в названии и характеристиках.
         }
 
         $productWord = in_array($type, ['Мотошины', 'Шины для грузовиков и спецтехники'], true) ? 'ШИНЫ' : 'ТОВАРЫ';
         $html = '<p><strong>▶️ ТОЛЬКО НОВЫЕ ' . $productWord . ' С ГАРАНТИЕЙ!</strong><br>'
-            . '◀️ ' . self::descriptionHtml($intro) . ' В наличии на складе.</p>';
+            . ($intro !== '' ? '◀️ ' . self::descriptionHtml($intro) . ' В наличии на складе.' : '') . '</p>';
         $html .= '<p><strong>' . self::descriptionHtml($name) . '</strong></p>';
         if ($source !== '' && $source !== $name) {
             $source = self::limitText($source, 2800);
