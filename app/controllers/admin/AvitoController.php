@@ -343,6 +343,17 @@ class AvitoController extends AppController
 
             // берём атрибуты после load()
             $attrs = $model->attributes;
+            $titleError = \app\services\AvitoProductTemplate::titleError((string)($attrs['title'] ?? ''));
+            if ($titleError !== '') {
+                $_SESSION['error'] = $titleError;
+                if (!isset($ad) || !is_object($ad)) $ad = new \stdClass();
+                foreach ($attrs as $field => $value) $ad->$field = $value;
+                if (isset($id)) $ad->id = $id;
+                $this->setMeta('AVITO — исправьте название объявления');
+                $this->set(compact('ad'));
+                return;
+            }
+
 
             // нормализуем images_json: textarea -> JSON
             if (isset($attrs['images_json'])) {
@@ -398,6 +409,17 @@ class AvitoController extends AppController
             $before = $ad->export();
             $model->load($_POST);
             $attrs = $model->attributes;
+            $titleError = \app\services\AvitoProductTemplate::titleError((string)($attrs['title'] ?? ''));
+            if ($titleError !== '') {
+                $_SESSION['error'] = $titleError;
+                if (!isset($ad) || !is_object($ad)) $ad = new \stdClass();
+                foreach ($attrs as $field => $value) $ad->$field = $value;
+                if (isset($id)) $ad->id = $id;
+                $this->setMeta('AVITO — исправьте название объявления');
+                $this->set(compact('ad'));
+                return;
+            }
+
 
             // нормализуем images_json: textarea -> JSON
             if (isset($attrs['images_json'])) {

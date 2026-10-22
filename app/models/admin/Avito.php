@@ -703,6 +703,7 @@ class Avito extends AppModel
     }
     public static function ensureSchema(): void
     {
+        \app\services\AvitoProductTemplate::ensureTitleStorage();
         // Cleanup of an orphan that could be left by the legacy failed insert
         // path. Never touch a populated row, even if its historical ID is 0.
         \R::exec("DELETE FROM avito_ad
@@ -891,7 +892,7 @@ class Avito extends AppModel
             $ad->status = self::publicationStatus($quantity);
 
             if (empty($ad->title)) {
-                $ad->title = self::limitText((string)$row['name'], 50);
+                $ad->title = \app\services\AvitoProductTemplate::title($row);
             }
             if (empty($ad->description)) {
                 $ad->description = self::buildDescription($row);
@@ -1493,8 +1494,11 @@ class Avito extends AppModel
         $warnings = [];
         $title = trim((string)($row['title'] ?? ''));
         $description = trim(strip_tags((string)($row['description'] ?? '')));
-        if ($title !== '' && (mb_strlen($title, 'UTF-8') < 12 || mb_strlen($title, 'UTF-8') > 50)) {
+        if ($title !== '' && (mb_strlen($title, 'UTF-8') < 12 || mb_strlen($title, 'UTF-8') > \app\services\AvitoProductTemplate::TITLE_LIMIT)) {
             $warnings[] = 'Название желательно сделать длиной 12–50 символов';
+        }
+        if ($titleError = \app\services\AvitoProductTemplate::titleError($title)) {
+            $missingRequired['title'] = $titleError;
         }
         $descriptionLength = mb_strlen($description, 'UTF-8');
         if ($descriptionLength < 250) {
@@ -1526,7 +1530,7 @@ class Avito extends AppModel
         $optionalScore = $optionalTotal ? (int)round($optionalFilled * 100 / $optionalTotal) : 100;
         $textScore = 0;
         if ($title !== '') $textScore += 25;
-        if (mb_strlen($title, 'UTF-8') >= 12 && mb_strlen($title, 'UTF-8') <= 50) $textScore += 15;
+        if (mb_strlen($title, 'UTF-8') >= 12 && mb_strlen($title, 'UTF-8') <= \app\services\AvitoProductTemplate::TITLE_LIMIT) $textScore += 15;
         if ($descriptionLength >= 250) $textScore += 25;
         if ($descriptionLength >= 600) $textScore += 15;
         if (preg_match('~\d~u', $title)) $textScore += 10;
@@ -1585,7 +1589,7 @@ class Avito extends AppModel
         $ad->article = $article;
         $ad->status = 'archived';
         $ad->review_status = 'needs_review';
-        $ad->title = self::limitText((string)($row['name'] ?? ''), 50);
+        $ad->title = \app\services\AvitoProductTemplate::title($row);
         $ad->description = self::buildGeneratedDescription($row);
         $ad->price_rub = (int)round((float)($row['price'] ?? 0));
         $ad->quantity = 'за 1 шт.';
@@ -1734,20 +1738,7 @@ class Avito extends AppModel
 
     public static function generatedProductType(array $row): string
     {
-        $name = mb_strtolower(implode(' ', [
-            (string)($row['name'] ?? ''),
-            (string)($row['description'] ?? ''),
-            (string)($row['attribute_text'] ?? ''),
-        ]), 'UTF-8');
-        if ((int)($row['category_id'] ?? 0) === 2 || preg_match('~\b(?:atv|квадроцикл)~u', $name)) return 'Мотошины';
-        if (preg_match('~\bдиск\w*\b~u', $name)) return 'Диски';
-        if (preg_match('~\bфильтр\w*\b~u', $name)) return 'Фильтры и фильтроэлементы';
-        if (preg_match('~радиатор|помпа|термостат|охлажден~u', $name)) return 'Система охлаждения ДВС';
-        if (preg_match('~маслян|масляный насос|смазк~u', $name)) return 'Система смазки';
-        if (preg_match('~глушител|выхлоп|выпускн~u', $name)) return 'Система выпуска';
-        if (preg_match('~топлив|форсунк|тнвд|бензонасос~u', $name)) return 'Топливная система';
-        if (preg_match('~сидень|кресл|зеркал|стеклоподъем|салон~u', $name)) return 'Детали салона';
-        return 'Шины для грузовиков и спецтехники';
+        return \app\services\AvitoProductTemplate::productType($row);
     }
 
     private static function descriptionValue(array $row): string

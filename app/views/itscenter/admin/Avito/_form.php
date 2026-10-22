@@ -291,8 +291,12 @@ if (!function_exists('avito_h')) {
                       Название объявления (Title) <span class="text-danger">*</span>
                     </label>
                     <div class="col-sm-9">
-                      <input maxlength="50" required class="form-control" name="title" value="<?=avito_h($ad->title ?? '')?>">
-                      <small class="form-text text-muted">До 50 символов, как будет видно на Авито.</small>
+                      <input id="avito-title" required class="form-control" name="title" data-title-limit="<?= \app\services\AvitoProductTemplate::TITLE_LIMIT ?>" aria-describedby="avito-title-help avito-title-count avito-title-error" value="<?=avito_h($ad->title ?? '')?>">
+                      <div class="d-flex justify-content-between align-items-start mt-1">
+                        <small id="avito-title-help" class="text-muted">Лимит названия в выгрузке — <?= \app\services\AvitoProductTemplate::TITLE_LIMIT ?> символов с пробелами. Текст автоматически не обрезается.</small>
+                        <output id="avito-title-count" for="avito-title" class="ml-3 text-nowrap font-weight-bold" aria-live="polite"><?= mb_strlen((string)($ad->title ?? ''), 'UTF-8') ?>/<?= \app\services\AvitoProductTemplate::TITLE_LIMIT ?></output>
+                      </div>
+                      <small id="avito-title-error" class="text-danger" hidden></small>
                     </div>
                   </div>
 
@@ -1108,4 +1112,5 @@ if (!function_exists('avito_h')) {
 
     </div>
   </div>
+<script src="<?= PATH ?>/js/avito-title-counter.js?v=<?= (int)filemtime(WWW.'/js/avito-title-counter.js') ?>"></script>
 </section>
