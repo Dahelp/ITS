@@ -29,4 +29,6 @@ assert.equal(reloads,2,'Partial successes still refresh IDs');assert.match(statu
 intervals[0]();requests[3].failure();requests[3].complete();assert.match(status.textContent,/Не удалось/);
 intervals[0]();requests[4].success({assigned:1,pending:0,checked_at:12,errors:[]});requests[4].complete();
 assert.equal(reloads,3);assert.match(status.textContent,/Все номера/);
+intervals[0]();requests[5].success({assigned:0,deleted:1,pending:0,deletions_pending:1,checked_at:13,errors:[]});requests[5].complete();
+assert.equal(reloads,4,'Confirmed deletion removes the row without another click');assert.match(status.textContent,/подтверждения снятия: 1/);
 console.log('Avito ID polling: retry, visibility, locking, cached results, partial errors OK');

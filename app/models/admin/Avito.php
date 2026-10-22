@@ -650,7 +650,7 @@ class Avito extends AppModel
 
         \R::exec("\n            UPDATE avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            SET a.status = CASE\n                WHEN COALESCE(p.rest, p.quantity, 0) > 0 THEN 'active'\n                ELSE 'archived'\n            END\n        ");
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.article AS ad_article,\n                p.id AS product_id,\n                p.article, p.name, p.description, p.content, p.price, p.quantity, p.rest, p.hide,\n                p.img, p.unload_img, p.alias, p.model, p.weight,\n                b.name AS brand_name\n            FROM avito_ad a\n            INNER JOIN product p ON p.article = a.article\n            LEFT JOIN brand b ON b.id = p.brand_id\n            WHERE a.article IS NOT NULL AND a.article != '' AND a.deletion_requested_at IS NULL\n        ");
 
         $updated = 0;
         foreach ($rows as $row) {
@@ -703,16 +703,28 @@ class Avito extends AppModel
         return $updated;
     }
 
+    public static function deletionIsConfirmed(?string $publicationStatus): bool
+    {
+        return in_array(mb_strtolower(trim((string)$publicationStatus), 'UTF-8'), [
+            'old', 'removed', 'archived', 'unpublished', 'deleted',
+        ], true);
+    }
+
+    public static function numericAvitoItemId(array $row): int
+    {
+        return self::apiItemId($row);
+    }
+
     public static function getFeedRows(int $id = 0, bool $onlyActive = false): array
     {
         self::syncLinkedAdsFromProducts();
         if ($id > 0) {
-            return \R::getAll("SELECT * FROM avito_ad WHERE id = ? LIMIT 1", [$id]);
+            return \R::getAll("SELECT * FROM avito_ad WHERE id = ? AND deletion_requested_at IS NULL LIMIT 1", [$id]);
         }
         if ($onlyActive) {
-            return \R::getAll("SELECT * FROM avito_ad WHERE status = 'active' ORDER BY id DESC");
+            return \R::getAll("SELECT * FROM avito_ad WHERE status = 'active' AND deletion_requested_at IS NULL ORDER BY id DESC");
         }
-        return \R::getAll("SELECT * FROM avito_ad ORDER BY id DESC");
+        return \R::getAll("SELECT * FROM avito_ad WHERE deletion_requested_at IS NULL ORDER BY id DESC");
     }
 
     public static function buildFeedXml(int $id = 0, bool $onlyActive = true): string
@@ -990,7 +1002,7 @@ class Avito extends AppModel
             'errors' => [],
         ];
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE a.article IS NOT NULL AND a.article != ''\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE a.article IS NOT NULL AND a.article != '' AND a.deletion_requested_at IS NULL\n        ");
 
         if (!$rows) {
             return $stats;
