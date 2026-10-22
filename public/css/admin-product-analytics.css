@@ -8,3 +8,31 @@
 .product-admin .menu_btn{height:auto;padding:0}.product-admin .pc-table-toolbar .dataTables_length,.product-admin .pc-table-toolbar .dataTables_filter{width:auto;padding:0}.product-admin .pc-table-footer .dataTables_info,.product-admin .pc-table-footer .dataTables_paginate{width:auto;float:none;padding:0}.pc-health-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-bottom:8px}.pc-health-top .pc-attributes{border:0;margin:0;padding:0;font-size:11px;line-height:1.9}.product-admin .product-table{font-size:13px}.product-admin .table_product_name{font-size:14px}.pc-links .bg-danger,.pc-attributes .bg-danger{background:#fae9ec!important;color:#aa394b!important}.pc-links .bg-success,.pc-attributes .bg-success{background:#e3f3e9!important;color:#28774a!important}.product-admin .pc-col-avito .badge-danger{background:#fff2df;color:#8c5b0b}.product-admin .pc-col-avito .badge-light{background:#f0f3f7;color:#64748b}.product-admin .pc-status .badge-success{background:#e3f3e9;color:#28774a}
 @media(max-width:1199px){.pc-health-top{grid-template-columns:minmax(0,1fr);gap:4px}.pc-health-top .pc-attributes br{display:none}.pc-health-top .pc-attributes .badge{margin-right:3px}.product-admin .table_product_name{font-size:13px}}
 @media(max-width:767px){.pc-health-top{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.product-admin .pc-table-toolbar .dataTables_filter{width:100%}.product-admin .table_product_name{font-size:14px}}
+/* Readable product rows and consistently spaced image diagnostics. */
+.product-admin .product-table{font-size:15px;line-height:1.55}
+.product-admin .product-table th{font-size:12px}
+.product-admin .table_product_name{font-size:16px;line-height:1.5}
+.product-admin .pc-ids,.product-admin .pc-category{font-size:12px;line-height:1.5}
+.product-admin .pc-product{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px}
+.product-admin .pc-media{width:76px}
+.product-admin .pc-media img{width:72px;height:78px;max-height:78px!important}
+.pc-image-info{grid-column:1/-1;display:grid;gap:7px;margin-top:2px}
+.pc-image-line{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 9px;font-size:12px;line-height:1.5}
+.pc-image-label{flex:0 0 76px;color:#64748b}
+.pc-image-values{display:flex;align-items:center;flex-wrap:wrap;gap:5px;min-width:0}
+.product-admin .pc-image-values .badge{display:inline-block;position:static;font-size:12px;line-height:1.25;padding:3px 6px;margin:0;border-radius:4px}
+.pc-photo-empty{display:grid;place-items:center;min-height:72px;background:#f3f6fa;border-radius:6px;font-size:12px;color:#64748b}
+.product-admin .pc-seo,.product-admin .pc-health-top .pc-attributes,.product-admin .pc-links,.product-admin .pc-status,.product-admin .pc-flags{font-size:14px;line-height:1.65}
+.product-admin .pc-incoming{font-size:12px}
+.product-admin .pc-col-stock{font-size:16px}
+.product-admin .pc-col-stock span{font-size:14px}
+.product-admin .pc-status .badge,.product-admin .pc-col-avito .badge,.product-admin .pc-links .badge,.product-admin .pc-attributes .badge{font-size:12px;padding:3px 5px}
+.product-admin .product-table .pc-col-avito .btn,.product-admin .pc-col-avito a{font-size:13px;line-height:1.5}
+.product-admin .table_product_count_info .btn{font-size:12px;padding:4px 7px!important}
+.product-admin .pc-actions a{width:29px;height:29px;font-size:13px}
+.product-admin .pc-flags .custom-control{min-height:24px;margin-bottom:5px!important}
+.product-admin .pc-flags .custom-control-label{line-height:24px}
+.product-admin .pc-table-toolbar,.product-admin .pc-table-footer,.product-admin .pa-filter-bar label{font-size:14px}
+.product-admin .pa-metric{font-size:14px}.product-admin .pa-note{font-size:12px}
+@media(max-width:1199px){.product-admin .pc-product{grid-template-columns:64px minmax(0,1fr);gap:10px}.product-admin .pc-media{width:64px}.product-admin .pc-media img{width:62px;height:70px}.product-admin .pc-health-top{grid-template-columns:minmax(0,1fr)}.product-admin .pc-health-top .pc-attributes br{display:block}.product-admin .table_product_name{font-size:15px}}
+@media(max-width:767px){.product-admin .pc-product{grid-template-columns:76px minmax(0,1fr)}.product-admin .pc-media{width:76px}.product-admin .pc-media img{width:72px;height:78px}.product-admin .table_product_name{font-size:16px}.product-admin .product-table td:before{font-size:12px}.product-admin .pc-health-top{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.product-admin .pc-image-info{margin-top:4px}.product-admin .pc-flags{gap:8px 14px}}

@@ -14,9 +14,17 @@
         function product(data, type, row) {
             if (type === 'export') return 'ID '+row[0]+'; Артикул '+row[2]+'; '+row[4]+'; '+plain(data)+'; '+plain(row[1]);
             if (type !== 'display') return data;
-            return '<div class="pc-product"><div class="pc-media">'+row[1]+'</div><div class="pc-identity">'
+            var media=$('<div>').html(row[1]),image=media.find('img').first();
+            var labels=['Основная:','Галерея:','Выгрузка:'],imageInfo='';
+            media.find('.small > div').each(function(index){
+                var values=$(this).find('.badge').clone();
+                values.each(function(){ $(this).text($(this).text().replace(/^(галерея|unload):\s*/i,'')); });
+                imageInfo+='<div class="pc-image-line"><span class="pc-image-label">'+labels[index]+'</span><span class="pc-image-values">'
+                    +values.map(function(){return this.outerHTML;}).get().join('')+'</span></div>';
+            });
+            return '<div class="pc-product"><div class="pc-media">'+(image.length?image.prop('outerHTML'):'<span class="pc-photo-empty">Нет фото</span>')+'</div><div class="pc-identity">'
                 +'<div class="pc-ids">ID '+escape(row[0])+' <span>Артикул '+escape(row[2])+'</span></div>'
-                +'<div class="pc-category">'+escape(row[4])+'</div>'+data+'</div></div>';
+                +'<div class="pc-category">'+escape(row[4])+'</div>'+data+'</div><div class="pc-image-info">'+imageInfo+'</div></div>';
         }
         function quality(data, type, row) {
             if (type === 'export') return plain(data)+'; '+plain(row[7])+'; '+plain(row[8])+'; Входящих: '+row[18];
