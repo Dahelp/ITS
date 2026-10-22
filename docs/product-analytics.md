@@ -31,3 +31,11 @@ remain in the filtered table.
 
 Run `php tests/ProductAnalyticsTest.php` for fixture-based counter/filter parity,
 reserved stock, duplicate/set/pending ads, templates and invalid link checks.
+
+The product list uses five composite columns (product identity/media, price and
+stock, quality/links, management, Avito). All twenty server-side data columns are
+retained for searching and numeric ordering. The previous independent columns
+are combined, not discarded. Exports include identifiers and diagnostic details.
+On narrow screens each row becomes a labelled vertical card without a horizontal
+scroll container. Analytics panels use AdminLTE CardWidget collapse and remember
+their state per browser. Existing filters and badge actions remain available.
