@@ -927,9 +927,9 @@ class Avito extends AppModel
             $client = new \app\services\AvitoApiClient();
             $client->getAccessToken();
         } catch (\Throwable $e) {
-            return 0;
+            throw new \RuntimeException('Не удалось подключиться к Авито для получения номеров объявлений.');
         }
-        $updated = 0;
+        $updated = self::syncAvitoIdsFromExternalIds($client);
         $page = 1;
         $perPage = 100;
 
@@ -965,6 +965,13 @@ class Avito extends AppModel
         } while (count($items) >= max(1, $returnedPerPage) && $page <= $currentPage + 100);
 
         return $updated;
+    }
+    private static function syncAvitoIdsFromExternalIds(\app\services\AvitoApiClient $client): int
+    {
+        $stats = \app\services\AvitoIdSync::refreshPending(true, $client);
+        if (!empty($stats['busy'])) throw new \RuntimeException('Проверка номеров Авито уже выполняется. Повторите через минуту.');
+        if (!empty($stats['errors'])) throw new \RuntimeException(implode(' ', $stats['errors']));
+        return (int)$stats['assigned'];
     }
     public static function pushLinkedAdsToApi(): array
     {

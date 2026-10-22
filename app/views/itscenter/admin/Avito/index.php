@@ -40,6 +40,7 @@
         </div>
         <div class="card-body">
           <div class="table-responsive">
+            <div id="avito-id-sync-status" class="small text-muted mb-3" role="status" aria-live="polite" data-url="<?= ADMIN ?>/avito/sync-identifiers">Номера новых объявлений проверяются автоматически, пока открыт список.</div>
             <table id="avito-table" class="table table-bordered display" width="100%">
               <thead>
               <tr>
@@ -129,3 +130,5 @@ $(function () {
 
 
 
+
+<script src="<?= PATH ?>/js/avito-id-sync.js?v=<?= (int)filemtime(WWW . '/js/avito-id-sync.js') ?>" defer></script>
