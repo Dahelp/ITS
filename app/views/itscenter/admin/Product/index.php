@@ -45,14 +45,14 @@ $ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
     <!-- /.content-header -->
 
 <!-- Main content -->
-<section class="content">
+<section class="content product-admin">
     <div class="row">
         <div class="col-md-12">
 			<div class="menu_btn">
                 <a href="<?=ADMIN;?>/product/add" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Добавить товар</a>
             </div>
             <?php require __DIR__.'/_analytics.php'; ?>
-            <div class="card">
+            <div class="card product-list-card">
 				<div class="card-header d-flex p-0">
                     <h3 class="card-title p-3">Товары<?php if($category["name"]) { echo " категории ".$category["name"].""; }?></h3>
 					<ul class="nav nav-pills ml-auto p-2">
@@ -77,8 +77,8 @@ $ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
 							<?php endforeach; ?>
 						</div>
 					</div>
-					<div class="table-responsive">
-						<table id="example" class="table table-bordered display" width="100%">
+					<div class="product-table-wrap">
+						<table id="example" class="table product-table" width="100%">
 							<thead>
 								<tr>
 									<th>ID</th>
@@ -107,138 +107,9 @@ $ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
 
 ?>
 <script>
-$(document).ready(function () {
-	$('#example thead tr th').eq(8).after('<th>Отметки</th>');
-	var hideFromExport = [1, 6, 7, 8, 9, 10, 11, 12];
-	var table = $('#example').DataTable({		
-		"processing": true,
-		"serverSide": true,
-		"stateSave": true,
-        "order": <?= json_encode($defaultAnalyticsOrder) ?>,
-        "stateSaveParams": function(settings,data){data.analyticsScope=<?= json_encode($analyticsScope) ?>;},
-        "stateLoadParams": function(settings,data){
-            if(!data.columns || data.columns.length !== 20)return false;
-            if(data.analyticsScope !== <?= json_encode($analyticsScope) ?>){
-                data.start=0;data.order=<?= json_encode($defaultAnalyticsOrder) ?>;
-                if(data.search)data.search.search='';
-                data.columns.forEach(function(column){if(column.search)column.search.search='';});
-            }
-        },
-		"lengthChange": true,
-		"lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "Все"]],
-		"aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 1, 4, 6, 7, 8, 11, 12 ] }, {'bVisible':false,'bSearchable':false,'aTargets':[13,14,15,16,17,18,19]}],
-		dom: '<"blok-bottoms"B><"blok-table"lfrtip>',
-		"ajax": {
-            url: adminpath + '/product/server-processing<?= $ajaxQuery; ?>',		
-        },
-        buttons: [ 
-			{
-				extend: 'copyHtml5',
-				exportOptions: {
-					columns: function ( idx, data, node ) {
-					var isVisible = table.column( idx ).visible();
-						var isNotForExport = $.inArray( idx, hideFromExport ) !== -1;
-						return isVisible && !isNotForExport ? true : false; 
-					}
-				},
-				text: 'Копировать'
-			},
-			{
-				extend: 'csvHtml5',
-				bom: true,
-				exportOptions: {
-					columns: function ( idx, data, node ) {
-					var isVisible = table.column( idx ).visible();
-						var isNotForExport = $.inArray( idx, hideFromExport ) !== -1;
-						return isVisible && !isNotForExport ? true : false; 
-					}
-				}
-			},
-			{
-				extend: 'excelHtml5',
-				exportOptions: {
-					columns: function ( idx, data, node ) {
-					var isVisible = table.column( idx ).visible();
-						var isNotForExport = $.inArray( idx, hideFromExport ) !== -1;
-						return isVisible && !isNotForExport ? true : false; 
-					}
-				}
-			},
-			{
-				extend: 'pdfHtml5',
-				exportOptions: {
-					columns: function ( idx, data, node ) {
-					var isVisible = table.column( idx ).visible();
-						var isNotForExport = $.inArray( idx, hideFromExport ) !== -1;
-						return isVisible && !isNotForExport ? true : false; 
-					}
-				}
-			},
-			{
-				extend: 'print',
-				exportOptions: {
-					columns: function ( idx, data, node ) {
-					var isVisible = table.column( idx ).visible();
-						var isNotForExport = $.inArray( idx, hideFromExport ) !== -1;
-						return isVisible && !isNotForExport ? true : false; 
-					}
-				}
-			},
-			{
-				extend: 'colvis',
-				text: 'Настроить колонки'				
-			}
-
-        ],		
-		
-		createdRow: function( row, data, dataIndex){
-			if( data[10].indexOf("Не активный") !== -1 ){
-                $(row).css('background-color', '#fed8d8');
-            } 
-			if( data[10].indexOf("Закрыт от индексации") !== -1 ){
-                $(row).css('background-color', '#d7d6d6');
-            } 
-		}
-	});
-    var analyticsOrder=document.getElementById('product-analytics-order');
-    function reflectAnalyticsOrder(){var order=table.order()[0];if(order)analyticsOrder.value=order[0]+':'+order[1];}
-    reflectAnalyticsOrder();
-    analyticsOrder.addEventListener('change',function(){var parts=this.value.split(':');if(parts.length===2)table.order([[Number(parts[0]),parts[1]]]).draw();});
-    table.on('order.dt',reflectAnalyticsOrder);
-	table.on('draw', function () {
-		$('#example tbody tr').each(function () {
-			var status = $(this).find('td').eq(10).text();
-			if (status === 'Не активный') {
-				$(this).css('background-color', '#fed8d8');
-			}
-			if (status === 'Закрыт от индексации') {
-				$(this).css('background-color', '#d7d6d6');
-			}
-		});
-	});
-	$('#example').on('change', '.product-badge-toggle', function () {
-		var input = this;
-		input.disabled = true;
-		$.ajax({
-			url: adminpath + '/product/badge-toggle',
-			type: 'POST',
-			dataType: 'json',
-			data: {
-				id: input.getAttribute('data-id'),
-				field: input.getAttribute('data-field'),
-				value: input.checked ? 1 : 0
-			}
-		}).done(function (res) {
-			if (!res || !res.success) {
-				input.checked = !input.checked;
-				alert('Не удалось сохранить отметку товара');
-			}
-		}).fail(function () {
-			input.checked = !input.checked;
-			alert('Не удалось сохранить отметку товара');
-		}).always(function () {
-			input.disabled = false;
-		});
-	});
-})
+window.productCatalogConfig = <?= json_encode([
+    'ajax'=>ADMIN.'/product/server-processing'.$ajaxQuery,
+    'scope'=>$analyticsScope, 'order'=>$defaultAnalyticsOrder,
+], JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 </script>
+<script src="<?= PATH ?>/js/admin-product-catalog.js?v=<?= (int)filemtime(WWW.'/js/admin-product-catalog.js') ?>"></script>
