@@ -884,94 +884,23 @@ class UserController extends AppController {
 		redirect('user/login');
 	}
 	
-	public function zvonokAction(){
-		if (!empty($_POST)) {
-			$name    = trim($_POST['name'] ?? '');
-			$phone   = trim($_POST['phone'] ?? '');
-			$email   = trim($_POST['email'] ?? '');
-			$comment = trim($_POST['comment'] ?? '');
-			$title   = trim($_POST['title'] ?? 'Заказ обратного звонка');
-			$agree   = !empty($_POST['agree']);
-
-			if (!$agree) {
-				$this->sessWriteOpen();
-				$_SESSION['error'] = 'Необходимо согласие на обработку персональных данных.';
-				$this->sessClose();
-				redirect();
-			}
-
-			$this->sessReadOpen();
-			$user_id = $_SESSION['user']['id'] ?? 0;
-			$this->sessClose();
-
-			$first = substr($phone, 0, 5);
-			if ($first != "+7 (9") {
-				$this->sessWriteOpen();
-				$_SESSION['error'] = 'Запрос не обработан! Вы робот? Если нет, попробуйте заполнить форму обратной связи еще раз!';
-				$this->sessClose();
-				redirect();
-			}
-
-			$callback = \R::dispense('callback');
-			$callback->user_id = (int)$user_id;
-			$callback->topic = $title;
-			$callback->phone = $phone;
-			$callback->date_create = date('Y-m-d H:i:s');
-			$callback->date_modified = '';
-			$callback->user_modified = '';
-			$callback->hide = '';
-
-			// Если в таблице есть такие поля — раскомментируйте:
-			// $callback->name = $name;
-			// $callback->email = $email;
-			// $callback->comment = $comment;
-
-			$id = \R::store($callback);
-
-			if ($id) {
-				AdminActivityLogger::incoming(AdminActivityLogger::ACTION_CALLBACK, 'callback', (int)$id, (int)$user_id);
-
-				setcookie("request-mig", "1house", time() + 3600, "/");
-
-				$transport = (new Swift_SmtpTransport(
-					App::$app->getProperty('smtp_host'),
-					App::$app->getProperty('smtp_port'),
-					App::$app->getProperty('smtp_protocol')
-				))
-					->setUsername(App::$app->getProperty('smtp_login'))
-					->setPassword(App::$app->getProperty('smtp_password'));
-
-				$mailer = new Swift_Mailer($transport);
-
-				$namecomp = App::$app->getProperty('shop_name');
-				$tell_site = \ishop\App::options('option_telefon');
-
-				ob_start();
-				require APP . '/views/' . TEMPLATE . '/mail/mail_callback.php';
-				$body = ob_get_clean() . TrafficSource::emailHtml();
-
-				$message_admin = (new Swift_Message("Заказ обратного звонка на сайте " . App::$app->getProperty('shop_name')))
-					->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
-					->setTo(App::$app->getProperty('admin_email'))
-					->setBody($body, 'text/html');
-
-				$mailer->send($message_admin);
-
-				$this->sessWriteOpen();
-				$_SESSION['success'] = 'Спасибо за заказ обратного звонка. Наш менеджер обязательно Вам позвонит по указаному номеру. Ожидайте звонка в рабочее время с ПН-ПТ 9:00 до 17:00 по МСК.';
-				$this->sessClose();
-
-				redirect();
-			} else {
-				$this->sessWriteOpen();
-				$_SESSION['error'] = 'Ошибка отправки формы. Попробуйте ещё раз.';
-				$this->sessClose();
-				redirect();
-			}
-		}
-
-		redirect();
-	}
+    public function zvonokAction(){
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        try {
+            \app\services\LeadForm::guard('callback', $_POST);
+            $phone = \app\services\LeadForm::phone($_POST['phone'] ?? '');
+            \app\services\LeadForm::rejectRecent('callback','phone',$phone);
+            $name = \app\services\LeadForm::text($_POST['name'] ?? '', 200);
+            $email = \app\services\LeadForm::text($_POST['email'] ?? '', 254);
+            $comment = \app\services\LeadForm::text($_POST['comment'] ?? '', 3000);
+            if ($email !== '' && !filter_var($email,FILTER_VALIDATE_EMAIL)) throw new \DomainException('Укажите корректную почту или оставьте поле пустым.');
+            if (empty($_POST['agree'])) throw new \DomainException('Подтвердите согласие на обработку данных.');
+            (new \app\models\Callback())->addCallback($phone, (int)($_SESSION['user']['id'] ?? 0), 'Заказать звонок', $name, $email, $comment);
+            \app\services\LeadForm::consumed('callback');
+            $_SESSION['success']='Заявка принята. Менеджер перезвонит в рабочее время.';
+        } catch (\DomainException $e) { $_SESSION['error']=$e->getMessage(); }
+        redirect();
+    }
 
 	public function catalogAction(){
 		if (!empty($_POST)) {

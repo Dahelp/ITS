@@ -47,7 +47,7 @@
               <tr class="<?= !$isClosed && $statusId === '0' ? 'table-warning' : '' ?>">
                 <td><?= (int)$item['id'] ?></td>
                 <td><?= $status ?></td>
-                <td><?= $e($item['topic'] ?: 'Обратный звонок') ?></td>
+                <td><?= $e($item['topic'] ?: 'Обратный звонок') ?><div class="text-muted"><?= $e(mb_strimwidth($item['comment'] ?? '',0,150,'…')) ?></div></td>
                 <td><?= !empty($item['user_id']) ? '<a href="' . ADMIN . '/user/edit?id=' . (int)$item['user_id'] . '">' . $e($item['user_name'] ?: ('#' . $item['user_id'])) . '</a>' : '<span class="text-muted">Гость</span>' ?></td>
                 <td><a href="tel:<?= $e(preg_replace('/\D+/', '', (string)$item['phone'])) ?>"><?= $e($item['phone']) ?></a></td>
                 <td><?= $e($item['date_create']) ?></td>

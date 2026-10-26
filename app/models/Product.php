@@ -41,7 +41,7 @@ class Product extends AppModel {
     }
 
     /** Отправка "1 клик" */
-    public static function mailZakazClick($name_tovar, $fio, $tell, $email, $note){
+    public static function mailZakazClick($name_tovar, $fio, $tell, $email, $note, $quantity = 1, $unitPrice = null){
         $transport = (new Swift_SmtpTransport(
             App::$app->getProperty('smtp_host'),
             App::$app->getProperty('smtp_port'),
@@ -55,16 +55,18 @@ class Product extends AppModel {
         $tell_site = \ishop\App::options('option_telefon');
 
         // письмо клиенту
+        if ($email !== '') {
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_oneclick_user.php';
         $body_user = ob_get_clean();
 
-        $message_client = (new Swift_Message("Вы совершили заказ в 1 клик на сайте {$namecomp}"))
+        $message_client = (new Swift_Message("Ваша заявка на заказ на сайте {$namecomp}"))
             ->setFrom([App::$app->getProperty('smtp_login') => $namecomp])
             ->setTo($email)
             ->setBody($body_user, 'text/html')
-            ->setReplyTo([$email => $fio ?: 'Клиент']);
+            ;
 
+        }
         // письмо админу
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_oneclick.php';
@@ -74,10 +76,10 @@ class Product extends AppModel {
             ->setFrom([App::$app->getProperty('smtp_login') => $namecomp])
             ->setTo(App::$app->getProperty('admin_email'))
             ->setBody($body_admin, 'text/html')
-            ->setReplyTo([$email => $fio ?: 'Клиент']);
+            ;
 
         try {
-            $s1 = $mailer->send($message_client);
+            $s1 = $email !== '' ? $mailer->send($message_client) : 1;
             $s2 = $mailer->send($message_admin);
             if (!$s1 || !$s2) {
                 throw new \RuntimeException('SwiftMailer вернул 0 получателей (oneclick).');

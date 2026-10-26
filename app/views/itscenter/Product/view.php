@@ -1477,12 +1477,12 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 </div>
 <!--end-single-->
 
-<!-- Modal Купить в 1 клик -->
+<!-- Modal Заказать в 1 клик -->
 <div class="modal fade" id="Modalclick" tabindex="-1" aria-labelledby="ModalclickLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content callback-modal">
             <div class="modal-header">
-                <div class="modal-title" id="ModalclickLabel">Купить в 1 клик</div>
+                <div class="modal-title" id="ModalclickLabel">Заказать в 1 клик</div>
 
                 <button type="button"
                         class="btn-close"
@@ -1490,8 +1490,13 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         aria-label="Закрыть"></button>
             </div>
 
-            <form action="<?= PATH ?>/product/<?= h($product->alias) ?>" method="post" class="callback-form js-modal-validate" novalidate>
+            <form action="<?= PATH ?>/product/<?= h($product->alias) ?>" method="post" class="callback-form js-modal-validate" data-lead-form novalidate>
                 <div class="modal-body">
+                    <p>Менеджер свяжется с вами, уточнит доставку и подтвердит заказ.</p>
+                    <label class="form-label">Количество <input class="form-control" type="number" name="quantity" min="1" max="9999" value="1" required></label>
+                    <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('oneclick') ?>">
+                    <input type="text" name="hp_field" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" value="">
+
                     <div class="availability-product mb-3">
                         <div class="availability-product__name">
                             <?= h($product->name) ?>
@@ -1503,7 +1508,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                     <div class="mb-3">
                         <label for="oneclick-fio-<?= (int)$product->id ?>" class="form-label">
-                            Ф.И.О. <span class="text-danger">*</span>
+                            Имя
                         </label>
 
                         <input
@@ -1511,12 +1516,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             name="fio_modal"
                             id="oneclick-fio-<?= (int)$product->id ?>"
                             class="form-control"
-                            placeholder="Укажите Ф.И.О."
+                            placeholder="Как к вам обращаться"
                             value="<?= h($userName ?? '') ?>"
-                            required
                         >
 
-                        <div class="invalid-feedback">Укажите Ф.И.О.</div>
+                        <div class="invalid-feedback">Как к вам обращаться</div>
                     </div>
 
                     <div class="mb-3">
@@ -1538,7 +1542,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                     <div class="mb-3">
                         <label for="oneclick-email-<?= (int)$product->id ?>" class="form-label">
-                            Электронная почта <span class="text-danger">*</span>
+                            Электронная почта (необязательно)
                         </label>
 
                         <input
@@ -1547,7 +1551,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             id="oneclick-email-<?= (int)$product->id ?>"
                             class="form-control"
                             placeholder="Укажите адрес электронной почты"
-                            required
                         >
 
                         <div class="invalid-feedback">Укажите корректный адрес электронной почты.</div>
@@ -1591,12 +1594,12 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         <div class="invalid-feedback d-block">Нужно подтвердить согласие.</div>
                     </div>
 
-                    <input type="hidden" name="oneclick" value="<?= md5(date('Y-m-d')) ?>">
+                    <input type="hidden" name="oneclick" value="1">
                 </div>
 
                 <div class="modal-footer justify-content-start">
                     <button type="submit" class="btn btn-danger callback-submit" disabled>
-                        Отправить
+                        Отправить заявку
                     </button>
                 </div>
             </form>
@@ -1605,6 +1608,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 </div>
 
 
+<script defer src="/js/lead-forms.js?v=20261027"></script>
 <!-- Modal Оформить товар под заказ -->
 <div class="modal fade" id="ModalRequest" tabindex="-1" aria-labelledby="ModalRequestLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

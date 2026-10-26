@@ -141,8 +141,9 @@ if (empty($_SESSION['callback_token'])) {
                                 </div>
                             </div>
 
-                            <form action="/callback" class="form decide-right-form" method="post" data-toggle="validator" novalidate="true">
+                            <form action="/callback" data-lead-form class="form decide-right-form" method="post" data-toggle="validator" novalidate="true">
                                 <input type="hidden" name="title" value="Заказать звонок">
+                                <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('callback') ?>">
                                 <input type="hidden" name="agree" value="1">
 
                                 <input type="hidden" name="callback_token"
@@ -189,3 +190,5 @@ if (empty($_SESSION['callback_token'])) {
         </div>
     </div>
 </div>
+
+<script defer src="/js/lead-forms.js?v=20261027"></script>

@@ -28,17 +28,19 @@
 								?>
 
 								<?php if ($dayofweek >= 1 && $dayofweek <= 5): ?>
-									Ваш заказ в 1 клик на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в рабочее время ПН-ПТ с 09:00 до 17:00.
+									Ваша заявка на заказ на сайте <?=$namecomp?> принята. Для подтверждения заказа с Вами свяжется менеджер в рабочее время ПН-ПТ с 09:00 до 17:00.
 								<?php else: ?>
-									Ваш заказ в 1 клик на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в понедельник в рабочее время с 09:00 до 17:00.
+									Ваша заявка на заказ на сайте <?=$namecomp?> принята. Для подтверждения заказа с Вами свяжется менеджер в понедельник в рабочее время с 09:00 до 17:00.
 								<?php endif; ?>
 
 								<br><br>
-								<b>Название товара:</b> <?=$name_tovar?><br>
-								<b>Ф.И.О.:</b> <?=$fio_click?><br>
-								<b>Номер телефона:</b> <?=$tell_click?><br>
-								<b>Электронная почта:</b> <?=$email_click?><br>
-								<b>Комментарий:</b> <?=$prim_click?><br>
+								<b>Количество:</b> <?= (int)$quantity ?><br>
+                                    <?php if ($unitPrice !== null): ?><b>Цена за единицу при заявке:</b> <?= htmlspecialchars((string)$unitPrice, ENT_QUOTES, 'UTF-8') ?> ₽<br><?php endif; ?>
+                                    <b>Название товара:</b> <?=htmlspecialchars((string)$name_tovar, ENT_QUOTES, 'UTF-8')?><br>
+								<b>Ф.И.О.:</b> <?=htmlspecialchars((string)$fio, ENT_QUOTES, 'UTF-8')?><br>
+								<b>Номер телефона:</b> <?=htmlspecialchars((string)$tell, ENT_QUOTES, 'UTF-8')?><br>
+								<b>Электронная почта:</b> <?=htmlspecialchars((string)$email, ENT_QUOTES, 'UTF-8')?><br>
+								<b>Комментарий:</b> <?=htmlspecialchars((string)$note, ENT_QUOTES, 'UTF-8')?><br>
 								<b>Время заказа:</b> <?=date('Y-m-d H:i:s')?><br><br><br>
 								С уважением, <?=$namecomp?> <br>
 								<b>Телефон:</b> <?=$tell_site?>

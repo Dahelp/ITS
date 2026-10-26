@@ -27,12 +27,14 @@
 						<table cellspacing="0" cellpadding="0" style="width:660px;padding:20px;font-family:Tahoma, Helvetica, sans-serif;color:#212529;font-size:13px" align="center">
 							<tr>
 								<td colspan="4" style="padding:20px 0 20px 0">
-                                    На сайт <?=$namecomp?> поступил заказ товара в 1 клик.<br><br>
-									<b>Название товара:</b> <?=$name_tovar?><br>
-									<b>Ф.И.О.:</b> <?=$fio?><br>
-									<b>Номер телефона:</b> <?=$tell?><br>
-									<b>Электронная почта:</b> <?=$email?><br>
-									<b>Комментарий:</b> <?=$note?><br>
+                                    На сайт <?=$namecomp?> поступила заявка на заказ товара.<br><br>
+									<b>Количество:</b> <?= (int)$quantity ?><br>
+                                    <?php if ($unitPrice !== null): ?><b>Цена за единицу при заявке:</b> <?= htmlspecialchars((string)$unitPrice, ENT_QUOTES, 'UTF-8') ?> ₽<br><?php endif; ?>
+                                    <b>Название товара:</b> <?=htmlspecialchars((string)$name_tovar, ENT_QUOTES, 'UTF-8')?><br>
+									<b>Ф.И.О.:</b> <?=htmlspecialchars((string)$fio, ENT_QUOTES, 'UTF-8')?><br>
+									<b>Номер телефона:</b> <?=htmlspecialchars((string)$tell, ENT_QUOTES, 'UTF-8')?><br>
+									<b>Электронная почта:</b> <?=htmlspecialchars((string)$email, ENT_QUOTES, 'UTF-8')?><br>
+									<b>Комментарий:</b> <?=htmlspecialchars((string)$note, ENT_QUOTES, 'UTF-8')?><br>
 									<b>Время заказа:</b> <?=date('Y-m-d H:i:s')?><br><br><br>
 									С уважением, <?=$namecomp?><br>
 									<b>Телефон:</b> <?=$tell_site?>
