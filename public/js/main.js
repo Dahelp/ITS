@@ -1182,7 +1182,7 @@ document.addEventListener('click', function(e){
       $('[name="telefon"][data-step-field="3"]').prop('required', true);
       $('[name="email"][data-step-field="3"]').prop('required', true);
       $('[name="name"][data-step-field="3"]').prop('required', true);
-      $('#checkout_legal_agree, #form_callback, #vidurlface').prop('required', true);
+      $('#checkout_legal_agree, #form_callback, #vidurlface, #checkout-payment-method').prop('required', true);
 
       // ✅ для Step3 — тоже восстановим доставку и покажем readonly-блок
       restoreDeliveryState();

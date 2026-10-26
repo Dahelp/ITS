@@ -13,7 +13,12 @@ use app\services\TrafficSource;
 class Order extends AppModel {
 
     public static function saveOrder($data){
+        $paymentGroup = (int)($data['groups'] ?? 0);
+        $deliveryName = (string)\R::getCell('SELECT name FROM dostavka WHERE id=?', [(int)($data['dostavka_id'] ?? 0)]);
+        $paymentMethod = \app\services\CheckoutPayment::validate($data['payment_method'] ?? '', $paymentGroup, \app\services\CheckoutPayment::pickup($deliveryName));
         $order = \R::dispense('order');
+        $order->payment_method = $paymentMethod;
+        $order->payment_customer_type = $paymentGroup;
         $order->user_id = $data['user_id'];
         $order->note = $data['note'];
 		$order->dostavka_id = $data['dostavka_id'];
@@ -117,10 +122,12 @@ class Order extends AppModel {
 		$tell_site = \ishop\App::options('option_telefon');
 		$order_prefix = \ishop\App::options('order_prefix');
 		// Create a message
+        $ord = \R::findOne('order', 'id = ?', [$order_id]);
+        $paymentLabel = \app\services\CheckoutPayment::label($ord['payment_method'] ?? '', (int)($ord['payment_customer_type'] ?? 3));
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_order.php';
         $body = ob_get_clean();
-		$ord = \R::findOne('order', 'id = ?', [$order_id]);
+		
         $message_client = (new Swift_Message("Вы совершили заказ №{$ord["inv"]} на сайте " . App::$app->getProperty('shop_name')))
             ->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
             ->setTo($user_email)

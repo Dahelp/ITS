@@ -108,7 +108,8 @@
 											<td>Статус</td>
 											<td><?=$order['status_name'];?></td>
 										</tr>
-										<tr>
+										<tr><td>Способ оплаты</td><td><?=htmlspecialchars(\app\services\CheckoutPayment::label($order['payment_method']??'',(int)($order['payment_customer_type']??3)),ENT_QUOTES,'UTF-8')?></td></tr>
+                                        <tr>
 											<td>Комментарий</td>
 											<td><?=$order['note'];?></td>
 										</tr>

@@ -19,7 +19,7 @@ valid=true;assert.equal(go(3),true);assert.equal(step,3);
 go(1);assert.equal(step,1);const previous=checks;go(2);assert.equal(checks,previous);assert.equal(step,2);
 assert(source.includes('if (!checkoutInitializing) saveDeliveryState();'));
 assert(source.includes('restoreDeliveryState();\n  setStep(saved);'));
-assert(source.includes("$('#checkout_legal_agree, #form_callback, #vidurlface').prop('required', true)"));
+assert(source.includes("$('#checkout_legal_agree, #form_callback, #vidurlface, #checkout-payment-method').prop('required', true)"));
 console.log('Checkout drafts: TTL, owner, completed order, malformed data, sensitive field exclusions and step validation OK');
 const progressSource=fs.readFileSync('public/js/checkout-progress.js','utf8');
 const resetBegin=progressSource.indexOf(' function resetDraftFields(){'),resetEnd=progressSource.indexOf(' function save()',resetBegin);

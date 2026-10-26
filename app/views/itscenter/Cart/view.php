@@ -35,23 +35,26 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
             </form>
         <?php endif; ?>
 		<div class="col-md-12 cart-block" <?php if(!empty($_SESSION['cart'])){ ?>style="display:block"<?php }else{ ?>style="display:none"<?php } ?>>
-			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
+			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-customer-group="<?= (int)($checkoutCustomerGroup ?? 0) ?>" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
                 <link rel="stylesheet" href="/css/checkout-progress.css?v=<?= (int)filemtime(WWW.'/css/checkout-progress.css') ?>">
                 <div class="checkout-steps mb-3">
                   <nav class="checkout-steps__nav" aria-label="Шаги оформления заказа">
                     <button type="button" class="checkout-step is-active" data-step-badge="1" data-checkout-go="1" aria-current="step">1. Корзина</button>
                     <button type="button" class="checkout-step" data-step-badge="2" data-checkout-go="2">2. Получение</button>
-                    <button type="button" class="checkout-step" data-step-badge="3" data-checkout-go="3">3. Контакты</button>
+                    <button type="button" class="checkout-step" data-step-badge="3" data-checkout-go="3">3. Контакты и оплата</button>
                   </nav>
                   <div id="checkout-progress-label" class="checkout-progress__label" aria-live="polite">Шаг 1 из 3 — Корзина</div>
                   <div id="checkout-progress" class="checkout-progress" role="progressbar" aria-label="Оформление заказа" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1"><div id="checkout-progress-fill" class="checkout-progress__fill"></div></div>
-                  <div class="checkout-draft-info"><span id="checkout-draft-status" role="status">Введённые данные сохраняются в этом браузере на 24 часа.</span><button type="button" id="checkout-delete-draft" title="Сбросить данные оформления без удаления товаров">Сбросить данные оформления</button></div>
+                  <div id="checkout-form-notice" class="alert alert-info mt-2" role="status" hidden></div>
                   <div id="checkout-resume" class="checkout-resume" hidden>
-                    <p>Найдено незавершённое оформление. Введённые данные восстановлены.</p>
+                    <p>Вы не завершили оформление заказа.</p>
                     <button type="button" id="checkout-continue" class="btn btn-primary">Продолжить оформление</button>
                     <button type="button" id="checkout-start-over" class="btn btn-outline-secondary">Остаться в корзине</button>
                   </div>
                 </div>
+                <?php $paymentRules = \app\services\CheckoutPayment::rules(\R::getAll('SELECT id,name FROM dostavka')); ?>
+                <script type="application/json" id="checkout-payment-rules"><?=json_encode($paymentRules,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?></script>
+                <script src="/js/checkout-payment.js?v=<?= (int)filemtime(WWW.'/js/checkout-payment.js') ?>" defer></script>
                 <script src="/js/checkout-progress.js?v=<?= (int)filemtime(WWW.'/js/checkout-progress.js') ?>" defer></script>
 				<div class="product-cart">
 					<div id="cartContent">
@@ -108,6 +111,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 								<div class="register-top heading">
 									<h2>Ваш заказ</h2>
 								</div>
+                                <p class="checkout-payment-summary">Способ оплаты: <strong data-payment-summary>Не выбран</strong></p>
 
 								<div class="d-flex justify-content-between align-items-center">
 									<span class="text-muted">Товары (<span class="js-qty">0</span>)</span>
@@ -282,6 +286,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 									<div class="register-top heading">
 										<h2>Ваш заказ</h2>
 									</div>
+                                <p class="checkout-payment-summary">Способ оплаты: <strong data-payment-summary>Не выбран</strong></p>
 
 									<div class="d-flex justify-content-between align-items-center">
 										<span class="text-muted">Товары (<span class="js-qty">0</span>)</span>
@@ -334,7 +339,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
       <!-- ✅ ТВОЙ БЛОК №3: "Информация для связи" -->
       <div class="bg-light rounded-3 py-5 px-4 px-xxl-5">
         <div class="register-top heading">
-          <h2>Информация для связи</h2>
+          <h2>Контакты и оплата</h2>
         </div>
 
         <div class="row gx-4 gy-3">
@@ -402,6 +407,15 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                      data-step-field="3">
             </div>
           <?php endif; ?>
+
+          <div class="col-sm-12 checkout-payment">
+            <label class="form-label" for="checkout-payment-method">Способ оплаты <span class="text-danger">*</span></label>
+            <select class="form-control" id="checkout-payment-method" name="payment_method" data-step-field="3" aria-describedby="checkout-payment-help">
+              <option value="">Выберите способ оплаты</option>
+              <?php foreach(\app\services\CheckoutPayment::options(3,true)as$code=>$label):?><option value="<?=h($code)?>" <?=($checkoutFormData['payment_method']??'')===$code?'selected':''?>><?=h($label)?></option><?php endforeach;?>
+            </select>
+            <small id="checkout-payment-help" class="d-block mt-2 text-muted" aria-live="polite">Реквизиты и порядок оплаты сообщим при подтверждении заказа.</small>
+          </div>
 
 		  <div class="col-sm-6">
 			<label class="form-label" for="form_callback">
@@ -492,6 +506,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
           <div class="register-top heading">
             <h2>Ваш заказ</h2>
           </div>
+                                <p class="checkout-payment-summary">Способ оплаты: <strong data-payment-summary>Не выбран</strong></p>
 
           <div class="d-flex justify-content-between align-items-center">
             <span class="text-muted">Товары (<span class="js-qty">0</span>)</span>

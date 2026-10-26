@@ -604,6 +604,9 @@ class CartController extends AppController {
             unset($_SESSION['form_data']);
         }
 
+        $accountGroup = !empty($_SESSION['user']['id']) ? \R::getCell('SELECT `groups` FROM user WHERE id=?', [(int)$_SESSION['user']['id']]) : 0;
+        $this->data['checkoutCustomerGroup'] = \app\services\CheckoutPayment::group($accountGroup, 0);
+
         $this->sessClose();
     }
 
@@ -804,6 +807,21 @@ class CartController extends AppController {
         redirect();
     }
 
+    // Validate payment before creating a customer or an order.
+    $accountGroup = $isAuth && !empty($sessionUser['id'])
+        ? \R::getCell('SELECT `groups` FROM user WHERE id=?', [(int)$sessionUser['id']]) : 0;
+    $paymentGroup = \app\services\CheckoutPayment::group($accountGroup, $_POST['groups'] ?? null);
+    $paymentDelivery = \R::getRow('SELECT id,name FROM dostavka WHERE id=?', [(int)($_POST['dostavka_id'] ?? 0)]);
+    try {
+        if (!$paymentDelivery) throw new \DomainException('Выберите способ получения.');
+        $paymentMethod = \app\services\CheckoutPayment::validate($_POST['payment_method'] ?? '', $paymentGroup, \app\services\CheckoutPayment::pickup((string)$paymentDelivery['name']));
+    } catch (\DomainException $e) {
+        $_SESSION['error'] = $e->getMessage();
+        $_SESSION['form_data'] = $_POST;
+        $_SESSION['checkout_token'] = bin2hex(random_bytes(32));
+        $this->redirectCartView(303);
+    }
+
     // ====== Получаем / создаём пользователя ======
     $user_id = null;
     $comp_id = null;
@@ -901,9 +919,8 @@ class CartController extends AppController {
 
     $data['branch_id'] = !empty($_POST['branch_id']) ? $_POST['branch_id'] : '';
 
-    $data['groups'] = !empty($_SESSION['user']['groups'])
-        ? $_SESSION['user']['groups']
-        : ($data['groups'] ?? ($_POST['groups'] ?? null));
+    $data['groups'] = $paymentGroup;
+    $data['payment_method'] = $paymentMethod;
 
     $user_email = $_SESSION['user']['email'] ?? $email;
 
