@@ -35,14 +35,24 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
             </form>
         <?php endif; ?>
 		<div class="col-md-12 cart-block" <?php if(!empty($_SESSION['cart'])){ ?>style="display:block"<?php }else{ ?>style="display:none"<?php } ?>>
-			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm">
-				<div class="checkout-steps mb-3">
-					<div class="d-flex gap-2 flex-wrap">
-						<span class="checkout-step is-active" data-step-badge="1">1. Корзина</span>
-						<span class="checkout-step" data-step-badge="2">2. Получение</span>
-						<span class="checkout-step" data-step-badge="3">3. Контакты</span>
-					</div>
-				</div>
+			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
+                <link rel="stylesheet" href="/css/checkout-progress.css?v=<?= (int)filemtime(WWW.'/css/checkout-progress.css') ?>">
+                <div class="checkout-steps mb-3">
+                  <nav class="checkout-steps__nav" aria-label="Шаги оформления заказа">
+                    <button type="button" class="checkout-step is-active" data-step-badge="1" data-checkout-go="1" aria-current="step">1. Корзина</button>
+                    <button type="button" class="checkout-step" data-step-badge="2" data-checkout-go="2">2. Получение</button>
+                    <button type="button" class="checkout-step" data-step-badge="3" data-checkout-go="3">3. Контакты</button>
+                  </nav>
+                  <div id="checkout-progress-label" class="checkout-progress__label" aria-live="polite">Шаг 1 из 3 — Корзина</div>
+                  <div id="checkout-progress" class="checkout-progress" role="progressbar" aria-label="Оформление заказа" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1"><div id="checkout-progress-fill" class="checkout-progress__fill"></div></div>
+                  <div class="checkout-draft-info"><span id="checkout-draft-status" role="status">Введённые данные сохраняются в этом браузере на 24 часа.</span><button type="button" id="checkout-delete-draft" title="Удалить сохранённые данные, оставив открытую форму">Удалить черновик</button></div>
+                  <div id="checkout-resume" class="checkout-resume" hidden>
+                    <p>Найдено незавершённое оформление. Введённые данные восстановлены.</p>
+                    <button type="button" id="checkout-continue" class="btn btn-primary">Продолжить оформление</button>
+                    <button type="button" id="checkout-start-over" class="btn btn-outline-secondary">Остаться в корзине</button>
+                  </div>
+                </div>
+                <script src="/js/checkout-progress.js?v=<?= (int)filemtime(WWW.'/js/checkout-progress.js') ?>" defer></script>
 				<div class="product-cart">
 					<div id="cartContent">
 

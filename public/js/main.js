@@ -1021,6 +1021,7 @@ document.addEventListener('click', function(e){
   if (!$('#checkoutForm').length) return;
 
   var restoringDelivery = false;
+  var checkoutInitializing = true;
   var DELIVERY_KEY = 'checkout_delivery_state_v1';
 
   function setBadges(step){
@@ -1248,7 +1249,7 @@ document.addEventListener('click', function(e){
     step = parseInt(step, 10) || 1;
 
     // перед сменой шага — сохраняем доставку (иначе можно потерять city/address)
-    saveDeliveryState();
+    if (!checkoutInitializing) saveDeliveryState();
 
     // если корзина пустая — всегда шаг 1
     var qtyNow = 0;
@@ -1279,6 +1280,7 @@ document.addEventListener('click', function(e){
       $('[name="telefon"][data-step-field="3"]').prop('required', true);
       $('[name="email"][data-step-field="3"]').prop('required', true);
       $('[name="name"][data-step-field="3"]').prop('required', true);
+      $('#checkout_legal_agree, #form_callback, #vidurlface').prop('required', true);
 
       // ✅ для Step3 — тоже восстановим доставку и покажем readonly-блок
       restoreDeliveryState();
@@ -1338,7 +1340,21 @@ document.addEventListener('click', function(e){
   if (window.cartHasItems === false) saved = 1;
   if (saved < 1 || saved > 3) saved = 1;
 
+  restoreDeliveryState();
   setStep(saved);
+  checkoutInitializing = false;
+  function goToStep(target){
+    target = Math.max(1, Math.min(3, parseInt(target, 10) || 1));
+    var current = parseInt($('#checkoutForm').attr('data-current-step') || '1',10);
+    if(target > current && target === 3){
+      if(current === 1) setStep(2);
+      if(!validateStep(2)) return false;
+    }
+    setStep(target);
+    return true;
+  }
+  document.getElementById('checkoutForm').checkoutNavigation = {goTo:goToStep, restoreDelivery:restoreDeliveryState};
+  document.getElementById('checkoutForm').dispatchEvent(new Event('checkout:ready'));
 }
 
   // -------------------------
