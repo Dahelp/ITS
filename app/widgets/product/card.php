@@ -159,8 +159,6 @@
 
                     <button type="button"
                             class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLive"
                             style="display:none;">
                         В корзине
                     </button>
@@ -175,9 +173,7 @@
                     </a>
 
                     <button type="button"
-                            class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLive">
+                            class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart">
                         В корзине
                     </button>
                 <?php endif; ?>

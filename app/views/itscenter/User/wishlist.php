@@ -93,8 +93,6 @@ $companyTip = $comp_priceopt['tip'] ?? null;
 
 												<button type="button"
 														class="btn btn-success pc-in-cart vkorzine-<?=$item["product_id"]?> clear-vkorzine js-open-cart"
-														data-bs-toggle="modal"
-														data-bs-target="#exampleModalLive"
 														style="<?= $inCart ? '' : 'display:none;' ?>">
 													В корзине
 												</button>
