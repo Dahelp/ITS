@@ -23,7 +23,7 @@ jobs:
         shell: bash
         run: |
           ssh -i ~/.ssh/beget_report_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
-            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/export_low_stock_tires.php" > low-stock-tires.csv
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 -d display_errors=stderr -d log_errors=0 -d error_reporting=E_ALL bin/export_low_stock_tires.php" > low-stock-tires.csv
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
