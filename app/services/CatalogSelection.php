@@ -11,8 +11,9 @@ final class CatalogSelection
         $sort=is_string($query['sort']??null)?$query['sort']:'stock';
         $sort=['price'=>'price_asc','nal'=>'stock','rate'=>'rating'][$sort]??$sort;
         $status=is_string($query['status']??null)?$query['status']:'';
-        $perpage=(int)(is_scalar($query['perpage']??null)?($query['perpage']??24):24);
-        return ['sort'=>isset(self::SORTS[$sort])?$sort:'stock','status'=>isset(self::STATUSES[$status])?$status:'','in_stock'=>($query['in_stock']??'')==='1','perpage'=>in_array($perpage,[24,48,96],true)?$perpage:24];
+        $perpage=(int)(is_scalar($query['perpage']??null)?($query['perpage']??25):25);
+        $perpage=[24=>25,48=>50,96=>100][$perpage]??$perpage;
+        return ['sort'=>isset(self::SORTS[$sort])?$sort:'stock','status'=>isset(self::STATUSES[$status])?$status:'','in_stock'=>($query['in_stock']??'')==='1','perpage'=>in_array($perpage,[25,50,100],true)?$perpage:25];
     }
     public static function stock(): string
     {
