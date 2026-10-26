@@ -1021,6 +1021,8 @@ class CartController extends AppController {
 		$_SESSION['cart.notice']
 	);
 
+	$_SESSION['checkout_draft_generation'] = bin2hex(random_bytes(8));
+
 	session_write_close();
 	redirect();
 }
