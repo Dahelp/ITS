@@ -35,7 +35,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                   </nav>
                   <div id="checkout-progress-label" class="checkout-progress__label" aria-live="polite">Шаг 1 из 3 — Корзина</div>
                   <div id="checkout-progress" class="checkout-progress" role="progressbar" aria-label="Оформление заказа" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1"><div id="checkout-progress-fill" class="checkout-progress__fill"></div></div>
-                  <div class="checkout-draft-info"><span id="checkout-draft-status" role="status">Введённые данные сохраняются в этом браузере на 24 часа.</span><button type="button" id="checkout-delete-draft" title="Удалить сохранённые данные, оставив открытую форму">Удалить черновик</button></div>
+                  <div class="checkout-draft-info"><span id="checkout-draft-status" role="status">Введённые данные сохраняются в этом браузере на 24 часа.</span><button type="button" id="checkout-delete-draft" title="Сбросить данные оформления без удаления товаров">Сбросить данные оформления</button></div>
                   <div id="checkout-resume" class="checkout-resume" hidden>
                     <p>Найдено незавершённое оформление. Введённые данные восстановлены.</p>
                     <button type="button" id="checkout-continue" class="btn btn-primary">Продолжить оформление</button>
@@ -65,7 +65,8 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 							<?php endif; ?>
 
 							<!-- сюда будет подмена HTML при +/- -->
-							<div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
+							<div class="cart-clear-tools"><button type="button" class="btn btn-outline-secondary js-clear-cart">Очистить корзину</button><span>Товары и черновик оформления будут удалены.</span></div>
+                                <div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
 								<?php require __DIR__ . '/cart_table.php'; ?>
 							</div>
 
@@ -402,7 +403,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
               <label class="form-label" for="name">ФИО <span class="text-danger">*</span></label>
               <input type="text" name="name" class="form-control" id="name"
                      placeholder="ФИО необходимо для отправки заказов"
-                     value="<?= htmlspecialchars((string)($_SESSION['form_data']['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                     value="<?= htmlspecialchars((string)($checkoutFormData['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                      data-step-field="3">
             </div>
 
@@ -414,7 +415,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
             <div class="col-sm-6">
               <label class="form-label" for="email">Электронная почта <span class="text-danger">*</span></label>
               <input type="email" name="email" class="form-control" id="email" placeholder="Электронная почта"
-                     value="<?= htmlspecialchars((string)($_SESSION['form_data']['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                     value="<?= htmlspecialchars((string)($checkoutFormData['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                      data-step-field="3">
             </div>
           <?php endif; ?>
@@ -430,7 +431,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 					data-step-field="3"
 					required>
 				<option value="">Выберите способ обратной связи</option>
-				<?php $cb = (string)($_SESSION['form_data']['form_callback'] ?? ''); ?>
+				<?php $cb = (string)($checkoutFormData['form_callback'] ?? ''); ?>
 
 				<option value="MAX" <?= $cb==='MAX'?'selected':'' ?>>MAX</option>
 				<option value="E-mail" <?= $cb==='E-mail'?'selected':'' ?>>Электронная почта</option>
