@@ -1,0 +1,33 @@
+name: Export low-stock tires
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.BEGET_SSH_KEY }}" > ~/.ssh/beget_report_key
+          chmod 600 ~/.ssh/beget_report_key
+          ssh-keyscan -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_HOST }}" >> ~/.ssh/known_hosts
+      - name: Build current report on server
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_report_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/export_low_stock_tires.php" > low-stock-tires.csv
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: low-stock-tires
+          path: low-stock-tires.csv
+          if-no-files-found: error
+          retention-days: 1
