@@ -29,6 +29,9 @@ class ProductController extends AppController {
     }
 	
 	public function serverProcessingAction(){		
+		$responseBufferLevel = ob_get_level();
+		ob_start();
+		try {
 		Avito::ensureSchema();
 		//datatables server-side
 		$category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : 0;
@@ -288,9 +291,28 @@ class ProductController extends AppController {
 			'host' => App::$app->getProperty('sql_host')
 		);
 		$spp = new SSP();
-		echo json_encode(
-			$spp::simple( $_GET, $sql_details, $table, $primaryKey, $columns, null, "" )
-		);
+		$response = $spp::simple( $_GET, $sql_details, $table, $primaryKey, $columns, null, "" );
+		$unexpectedOutput = ob_get_clean();
+		if ($unexpectedOutput !== '') {
+			error_log('Product DataTables discarded unexpected output: '.trim($unexpectedOutput));
+		}
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+		} catch (\Throwable $e) {
+			while (ob_get_level() > $responseBufferLevel) {
+				ob_end_clean();
+			}
+			error_log('Product DataTables error: '.$e->getMessage());
+			http_response_code(500);
+			header('Content-Type: application/json; charset=utf-8');
+			echo json_encode([
+				'draw' => (int)($_GET['draw'] ?? 0),
+				'recordsTotal' => 0,
+				'recordsFiltered' => 0,
+				'data' => [],
+				'error' => 'Не удалось выполнить поиск товаров. Ошибка записана в журнал сервера.',
+			], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+		}
 		die;
 	}
 

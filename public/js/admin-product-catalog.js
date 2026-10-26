@@ -54,7 +54,7 @@
             lengthMenu:[[20,50,100,-1],[20,50,100,'Все']],
             columnDefs:[
                 {targets:[0,1,2,4,7,8,9,11,13,14,15,16,17,18,19],visible:false},
-                {targets:[13,14,15,16,17,18,19],searchable:false},
+				{targets:[1,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],searchable:false},
                 {targets:[1,4,6,7,8,9,10,11,12],orderable:false},
                 {targets:3,render:product,className:'pc-col-product',width:'34%'},
                 {targets:5,className:'pc-col-stock',width:'15%'},
