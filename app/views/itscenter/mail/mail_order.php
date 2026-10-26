@@ -67,7 +67,8 @@
 										</tbody>
 									</table>
 									<br><br>
-									<b>Способ доставки:</b> <?=$dostavka_name?><br>
+									<b>Способ оплаты:</b> <?=htmlspecialchars((string)($paymentLabel ?? 'Не указан'),ENT_QUOTES,'UTF-8')?><br>
+                                    <b>Способ доставки:</b> <?=$dostavka_name?><br>
 									<?=$transport_company?>
 									<b>Город:</b> <?=$branch_name?><?=$city_name?>
 									<?=$address?>

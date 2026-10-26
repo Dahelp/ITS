@@ -165,6 +165,7 @@
                                     Адрес: <?= nl2br(htmlspecialchars($order_info['address'])) ?><br />
                                 <?php endif; ?>
 
+                                Способ оплаты: <?=htmlspecialchars(\app\services\CheckoutPayment::label($order_info['payment_method']??'',(int)($order_info['payment_customer_type']??3)),ENT_QUOTES,'UTF-8')?><br>
                                 <?php if (!empty($order_info['note'])): ?>
                                     Комментарий: <?= nl2br(htmlspecialchars($order_info['note'])) ?><br />
                                 <?php endif; ?>
