@@ -67,7 +67,8 @@ class CategoryController extends AppController
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $page = max(1, $page);
 
-    $perpage = 15;
+    $selection = \app\services\CatalogSelection::state($_GET);
+    $perpage = $selection['perpage'];
 
     $sqlPart = '';
     $sqlSort = "ORDER BY FIELD(`stock_status_id`, 1,3,2,0), name ASC";
@@ -200,18 +201,11 @@ class CategoryController extends AppController
         }
     }
 
-    if (!empty($_GET['sort'])) {
-        if ($_GET['sort'] === 'price') {
-            $sqlSort = "ORDER BY price ASC";
-        } elseif ($_GET['sort'] === 'nal') {
-            $sqlSort = "ORDER BY stock_status_id DESC";
-        } elseif ($_GET['sort'] === 'rate') {
-            $sqlSort = "ORDER BY hit DESC";
-        }
-    }
+    $sqlPart .= ' '.\app\services\CatalogSelection::where($selection);
+    $sqlSort = \app\services\CatalogSelection::order($selection);
 
     $total = \R::count('product', "hide = 'show' AND category_id IN ($ids) $sqlPart");
-    if (!empty($selectedAttrId) && $total < 1) {
+    if (!empty($selectedAttrId) && $total < 1 && $selection['status'] === '' && !$selection['in_stock']) {
         throw new \Exception('Страница не найдена', 404);
     }
 
@@ -604,6 +598,8 @@ class CategoryController extends AppController
         $canonicalUrl .= '?page=' . $page;
     }
 
+    if (!empty($_GET['sort']) || !empty($_GET['status']) || !empty($_GET['in_stock']) || !empty($_GET['perpage'])) $metaRobots = 'noindex, follow';
+
     $productWidgetContext = \app\widgets\product\Product::buildContext($products);
 
     $categoryFaqRows = \R::getAll(
@@ -649,7 +645,7 @@ class CategoryController extends AppController
     );
 
     if ($this->isAjax() && isset($_GET['lazy_products']) && $_GET['lazy_products'] === '1') {
-        $products = array_slice(array_values($products), 10, 5);
+        $products = array_slice(array_values($products), 10);
         $productWidgetContext = \app\widgets\product\Product::buildContext($products);
         $this->loadView('lazy_products', compact('products', 'productWidgetContext'));
         die;
