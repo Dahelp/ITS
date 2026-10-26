@@ -39,6 +39,8 @@
 
 	if ($controller === 'Error') {
 		$robots = 'noindex, nofollow';
+	} elseif (($controller === 'Catalog' && $action === 'products') || ($controller === 'Category' && (!empty($_GET['status']) || !empty($_GET['in_stock']) || !empty($_GET['perpage'])))) {
+		$robots = 'noindex, follow';
 	} elseif ($controller === 'Cart' && $action === 'view') {
 		$robots = 'noindex, follow';
 	} elseif ($controller === 'Complete' && $action === 'index' && (isset($_GET['category']) || isset($_GET['sort']))) {

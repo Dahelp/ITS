@@ -64,7 +64,11 @@
             url += '?filter=' + extraIds.join(',');
         }
 
-        return url;
+        const preserved = new URLSearchParams(window.location.search);
+        const target = new URL(url, window.location.origin);
+        ['status','in_stock','sort','perpage'].forEach(key => { if(preserved.has(key)) target.searchParams.set(key,preserved.get(key)); });
+        return target.pathname + target.search;
+
     }
 
     function getSelectedFiltersFromUI() {
@@ -104,7 +108,7 @@
       const selected = getSelectedFiltersFromUI();
 
       if (!selected.length) {
-          window.location.href = '/category/' + encodeURIComponent(categoryAlias);
+          window.location.href = buildUrl(categoryAlias, '', []);
           return;
       }
 
@@ -190,40 +194,6 @@ function initCategoryProductLazyLoading() {
 
 $(document).ready(function () {
  initCategoryProductLazyLoading();
- $(".sort-inner span").click(function () {
-	var id = $(this).attr('id');
-	
-	$('.sort-inner span').toggleClass('active', false);
-	$('.sort-inner span#'+$(this).attr('id')+'').toggleClass('active');
-	$.ajax({
-	    url: location.href,
-            data: 'sort='+id,
-            type: 'GET',
-            beforeSend: function(){
-                $('.preloader').fadeIn(300, function(){
-                    $('.product-one').hide();
-                });
-		
-            },
-            success: function(res){
-                $('.preloader').delay(500).fadeOut('slow', function(){
-                    $('.product-one').html(res).fadeIn();
-                    var url = location.search.replace(/sort(.+?)(&|$)/g, ''); //$2
-                    var newURL = location.pathname + url + (location.search ? "&" : "?") + "sort=" + id;
-                    newURL = newURL.replace('&&', '&');
-                    newURL = newURL.replace('?&', '?');
-                    history.pushState({}, '', newURL);
-                    initCategoryProductLazyLoading();
-			
-                });
-		
-            },
-            error: function () {
-                alert('Ошибка!');
-            }
-        });
-		
- });   
 });
 
 //addinn

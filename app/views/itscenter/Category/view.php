@@ -177,14 +177,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
       </div>
     </section>
 
-    <div class="d-flex align-items-center col-md-12 pb-4 sort-inner">
-      <div class="sort-inner">
-        <div class="sort-name">Сортировать по:</div>
-        <span class="nav-link" id="nal">Наличию</span>
-        <span class="nav-link" id="price">Цене</span>
-        <span class="nav-link" id="rate">Рейтингу</span>
-      </div>
-    </div>
+    <?php require APP.'/views/itscenter/partials/catalog-controls.php'; ?>
 
     <div class="prdt-top">
       <div class="col-md-12">

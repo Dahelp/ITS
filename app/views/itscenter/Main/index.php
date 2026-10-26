@@ -75,7 +75,7 @@
     <div class="container">
         <div class="related_prod">
             <section class="mb-2 recomend-1">
-                <div class="product-name"><h3>Хиты продаж</h3></div>
+                <link rel="stylesheet" href="/css/catalog-controls.css?v=20261026b"><div class="product-name hits-heading"><h3>Хиты продаж</h3><a class="hits-all-link" href="/catalog/products?status=hit">Все хиты →</a></div>
 
                 <div class="swiper-container swiper1 hits-swiper">
                     <div class="swiper-wrapper">

@@ -7,6 +7,30 @@ use ishop\App;
 
 class CatalogController extends AppController {
 
+    public function productsAction(): void
+    {
+        $selection = \app\services\CatalogSelection::state($_GET);
+        $where = "product.hide='show' ".\app\services\CatalogSelection::where($selection);
+        $categoryId = (int)($_GET['category'] ?? 0);
+        if ($categoryId > 0) {
+            $category = \R::getRow("SELECT id FROM category WHERE id=? AND (hide='show' OR hide='' OR hide IS NULL)", [$categoryId]);
+            if (!$category) throw new \Exception('Категория не найдена',404);
+            $ids = (new \app\models\Category())->getIds($categoryId);
+            $ids = $ids ? $ids.$categoryId : (string)$categoryId;
+            $where .= " AND product.category_id IN ($ids)";
+        }
+        $total = \R::count('product',$where);
+        $pagination = new \ishop\libs\Pagination(max(1,(int)($_GET['page']??1)),$selection['perpage'],$total);
+        $start = (int)$pagination->getStart(); $limit = $selection['perpage'];
+        $order = \app\services\CatalogSelection::order($selection);
+        $products = \R::find('product',"$where $order LIMIT $start,$limit");
+        $productWidgetContext = \app\widgets\product\Product::buildContext($products);
+        $categories = \R::getAll("SELECT id,name FROM category WHERE (hide='show' OR hide='' OR hide IS NULL) ORDER BY name,id");
+        $metaRobots = 'noindex, follow';
+        $this->setMeta('Все товары — ИТС-Центр','Каталог товаров ИТС-Центр','','','',PATH.'/catalog/products');
+        $this->set(compact('products','total','pagination','productWidgetContext','categories','metaRobots'));
+    }
+
 	public function menuAction(): void
 	{
 		if (!$this->isAjax()) {
