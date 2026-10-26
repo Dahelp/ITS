@@ -23,7 +23,8 @@ $rows = \R::getAll(<<<'SQL'
           SELECT 1
           FROM avito_ad aa
           WHERE aa.complete_id IS NULL
-            AND TRIM(COALESCE(aa.article, '')) = TRIM(COALESCE(CAST(p.article AS CHAR), ''))
+            AND CONVERT(TRIM(COALESCE(aa.article, '')) USING utf8mb4) COLLATE utf8mb4_unicode_ci
+                = CONVERT(TRIM(COALESCE(CAST(p.article AS CHAR), '')) USING utf8mb4) COLLATE utf8mb4_unicode_ci
             AND aa.deletion_requested_at IS NULL
       )
     ORDER BY free_stock ASC, p.name ASC, p.article ASC
