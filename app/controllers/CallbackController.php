@@ -45,6 +45,7 @@ class CallbackController extends AppController
         $phone = isset($data['phone']) ? trim((string)$data['phone']) : '';
         $title = isset($data['title']) ? trim((string)$data['title']) : 'Заказать звонок';
         $agree = !empty($data['agree']);
+        try { \app\services\LeadForm::guard('callback', $data); $phone = \app\services\LeadForm::phone($data['phone'] ?? ''); \app\services\LeadForm::rejectRecent('callback','phone',$phone); } catch (\DomainException $e) { $_SESSION['error']=$e->getMessage(); redirect(); }
 
         if (!$agree) {
             $_SESSION['error'] = 'Необходимо согласие на обработку персональных данных.';
@@ -73,7 +74,8 @@ class CallbackController extends AppController
         $user_id = $_SESSION['user']['id'] ?? null;
 
         $callback = new Callback();
-        $callback->addCallback($phone, $user_id, $title);
+        $callback->addCallback($phone, $user_id, 'Заказать звонок');
+        \app\services\LeadForm::consumed('callback');
 
         $_SESSION['success'] = 'Спасибо! Мы перезвоним вам в ближайшее время.';
         redirect();

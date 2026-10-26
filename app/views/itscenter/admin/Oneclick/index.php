@@ -51,7 +51,7 @@
                 <td><?= $e($click['fio_click']) ?></td>
                 <td><a href="tel:<?= $e($phone) ?>"><?= $e($click['tell_click']) ?></a></td>
                 <td><?php if (!empty($click['email_click'])): ?><a href="<?= ADMIN ?>/mailbox/answer?email=<?= rawurlencode((string)$click['email_click']) ?>&subject=<?= rawurlencode('Заказ товара в 1 клик на сайте ' . $namecomp) ?>"><?= $e($click['email_click']) ?></a><?php endif; ?></td>
-                <td><?= $e($click['prim_click']) ?></td>
+                <td><?= $e($click['prim_click']) ?><div>Количество: <?= (int)($click['quantity'] ?? 1) ?></div><?php if ($click['unit_price'] !== null): ?><div>Цена при заявке: <?= $e($click['unit_price']) ?> ₽</div><?php endif; ?></td>
                 <td><?= $e($click['data_create']) ?></td>
                 <td>
                   <div class="btn-group btn-group-sm">

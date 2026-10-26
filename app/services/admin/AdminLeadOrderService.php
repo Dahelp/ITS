@@ -167,14 +167,15 @@ class AdminLeadOrderService
         \R::exec(
             "INSERT INTO order_product
                 (order_id, product_id, article, qty, unit, name, price, discount_value, discount_type, discount, price_discount, discount_amount, external)
-             VALUES (?, ?, ?, 1, ?, ?, ?, '', '', '', '', '', '')",
+             VALUES (?, ?, ?, ?, ?, ?, ?, '', '', '', '', '', '')",
             [
                 $orderId,
                 $productId,
                 (string)($lead['article'] ?? ''),
+                max(1, (int)($lead['quantity'] ?? 1)),
                 (string)($lead['unit'] ?? 'шт'),
                 (string)($lead['product_name'] ?: ($lead['name'] ?? '')),
-                (float)($lead['price'] ?? 0),
+                (float)($lead['unit_price'] ?? $lead['price'] ?? 0),
             ]
         );
     }

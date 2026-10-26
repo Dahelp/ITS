@@ -99,27 +99,30 @@ class ProductController extends AppController
             $this->errors['unique'] = [];
         }
 
-        if ($oneclick === $dtmd) {
-            if ($politika === 'pk') {
-                if (!$isValidRuMobile($tell_modal)) {
-                    $this->errors['unique'][] = "Запрос не обработан! Некорректный номер телефона. Укажите номер мобильного РФ в формате +7 9ХХ ХХХ-ХХ-ХХ.";
-                } else {
-                    Product::mailZakazClick($name_tovar, $fio_modal, $tell_modal, $email_modal, $prim_modal);
-
-                    \R::exec(
-                        "INSERT INTO mail_oneclick
-                        (user_id, product_id, name, fio_click, tell_click, email_click, prim_click, data_create, hide_call, data_call, call_uid, hide_order, order_id, hide)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, '', '', '', '', '', '0')",
-                        [$userId, $productId, $name_tovar, $fio_modal, $tell_modal, $email_modal, $prim_modal, $data_create]
-                    );
-                    $oneClickId = (int)\R::getCell('SELECT LAST_INSERT_ID()');
-                    AdminActivityLogger::incoming(AdminActivityLogger::ACTION_ONECLICK, 'mail_oneclick', $oneClickId, $userId);
-
-                    setcookie("click-mig", "1house", time() + 3600);
-                }
-            } else {
-                $this->errors['unique'][] = "Запрос не обработан! Вы отказались принимать условия политики конфиденциальности на сайте.";
-            }
+        if (isset($post['oneclick'])) {
+            if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+            try {
+                \app\services\LeadForm::guard('oneclick', $post);
+                if ($politika !== 'pk') throw new \DomainException('Подтвердите согласие на обработку данных.');
+                $tell_modal = \app\services\LeadForm::phone($post['tell_modal'] ?? '');
+                $fio_modal = \app\services\LeadForm::text($post['fio_modal'] ?? '', 200);
+                $email_modal = \app\services\LeadForm::text($post['email_modal'] ?? '', 254);
+                $prim_modal = \app\services\LeadForm::text($post['prim_modal'] ?? '', 3000);
+                if ($email_modal !== '' && !filter_var($email_modal, FILTER_VALIDATE_EMAIL)) throw new \DomainException('Укажите корректную почту или оставьте поле пустым.');
+                $quantity = \app\services\LeadForm::quantity($post['quantity'] ?? 1);
+                \app\services\LeadForm::rejectRecent('mail_oneclick', 'tell_click', $tell_modal);
+                $name_tovar = (string)$product->name;
+                $productId = (int)$product->id;
+                $unitPrice = (float)$product->price;
+                // Keep a snapshot: changing the catalogue later must not rewrite the enquiry.
+                $lead = \R::dispense('mail_oneclick');
+                foreach (['user_id'=>$userId,'product_id'=>$productId,'name'=>$name_tovar,'fio_click'=>$fio_modal,'tell_click'=>$tell_modal,'email_click'=>$email_modal,'prim_click'=>$prim_modal,'data_create'=>$data_create,'hide_call'=>'','data_call'=>'','call_uid'=>'','hide_order'=>'','order_id'=>'','hide'=>'0','quantity'=>$quantity,'unit_price'=>$unitPrice,'source_path'=>\app\services\LeadForm::source()] as $key=>$value) $lead->$key=$value;
+                $oneClickId = (int)\R::store($lead);
+                \app\services\LeadForm::consumed('oneclick');
+                AdminActivityLogger::incoming(AdminActivityLogger::ACTION_ONECLICK, 'mail_oneclick', $oneClickId, $userId);
+                Product::mailZakazClick($name_tovar, $fio_modal, $tell_modal, $email_modal, $prim_modal, $quantity, $unitPrice);
+                $_SESSION['success']='Заявка на заказ принята. Менеджер уточнит доставку и подтвердит заказ.';
+            } catch (\DomainException $e) { $_SESSION['error']=$e->getMessage(); }
             redirect();
         }
 

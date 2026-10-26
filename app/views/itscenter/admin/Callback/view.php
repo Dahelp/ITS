@@ -20,8 +20,10 @@
     <div class="card-body">
       <dl class="row">
         <dt class="col-sm-3">Телефон</dt><dd class="col-sm-9"><a href="tel:<?= $e(preg_replace('/\D+/', '', (string)$item['phone'])) ?>"><?= $e($item['phone']) ?></a></dd>
-        <dt class="col-sm-3">Клиент</dt><dd class="col-sm-9"><?= $e($item['user_name'] ?: 'Гость') ?></dd>
-        <dt class="col-sm-3">E-mail</dt><dd class="col-sm-9"><?= $e($item['user_email'] ?: '') ?></dd>
+        <dt class="col-sm-3">Клиент</dt><dd class="col-sm-9"><?= $e(($item['contact_name'] ?? '') ?: ($item['user_name'] ?: 'Гость')) ?></dd>
+        <dt class="col-sm-3">E-mail</dt><dd class="col-sm-9"><?= $e(($item['contact_email'] ?? '') ?: ($item['user_email'] ?: '')) ?></dd>
+        <dt class="col-sm-3">Вопрос</dt><dd class="col-sm-9"><?= nl2br($e($item['comment'] ?? '')) ?></dd>
+        <dt class="col-sm-3">Страница обращения</dt><dd class="col-sm-9"><?= $e($item['source_path'] ?? '') ?></dd>
         <dt class="col-sm-3">Дата создания</dt><dd class="col-sm-9"><?= $e($item['date_create']) ?></dd>
         <dt class="col-sm-3">Дата изменения</dt><dd class="col-sm-9"><?= $e($item['date_modified']) ?></dd>
       </dl>

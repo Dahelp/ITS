@@ -653,7 +653,7 @@ if (property_exists($product, 'reserve')) {
 <!--end-single-->
 </span>
 <!-- Modal 1 click -->
-<form action="/product/<?=$product->alias?>" method="post" class="modal fade" id="Modalclick" tabindex="-1" role="dialog" aria-labelledby="ModalclickLabel" aria-hidden="true" data-toggle="validator">
+<form action="/product/<?=$product->alias?>" method="post" class="modal fade" id="Modalclick" tabindex="-1" role="dialog" aria-labelledby="ModalclickLabel" aria-hidden="true" data-toggle="validator" data-lead-form>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
             <div class="modal-header">
@@ -662,35 +662,38 @@ if (property_exists($product, 'reserve')) {
 					<span aria-hidden="true">&times;</span>
 				</button>
       </div>
-            <div class="modal-body">
+            <div class="modal-body"><p>Менеджер свяжется с вами и подтвердит заказ.</p>
+ <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('oneclick') ?>">
+ <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">
+ <label>Количество <input type="number" name="quantity" min="1" max="9999" value="1" required></label>
 				<div class="fc-3"><?=$product->name;?>
 					<input type="hidden" name="name_tovar" value="<?=$product->name;?>">
 					<input type="hidden" name="product_id" value="<?=$product->id;?>">
 				</div>
 				<div class="fc-1">
-					<div class="fc_name">Ф.И.О. <span>*</span></div>
-					<div class="fc_input"><input type="text" name="fio_click" placeholder="Укажите Ф.И.О." value="<?=$userName?>" required></div>
+					<div class="fc_name">Имя (необязательно)</div>
+					<div class="fc_input"><input type="text" name="fio_modal" placeholder="Укажите Ф.И.О." value="<?=$userName?>" required></div>
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Телефон <span>*</span></div>
-					<div class="fc_input"><input type="tel" name="tell_click" id="phone-input2" required></div>
+					<div class="fc_input"><input type="tel" name="tell_modal" id="phone-input2" required></div>
 				</div>
 				<div class="fc-1">
-					<div class="fc_name">Электронная почта <span>*</span></div>
-					<div class="fc_input"><input type="text" name="email_click" placeholder="Укажите адрес электронной почты" required></div>
+					<div class="fc_name">Почта (необязательно)</div>
+					<div class="fc_input"><input type="text" name="email_modal" placeholder="Укажите адрес электронной почты"></div>
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Комментарий к заказу</div>
-					<div class="fc_textarea"><textarea name="prim_click" placeholder="Комментарий к заказу (количество, время для обратного звонка или другую необходимую информацию)"></textarea></div>
+					<div class="fc_textarea"><textarea name="prim_modal" placeholder="Комментарий к заказу (количество, время для обратного звонка или другую необходимую информацию)"></textarea></div>
 				</div>
             </div>
             <div class="modal-footer">
                 <table class="zayvka_1click" role="presentation"><tbody><tr><td><input type="checkbox" name="politika" value="pk" required></td><td style="font-size:14px;padding:0 0 0 20px">Я принимаю <a href="/pages/privacy" target="_blank" rel="noopener">Политику конфиденциальности</a> и даю <a href="/pages/personal-data-consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a>.</td></tr></tbody></table>
-				<button type="submit" name="oneclick" value="<?php echo md5(date('Y-m-d')); ?>" class="btn btn-danger">Отправить</button>
+				<button type="submit" name="oneclick" value="1" class="btn btn-danger">Отправить</button>
             </div>
         </div>
   </div>
-</form>
+</form><script defer src="/js/lead-forms.js?v=20261027"></script>
 
 <?php
 use app\helpers\PdfAssets;

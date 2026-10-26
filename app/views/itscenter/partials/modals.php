@@ -111,8 +111,11 @@ defined('WWW') or die('Access denied');
                         aria-label="Закрыть"></button>
             </div>
 
-            <form action="<?= PATH ?>/user/zvonok" method="post" class="callback-form js-modal-validate" novalidate>
+            <form action="<?= PATH ?>/user/zvonok" method="post" class="callback-form js-modal-validate" data-lead-form novalidate>
                 <div class="modal-body">
+                    <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('callback') ?>">
+                    <input type="text" name="hp_field" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" value="">
+
 
                     <div class="mb-3">
                         <label for="callback-name" class="form-label">Имя</label>
@@ -143,13 +146,11 @@ defined('WWW') or die('Access denied');
                     </div>
 
                     <div class="mb-3">
-                        <label for="callback-comment" class="form-label">Ваш вопрос или задача <span class="text-danger">*</span></label>
+                        <label for="callback-comment" class="form-label">Ваш вопрос (необязательно)</label>
                         <textarea name="comment"
                                   id="callback-comment"
                                   class="form-control"
                                   rows="4"
-                                  required
-                                  data-request-question
                                   aria-describedby="callback-question-help callback-question-error"
                                   placeholder="Например: подберите шины для погрузчика JCB 3CX. Нужны 4 шт., доставка в Казань."></textarea>
                         <div class="form-text" id="callback-question-help">Расскажите, что хотите заказать или уточнить. Менеджер заранее подготовит ответ или предложение.</div>

@@ -70,35 +70,7 @@ class CrossController extends AppController {
         $data_create = date('Y-m-d H:i:s');
 
         // --- обработка OneClick ---
-        if ($oneclick === $oneclickToken) {
-            if ($politika === 'pk') {
-                // упрощённая анти-бот проверка для российских номеров
-                $first = substr($tell_click, 0, 3); // "+79", "+7 "
-                if ($first !== '+79' && $first !== '+7 ') {
-                    $this->errors['unique'][] = "Запрос не обработан! Вы робот? Если нет, попробуйте заполнить форму ещё раз!";
-                } else {
-                    // письмо
-                    Product::mailZakazClick($name_tovar, $fio_click, $tell_click, $email_click, $prim_click);
-
-                    // заявка (параметризованно)
-                    \R::exec(
-                        "INSERT INTO mail_oneclick
-                         (user_id, product_id, name, fio_click, tell_click, email_click, prim_click, data_create, hide_call, data_call, call_uid, hide_order, order_id, hide)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, '', '', '', '', '', '0')",
-                        [(int)$user_id, (int)$product_id, $name_tovar, $fio_click, $tell_click, $email_click, $prim_click, $data_create]
-                    );
-
-                    // история в админку
-                    $oneClickId = (int)\R::getCell('SELECT LAST_INSERT_ID()');
-                    AdminActivityLogger::incoming(AdminActivityLogger::ACTION_ONECLICK, 'mail_oneclick', $oneClickId, (int)$user_id);
-
-                    setcookie("click-mig", "1house", time()+3600);
-                }
-            } else {
-                $this->errors['unique'][] = "Запрос не обработан! Вы отказались принимать условия политики конфиденциальности.";
-            }
-            redirect();
-        }
+        if (isset($post['oneclick'])) { $_SESSION['error']='Обновите страницу товара и отправьте заявку повторно.'; redirect('/product/' . $product->alias); }
 
         // хлебные крошки
         $breadcrumbs = Breadcrumbs::getBreadcrumbs($product->category_id, $product->name);
