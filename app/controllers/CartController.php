@@ -76,7 +76,7 @@ class CartController extends AppController {
 
         if ($id <= 0) {
             if ($this->isAjax()) {
-                $this->loadView('cart_modal');
+                $this->loadView('cart_state');
                 $this->sessClose();
                 return;
             }
@@ -88,7 +88,7 @@ class CartController extends AppController {
 
         if (!$product) {
             if ($this->isAjax()) {
-                $this->loadView('cart_modal');
+                $this->loadView('cart_state');
                 $this->sessClose();
                 return;
             }
@@ -147,7 +147,7 @@ class CartController extends AppController {
             $cart->addToCart($product, $qty, $max, $mod);
         }
 
-        $this->loadView('cart_modal');
+        $this->loadView('cart_state');
         $this->sessClose();
         return;
     }
@@ -167,7 +167,7 @@ class CartController extends AppController {
         $completeId      = !empty($_GET['complete_id']) ? (int)$_GET['complete_id'] : 0;
 
         if ($productIdsRaw === '' || $completeCount < 1) {
-            $this->loadView('cart_modal');
+            $this->loadView('cart_state');
             $this->sessClose();
             return;
         }
@@ -240,7 +240,7 @@ class CartController extends AppController {
             $cart->refreshCompleteState($completeId);
         }
 
-        $this->loadView('cart_modal');
+        $this->loadView('cart_state');
         $this->sessClose();
         return;
     }
@@ -254,7 +254,7 @@ class CartController extends AppController {
         }
 
         (new Cart())->reconcileAvailability();
-        $this->loadView('cart_modal');
+        $this->loadView('cart_state');
         $this->sessClose();
         return;
     }
@@ -274,7 +274,7 @@ class CartController extends AppController {
             $cart->deleteItem($id);
         }
 
-        $this->loadView('cart_modal');
+        $this->loadView('cart_state');
         $this->sessClose();
         return;
     }
@@ -295,7 +295,7 @@ class CartController extends AppController {
             $cart->deletecompleteItem($id, $completeId);
         }
 
-        $this->loadView('cart_modal');
+        $this->loadView('cart_state');
         $this->sessClose();
         return;
     }
@@ -394,47 +394,6 @@ class CartController extends AppController {
         return;
     }
 
-    public function plusmodalAction()
-    {
-        $this->sessOpenRW();
-
-        if (!$this->isAjax()) {
-            $this->redirectCartView(302);
-        }
-
-        $id = !empty($_GET['id']) ? $_GET['id'] : null;
-
-        if ($id !== null && isset($_SESSION['cart'][$id])) {
-            $cart = new Cart();
-            $cart->pluscartItem($id);
-        }
-
-        $this->loadView('cart_modal');
-        $this->sessClose();
-        return;
-    }
-
-    public function plusmodalcompleteAction()
-    {
-        $this->sessOpenRW();
-
-        if (!$this->isAjax()) {
-            $this->redirectCartView(302);
-        }
-
-        $id = !empty($_GET['id']) ? $_GET['id'] : null;
-        $completeId = !empty($_GET['complete_id']) ? (int)$_GET['complete_id'] : 0;
-
-        if ($id !== null && isset($_SESSION['cart'][$id])) {
-            $cart = new Cart();
-            $cart->pluscartcompleteItem($id, $completeId);
-        }
-
-        $this->loadView('cart_modal');
-        $this->sessClose();
-        return;
-    }
-
     public function quantityAction(): void
     {
         $this->sessOpenRW();
@@ -446,7 +405,7 @@ class CartController extends AppController {
         if ($qty !== false && isset($_SESSION['cart'][$id])) {
             (new Cart())->setQuantity($id, $qty);
         }
-        $this->loadView(($_GET['ctx'] ?? '') === 'product' ? 'cart_modal' : 'cart_table');
+        $this->loadView(($_GET['ctx'] ?? '') === 'product' ? 'cart_state' : 'cart_table');
         $this->sessClose();
     }
 
@@ -487,47 +446,6 @@ class CartController extends AppController {
         }
 
         $this->loadView('cart_table');
-        $this->sessClose();
-        return;
-    }
-
-    public function minusmodalAction()
-    {
-        $this->sessOpenRW();
-
-        if (!$this->isAjax()) {
-            $this->redirectCartView(302);
-        }
-
-        $id = !empty($_GET['id']) ? $_GET['id'] : null;
-
-        if ($id !== null && isset($_SESSION['cart'][$id])) {
-            $cart = new Cart();
-            $cart->minuscartItem($id);
-        }
-
-        $this->loadView('cart_modal');
-        $this->sessClose();
-        return;
-    }
-
-    public function minusmodalcompleteAction()
-    {
-        $this->sessOpenRW();
-
-        if (!$this->isAjax()) {
-            $this->redirectCartView(302);
-        }
-
-        $id = !empty($_GET['id']) ? $_GET['id'] : null;
-        $completeId = !empty($_GET['complete_id']) ? (int)$_GET['complete_id'] : 0;
-
-        if ($id !== null && isset($_SESSION['cart'][$id])) {
-            $cart = new Cart();
-            $cart->minuscartcompleteItem($id, $completeId);
-        }
-
-        $this->loadView('cart_modal');
         $this->sessClose();
         return;
     }
@@ -643,32 +561,23 @@ class CartController extends AppController {
 
     private function emptyCart(): void
     {
-        foreach (['cart', 'cart.qty', 'cart.sum', 'cart.weight', 'cart.volume', 'cart.currency',
-                  'promocart', 'promo_state', 'cart.notice', 'cart.quantity_notice', 'cart.undo'] as $key) {
+        foreach (['cart','cart.qty','cart.sum','cart.weight','cart.volume','cart.currency',
+                  'promocart','promo_state','cart.notice','cart.quantity_notice','cart.undo'] as $key) {
             unset($_SESSION[$key]);
         }
+        if (isset($_SESSION['form_data']['checkout_token']) || isset($_SESSION['form_data']['dostavka_id'])) {
+            unset($_SESSION['form_data']);
+        }
+        $_SESSION['checkout_draft_generation'] = bin2hex(random_bytes(8));
     }
 
     public function clearAction(): void
     {
         $this->sessOpenRW();
-
-        if (!$this->isAjax()) {
-            $this->redirectCartView(302);
-        }
-
+        if (!$this->isAjax()) $this->redirectCartView(302);
         $this->emptyCart();
-
-        $ctx = $_GET['ctx'] ?? 'page';
-
-        if ($ctx === 'modal') {
-            $this->loadView('cart_modal');
-        } else {
-            $this->loadView('cart_table');
-        }
-
+        $this->loadView('cart_table');
         $this->sessClose();
-        return;
     }
 
     public function viewAction()
@@ -688,6 +597,12 @@ class CartController extends AppController {
             PATH . '/images/' . App::$app->getProperty('og_logo'),
             PATH . '/cart/view'
         );
+
+        $this->data['checkoutFormData'] = [];
+        if (isset($_SESSION['form_data']['checkout_token']) || isset($_SESSION['form_data']['dostavka_id'])) {
+            $this->data['checkoutFormData'] = $_SESSION['form_data'];
+            unset($_SESSION['form_data']);
+        }
 
         $this->sessClose();
     }
@@ -1109,19 +1024,7 @@ class CartController extends AppController {
 		$promo
 	);
 
-	unset(
-		$_SESSION['cart'],
-		$_SESSION['cart.qty'],
-		$_SESSION['cart.sum'],
-		$_SESSION['cart.weight'],
-		$_SESSION['cart.volume'],
-		$_SESSION['cart.currency'],
-		$_SESSION['promocart'],
-		$_SESSION['promo_state'],
-		$_SESSION['cart.notice']
-	);
-
-	$_SESSION['checkout_draft_generation'] = bin2hex(random_bytes(8));
+	$this->emptyCart();
 
 	session_write_close();
 	redirect();
