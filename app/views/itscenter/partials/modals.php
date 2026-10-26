@@ -2,43 +2,7 @@
 defined('WWW') or die('Access denied');
 ?>
 
-<!-- Modal korzina -->
-<div class="modal fade" id="exampleModalLive" tabindex="-1" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <div class="modal-title" id="exampleModalLiveLabel">Корзина</div>
-
-                <button type="button"
-                        class="btn-close js-cart-modal-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Закрыть"></button>
-            </div>
-
-            <div class="modal-body"></div>
-
-            <div class="modal-footer">
-                <button type="button"
-                        class="btn btn-default js-cart-modal-close"
-                        data-bs-dismiss="modal">
-                    Продолжить покупки
-                </button>
-
-                <a href="/cart/view" class="btn btn-danger">
-                    Оформить заказ
-                </a>
-
-                <button type="button" class="btn btn-primary js-clear-cart">
-                    Очистить корзину
-                </button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
+<!-- Cart opens at /cart/view; no shared cart modal. -->
 <!-- Modal katalog -->
 <div class="modal fade" id="exampleModalCatalog" tabindex="-1" aria-labelledby="exampleModalCatalogLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

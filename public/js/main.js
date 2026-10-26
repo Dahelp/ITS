@@ -485,6 +485,12 @@ document.addEventListener('click', function(e){
   'use strict';
 
   var NS = '.cartStable';
+  // Legacy cart links also navigate directly to the cart page.
+  window.addEventListener('click', function(e){
+    var cartLink=e.target.closest('.js-open-cart, #getCart, [onclick*="getCart("]');
+    if(cartLink){e.preventDefault();e.stopImmediatePropagation();window.location.href=url('/cart/view');}
+  },true);
+
   var inFlight = false;
 
   // BASE PATH (если сайт не в корне)
@@ -767,32 +773,24 @@ document.addEventListener('click', function(e){
   // Modal
   // -------------------------
   function showCartModal(html){
-    var modalEl = document.getElementById('exampleModalLive');
-    var $modal = $('#exampleModalLive');
+    // Legacy callers now open the full cart; no cart dialog is rendered.
+    window.location.href = url('/cart/view');
+  }
 
-    $modal.find('.modal-body').html(html);
-
-    var isEmpty = $.trim($modal.find('.modal-body').text()).toLowerCase().indexOf('корзина пуста') !== -1;
-
-    if (isEmpty){
-      $modal.find('.modal-footer a, .modal-footer .btn-primary').hide();
-    } else {
-      $modal.find('.modal-footer a, .modal-footer .btn-primary').css('display','inline-block');
+  var inlineCartFeedbackTimer;
+  function notifyCartWithoutModal(message, warning){
+    var $notice = $('#inlineCartFeedback');
+    if (!$notice.length) {
+      $notice = $('<div>', {id:'inlineCartFeedback',role:'status','aria-live':'polite'}).css({position:'fixed',bottom:'24px',left:'50%',transform:'translateX(-50%)',zIndex:2500,padding:'16px 20px',borderRadius:'12px',background:'#0b456b',color:'#fff',boxShadow:'0 8px 28px rgba(0,0,0,.22)',width:'440px',maxWidth:'calc(100vw - 32px)',fontSize:'16px',display:'flex',alignItems:'center',gap:'16px',boxSizing:'border-box'});
+      $notice.append($('<span>',{'data-cart-feedback-text':'1'}));
+      $notice.append($('<a>',{href:url('/cart/view')}).text('Перейти в корзину').css({color:'#fff',textDecoration:'underline',fontWeight:600}));
+      $('body').append($notice);
     }
-
-    updateHeaderFromModalHtml(html);
-
-    var ids = getProductIdsFromModalHtml(html);
-    syncCatalogButtonsFromIds(ids);
-
-    if ($('#cartTableWrap').length) {
-      syncAllFromCartTable();
-      syncCatalogButtons();
-      refreshOrderItemsReadonly();
-    }
-
-    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    modal.show();
+    $notice.find('[data-cart-feedback-text]').text(message || 'Товар добавлен в корзину');
+    $notice.css('background', warning ? '#9d332b' : '#0b456b');
+    clearTimeout(inlineCartFeedbackTimer);
+    $notice.stop(true,true).fadeIn(150);
+    inlineCartFeedbackTimer=setTimeout(function(){ $notice.fadeOut(300); },5000);
   }
 
   $(document).on('click', '.js-cart-modal-close', function (e) {
@@ -826,6 +824,23 @@ document.addEventListener('click', function(e){
 
       var endpointStr = String(endpoint || '');
       var ctx = (data && data.ctx) ? String(data.ctx) : '';
+
+      if (endpointStr === '/cart/add' || endpointStr === '/cart/addcomplete') {
+        var addedIds = getProductIdsFromModalHtml(res);
+        var requested = String((data && data.id) || '').split('-');
+        var feedback = $.trim($('<div>').html(res).find('.cart-feedback').text());
+        if (!isCartModalHtml(res) || (!feedback && !requested.every(function(id){return !!addedIds[id];}))) {
+          notifyCartWithoutModal('Не удалось добавить товар. Проверьте наличие.', true);
+          return;
+        }
+        updateHeaderFromModalHtml(res);
+        syncCatalogButtonsFromIds(addedIds);
+        if (typeof syncStoreQuantities === 'function') syncStoreQuantities(res);
+        notifyCartWithoutModal(feedback || 'Товар добавлен в корзину', !!feedback);
+        $(document).trigger('cart:updated');
+        return;
+      }
+
 
       // /cart/show -> ВСЕГДА модалка
       if (endpointStr.indexOf('/cart/show') !== -1){
@@ -1247,7 +1262,7 @@ document.addEventListener('click', function(e){
   function bindHandlersOnce(){
     $('body').off(NS);
 
-    // OPEN CART MODAL
+    // OPEN CART PAGE
     $('body').on('click' + NS, '.js-open-cart, #getCart', function(e){
       e.preventDefault();
       requestCart('/cart/show', {});

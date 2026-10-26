@@ -311,9 +311,7 @@ if (!empty($activeCategoryIds)) {
                                                         <i class="fas fa-cart-plus fs-base"></i> Купить
                                                     </a>
                                                     <button type="button"
-															class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart"
-															data-bs-toggle="modal"
-															data-bs-target="#exampleModalLive">
+															class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart">
 														В корзине
 													</button>
                                                 <?php else: ?>
@@ -327,8 +325,6 @@ if (!empty($activeCategoryIds)) {
                                                     </a>
                                                     <button type="button"
 															class="btn btn-success pc-in-cart vkorzine-<?= $pid ?> clear-vkorzine js-open-cart"
-															data-bs-toggle="modal"
-															data-bs-target="#exampleModalLive"
 															style="display:none;">
 														В корзине
 													</button>
