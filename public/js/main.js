@@ -719,6 +719,47 @@ document.addEventListener('click', function(e){
     $('button.vkorzine-' + pid).removeAttr('style').show();
   }
 
+  function syncStoreQuantities(html){
+    var rows = {};
+    $('<div>').html(html).find('tr[data-cart-key]').each(function(){
+      var pid = $(this).attr('data-product-id');
+      if ($(this).attr('data-set')) return;
+      if (!rows[pid]) rows[pid] = [];
+      rows[pid].push({ key: $(this).attr('data-cart-key'), qty: parseIntSafe($(this).attr('data-qty')), max: parseIntSafe($(this).attr('data-max')) });
+    });
+    $('.js-store-controls').each(function(){
+      if (!rows[$(this).attr('data-product-id')]) {
+        $(this).closest('.product-card, .product-order-actions').find('input.detail-quantity, .one-click').show();
+        $(this).remove();
+      }
+    });
+    Object.keys(rows).forEach(function(pid){
+      // Multiple variants of one product need an explicit choice in the cart.
+      if (rows[pid].length !== 1) return;
+      var row = rows[pid][0];
+      $('button.vkorzine-' + pid).each(function(){
+        var $button = $(this);
+        var $scope = $button.closest('.product-card, .product-order-actions');
+        if (!$scope.length) return;
+        $button.hide();
+        $scope.find('input.detail-quantity').hide();
+        $scope.find('.one-click').show();
+        var $controls = $scope.find('.js-store-controls').first();
+        if (!$controls.length) {
+          $controls = $('<div>', { 'class':'store-quantity js-store-controls', role:'group', 'aria-label':'Количество в корзине' });
+          $controls.append($('<button>', { type:'button', 'class':'js-store-minus', 'aria-label':'Уменьшить количество' }).text('−'));
+          $controls.append($('<input>', { type:'number', min:1, step:1, inputmode:'numeric', 'class':'js-store-quantity', 'aria-label':'Количество в корзине' }));
+          $controls.append($('<button>', { type:'button', 'class':'js-store-plus', 'aria-label':'Увеличить количество' }).text('+'));
+          $button.after($controls);
+          if ($scope.hasClass('product-order-actions')) $scope.prepend($controls);
+        }
+        $controls.attr({ 'data-key':row.key, 'data-product-id':pid, 'data-qty':row.qty });
+        $controls.find('input').val(row.qty).attr('max', row.max);
+        $controls.find('.js-store-plus').prop('disabled', row.qty >= row.max);
+      });
+    });
+  }
+
   function getProductIdsFromCartStateHtml(html){
     var ids = {};
     try{
@@ -826,9 +867,9 @@ document.addEventListener('click', function(e){
         updateHeaderFromCartStateHtml(res);
         syncCatalogButtonsFromIds(ids);
         if(typeof syncStoreQuantities==='function') syncStoreQuantities(res);
-        if(adding || ctx==='product') {
+        if(!data.silent && (adding || ctx==='product')) {
           showCartFeedback(feedback || (adding ? 'Товар добавлен в корзину' : ((data && data.feedback) || 'Количество обновлено')),!!feedback);
-        } else {
+        } else if(!data.silent) {
           window.location.href=url('/cart/view');
         }
         $(document).trigger('cart:updated');
@@ -1204,6 +1245,30 @@ document.addEventListener('click', function(e){
   // -------------------------
   function bindHandlersOnce(){
     $('body').off(NS);
+    $('body').on('click' + NS, '.js-store-minus, .js-store-plus', function(e){
+      e.preventDefault();
+      if (inFlight) return;
+      var $controls = $(this).closest('.js-store-controls');
+      var qty = parseIntSafe($controls.attr('data-qty')) + ($(this).hasClass('js-store-plus') ? 1 : -1);
+      requestCart(qty < 1 ? '/cart/delete' : '/cart/quantity', {
+        id:$controls.attr('data-key'), qty:qty, ctx:'product',
+        feedback:qty < 1 ? 'Товар удалён из корзины' : ($(this).hasClass('js-store-plus') ? 'Количество увеличено' : 'Количество уменьшено')
+      });
+    });
+    $('body').on('change' + NS, '.js-store-quantity', function(){
+      var $controls = $(this).closest('.js-store-controls');
+      if (inFlight || !this.checkValidity()) {
+        if (!inFlight) this.reportValidity();
+        this.value = $controls.attr('data-qty');
+        return;
+      }
+      requestCart('/cart/quantity', { id:$controls.attr('data-key'), qty:this.value, ctx:'product' });
+    });
+    $('body').on('keydown' + NS, '.js-store-quantity', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); this.blur(); }
+    });
+
+
 
     // Clear the server cart; clear its draft only after confirmed success.
     $('body').on('click' + NS, '.clear-cart, #clearCart, .js-clear-cart', function(e){
@@ -1333,6 +1398,7 @@ document.addEventListener('click', function(e){
   $(function(){
     bindHandlersOnce();
     initCheckoutSteps();
+    if ($('.product-card, .product-order-actions').length && !$('#cartTableWrap').length) requestCart('/cart/show', { ctx:'product', silent:true });
 
     // первичная синхронизация
     if ($('#cartTableWrap').length){
