@@ -738,6 +738,7 @@ document.addEventListener('click', function(e){
     var rows = {};
     $('<div>').html(html).find('tr[data-cart-key]').each(function(){
       var pid = $(this).attr('data-product-id');
+      if ($(this).attr('data-set')) return;
       if (!rows[pid]) rows[pid] = [];
       rows[pid].push({ key: $(this).attr('data-cart-key'), qty: parseIntSafe($(this).attr('data-qty')), max: parseIntSafe($(this).attr('data-max')) });
     });
@@ -886,9 +887,9 @@ document.addEventListener('click', function(e){
         updateHeaderFromCartStateHtml(res);
         syncCatalogButtonsFromIds(ids);
         if(typeof syncStoreQuantities==='function') syncStoreQuantities(res);
-        if(adding || ctx==='product') {
+        if(!data.silent && (adding || ctx==='product')) {
           showCartFeedback(feedback || (adding ? 'Товар добавлен в корзину' : ((data && data.feedback) || 'Количество обновлено')),!!feedback);
-        } else {
+        } else if(!data.silent) {
           window.location.href=url('/cart/view');
         }
         $(document).trigger('cart:updated');
@@ -1544,7 +1545,7 @@ document.addEventListener('click', function(e){
     initCartCheckoutDock();
     initMobileCartAccess();
     if ($('.product-card, .product-order-actions').length && !$('#cartTableWrap').length) {
-      requestCart('/cart/show', { ctx:'product' });
+      requestCart('/cart/show', { ctx:'product', silent:true });
     }
 
     // первичная синхронизация
