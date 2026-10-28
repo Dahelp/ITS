@@ -13,6 +13,7 @@ $rows = \R::getAll(<<<'SQL'
         CAST(p.article AS CHAR) AS article,
         p.name,
         GREATEST(0, COALESCE(p.quantity, p.rest, 0) - COALESCE(p.reserve, 0)) AS free_stock,
+        COALESCE(p.reserve, 0) AS reserve_stock,
         c.name AS category
     FROM product p
     JOIN category c ON c.id = p.category_id
@@ -32,8 +33,8 @@ SQL);
 
 $out = fopen('php://output', 'wb');
 fwrite($out, "\xEF\xBB\xBF");
-fputcsv($out, ['Артикул', 'Наименование товара', 'Наличие', 'Категория'], ';');
+fputcsv($out, ['Артикул', 'Наименование товара', 'Наличие', 'Резерв', 'Категория'], ';');
 foreach ($rows as $row) {
-    fputcsv($out, [$row['article'], $row['name'], (int)$row['free_stock'], $row['category']], ';');
+    fputcsv($out, [$row['article'], $row['name'], (int)$row['free_stock'], (int)$row['reserve_stock'], $row['category']], ';');
 }
 fclose($out);
