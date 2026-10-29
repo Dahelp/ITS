@@ -193,10 +193,9 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                         <div class="product-block-title">Состав комплекта</div>
                                         <ul class="complete-short-list__items">
                                             <?php foreach ($prods as $prod): ?>
-                                                <?php $stockItem=$inventoryItems[(int)$prod['product_id']]??['available'=>0,'reserve'=>0]; ?>
                                                 <li>
                                                     <span class="complete-short-list__name"><?=htmlspecialchars($prod['name'] ?? '', ENT_QUOTES)?></span>
-                                                    <span class="complete-short-list__qty">Нужно <?=(int)$prod['qty']?>; свободно <?=(int)$stockItem['available']?>; резерв <?=(int)$stockItem['reserve']?></span>
+                                                    <span class="complete-short-list__qty"><?=(int)$prod['qty']?> шт.</span>
                                                 </li>
                                             <?php endforeach; ?>
                                         </ul>
