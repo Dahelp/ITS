@@ -1,0 +1,8 @@
+<?php
+namespace app\services;
+class CompleteSimilar {
+ public static function ensureSchema(): void { \R::exec('CREATE TABLE IF NOT EXISTS plagins_complete_similar (complete_id INT NOT NULL, similar_id INT NOT NULL, sort_order INT NOT NULL DEFAULT 0, PRIMARY KEY (complete_id, similar_id), INDEX idx_complete_similar_reverse (similar_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'); }
+ public static function save(int $completeId,array $ids): void { self::ensureSchema(); $ids=array_values(array_unique(array_filter(array_map('intval',$ids),static fn($id)=>$id>0&&$id!==$completeId))); if($ids){$slots=implode(',',array_fill(0,count($ids),'?'));$valid=array_map('intval',\R::getCol("SELECT id FROM plagins_complete WHERE id IN ($slots)",$ids));$ids=array_values(array_intersect($ids,$valid));} \R::begin(); try{\R::exec('DELETE FROM plagins_complete_similar WHERE complete_id = ?',[$completeId]);foreach($ids as $sort=>$similarId)\R::exec('INSERT INTO plagins_complete_similar (complete_id, similar_id, sort_order) VALUES (?, ?, ?)',[$completeId,$similarId,$sort]);\R::commit();}catch(\Throwable $e){\R::rollback();throw $e;} }
+ public static function find(int $completeId): array { self::ensureSchema(); return \R::getAll("SELECT c.* FROM plagins_complete_similar s JOIN plagins_complete c ON c.id=s.similar_id WHERE s.complete_id=? AND c.hide!='hide' ORDER BY s.sort_order,c.name",[$completeId]); }
+ public static function deleteFor(int $completeId): void { self::ensureSchema(); \R::exec('DELETE FROM plagins_complete_similar WHERE complete_id=? OR similar_id=?',[$completeId,$completeId]); }
+}

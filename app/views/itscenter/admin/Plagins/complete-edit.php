@@ -31,6 +31,7 @@
 					<li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Основное</a></li>                  
 					<li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">SEO</a></li>
 					<li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Товарные позиции</a></li>
+					<li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">Похожие комплекты</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -226,6 +227,7 @@
 				</div><!-- /.card-body -->
 					</div>
                   <!-- /.tab-pane -->                  
+                  <div class="tab-pane" id="tab_4"><div class="box-body"><div class="form-group row"><label class="col-sm-3 col-form-label" for="similar_complete">Похожие комплекты</label><div class="col-sm-9"><select id="similar_complete" name="similar[]" class="form-control" multiple style="width:100%"><?php foreach(($similar_complete??[]) as $item): ?><option value="<?=(int)$item['id']?>" selected><?=h($item['name'])?></option><?php endforeach; ?></select><small class="form-text text-muted">Начните вводить название комплекта.</small></div></div></div></div>
                 </div>
                 <!-- /.tab-content -->
 				
@@ -429,6 +431,7 @@ $(function(){
     $("#add_prod").on("click", function(){
         add_new_orders();
     });
+    $("#similar_complete").select2({placeholder:"Найдите и выберите похожие комплекты",minimumInputLength:1,ajax:{url:adminpath+"/plagins/searchcomplete",delay:250,dataType:"json",data:function(params){return {q:params.term,exclude:<?=(int)$complete->id?>};},processResults:function(data){return {results:data.items||[]};}}});
 });
 
 function change_price(total) {

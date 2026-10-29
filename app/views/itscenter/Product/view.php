@@ -719,6 +719,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                 $discount_complete = 0;
                 $itg_qty = 0;
                 $vcomplecte = 0;
+                $availableSets = null;
 
                 foreach ($prods as $prod) {
                   $price_complete += ((float)$prod["price_complete"] * (int)$prod["qty"]);
@@ -726,10 +727,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                   $prod_id .= $prod["product_id"] . ",";
                   $prod_qty .= $prod["qty"] . ",";
 
-                  if ((int)$prod["quantity"] >= (int)$prod["qty"]) {
+                  $totalStock=max(0,(int)$prod['quantity']+(int)($prod['modification_quantity']??0));$freeStock=max(0,$totalStock-max(0,(int)($prod['reserve']??0)));$canUseProduct=($prod['hide']??'')!=='hide';$setsFromProduct=$canUseProduct?intdiv($freeStock,max(1,(int)$prod['qty'])):0;$availableSets=min($availableSets??PHP_INT_MAX,$setsFromProduct);
+                  if ($canUseProduct && $freeStock >= (int)$prod["qty"]) {
                     $quantity_ok = 1;
                     $prodid .= $prod["product_id"] . "-";
-                  } elseif ((int)$prod["quantity"] > 0) {
+                  } elseif ($canUseProduct && $freeStock > 0) {
                     $quantity_ok = 0;
                     $prodid .= $prod["product_id"] . "-";
                   } else {
@@ -743,10 +745,9 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                 $prod_id = rtrim($prod_id, ',');
                 $prod_qty = rtrim($prod_qty, ',');
                 $prodid = rtrim($prodid, '-');
+                $availableSets=$availableSets??0;
 
-                $isFullAvailable = ($itg_qty == count($prods));
-                $isPartialAvailable = ($itg_qty > 0 && $itg_qty < count($prods));
-                $isUnavailable = ($itg_qty == 0);
+                $isFullAvailable=$availableSets>0&&count($prods)>0;$isPartialAvailable=!$isFullAvailable&&$itg_qty>0;$isUnavailable=!$isFullAvailable&&!$isPartialAvailable;
 
                 $effective_discount_complete = ($isFullAvailable && $discount_complete > 0) ? $discount_complete : 0;
                 $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
@@ -776,7 +777,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                           <span class="complete-badge complete-badge--light">В комплекте <?=$vcomplecte?> шт.</span>
 
                           <?php if ($isFullAvailable): ?>
-                            <span class="complete-badge complete-badge--ok">Все позиции в наличии</span>
+                            <span class="complete-badge complete-badge--ok">В наличии: <?=$availableSets?> компл.</span>
                           <?php elseif ($isPartialAvailable): ?>
                             <span class="complete-badge complete-badge--warn">Частично в наличии</span>
                           <?php else: ?>
@@ -808,15 +809,17 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       <div class="complete-premium__composition-drop" id="complete-composition-<?=$cpl["id"]?>" hidden>
                         <div class="complete-premium__composition-list">
                           <?php foreach ($prods as $prod): ?>
+                            <?php $totalStock=max(0,(int)$prod['quantity']+(int)($prod['modification_quantity']??0));$reserveStock=max(0,(int)($prod['reserve']??0));$freeStock=max(0,$totalStock-$reserveStock); ?>
                             <div class="complete-comp-item">
                               <div class="complete-comp-item__name"><?=$prod["name"]?></div>
                               <div class="complete-comp-item__meta">
                                 <span><?=$prod["qty"]?> шт.</span>
+                                <span>Свободно: <?=$freeStock?> шт.</span><?php if($reserveStock>0): ?><span>Резерв: <?=$reserveStock?> шт.</span><?php endif; ?>
                                 <span><?=number_format((float)$prod["price_complete"], 0, '.', ' ')?> <?=$curr['symbol_right'];?> / шт.</span>
 
-                                <?php if ((int)$prod["quantity"] >= (int)$prod["qty"]): ?>
+                                <?php if (($prod['hide']??'')!=='hide' && $freeStock >= (int)$prod["qty"]): ?>
                                   <span class="is-ok">Достаточно</span>
-                                <?php elseif ((int)$prod["quantity"] > 0): ?>
+                                <?php elseif (($prod['hide']??'')!=='hide' && $freeStock > 0): ?>
                                   <span class="is-warn">Частично</span>
                                 <?php else: ?>
                                   <span class="is-empty">Нет</span>
@@ -852,7 +855,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 
                       <div class="complete-summary__status">
                         <?php if ($isFullAvailable): ?>
-                          <span class="status-ok">Комплект доступен полностью</span>
+                          <span class="status-ok">В наличии: <?=$availableSets?> компл.</span>
                         <?php elseif ($isPartialAvailable): ?>
                           <span class="status-warn">Доступен не в полном составе</span>
                         <?php else: ?>

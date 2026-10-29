@@ -56,6 +56,7 @@ $extBadge = function($ext) {
 $rows = [];
 foreach ($complete as $compl) {
     $cid = (int)$compl["id"];
+    $inventory=$completeInventoryById[$cid]??['stock'=>0,'reserve'=>0,'available'=>0,'items'=>[]];$avito=$completeAvitoById[$cid]??['total'=>0,'published'=>0,'ads'=>[]];
 
     // --- миниатюра
     $thumbSrc = !empty($compl["img"]) ? "/images/complete/mini/" . $compl["img"] : "/images/no_image.jpg";
@@ -120,7 +121,7 @@ foreach ($complete as $compl) {
 
     // --- состав комплекта + цена
     $pcp = \R::getAll("
-        SELECT product.name, plagins_complete_product.price, plagins_complete_product.qty
+        SELECT product.id AS product_id, product.name, plagins_complete_product.price, plagins_complete_product.qty
         FROM plagins_complete_product 
         JOIN product ON product.id = plagins_complete_product.product_id
         WHERE plagins_complete_product.complete_id = ?
@@ -128,10 +129,14 @@ foreach ($complete as $compl) {
 
     $productListHtml = '';
     $priceSum = 0;
+    $inventoryItems=[];foreach($inventory['items'] as $item)$inventoryItems[(int)$item['product_id']]=$item;
     foreach ($pcp as $p) {
-        $productListHtml .= htmlspecialchars($p["name"], ENT_QUOTES, 'UTF-8')."<br>";
+        $item=$inventoryItems[(int)$p['product_id']]??[];$free=(int)($item['available']??0);$reserve=(int)($item['reserve']??0);$required=(int)$p['qty'];$shortage=max(0,$required-$free);$stockClass=$shortage>0?'text-danger':'text-success';
+        $productListHtml.='<div class="mb-2"><strong>'.htmlspecialchars($p['name'],ENT_QUOTES,'UTF-8').'</strong><br><span class="small '.$stockClass.'">Нужно: '.$required.'; свободно: '.$free.'; резерв: '.$reserve.($shortage>0?'; не хватает: '.$shortage:'').'</span></div>';
         $priceSum += ((float)$p["price"]) * ((int)$p["qty"]);
     }
+    $availabilityCell='<span class="badge '.((int)$inventory['available']>0?'bg-success':'bg-danger').'">'.((int)$inventory['available']>0?'Доступно: '.(int)$inventory['available'].' компл.':'Нет полного комплекта').'</span><div class="small mt-1">На складе: '.(int)$inventory['stock'].' компл.; резерв: '.(int)$inventory['reserve'].'</div>';
+    if((int)$avito['total']>0){$adLinks=[];foreach($avito['ads'] as $ad){$label=(string)($ad['avito_id']?:$ad['ad_external_id']?:('№'.(int)$ad['id']));$adLinks[]='<a href="'.ADMIN.'/avito/edit?id='.(int)$ad['id'].'">'.htmlspecialchars($label,ENT_QUOTES,'UTF-8').'</a>';}$avitoCell='<span class="badge '.((int)$avito['published']>0?'bg-success':'bg-warning').'">'.((int)$avito['published']>0?'Опубликовано: '.(int)$avito['published']:'Связано, не опубликовано').'</span><div class="small mt-1">Объявлений: '.(int)$avito['total'].'<br>'.implode(', ',$adLinks).'</div>';}else{$avitoCell='<span class="badge bg-secondary">Объявления нет</span>';}
 
     $cat = \R::findOne('category', 'id = ?', [$compl['category_id']]);
 
@@ -156,6 +161,8 @@ foreach ($complete as $compl) {
         htmlspecialchars($compl['name'], ENT_QUOTES, 'UTF-8'),
         htmlspecialchars($cat['name'] ?? '', ENT_QUOTES, 'UTF-8'),
         $productListHtml,
+        $availabilityCell,
+        $avitoCell,
         number_format($priceSum, 0, '.', ' '),
         $itog_seo,
         $option,
@@ -177,12 +184,14 @@ $(document).ready(function() {
       { title: "Название комплекта" },
       { title: "Категория" },
       { title: "Товарные позиции" },
+      { title: "Наличие комплектов" },
+      { title: "Avito" },
       { title: "Цена комплекта" },
       { title: "SEO" },
       { title: "Действия" }
     ],
     columnDefs: [
-      { targets: [1,4,6,7], orderable: false, searchable: false }
+      { targets: [1,4,5,6,8,9], orderable: false, searchable: false }
     ]
   });
 });

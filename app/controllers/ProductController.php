@@ -343,6 +343,8 @@ class ProductController extends AppController
                         p.name,
                         p.price AS price,
                         p.quantity,
+                        p.reserve,p.hide,
+                        COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id=p.id),0) AS modification_quantity,
                         pcp.product_id,
                         pcp.qty,
                         pcp.price AS price_complete,

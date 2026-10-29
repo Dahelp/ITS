@@ -1,4 +1,5 @@
 <?php use app\helpers\Img; ?>
+<link rel="stylesheet" href="<?=PATH?>/css/complete-catalog.css?v=<?=(int)filemtime(WWW.'/css/complete-catalog.css')?>">
 
 <?php
 $curr = \ishop\App::$app->getProperty('currency');
@@ -13,9 +14,7 @@ if ($userId) {
 }
 
 $totalPositions = !empty($prods) ? count($prods) : 0;
-$isFullAvailable = ($itg_qty === $totalPositions && $totalPositions > 0);
-$isPartialAvailable = ($itg_qty > 0 && $itg_qty < $totalPositions);
-$isUnavailable = ($itg_qty === 0);
+$availableSets=max(0,(int)($completeInventory['available']??0));$inventoryItems=[];foreach(($completeInventory['items']??[]) as $inventoryItem)$inventoryItems[(int)$inventoryItem['product_id']]=$inventoryItem;$positionsWithFreeStock=count(array_filter($inventoryItems,static fn($item)=>(int)$item['available']>0));$isFullAvailable=$availableSets>0&&$totalPositions>0;$isPartialAvailable=!$isFullAvailable&&$positionsWithFreeStock>0;$isUnavailable=!$isFullAvailable&&!$isPartialAvailable;
 
 $effective_discount_complete = ($isFullAvailable && $discount_complete > 0) ? $discount_complete : 0;
 $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
@@ -194,9 +193,10 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                         <div class="product-block-title">Состав комплекта</div>
                                         <ul class="complete-short-list__items">
                                             <?php foreach ($prods as $prod): ?>
+                                                <?php $stockItem=$inventoryItems[(int)$prod['product_id']]??['available'=>0,'reserve'=>0]; ?>
                                                 <li>
                                                     <span class="complete-short-list__name"><?=htmlspecialchars($prod['name'] ?? '', ENT_QUOTES)?></span>
-                                                    <span class="complete-short-list__qty"><?= (int)$prod['qty'] ?> шт.</span>
+                                                    <span class="complete-short-list__qty">Нужно <?=(int)$prod['qty']?>; свободно <?=(int)$stockItem['available']?>; резерв <?=(int)$stockItem['reserve']?></span>
                                                 </li>
                                             <?php endforeach; ?>
                                         </ul>
@@ -254,7 +254,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                         <div class="product-block-title">Наличие</div>
                                         <div class="vnalichie">
                                             <?php if ($isFullAvailable): ?>
-                                                <span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> Доступны все позиции комплекта</span>
+                                                <span class="nalich_ok"><i class="fas fa-check" aria-hidden="true"></i> В наличии <?=$availableSets?> компл.</span>
                                             <?php elseif ($isPartialAvailable): ?>
                                                 <span class="nalich_postuplenie">Доступен не полный комплект. В наличии позиций: <?=$itg_qty?></span>
                                             <?php else: ?>
@@ -324,10 +324,9 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
 								$sku   = htmlspecialchars((string)($prod['sku'] ?? ''), ENT_QUOTES, 'UTF-8');
 
 								$qtyNeed = (int)($prod['qty'] ?? 0);
-								$qtyHave = (int)($prod['quantity'] ?? 0);
+								$stockItem=$inventoryItems[$pid]??['available'=>0,'reserve'=>0,'active'=>false];$qtyHave=(int)$stockItem['available'];$qtyReserve=(int)$stockItem['reserve'];$productActive=!empty($stockItem['active']);
 
-								$prodFull    = ($qtyHave >= $qtyNeed);
-								$prodPartial = ($qtyHave > 0 && $qtyHave < $qtyNeed);
+								$prodFull=$productActive&&$qtyHave>=$qtyNeed;$prodPartial=$productActive&&$qtyHave>0&&$qtyHave<$qtyNeed;
 
 								$base  = (float)($prod['price'] ?? 0);
 								$rrs   = (float)($prod['price_rrs'] ?? 0);
@@ -380,7 +379,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
 
 										<div class="pc-body">
 											<div class="pc-meta">
-												В комплекте: <?= $qtyNeed ?> шт.
+											Нужно: <?=$qtyNeed?> шт. · Свободно: <?=$qtyHave?> · Резерв: <?=$qtyReserve?>
 											</div>
 
 											<div class="pc-title">
@@ -438,6 +437,8 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                         </div>
                     </section>
                 <?php endif; ?>
+
+                <?php if(!empty($similarCompletes)): ?><section class="complete-items-premium"><div class="complete-items-premium__head"><h2>Похожие комплекты</h2><p>Другие готовые комплекты с актуальным количеством в наличии.</p></div><div class="complete-catalog-grid"><?php foreach($similarCompletes as $similarComplete)new \app\widgets\complete\Complete($similarComplete,$curr); ?></div></section><?php endif; ?>
 
                 <!-- Descriptions -->
                 <section class="desc-prod-inner bg-light shadow">

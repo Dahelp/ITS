@@ -14,15 +14,13 @@ class Complete
         $items = \R::getAll("SELECT cp.qty, cp.price, cp.discount, p.quantity, p.reserve,
             COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = p.id), 0) AS modification_quantity
             FROM plagins_complete_product cp JOIN product p ON p.id = cp.product_id WHERE cp.complete_id = ?", [(int)$complete['id']]);
-        $price = $discount = $pieces = $available = 0;
+        $price = $discount = $pieces = 0;
         foreach ($items as $item) {
             $price += (float)$item['price'] * (int)$item['qty'];
             $discount += (float)$item['discount'] * (int)$item['qty'];
             $pieces += (int)$item['qty'];
-            if ((float)$item['quantity'] + (float)$item['modification_quantity'] - (float)$item['reserve'] >= (int)$item['qty']) $available++;
         }
-        $quantity = count($items) > 0 && $available === count($items) ? 1 : 0;
-        $stockText = $quantity ? 'В наличии' : 'Нет в наличии';
+        $inventory=\app\services\CompleteInventory::forComplete((int)$complete['id']);$quantity=max(0,(int)$inventory['available']);$stockText=$quantity>0?'В наличии: '.$quantity.' компл.':'Нет в наличии';
         $categoryName = htmlspecialchars((string)\R::getCell('SELECT name FROM category WHERE id = ?', [(int)$complete['category_id']]), ENT_QUOTES, 'UTF-8');
         $seoName = (string)$complete['name'];
         $cardUrl = htmlspecialchars(PATH . '/complete/' . (string)$complete['alias'], ENT_QUOTES, 'UTF-8');

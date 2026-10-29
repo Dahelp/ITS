@@ -110,6 +110,8 @@ class CompleteController extends AppController {
 				p.price,
 				p.price_rrs,
 				p.quantity,
+				p.reserve,
+				COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id=p.id),0) AS modification_quantity,
 				p.article,
 				p.sku,
 				p.hit,
@@ -124,6 +126,7 @@ class CompleteController extends AppController {
 			WHERE pcp.complete_id = ?
 			ORDER BY pcp.id ASC
 		", [$complete->id]);
+		$completeInventory=\app\services\CompleteInventory::forCompleteDetails((int)$complete->id);$similarCompletes=\app\services\CompleteSimilar::find((int)$complete->id);$inventoryByProduct=[];foreach($completeInventory['items'] as $item)$inventoryByProduct[(int)$item['product_id']]=$item;
 
 		$price_complete = 0;
 		$discount_complete = 0;
@@ -143,10 +146,11 @@ class CompleteController extends AppController {
 			$prod_id[] = $prod['product_id'];
 			$prod_qty[] = $prod['qty'];
 
-			if ((int)$prod['quantity'] >= (int)$prod['qty']) {
+			$freeQuantity=(int)($inventoryByProduct[(int)$prod['product_id']]['available']??0);
+			if ($freeQuantity >= (int)$prod['qty']) {
 				$quantity_state = 1;
 				$prodid[] = $prod['product_id'];
-			} elseif ((int)$prod['quantity'] > 0 && (int)$prod['quantity'] < (int)$prod['qty']) {
+			} elseif ($freeQuantity > 0 && $freeQuantity < (int)$prod['qty']) {
 				$quantity_state = 0;
 				$prodid[] = $prod['product_id'];
 			} else {
@@ -223,6 +227,7 @@ class CompleteController extends AppController {
 			'cat_prod',
 			'vendor',
 			'prods',
+			'completeInventory','similarCompletes',
 			'price_complete',
 			'discount_complete',
 			'itg_qty',

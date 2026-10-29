@@ -1162,9 +1162,18 @@ class PlaginsController extends AppController {
 	public function completeAction(){
 		
         $complete = \R::getAll("SELECT * FROM plagins_complete");
+        $completeInventoryById=[]; foreach($complete as $row)$completeInventoryById[(int)$row['id']]=\app\services\CompleteInventory::forCompleteDetails((int)$row['id']);
+        $completeAvitoById=[];
+        if (\R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'complete_id'")) {
+            $hasRemote=(bool)\R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'avito_publication_status'");
+            $hasDeleted=(bool)\R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'deletion_requested_at'");
+            $remote=$hasRemote?'avito_publication_status':"'' AS avito_publication_status";
+            $where=$hasDeleted?' AND deletion_requested_at IS NULL':'';
+            foreach(\R::getAll("SELECT id,complete_id,avito_id,ad_external_id,$remote FROM avito_ad WHERE complete_id IS NOT NULL$where ORDER BY id") as $row){$cid=(int)$row['complete_id'];if(!isset($completeAvitoById[$cid]))$completeAvitoById[$cid]=['total'=>0,'published'=>0,'ads'=>[]];$completeAvitoById[$cid]['total']++;if(in_array(strtolower((string)$row['avito_publication_status']),['active','published'],true))$completeAvitoById[$cid]['published']++;$completeAvitoById[$cid]['ads'][]=$row;}
+        }
 
         $this->setMeta('Комплекты из товаров');
-        $this->set(compact('complete'));		
+        $this->set(compact('complete','completeInventoryById','completeAvitoById'));
 	}
 	
 	public function CompleteAddImageAction(){
@@ -1192,6 +1201,7 @@ class PlaginsController extends AppController {
 		@unlink(WWW . "/images/complete/baseimg/".$complete["img"]."");
 		@unlink(WWW . "/images/complete/mini/".$complete["img"]."");
 		\R::trash($complete);
+		\app\services\CompleteSimilar::deleteFor((int)$id);
 		$gallery = \R::findOne('plagins_complete_gallery', 'complete_id = ?', [$id]);		
 		@unlink(WWW . "/images/complete/gallery/".$gallery["img"]."");
         $del_gallery = \R::load('gallery', $gallery["id"]);
@@ -1249,6 +1259,7 @@ class PlaginsController extends AppController {
                 $p->alias = $alias;
                 \R::store($p);
 				$complete->editProductComplete($id, $data);
+				\app\services\CompleteSimilar::save((int)$id,(array)($data['similar']??[]));
 				
 				// API IndexNow
 				$indexnow = new PlaginsIndexnow();
@@ -1283,6 +1294,7 @@ class PlaginsController extends AppController {
 				
                 $alias = AppModel::createAlias('plagins_complete', 'alias', $data["name"], $id);
 				$complete->editProductComplete($id, $data);
+				\app\services\CompleteSimilar::save((int)$id,(array)($data['similar']??[]));
                 $complete = \R::load('plagins_complete', $id);
 				if($data['alias']!=""){ $complete->alias = $data['alias'];}
 				else{$complete->alias = $alias;}
@@ -1305,10 +1317,14 @@ class PlaginsController extends AppController {
 		App::$app->setProperty('parent_id', $complete->category_id);
 		$gallery = \R::getCol('SELECT img FROM plagins_complete_gallery WHERE complete_id = ?', [$id]);
 		$complete_product = \R::getAll('SELECT * FROM plagins_complete_product JOIN product ON product.id = plagins_complete_product.product_id WHERE plagins_complete_product.complete_id = ?', [$id]);
+		\app\services\CompleteSimilar::ensureSchema();
+		$similar_complete=\R::getAll('SELECT c.id,c.name FROM plagins_complete_similar s JOIN plagins_complete c ON c.id=s.similar_id WHERE s.complete_id=? ORDER BY s.sort_order,c.name',[$id]);
 		
 		$this->setMeta("Редактирование {$complete->name}");
-        $this->set(compact('complete', 'gallery', 'complete_product'));
+        $this->set(compact('complete','gallery','complete_product','similar_complete'));
     }
+
+	public function searchcompleteAction(){ $q=trim((string)($_GET['q']??''));$exclude=max(0,(int)($_GET['exclude']??0));$params=["%{$q}%"];$where='name LIKE ?';if($exclude>0){$where.=' AND id != ?';$params[]=$exclude;}$rows=\R::getAll("SELECT id,name FROM plagins_complete WHERE $where ORDER BY name LIMIT 30",$params);header('Content-Type: application/json; charset=utf-8');echo json_encode(['items'=>array_map(static fn($row)=>['id'=>(int)$row['id'],'text'=>(string)$row['name']],$rows)],JSON_UNESCAPED_UNICODE);exit;}
 	
 		public function searchproductAction(){
 		$request = 1;
