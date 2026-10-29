@@ -1,198 +1,30 @@
-<!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Комплекты</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<?=ADMIN;?>">Главная</a></li>
-			  <li class="breadcrumb-item"><a href="<?=ADMIN;?>/plagins">Компоненты</a></li>
-              <li class="breadcrumb-item active">Список комплектов</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+<link rel="stylesheet" href="<?= PATH ?>/css/admin-product-analytics.css?v=<?= (int)filemtime(WWW.'/css/admin-product-analytics.css') ?>">
+<style>
+.complete-admin .complete-table{table-layout:fixed;width:100%!important}.complete-admin .cc-product{display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px}.complete-admin .cc-photo img{width:78px;height:78px;object-fit:contain;border:1px solid #edf1f7;border-radius:6px;background:#fff}.complete-admin .cc-id,.complete-admin .cc-category{font-size:12px;color:#718096;line-height:1.45}.complete-admin .cc-name{font-size:16px;font-weight:600;line-height:1.45;margin:5px 0 9px}.complete-admin .cc-images{grid-column:1/-1;display:grid;gap:4px;font-size:12px;color:#64748b}.complete-admin .cc-images .badge{font-size:11px;margin-left:5px}.complete-admin .cc-price{font-size:17px;font-weight:700;margin-bottom:10px;color:#1f2937}.complete-admin .cc-stock{font-size:14px;line-height:1.6}.complete-admin .cc-stock strong{display:block;color:#28774a;font-size:15px}.complete-admin .cc-stock.is-empty strong{color:#b23b4a}.complete-admin .cc-stock-detail{color:#64748b;font-size:12px;margin-top:5px}.complete-admin .cc-item{padding:0 0 9px;margin:0 0 9px;border-bottom:1px solid #edf1f7}.complete-admin .cc-item:last-of-type{margin-bottom:10px}.complete-admin .cc-item strong{display:block;font-size:13px;line-height:1.45}.complete-admin .cc-item span{font-size:12px;line-height:1.5;color:#28774a}.complete-admin .cc-item.is-short span{color:#b23b4a}.complete-admin .cc-quality{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;font-size:12px}.complete-admin .cc-quality .progress{height:4px;margin:4px 0 0}.complete-admin .cc-status{font-size:14px;margin-bottom:9px}.complete-admin .cc-actions{display:flex;gap:5px;flex-wrap:wrap;padding-top:9px;border-top:1px solid #edf1f7}.complete-admin .cc-actions a{display:grid;place-items:center;width:29px;height:29px;border-radius:5px;background:#eef3fa;font-size:13px}.complete-admin .cc-avito .badge{font-size:12px;line-height:1.4;white-space:normal}.complete-admin .cc-avito a{display:inline-block;margin-top:7px;font-size:13px}.complete-admin .cc-avito-list a{display:block}.complete-admin tr.cc-inactive>td{background:#fff4f4}.complete-admin tr.cc-locked>td{background:#f0f1f4}
+@media(max-width:767px){.complete-admin .complete-table,.complete-admin .complete-table tbody,.complete-admin .complete-table tr,.complete-admin .complete-table td{display:block;width:100%!important}.complete-admin .complete-table thead{display:none}.complete-admin .complete-table tr{border:1px solid #dfe5ed;border-radius:10px;margin-bottom:14px;overflow:hidden;background:#fff}.complete-admin .complete-table td{border:0;border-bottom:1px solid #edf1f7;padding:12px 14px}.complete-admin .complete-table td:last-child{border-bottom:0}.complete-admin .complete-table td:before{content:attr(data-label);display:block;text-transform:uppercase;font-size:12px;color:#718096;margin-bottom:8px;font-weight:600}.complete-admin .complete-table td:first-child:before{display:none}.complete-admin .cc-name{font-size:16px}}
+</style>
 
-<!-- Main content -->
-<section class="content">
-    <div class="row">
-        <div class="col-md-12">
-			<div class="menu_btn">
-                <a href="<?=ADMIN;?>/plagins/complete-add" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Добавить комплект</a>
-            </div>
-            <div class="card">
-				<div class="card-header d-flex p-0">
-                    <h3 class="card-title p-3">Список комплектов</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">					
-					<div class="table-responsive">						
-						<table id="example" class="table table-bordered display" width="100%"></table>                    
-					</div>						
-				</div>				
-			</div>
-		</div>
-	</div>
-</section>
+<div class="content-header"><div class="container-fluid"><div class="row mb-2"><div class="col-sm-6"><h1 class="m-0">Комплекты</h1></div><div class="col-sm-6"><ol class="breadcrumb float-sm-right"><li class="breadcrumb-item"><a href="<?=ADMIN?>">Главная</a></li><li class="breadcrumb-item"><a href="<?=ADMIN?>/plagins">Компоненты</a></li><li class="breadcrumb-item active">Список комплектов</li></ol></div></div></div></div>
+<section class="content product-admin complete-admin"><div class="row"><div class="col-md-12"><div class="menu_btn"><a href="<?=ADMIN?>/plagins/complete-add" class="btn btn-primary"><i class="fa fa-fw fa-plus"></i> Добавить комплект</a></div><div class="card product-list-card"><div class="card-header d-flex p-0"><h3 class="card-title p-3">Список комплектов</h3></div><div class="card-body"><div class="product-table-wrap"><table id="example" class="table product-table complete-table" width="100%"><thead><tr><th>Комплект</th><th>Цена и остаток</th><th>Состав и качество</th><th>Управление</th><th>Avito</th><th>Статус</th></tr></thead></table></div></div></div></div></div></section>
 
 <?php
-// helper для бейджа по расширению
-$extBadge = function($ext) {
-    if (!$ext) return "<span class='badge bg-danger'>нет</span>";
-    switch ($ext) {
-        case 'webp': return "<span class='badge bg-success'>webp</span>";
-        case 'jpg':
-        case 'jpeg': return "<span class='badge bg-primary'>jpg</span>";
-        case 'png':  return "<span class='badge bg-info'>png</span>";
-        case 'gif':  return "<span class='badge bg-warning text-dark'>gif</span>";
-        default:     return "<span class='badge bg-secondary'>".$ext."</span>";
-    }
-};
-
-$rows = [];
-foreach ($complete as $compl) {
-    $cid = (int)$compl["id"];
-    $inventory=$completeInventoryById[$cid]??['stock'=>0,'reserve'=>0,'available'=>0,'items'=>[]];$avito=$completeAvitoById[$cid]??['total'=>0,'published'=>0,'ads'=>[]];
-
-    // --- миниатюра
-    $thumbSrc = !empty($compl["img"]) ? "/images/complete/mini/" . $compl["img"] : "/images/no_image.jpg";
-    $thumb    = "<img src='{$thumbSrc}' alt='' style='max-height:50px'>";
-
-    // --- основная: расширение
-    $mainExt = '';
-    if (!empty($compl['img']) && $compl['img'] !== 'no_image.jpg') {
-        $mainExt = strtolower(pathinfo($compl['img'], PATHINFO_EXTENSION));
-    }
-    $badgeMain = $extBadge($mainExt);
-
-    // --- галерея комплектов: количество и форматы
-    $gal = \R::getRow("
-        SELECT 
-            COUNT(*) AS cnt,
-            GROUP_CONCAT(DISTINCT LOWER(SUBSTRING_INDEX(img,'.',-1)) SEPARATOR ',') AS exts
-        FROM plagins_complete_gallery
-        WHERE complete_id = ?
-    ", [$cid]);
-    $galCnt  = (int)($gal['cnt'] ?? 0);
-    $galExts = trim((string)($gal['exts'] ?? ''), ',');
-    if ($galCnt > 0) {
-        $parts = array_values(array_filter(array_unique(array_map('trim', explode(',', $galExts)))));
-        $extBadges = [];
-        foreach ($parts as $e) { $extBadges[] = $extBadge($e); }
-        $badgeGallery = "<span class='badge bg-success me-1'>галерея: {$galCnt}</span> " . implode(' ', $extBadges);
-    } else {
-        $badgeGallery = "<span class='badge bg-danger'>галерея: нет</span>";
-    }
-
-    // --- ячейка «Фото» с миниатюрой + бейджами
-    $imgCell = '
-      <div class="d-flex align-items-start">
-        <div>'.$thumb.'</div>
-        <div class="small" style="line-height:1.35; margin-left:10px">
-          <div>основная: '.$badgeMain.'</div>
-          <div>'.$badgeGallery.'</div>
-        </div>
-      </div>';
-
-    // --- статусы скрытия
-    if ($compl['hide'] == 'show') { $hide = "Активный"; }
-    if ($compl['hide'] == 'hide') { $hide = "Неактивный"; }
-    if ($compl['hide'] == 'lock') { $hide = "Закрыт от индексации"; }
-
-    // --- грубый SEO-«прогресс» (как у тебя)
-    $s1 = ($compl['title']       !== "") ? 20 : 0;
-    $s2 = ($compl['description'] !== "") ? 20 : 0;
-    $s3 = ($compl['keywords']    !== "") ? 20 : 0;
-    $s4 = ($compl['content']     !== "") ? 20 : 0;
-    $s5 = ($compl['img']         !== "") ? 20 : 0;
-    $seo = $s1 + $s2 + $s3 + $s4 + $s5;
-
-    if ($seo <= 40) {
-        $itog_seo = "SEO {$seo}% <div class='progress progress-xs'><div class='progress-bar bg-danger progress-bar-striped' role='progressbar' aria-valuenow='{$seo}' aria-valuemin='0' aria-valuemax='100' style='width: {$seo}%'></div></div>";
-    } elseif ($seo <= 80) {
-        $itog_seo = "SEO {$seo}% <div class='progress progress-xs'><div class='progress-bar bg-warning progress-bar-striped' role='progressbar' aria-valuenow='{$seo}' aria-valuemin='0' aria-valuemax='100' style='width: {$seo}%'></div></div>";
-    } else {
-        $itog_seo = "SEO {$seo}% <div class='progress progress-xs'><div class='progress-bar bg-success progress-bar-striped' role='progressbar' aria-valuenow='{$seo}' aria-valuemin='0' aria-valuemax='100' style='width: {$seo}%'></div></div>";
-    }
-
-    // --- состав комплекта + цена
-    $pcp = \R::getAll("
-        SELECT product.id AS product_id, product.name, plagins_complete_product.price, plagins_complete_product.qty
-        FROM plagins_complete_product 
-        JOIN product ON product.id = plagins_complete_product.product_id
-        WHERE plagins_complete_product.complete_id = ?
-    ", [$cid]);
-
-    $productListHtml = '';
-    $priceSum = 0;
-    $inventoryItems=[];foreach($inventory['items'] as $item)$inventoryItems[(int)$item['product_id']]=$item;
-    foreach ($pcp as $p) {
-        $item=$inventoryItems[(int)$p['product_id']]??[];$free=(int)($item['available']??0);$reserve=(int)($item['reserve']??0);$required=(int)$p['qty'];$shortage=max(0,$required-$free);$stockClass=$shortage>0?'text-danger':'text-success';
-        $productListHtml.='<div class="mb-2"><strong>'.htmlspecialchars($p['name'],ENT_QUOTES,'UTF-8').'</strong><br><span class="small '.$stockClass.'">Нужно: '.$required.'; свободно: '.$free.'; резерв: '.$reserve.($shortage>0?'; не хватает: '.$shortage:'').'</span></div>';
-        $priceSum += ((float)$p["price"]) * ((int)$p["qty"]);
-    }
-    $availabilityCell='<span class="badge '.((int)$inventory['available']>0?'bg-success':'bg-danger').'">'.((int)$inventory['available']>0?'Доступно: '.(int)$inventory['available'].' компл.':'Нет полного комплекта').'</span><div class="small mt-1">На складе: '.(int)$inventory['stock'].' компл.; резерв: '.(int)$inventory['reserve'].'</div>';
-    if((int)$avito['total']>0){$adLinks=[];foreach($avito['ads'] as $ad){$label=(string)($ad['avito_id']?:$ad['ad_external_id']?:('№'.(int)$ad['id']));$adLinks[]='<a href="'.ADMIN.'/avito/edit?id='.(int)$ad['id'].'">'.htmlspecialchars($label,ENT_QUOTES,'UTF-8').'</a>';}$avitoCell='<span class="badge '.((int)$avito['published']>0?'bg-success':'bg-warning').'">'.((int)$avito['published']>0?'Опубликовано: '.(int)$avito['published']:'Связано, не опубликовано').'</span><div class="small mt-1">Объявлений: '.(int)$avito['total'].'<br>'.implode(', ',$adLinks).'</div>';}else{$avitoCell='<span class="badge bg-secondary">Объявления нет</span>';}
-
-    $cat = \R::findOne('category', 'id = ?', [$compl['category_id']]);
-
-    // --- короткий back (без «портянок» DataTables)
-    $back = ADMIN . '/plagins/complete';
-
-    // --- действия (+ фикс кавычек в confirm)
-    $option = "
-		<a href='".ADMIN."/plagins/complete-edit?id=".$compl["id"]."'><i class='fas fa-pencil-alt'></i></a>
-		<a class='delete' href='".ADMIN."/plagins/complete-delete?id=".$compl["id"]."'><i class='fas fa-times-circle text-danger'></i></a>
-		<a target='_blank' href='/complete/".$compl["alias"]."'><i class='fas fa-eye'></i></a>
-		<a href='".ADMIN."/media/convert?section=complete&id=".(int)$compl['id']."&back=".urlencode('/admin/plagins/complete')."' title='Перекодировать изображения комплекта'>
-			<i class='fas fa-recycle'></i>
-		</a>
-		";
-
-
-    // --- строка для DataTables
-    $rows[] = [
-        (string)$cid,
-        $imgCell,
-        htmlspecialchars($compl['name'], ENT_QUOTES, 'UTF-8'),
-        htmlspecialchars($cat['name'] ?? '', ENT_QUOTES, 'UTF-8'),
-        $productListHtml,
-        $availabilityCell,
-        $avitoCell,
-        number_format($priceSum, 0, '.', ' '),
-        $itog_seo,
-        $option,
-    ];
+$h=static fn($value)=>htmlspecialchars((string)$value,ENT_QUOTES,'UTF-8');
+$extBadge=static function(string $ext):string{$ext=strtolower(trim($ext));if($ext==='')return '<span class="badge bg-danger">нет</span>';$class=$ext==='webp'?'success':(in_array($ext,['jpg','jpeg'],true)?'primary':($ext==='png'?'info':'secondary'));return '<span class="badge bg-'.$class.'">'.htmlspecialchars($ext,ENT_QUOTES,'UTF-8').'</span>';};
+$hasSimilar=in_array('plagins_complete_similar',\R::inspect(),true);$rows=[];
+foreach($complete as $compl){
+ $cid=(int)$compl['id'];$inventory=$completeInventoryById[$cid]??['stock'=>0,'reserve'=>0,'available'=>0,'items'=>[]];$avito=$completeAvitoById[$cid]??['total'=>0,'published'=>0,'ads'=>[]];$cat=\R::findOne('category','id = ?',[(int)$compl['category_id']]);
+ $gallery=\R::getAll('SELECT img FROM plagins_complete_gallery WHERE complete_id = ?',[$cid]);$mainExt=!empty($compl['img'])&&$compl['img']!=='no_image.jpg'?strtolower(pathinfo($compl['img'],PATHINFO_EXTENSION)):'';$galleryExts=[];foreach($gallery as $image)$galleryExts[]=strtolower(pathinfo((string)$image['img'],PATHINFO_EXTENSION));$galleryExts=array_values(array_unique(array_filter($galleryExts)));$galleryBadges='<span class="badge '.($gallery?'bg-success':'bg-danger').'">'.count($gallery).' фото</span>';foreach($galleryExts as $ext)$galleryBadges.=$extBadge($ext);
+ $thumb=!empty($compl['img'])?'/images/complete/mini/'.$h($compl['img']):'/images/no_image.jpg';$identity='<div class="cc-product"><div class="cc-photo"><img src="'.$thumb.'" alt=""></div><div><div class="cc-id">ID '.$cid.'</div><div class="cc-category">'.$h($cat['name']??'Без категории').'</div><div class="cc-name">'.$h($compl['name']).'</div></div><div class="cc-images"><div>Основная: '.$extBadge($mainExt).'</div><div>Галерея: '.$galleryBadges.'</div></div></div>';
+ $products=\R::getAll('SELECT p.id product_id,p.name,cp.price,cp.discount,cp.qty FROM plagins_complete_product cp JOIN product p ON p.id=cp.product_id WHERE cp.complete_id=? ORDER BY p.name',[$cid]);$inventoryItems=[];foreach($inventory['items'] as $item)$inventoryItems[(int)$item['product_id']]=$item;$price=0.0;$composition='';
+ foreach($products as $product){$item=$inventoryItems[(int)$product['product_id']]??[];$required=max(1,(int)$product['qty']);$free=(int)($item['available']??0);$reserve=(int)($item['reserve']??0);$shortage=max(0,$required-$free);$price+=max(0,(float)$product['price']-(float)$product['discount'])*$required;$composition.='<div class="cc-item'.($shortage?' is-short':'').'"><strong>'.$h($product['name']).'</strong><span>Нужно: '.$required.' шт. · Свободно: '.$free.' шт. · Резерв: '.$reserve.' шт.'.($shortage?' · Не хватает: '.$shortage.' шт.':'').'</span></div>';}
+ $available=(int)$inventory['available'];$priceStock='<div class="cc-price">'.number_format($price,0,'.',' ').' ₽</div><div class="cc-stock'.($available?'':' is-empty').'"><strong>'.($available?'Доступно: '.$available.' компл.':'Нет полного комплекта').'</strong><div class="cc-stock-detail">До резерва: '.(int)$inventory['stock'].' компл.<br>В резерве: '.(int)$inventory['reserve'].' компл.</div></div>';
+ $scores=[trim((string)$compl['title']),trim((string)$compl['description']),trim((string)$compl['keywords']),trim((string)$compl['content']),trim((string)$compl['img'])];$seo=count(array_filter($scores,static fn($v)=>$v!==''))*20;$seoClass=$seo===100?'success':($seo>=60?'warning':'danger');$similarCount=$hasSimilar?(int)\R::getCell('SELECT COUNT(*) FROM plagins_complete_similar WHERE complete_id = ?',[$cid]):0;$quality=$composition.'<div class="cc-quality"><div>SEO '.$seo.'%<div class="progress progress-xs"><div class="progress-bar bg-'.$seoClass.'" style="width:'.$seo.'%"></div></div></div><a href="'.ADMIN.'/plagins/complete-edit?id='.$cid.'#similar">Похожие: '.$similarCount.'</a></div>';
+ $status=$compl['hide']==='show'?'Активный':($compl['hide']==='lock'?'Закрыт от индексации':'Неактивный');$actions='<div class="cc-status">'.$status.'</div><div class="cc-actions"><a href="'.ADMIN.'/plagins/complete-edit?id='.$cid.'" title="Редактировать"><i class="fas fa-pencil-alt"></i></a><a class="delete" href="'.ADMIN.'/plagins/complete-delete?id='.$cid.'" title="Удалить"><i class="fas fa-times-circle text-danger"></i></a><a target="_blank" href="/complete/'.$h($compl['alias']).'" title="Открыть на сайте"><i class="fas fa-eye"></i></a><a href="'.ADMIN.'/media/convert?section=complete&amp;id='.$cid.'&amp;back='.urlencode('/admin/plagins/complete').'" title="Конвертировать изображения"><i class="fas fa-recycle"></i></a></div>';
+ if((int)$avito['total']>0){$links='';foreach($avito['ads'] as $ad){$label=(string)($ad['avito_id']?:$ad['ad_external_id']?:('№'.(int)$ad['id']));$links.='<a href="'.ADMIN.'/avito/edit?id='.(int)$ad['id'].'">Объявление '.$h($label).'</a>';}$avitoCell='<div class="cc-avito"><span class="badge '.((int)$avito['published']?'badge-success':'badge-warning').'">'.((int)$avito['published']?'Опубликовано на Avito':'Связано, не опубликовано').'</span><div class="cc-avito-list">'.$links.'</div></div>';}else{$avitoCell='<div class="cc-avito"><span class="badge '.($available?'badge-danger':'badge-light').'">'.($available?'<i class="fas fa-exclamation-triangle"></i> Есть остаток, нет объявления':'Объявления нет').'</span><br><a href="'.ADMIN.'/plagins/complete-edit?id='.$cid.'">Привязать объявление</a></div>';}
+ $rows[]=[$identity,$priceStock,$quality,$actions,$avitoCell,(string)$compl['hide']];
 }
 ?>
 <script>
-var dataSet = <?= json_encode($rows, JSON_UNESCAPED_UNICODE) ?>;
-
-$(document).ready(function() {
-  $('#example').DataTable({
-    stateSave: true,
-    lengthChange: true,
-    lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "Все"]],
-    data: dataSet,
-    columns: [
-      { title: "ID" },
-      { title: "Фото" },
-      { title: "Название комплекта" },
-      { title: "Категория" },
-      { title: "Товарные позиции" },
-      { title: "Наличие комплектов" },
-      { title: "Avito" },
-      { title: "Цена комплекта" },
-      { title: "SEO" },
-      { title: "Действия" }
-    ],
-    columnDefs: [
-      { targets: [1,4,5,6,8,9], orderable: false, searchable: false }
-    ]
-  });
-});
+var completeDataSet=<?=json_encode($rows,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;
+$(function(){var labels=['Комплект','Цена и остаток','Состав и качество','Управление','Avito'];$('#example').DataTable({data:completeDataSet,stateSave:true,autoWidth:false,responsive:false,order:[[0,'asc']],lengthMenu:[[20,50,100,-1],[20,50,100,'Все']],columnDefs:[{targets:0,width:'32%'},{targets:1,width:'16%'},{targets:2,width:'27%',orderable:false},{targets:3,width:'12%',orderable:false,searchable:false},{targets:4,width:'13%',orderable:false},{targets:5,visible:false,searchable:false}],dom:'<"pc-table-toolbar"l f B>rt<"pc-table-footer"i p>',buttons:[{extend:'collection',text:'<i class="fas fa-download"></i> Экспорт',className:'btn-sm',buttons:['copy','csv','excel','pdf','print']}],createdRow:function(row,data){$(row).toggleClass('cc-inactive',data[5]==='hide').toggleClass('cc-locked',data[5]==='lock');$(row).children('td').each(function(i){$(this).attr('data-label',labels[i]);});}});});
 </script>
