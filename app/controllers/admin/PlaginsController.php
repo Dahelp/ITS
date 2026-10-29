@@ -1160,7 +1160,7 @@ class PlaginsController extends AppController {
 /* COMPLETE */
 	
 	public function completeAction(){
-		
+		\app\services\CompleteAvitoLinker::reconcile();
         $complete = \R::getAll("SELECT * FROM plagins_complete");
         $completeInventoryById=[]; foreach($complete as $row)$completeInventoryById[(int)$row['id']]=\app\services\CompleteInventory::forCompleteDetails((int)$row['id']);
         $completeAvitoById=[];
