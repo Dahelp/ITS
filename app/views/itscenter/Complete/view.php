@@ -415,9 +415,9 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
 												</div>
 
 												<?php if ($prodFull): ?>
-													<div class="pc-stock pc-stock--ok">В наличии</div>
+													<div class="pc-stock pc-stock--ok">В наличии: <?=$qtyHave?> шт.</div>
 												<?php elseif ($prodPartial): ?>
-													<div class="pc-stock pc-stock--warn">Частично</div>
+													<div class="pc-stock pc-stock--warn">В наличии: <?=$qtyHave?> шт.</div>
 												<?php else: ?>
 													<div class="pc-stock pc-stock--no">Нет в наличии</div>
 												<?php endif; ?>
