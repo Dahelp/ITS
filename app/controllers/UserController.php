@@ -516,9 +516,11 @@ class UserController extends AppController {
             ORDER BY pb.id DESC
             LIMIT ?, ?
         ", [$user_id, $start, $perpage]);
+		\app\services\CompleteEngagement::ensureSchema();
+		$completeWishlists=\R::getAll('SELECT cw.id wishlist_id,pc.id,pc.name,pc.alias,pc.img FROM complete_wishlists cw JOIN plagins_complete pc ON pc.id=cw.complete_id WHERE cw.user_id=? ORDER BY cw.id DESC',[$user_id]);
 
         $this->setMeta('Закладки');
-        $this->set(compact('wishlists', 'pagination'));
+        $this->set(compact('wishlists', 'pagination','completeWishlists'));
     }
 
 
@@ -717,6 +719,15 @@ class UserController extends AppController {
 
 		$_SESSION['success'] = 'Закладка удалена';
 		redirect('wishlists');
+	}
+
+	public function completeWishlistDeleteAction()
+	{
+		if (!User::checkAuth()) { redirect('/'); return; }
+		$userId=(int)($_SESSION['user']['id']??0);$id=(int)($_GET['id']??0);
+		\app\services\CompleteEngagement::ensureSchema();
+		if($id>0)\R::exec('DELETE FROM complete_wishlists WHERE id=? AND user_id=?',[$id,$userId]);
+		redirect('/user/wishlist');
 	}
 	
 	public function recoverAction()

@@ -1612,6 +1612,38 @@ class Avito extends AppModel
         return (int)\R::store($ad);
     }
 
+    public static function createArchivedForComplete(int $completeId): int
+    {
+        self::ensureSchema();
+        \app\services\CompleteAvitoLinker::reconcile();
+        $complete=\R::getRow('SELECT * FROM plagins_complete WHERE id=? LIMIT 1',[$completeId]);
+        if(!$complete)throw new \RuntimeException('Комплект не найден');
+        $existing=\R::findOne('avito_ad','complete_id=?',[$completeId]);
+        if($existing)return (int)$existing->id;
+        $products=\R::getAll("SELECT p.*,b.name brand_name,cp.qty complete_qty,cp.price complete_price,cp.discount complete_discount,
+            (SELECT GROUP_CONCAT(DISTINCT CONCAT(ag.title, ': ', av.value) SEPARATOR '\n') FROM attribute_product ap INNER JOIN attribute_value av ON av.id=ap.attr_id INNER JOIN attribute_group ag ON ag.id=av.attr_group_id WHERE ap.product_id=p.id) attribute_text
+            FROM plagins_complete_product cp JOIN product p ON p.id=cp.product_id LEFT JOIN brand b ON b.id=p.brand_id WHERE cp.complete_id=? ORDER BY cp.id",[$completeId]);
+        if(!$products)throw new \RuntimeException('В комплекте нет товарных позиций');
+        $inventory=\app\services\CompleteInventory::forCompleteDetails($completeId);
+        $price=0.0;$lines=[];
+        foreach($products as $product){$qty=max(1,(int)$product['complete_qty']);$price+=max(0,(float)$product['complete_price']-(float)$product['complete_discount'])*$qty;$lines[]='<strong>'.self::descriptionHtml((string)$product['name']).'</strong> — '.$qty.' шт.';}
+        $source=trim(strip_tags((string)($complete['content']?:$complete['description']??'')));
+        $description='<p><strong>▶️ ГОТОВЫЙ КОМПЛЕКТ НОВЫХ ТОВАРОВ С ГАРАНТИЕЙ!</strong><br>◀️ Все позиции подобраны и продаются одним комплектом.</p>'
+            .'<p><strong>'.self::descriptionHtml((string)$complete['name']).'</strong></p>'
+            .'<p><strong>Состав комплекта:</strong><br>'.implode('<br>',$lines).'</p>'
+            .($source!==''?'<p>'.self::descriptionHtml(self::limitText(preg_replace('~\s+~u',' ',$source),1800)).'</p>':'')
+            .'<p><strong>Цена и наличие:</strong><br><strong>Цена указана за полный комплект.</strong><br>Доступно: '.(int)$inventory['available'].' компл.</p>'
+            .'<p><strong>Доставка:</strong><br>▶️ Москва и область: доставка курьером.<br>▶️ По России: отправка транспортными компаниями.<br>👉 Бесплатно довозим до терминала транспортной компании. Возможен самовывоз.</p>'
+            .'<p><strong>Оплата:</strong><br>✅ Наличные или карта при самовывозе.<br>✅ Безналичная оплата по счёту.<br>✅ Работаем с НДС 22%, предоставляем документы.</p>'
+            .'<p><strong>Обращайтесь — поможем с выбором!</strong><br>🧡 Добавьте объявление в избранное, чтобы не потерять.</p>';
+        $ad=self::createAdBean();$ad->uuid=self::uuidV4();$ad->complete_id=$completeId;$ad->ad_external_id='its-complete-'.$completeId;$ad->article='complete-'.$completeId;$ad->status='archived';$ad->review_status='needs_review';$ad->title=\app\services\AvitoProductTemplate::title($complete);$ad->description=self::limitText($description,7500);$ad->price_rub=(int)round($price);$ad->quantity='за комплект';
+        $ad->product_type=self::generatedProductType($products[0]);self::fillDefaults($ad);self::normalizeCatalogFields($ad,$products[0]);
+        $images=[];$main=trim((string)($complete['img']??''));if($main!=='')$images[]=rtrim(PATH,'/').'/images/complete/baseimg/'.rawurlencode($main);
+        foreach(\R::getCol('SELECT img FROM plagins_complete_gallery WHERE complete_id=? ORDER BY id',[$completeId]) as $image){if(trim((string)$image)!=='')$images[]=rtrim(PATH,'/').'/images/complete/gallery/'.rawurlencode((string)$image);}
+        if($images)$ad->images_json=json_encode(array_values(array_unique($images)),JSON_UNESCAPED_UNICODE);
+        \app\services\AvitoWarehouse::apply($ad);return (int)\R::store($ad);
+    }
+
     private static function containsToken(string $text, string $token): bool
     {
         return mb_stripos($text, $token, 0, 'UTF-8') !== false;

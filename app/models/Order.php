@@ -71,6 +71,7 @@ class Order extends AppModel {
     }
 
     public static function saveOrderProduct($order_id){
+		\app\services\CompleteEngagement::ensureSchema();
 		$sql_part = '';
 
 		$promoCode = trim((string)($_SESSION['promocart'] ?? ''));
@@ -83,6 +84,8 @@ class Order extends AppModel {
 				$pid = (int)explode('-', (string)$rowKey)[0];
 			}
 			if ($pid <= 0) continue;
+			$completeId = !empty($product['set']) && !empty($product['complete_discount_active']) ? (int)$product['set'] : 0;
+			$completeSql = $completeId > 0 ? (string)$completeId : 'NULL';
 
 			if ($promoCode !== '') {
 				$prods = \R::getRow('SELECT * FROM product WHERE id = ?', [$pid]);
@@ -96,15 +99,15 @@ class Order extends AppModel {
 				$discount = ($base / 100) * $promoVal;
 				$discount_amount = $discount * (int)($product['qty'] ?? 0);
 
-				$sql_part .= "('".$order_id."', '".$pid."', '".$product['article']."', '".$product['qty']."', '".$product['unit']."', '".$product['name']."', '".$base."', '".$promoVal."', '3', '".$discount."', '".$product['price']."', '".$discount_amount."'),";
+				$sql_part .= "('".$order_id."', '".$pid."', '".$product['article']."', '".$product['qty']."', '".$product['unit']."', '".$product['name']."', '".$base."', '".$promoVal."', '3', '".$discount."', '".$product['price']."', '".$discount_amount."', ".$completeSql."),";
 			} else {
-				$sql_part .= "('".$order_id."', '".$pid."', '".$product['article']."', '".$product['qty']."', '".$product['unit']."', '".$product['name']."', '".$product['price']."', '', '', '', '', ''),";
+				$sql_part .= "('".$order_id."', '".$pid."', '".$product['article']."', '".$product['qty']."', '".$product['unit']."', '".$product['name']."', '".$product['price']."', '', '', '', '', '', ".$completeSql."),";
 			}
 		}
 
 		$sql_part = rtrim($sql_part, ',');
 		if ($sql_part !== '') {
-			\R::exec("INSERT INTO order_product (`order_id`, `product_id`, `article`, `qty`, `unit`, `name`, `price`, `discount_value`, `discount_type`, `discount`, `price_discount`, `discount_amount`) VALUES $sql_part");
+			\R::exec("INSERT INTO order_product (`order_id`, `product_id`, `article`, `qty`, `unit`, `name`, `price`, `discount_value`, `discount_type`, `discount`, `price_discount`, `discount_amount`, `complete_id`) VALUES $sql_part");
 		}
 	}
 

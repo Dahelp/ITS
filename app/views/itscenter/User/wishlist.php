@@ -32,6 +32,7 @@ $companyTip = $comp_priceopt['tip'] ?? null;
 						<h5 class="mb-0 h6">Закладки</h5>
 					</div>
 					<div class="card-body">
+					<?php if(!empty($completeWishlists)): ?><h6 class="mb-3">Избранные комплекты</h6><div class="row g-3 mb-4"><?php foreach($completeWishlists as $set): ?><div class="col-md-6"><div class="card h-100 p-2 d-flex flex-row align-items-center gap-3"><img src="images/complete/mini/<?=htmlspecialchars($set['img'],ENT_QUOTES)?>" width="80" height="80" style="object-fit:contain" alt=""><div class="flex-grow-1"><a href="complete/<?=htmlspecialchars($set['alias'],ENT_QUOTES)?>"><strong><?=htmlspecialchars($set['name'],ENT_QUOTES)?></strong></a></div><a class="btn btn-soft-danger" href="user/complete-wishlist-delete?id=<?=(int)$set['wishlist_id']?>" title="Удалить"><i class="far fa-trash"></i></a></div></div><?php endforeach;?></div><?php endif;?>
 					<?php if($wishlists): ?>
 						<div class="table-responsive">
 							<table class="table aiz-table mb-0 footable footable-1 breakpoint-xl">

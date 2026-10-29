@@ -97,6 +97,12 @@ jobs:
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && php8.2 -d display_errors=stderr -d log_errors=0 scripts/link_complete_avito_ads.php"
 
+      - name: Install complete reviews favorites and order attribution
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 scripts/install_complete_engagement.php"
+
       - name: Install product certificates
         shell: bash
         run: |

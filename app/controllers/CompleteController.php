@@ -52,6 +52,17 @@ class CompleteController extends AppController {
 		if (!$complete) {
 			throw new \Exception('Страница не найдена', 404);
 		}
+		\app\services\CompleteEngagement::ensureSchema();
+		$userId=(int)($_SESSION['user']['id']??0);
+		if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['complete_review'])) {
+			if ($userId<=0) { $_SESSION['error']='Чтобы оставить отзыв, войдите в личный кабинет.'; redirect('/complete/'.$complete->alias); return; }
+			try {
+				$name=trim((string)($_SESSION['user']['name']??$_SESSION['user']['uname']??'Покупатель'));
+				\app\services\CompleteEngagement::addReview((int)$complete->id,$userId,(string)($_POST['content']??''),(int)($_POST['point']??5),$name);
+				$_SESSION['success']='Спасибо! Отзыв добавлен.';
+			} catch (\DomainException $e) { $_SESSION['error']=$e->getMessage(); }
+			redirect('/complete/'.$complete->alias.'#complete-reviews'); return;
+		}
 
 		$cat_prod = \R::findOne('category', "id = ?", [$complete->category_id]);
 
@@ -127,6 +138,7 @@ class CompleteController extends AppController {
 			ORDER BY pcp.id ASC
 		", [$complete->id]);
 		$completeInventory=\app\services\CompleteInventory::forCompleteDetails((int)$complete->id);$similarCompletes=\app\services\CompleteSimilar::find((int)$complete->id);$inventoryByProduct=[];foreach($completeInventory['items'] as $item)$inventoryByProduct[(int)$item['product_id']]=$item;
+		$completeMetrics=\app\services\CompleteEngagement::metrics((int)$complete->id);$completeReviews=\app\services\CompleteEngagement::reviews((int)$complete->id);$completeFavorited=\app\services\CompleteEngagement::isFavorite((int)$complete->id,$userId);
 
 		$price_complete = 0;
 		$discount_complete = 0;
@@ -227,7 +239,7 @@ class CompleteController extends AppController {
 			'cat_prod',
 			'vendor',
 			'prods',
-			'completeInventory','similarCompletes',
+			'completeInventory','similarCompletes','completeMetrics','completeReviews','completeFavorited',
 			'price_complete',
 			'discount_complete',
 			'itg_qty',
@@ -242,6 +254,16 @@ class CompleteController extends AppController {
 			'technics',
 			'inseo'
 		));
+	}
+
+	public function favoriteAction(): void
+	{
+		header('Content-Type: application/json; charset=utf-8');
+		$userId=(int)($_SESSION['user']['id']??0);$completeId=(int)($_REQUEST['id']??0);
+		if($userId<=0){http_response_code(401);echo json_encode(['ok'=>false,'error'=>'not_auth']);exit;}
+		if($completeId<=0||!\R::count('plagins_complete','id=?',[$completeId])){http_response_code(400);echo json_encode(['ok'=>false,'error'=>'bad_params']);exit;}
+		$active=\app\services\CompleteEngagement::toggleFavorite($completeId,$userId);
+		echo json_encode(['ok'=>true,'active'=>$active,'count'=>(int)\R::count('complete_wishlists','user_id=?',[$userId])]);exit;
 	}
 
 }

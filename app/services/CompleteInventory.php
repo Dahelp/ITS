@@ -40,15 +40,19 @@ class CompleteInventory
             $reserve = max(0, (int)($row['reserve'] ?? 0)); $free = max(0, $total - $reserve);
             $items[] = ['product_id'=>(int)($row['product_id']??0),'article'=>(string)($row['article']??''),'name'=>(string)($row['name']??''),
                 'required'=>$required,'stock'=>$total,'reserve'=>$reserve,'available'=>$free,'active'=>($row['hide']??'')!=='hide',
-                'sets'=>($row['hide']??'')==='hide'?0:intdiv($free,$required),'shortage'=>max(0,$required-$free)];
+                'sets'=>($row['hide']??'')==='hide'?0:intdiv($free,$required),'shortage'=>max(0,$required-$free),
+                'adjustment'=>(int)($row['stock_adjustment']??0)+(int)($row['modification_adjustment']??0)];
         }
         return $summary + ['items'=>$items];
     }
 
     private static function rows(int $id): array
     {
-        return \R::getAll('SELECT cp.qty, p.id AS product_id, p.article, p.name, p.quantity, p.reserve, p.hide,
-            COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = p.id), 0) AS modification_quantity
-            FROM plagins_complete_product cp LEFT JOIN product p ON p.id = cp.product_id WHERE cp.complete_id = ? ORDER BY p.name, p.id', [$id]);
+        $productAdjustment=(bool)\R::getCell("SHOW COLUMNS FROM product LIKE 'stock_adjustment'")?'p.stock_adjustment':'0';
+        $modificationAdjustment=(bool)\R::getCell("SHOW COLUMNS FROM modification LIKE 'stock_adjustment'")?'COALESCE((SELECT SUM(m.stock_adjustment) FROM modification m WHERE m.product_id = p.id),0)':'0';
+        return \R::getAll("SELECT cp.qty, p.id AS product_id, p.article, p.name, p.quantity, p.reserve, p.hide,
+            COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = p.id), 0) AS modification_quantity,
+            $productAdjustment AS stock_adjustment, $modificationAdjustment AS modification_adjustment
+            FROM plagins_complete_product cp LEFT JOIN product p ON p.id = cp.product_id WHERE cp.complete_id = ? ORDER BY p.name, p.id", [$id]);
     }
 }

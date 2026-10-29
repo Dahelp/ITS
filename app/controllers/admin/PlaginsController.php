@@ -1161,8 +1161,10 @@ class PlaginsController extends AppController {
 	
 	public function completeAction(){
 		\app\services\CompleteAvitoLinker::reconcile();
+        \app\services\CompleteEngagement::ensureSchema();
         $complete = \R::getAll("SELECT * FROM plagins_complete");
         $completeInventoryById=[]; foreach($complete as $row)$completeInventoryById[(int)$row['id']]=\app\services\CompleteInventory::forCompleteDetails((int)$row['id']);
+        $completeMetricsById=[]; foreach($complete as $row)$completeMetricsById[(int)$row['id']]=\app\services\CompleteEngagement::metrics((int)$row['id']);
         $completeAvitoById=[];
         if (\R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'complete_id'")) {
             $hasRemote=(bool)\R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'avito_publication_status'");
@@ -1173,7 +1175,13 @@ class PlaginsController extends AppController {
         }
 
         $this->setMeta('Комплекты из товаров');
-        $this->set(compact('complete','completeInventoryById','completeAvitoById'));
+        $this->set(compact('complete','completeInventoryById','completeAvitoById','completeMetricsById'));
+	}
+
+	public function completeCreateAvitoAction(){
+		$id=(int)($_POST['id']??0);
+		if($id<=0){$_SESSION['error']='Не выбран комплект';redirect(ADMIN.'/plagins/complete');return;}
+		try{$adId=\app\models\admin\Avito::createArchivedForComplete($id);$_SESSION['success']='Объявление комплекта создано по шаблону и сохранено в архиве. Проверьте поля и подтвердите готовность.';redirect(ADMIN.'/avito/edit?id='.$adId);}catch(\Throwable $e){$_SESSION['error']='Не удалось создать объявление комплекта: '.$e->getMessage();redirect(ADMIN.'/plagins/complete');}
 	}
 	
 	public function CompleteAddImageAction(){

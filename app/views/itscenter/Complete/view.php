@@ -172,7 +172,9 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                     <h1 class="product-title"><?=htmlspecialchars($complete->name ?? '', ENT_QUOTES)?></h1>
 
                                     <div class="product-rating-row">
-                                        
+                                        <span><i class="fas fa-star text-warning"></i> <?=(int)($completeMetrics['reviews']??0)?> отзывов</span>
+                                        <span><i class="fas fa-shopping-cart"></i> Куплено комплектов: <?=(int)($completeMetrics['sales']??0)?></span>
+                                        <span><i class="fas fa-bookmark"></i> В избранном: <?=(int)($completeMetrics['favorites']??0)?></span>
                                     </div>
 
                                     <?php if (!empty($filters)): ?>
@@ -296,6 +298,9 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                                             <?php else: ?>
                                                 <button class="btn btn-secondary" type="button" disabled>Нет в наличии</button>
                                             <?php endif; ?>
+                                            <button type="button" class="btn btn-outline-danger js-complete-favorite<?=$completeFavorited?' active':''?>" data-id="<?=(int)$complete->id?>" aria-pressed="<?=$completeFavorited?'true':'false'?>">
+                                                <i class="<?=$completeFavorited?'fas':'far'?> fa-bookmark"></i> <span><?=$completeFavorited?'В избранном':'В избранное'?></span>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -439,6 +444,13 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
 
                 <?php if(!empty($similarCompletes)): ?><section class="complete-items-premium"><div class="complete-items-premium__head"><h2>Похожие комплекты</h2><p>Другие готовые комплекты с актуальным количеством в наличии.</p></div><div class="complete-catalog-grid"><?php foreach($similarCompletes as $similarComplete)new \app\widgets\complete\Complete($similarComplete,$curr); ?></div></section><?php endif; ?>
 
+                <section id="complete-reviews" class="complete-items-premium">
+                    <div class="complete-items-premium__head"><h2>Отзывы о комплекте</h2><p>Отзывов: <?=count($completeReviews??[])?></p></div>
+                    <?php if($userId): ?><form method="post" class="card p-3 mb-4"><input type="hidden" name="complete_review" value="1"><div class="row g-3"><div class="col-md-2"><label class="form-label">Оценка</label><select class="form-select" name="point"><?php for($i=5;$i>=1;$i--):?><option value="<?=$i?>"><?=$i?></option><?php endfor;?></select></div><div class="col-md-10"><label class="form-label">Ваш отзыв</label><textarea class="form-control" name="content" rows="3" required minlength="3"></textarea></div><div class="col-12"><button class="btn btn-danger" type="submit">Добавить отзыв</button></div></div></form><?php else:?><p><a href="<?=PATH?>/user/login">Войдите</a>, чтобы оставить отзыв.</p><?php endif;?>
+                    <?php foreach(($completeReviews??[]) as $review): ?><article class="card p-3 mb-3"><div class="d-flex justify-content-between"><strong><?=htmlspecialchars($review['uname']?:'Покупатель',ENT_QUOTES)?></strong><span class="text-warning"><?=str_repeat('★',max(1,min(5,(int)$review['point'])))?></span></div><small class="text-muted"><?=htmlspecialchars((string)$review['date_post'],ENT_QUOTES)?></small><p class="mt-2 mb-0"><?=nl2br(htmlspecialchars((string)$review['content'],ENT_QUOTES))?></p></article><?php endforeach;?>
+                    <?php if(empty($completeReviews)):?><p class="text-muted">У этого комплекта пока нет отзывов.</p><?php endif;?>
+                </section>
+
                 <!-- Descriptions -->
                 <section class="desc-prod-inner bg-light shadow">
                     <ul class="nav nav-pills p-3" id="pills-tab" role="tablist">
@@ -542,3 +554,6 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
     </div>
     <!--end-single-->
 </span>
+<script>
+document.addEventListener('click',function(e){var b=e.target.closest('.js-complete-favorite');if(!b)return;fetch('<?=PATH?>/complete/favorite?id='+encodeURIComponent(b.dataset.id),{method:'POST',headers:{'X-Requested-With':'XMLHttpRequest'}}).then(function(r){if(r.status===401){window.location.href='<?=PATH?>/user/login';return null}return r.json()}).then(function(d){if(!d||!d.ok)return;b.classList.toggle('active',d.active);b.setAttribute('aria-pressed',d.active?'true':'false');b.querySelector('i').className=(d.active?'fas':'far')+' fa-bookmark';b.querySelector('span').textContent=d.active?'В избранном':'В избранное'})});
+</script>
