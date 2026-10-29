@@ -40,7 +40,7 @@ class CompleteAvitoLinker
 
     public static function indexes(array $completes): array
     {
-        $result = ['ids' => [], 'names' => [], 'aliases' => [], 'images' => []];
+        $result = ['ids' => [], 'names' => [], 'aliases' => [], 'images' => [], 'complete_tokens' => []];
         foreach ($completes as $complete) {
             $id = (int)($complete['id'] ?? 0);
             if ($id <= 0) continue;
@@ -48,6 +48,7 @@ class CompleteAvitoLinker
             self::add($result['names'], self::normalise((string)($complete['name'] ?? '')), $id);
             self::add($result['aliases'], mb_strtolower(trim((string)($complete['alias'] ?? '')), 'UTF-8'), $id);
             self::add($result['images'], mb_strtolower(basename((string)($complete['img'] ?? '')), 'UTF-8'), $id);
+            $result['complete_tokens'][$id] = self::tokens((string)($complete['name'] ?? ''));
         }
         return $result;
     }
@@ -83,6 +84,25 @@ class CompleteAvitoLinker
             $found = array_values(array_unique($indexes['names'][$name] ?? []));
             if (count($found) === 1) return ['id' => $found[0], 'method' => 'exact_name', 'ambiguous' => false];
             if (count($found) > 1) return ['id' => 0, 'method' => '', 'ambiguous' => true];
+
+            $adTokens = self::tokens($title);
+            $scores = [];
+            foreach ($indexes['complete_tokens'] ?? [] as $id => $completeTokens) {
+                $common = array_intersect_key($adTokens, $completeTokens);
+                $hasDimension = false;
+                foreach ($common as $token => $_) {
+                    if (preg_match('~\d+(?:[.,]\d+)?x\d+(?:[.,]\d+)?-\d+~', $token)) { $hasDimension = true; break; }
+                }
+                if (!$hasDimension || count($common) < 2) continue;
+                $coverage = count($common) / max(1, min(count($adTokens), count($completeTokens)));
+                if ($coverage >= 0.70) $scores[(int)$id] = $coverage;
+            }
+            arsort($scores);
+            $ids = array_keys($scores);
+            if (count($ids) === 1 || ($ids && ($scores[$ids[0]] - ($scores[$ids[1]] ?? 0)) >= 0.15)) {
+                return ['id' => (int)$ids[0], 'method' => 'title_signature', 'ambiguous' => false];
+            }
+            if ($scores) return ['id' => 0, 'method' => '', 'ambiguous' => true];
         }
         return ['id' => 0, 'method' => '', 'ambiguous' => false];
     }
@@ -92,6 +112,21 @@ class CompleteAvitoLinker
         $value = mb_strtolower(str_replace(['ё', '×'], ['е', 'x'], strip_tags($value)), 'UTF-8');
         $value = preg_replace('~[^\pL\pN]+~u', ' ', $value);
         return trim(preg_replace('~\s+~u', ' ', $value));
+    }
+
+    private static function tokens(string $value): array
+    {
+        $stop = array_flip(['комплект','комплекта','шин','шины','шина','для','на','и','екка','ekka','новые','новая','квадроциклов','квадроцикла','atv']);
+        $tokens = [];
+        $dimensionText = mb_strtolower(str_replace(['×', ','], ['x', '.'], $value), 'UTF-8');
+        if (preg_match_all('~\d+(?:\.\d+)?x\d+(?:\.\d+)?-\d+(?:\.\d+)?~', $dimensionText, $dimensions)) {
+            foreach ($dimensions[0] as $dimension) $tokens[$dimension] = true;
+        }
+        foreach (preg_split('~\s+~u', self::normalise($value), -1, PREG_SPLIT_NO_EMPTY) as $token) {
+            if (isset($stop[$token]) || mb_strlen($token, 'UTF-8') < 2) continue;
+            $tokens[$token] = true;
+        }
+        return $tokens;
     }
 
     private static function add(array &$index, string $key, int $id): void

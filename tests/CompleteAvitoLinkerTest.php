@@ -20,4 +20,6 @@ $match = CompleteAvitoLinker::match(['title' => 'Комплект шин 27×9-1
 linkerCheck($match['id'] === 26 && $match['method'] === 'exact_name', 'Normalised exact name');
 $match = CompleteAvitoLinker::match(['title' => 'Шина 27x9-14 P350 EKKA'], $index);
 linkerCheck($match['id'] === 0, 'A single tyre must not be linked');
+$match = CompleteAvitoLinker::match(['title' => 'Шины 27x9-14 / 27x11-14 P350 EKKA Комплект 4PR'], $index);
+linkerCheck($match['id'] === 26 && $match['method'] === 'title_signature', 'Legacy set title signature');
 echo "Complete Avito linker tests passed\n";
