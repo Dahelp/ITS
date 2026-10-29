@@ -97,6 +97,12 @@ jobs:
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && php8.2 -d display_errors=stderr -d log_errors=0 scripts/link_complete_avito_ads.php"
 
+      - name: Remove CDEK mentions from tire Avito ads
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
+            "cd '${{ secrets.BEGET_PATH }}' && php8.2 -d display_errors=stderr -d log_errors=0 scripts/remove_cdek_from_avito_tires.php"
+
       - name: Install complete reviews favorites and order attribution
         shell: bash
         run: |
