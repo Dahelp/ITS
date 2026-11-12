@@ -6,6 +6,11 @@ use app\models\admin\Avito;
 require dirname(__DIR__) . '/config/init.php';
 require CONF . '/db_bootstrap.php';
 
+\ishop\App::$app = \ishop\Registry::instance();
+foreach ((array)require CONF . '/params.php' as $key => $value) {
+    \ishop\App::$app->setProperty($key, $value);
+}
+
 function normalizedSize(string $value): string
 {
     $value = mb_strtolower($value, 'UTF-8');
