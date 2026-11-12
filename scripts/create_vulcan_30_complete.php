@@ -81,18 +81,22 @@ if ($existingId > 0) {
 } else {
     \R::begin();
     try {
-        $complete = \R::dispense('plagins_complete');
-        $complete->name = $name;
-        $complete->category_id = (int)$front['category_id'];
-        $complete->title = $name . ' — купить в ИТС-Центр';
-        $complete->description = 'Комплект новых шин Vulcan EKKA для квадроцикла: 2 шины 30x9-14 и 2 шины 30x11-14. Цена указана за полный комплект.';
-        $complete->keywords = 'комплект шин 30x9-14 30x11-14, Vulcan EKKA, шины для квадроцикла';
-        $complete->content = '<p><strong>Комплект шин Vulcan EKKA для квадроцикла</strong> состоит из четырёх новых шин: двух передних 30x9-14 и двух задних 30x11-14.</p><p>Шины подобраны по модели и рисунку протектора. Цена указана за полный комплект из 4 шин.</p>';
-        $complete->hide = 'show';
-        $completeId = (int)\R::store($complete);
-
-        $complete = \R::load('plagins_complete', $completeId);
-        $complete->alias = AppModel::createAlias('plagins_complete', 'alias', $name, $completeId);
+        \R::exec(
+            'INSERT INTO plagins_complete (name, category_id, content, title, description, keywords, alias, hide) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                $name,
+                (int)$front['category_id'],
+                '<p><strong>Комплект шин Vulcan EKKA для квадроцикла</strong> состоит из четырёх новых шин: двух передних 30x9-14 и двух задних 30x11-14.</p><p>Шины подобраны по модели и рисунку протектора. Цена указана за полный комплект из 4 шин.</p>',
+                $name . ' — купить в ИТС-Центр',
+                'Комплект новых шин Vulcan EKKA для квадроцикла: 2 шины 30x9-14 и 2 шины 30x11-14. Цена указана за полный комплект.',
+                'комплект шин 30x9-14 30x11-14, Vulcan EKKA, шины для квадроцикла',
+                '',
+                'show',
+            ]
+        );
+        $completeId = (int)\R::getCell('SELECT LAST_INSERT_ID()');
+        $alias = AppModel::createAlias('plagins_complete', 'alias', $name, $completeId);
+        \R::exec('UPDATE plagins_complete SET alias = ? WHERE id = ?', [$alias, $completeId]);
 
         $frontImage = trim((string)($front['img'] ?? ''));
         if ($frontImage !== '') {
@@ -100,9 +104,8 @@ if ($existingId > 0) {
             $mainName = 'vulcan-30-complete-' . $completeId . ($ext ? '.' . $ext : '');
             copyCompleteImage(WWW . '/images/product/baseimg/' . $frontImage, WWW . '/images/complete/baseimg/' . $mainName);
             copyCompleteImage(WWW . '/images/product/mini/' . $frontImage, WWW . '/images/complete/mini/' . $mainName);
-            $complete->img = $mainName;
+            \R::exec('UPDATE plagins_complete SET img = ? WHERE id = ?', [$mainName, $completeId]);
         }
-        \R::store($complete);
 
         foreach ([$front, $rear] as $product) {
             \R::exec(
