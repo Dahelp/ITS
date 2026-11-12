@@ -34,6 +34,23 @@ jobs:
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "mkdir -p '${{ secrets.BEGET_PATH }}' && echo 'Beget SSH connection OK'"
 
+      - name: Preserve verified recovery baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cat /home/s/shinaspec/recovered-verified-20261113/manifest.json" > /tmp/its-verified-baseline.json
+          python3 - <<'PY'
+          import hashlib, json, pathlib, sys
+          data = json.loads(pathlib.Path('/tmp/its-verified-baseline.json').read_text())
+          files = data['files']
+          mismatches = [p for p, sha in files.items() if not pathlib.Path(p).is_file() or hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() != sha]
+          if mismatches:
+              print('Deployment stopped: checkout differs from the verified live recovery baseline. Integrate the recovered files before approving a new baseline.')
+              print('\n'.join(mismatches))
+              sys.exit(1)
+          print('Verified recovery baseline preserved:', len(files), 'files')
+          PY
+
       - name: Deploy files
         shell: bash
         run: |
@@ -63,6 +80,8 @@ jobs:
             --filter='protect public/css/home-preview.css' \
             --filter='protect public/js/home-preview.js' \
             --filter='protect public/images/home-preview/***' \
+            --filter='protect public/images/home/***' \
+            --filter='protect public/images/category/***' \
             --filter='protect public/images/complete/baseimg/***' \
             --filter='protect public/images/complete/mini/***' \
             --filter='protect public/images/complete/gallery/***' \
