@@ -1,0 +1,419 @@
+{
+  "generated_on": "2026-10-30",
+  "method": "built-in image_gen",
+  "assets": [
+    {
+      "key": "special-honeycomb-10-10",
+      "group": "special",
+      "series": "Сота 10/10",
+      "caliber": "10/10",
+      "filename": "snow-chain-special-honeycomb-10-10-v1.webp",
+      "product_count": 1,
+      "original_sha256": "7c4f509cff60a880a986b99029bd1646d437afc1aa2951de005697a3468e405b"
+    },
+    {
+      "key": "special-ladder-8-8",
+      "group": "special",
+      "series": "Лесенка 8/8",
+      "caliber": "8/8",
+      "filename": "snow-chain-special-ladder-8-8-v1.webp",
+      "product_count": 1,
+      "original_sha256": "d6d9bd6b8f6f8855f899fd296780f157ea61efbae42455c177ae7749b1174ef8"
+    },
+    {
+      "key": "special-ladder-10-8",
+      "group": "special",
+      "series": "Лесенка 10/8",
+      "caliber": "10/8",
+      "filename": "snow-chain-special-ladder-10-8-v1.webp",
+      "product_count": 1,
+      "original_sha256": "a2b9377e8fff563c3de92e39ddd1a5f1d19fb8e334340104269285d105e6af22"
+    },
+    {
+      "key": "special-ladder-10-10",
+      "group": "special",
+      "series": "Лесенка 10/10",
+      "caliber": "10/10",
+      "filename": "snow-chain-special-ladder-10-10-v1.webp",
+      "product_count": 1,
+      "original_sha256": "75cdd22860a01595b8fcf8b4ecc620e46ba4324894dfe12e86efc900b6964991"
+    },
+    {
+      "key": "forklift-ladder-6-6",
+      "group": "forklift",
+      "series": "Лесенка 6 мм",
+      "caliber": "6/6",
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "product_count": 18,
+      "original_sha256": "9ba97a64907cd90ada6ea89bdaf9dc2b64542fc33e46d53d8aca3b2f9dd4b5b9"
+    },
+    {
+      "key": "forklift-ladder-8-6",
+      "group": "forklift",
+      "series": "Лесенка 8/6 мм",
+      "caliber": "8/6",
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "product_count": 9,
+      "original_sha256": "160281ec6e58c71a52947b1bc09d0d183311b4805160891c5b0462beeccd255a"
+    },
+    {
+      "key": "forklift-honeycomb-6-6",
+      "group": "forklift",
+      "series": "Сота 6 мм",
+      "caliber": "6/6",
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "product_count": 16,
+      "original_sha256": "b8fe303df56b1230f576bbf99623114b35e40117ca99a6df246309586a98651a"
+    },
+    {
+      "key": "forklift-honeycomb-8-8",
+      "group": "forklift",
+      "series": "Сота 8 мм",
+      "caliber": "8/8",
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "product_count": 6,
+      "original_sha256": "32b2fb99ed98f0c2231bdf7aabeb156a3897cd3e6b6011df44e71483591b7366"
+    },
+    {
+      "key": "forklift-zigzag-8-6",
+      "group": "forklift",
+      "series": "Сота (Зигзаг) 8/6 мм",
+      "caliber": "8/6",
+      "filename": "snow-chain-forklift-zigzag-8-6-v1.webp",
+      "product_count": 2,
+      "original_sha256": "372baa40ca6a13eb5cc347de6407b6794039342e3731e529345282e0f07fc317"
+    }
+  ],
+  "products": {
+    "TSEP-F673331FA546": {
+      "filename": "snow-chain-special-honeycomb-10-10-v1.webp",
+      "series": "Сота 10/10",
+      "group": "special",
+      "alias": "cepi-spectehnika-sota-10-10-pod-zakaz"
+    },
+    "TSEP-B8D70A161A1A": {
+      "filename": "snow-chain-special-ladder-8-8-v1.webp",
+      "series": "Лесенка 8/8",
+      "group": "special",
+      "alias": "cepi-spectehnika-lesenka-8-8-pod-zakaz"
+    },
+    "TSEP-FE9C3F3C1681": {
+      "filename": "snow-chain-special-ladder-10-8-v1.webp",
+      "series": "Лесенка 10/8",
+      "group": "special",
+      "alias": "cepi-spectehnika-lesenka-10-8-pod-zakaz"
+    },
+    "TSEP-93662123F1D6": {
+      "filename": "snow-chain-special-ladder-10-10-v1.webp",
+      "series": "Лесенка 10/10",
+      "group": "special",
+      "alias": "cepi-spectehnika-lesenka-10-10-pod-zakaz"
+    },
+    "TSEP-40B1A608A8EF": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-4-00-8"
+    },
+    "TSEP-F07271C9FC8F": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-5-00-8"
+    },
+    "TSEP-1FDB9B5D8A24": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-18x7-8"
+    },
+    "TSEP-574083B8B2F3": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-6-00-9"
+    },
+    "TSEP-1AB4806D40D8": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-21x8-9"
+    },
+    "TSEP-0F3781D9E3DF": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-6-50-10"
+    },
+    "TSEP-AE03D6CA1FDA": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-23x9-10"
+    },
+    "TSEP-1A9F853CD274": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-4-5-12"
+    },
+    "TSEP-22BA99153559": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-7-00-12"
+    },
+    "TSEP-7142427BCAE0": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-23x10-12"
+    },
+    "TSEP-0EA5BAF130B2": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-27x10-12"
+    },
+    "TSEP-CB4AC04F7D9F": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-6-00-13"
+    },
+    "TSEP-94036656E316": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-8-15-15-28x9-15"
+    },
+    "TSEP-1B407DE55D57": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-8-25-15"
+    },
+    "TSEP-915211A68270": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-250-15"
+    },
+    "TSEP-01B6AF102134": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-300-15"
+    },
+    "TSEP-80FC8E398A0D": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-10-16-5"
+    },
+    "TSEP-B73F5B45C15E": {
+      "filename": "snow-chain-forklift-ladder-6-6-v1.webp",
+      "series": "Лесенка 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-6-6-12-16-5"
+    },
+    "TSEP-B7027D0E9F26": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-6-50-10"
+    },
+    "TSEP-9E610DA05881": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-7-00-12"
+    },
+    "TSEP-350931A3CDDC": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-27x10-12"
+    },
+    "TSEP-F97CAEC332A7": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-8-15-15-28x9-15"
+    },
+    "TSEP-5ADE96588CBF": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-8-25-15"
+    },
+    "TSEP-CF9B21F68102": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-250-15"
+    },
+    "TSEP-95F08D5BAF36": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-300-15"
+    },
+    "TSEP-4EDC7338F4EE": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-10-16-5"
+    },
+    "TSEP-388E7B218C47": {
+      "filename": "snow-chain-forklift-ladder-8-6-v1.webp",
+      "series": "Лесенка 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-lesenka-8-6-12-16-5"
+    },
+    "TSEP-5801055E9C9F": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-5-00-8"
+    },
+    "TSEP-A5D37C6EFD33": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-18x7-8"
+    },
+    "TSEP-07D87EA9B681": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-6-00-9"
+    },
+    "TSEP-761B89D3037F": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-21x8-9"
+    },
+    "TSEP-4DA6F5D412EC": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-6-50-10"
+    },
+    "TSEP-4E499357C858": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-23x9-10"
+    },
+    "TSEP-31D6ACDDFD03": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-7-00-12"
+    },
+    "TSEP-19A96F1D2608": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-23x10-12"
+    },
+    "TSEP-0CEFF0C92200": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-27x10-12"
+    },
+    "TSEP-D96FECBC7E08": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-6-00-13"
+    },
+    "TSEP-378642232913": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-8-15-15-28x9-15"
+    },
+    "TSEP-20CD0E0105B1": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-8-25-15"
+    },
+    "TSEP-C23BBA95DFC9": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-250-15"
+    },
+    "TSEP-A36F3D35221A": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-300-15"
+    },
+    "TSEP-07CB8615008B": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-10-16-5"
+    },
+    "TSEP-77273366832A": {
+      "filename": "snow-chain-forklift-honeycomb-6-6-v1.webp",
+      "series": "Сота 6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-6-6-12-16-5"
+    },
+    "TSEP-9C5A9FD11E4A": {
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "series": "Сота 8 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-8-8-8-15-15-28x9-15"
+    },
+    "TSEP-EDFE9CB8F4E6": {
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "series": "Сота 8 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-8-8-8-25-15"
+    },
+    "TSEP-66268D0F43E5": {
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "series": "Сота 8 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-8-8-250-15"
+    },
+    "TSEP-125AFDD6B5EA": {
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "series": "Сота 8 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-8-8-300-15"
+    },
+    "TSEP-42D46CBAB714": {
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "series": "Сота 8 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-8-8-10-16-5"
+    },
+    "TSEP-19FF58452D84": {
+      "filename": "snow-chain-forklift-honeycomb-8-8-v1.webp",
+      "series": "Сота 8 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-8-8-12-16-5"
+    },
+    "TSEP-5325125BA085": {
+      "filename": "snow-chain-forklift-zigzag-8-6-v1.webp",
+      "series": "Сота (Зигзаг) 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-zigzag-8-6-6-50-10"
+    },
+    "TSEP-94187A87EB1F": {
+      "filename": "snow-chain-forklift-zigzag-8-6-v1.webp",
+      "series": "Сота (Зигзаг) 8/6 мм",
+      "group": "forklift",
+      "alias": "cepi-pogruzchiki-sota-zigzag-8-6-7-00-12"
+    }
+  }
+}

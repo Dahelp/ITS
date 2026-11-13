@@ -1,0 +1,758 @@
+{
+    "app/controllers/CartController.php": {
+        "before": "5f8da82ccde373b73fac588dd744ed30dc5401fe135f08f067410c96d2ec5f65",
+        "after": "5d4e40f200d34a4e339e9c6b18cfc71028eebcda08196454b3c484477e7153e1"
+    },
+    "app/controllers/CronController.php": {
+        "before": "28c4056c44def41ffa6f481bcbf140a20aed0d2e3bb3e14eae9d9c79233b9286",
+        "after": "370b44b39c7e0be2ea46c8288fbc351ae00a0b112b23c99c84b45b9863917813"
+    },
+    "app/controllers/UserController.php": {
+        "before": "ee1880d516948fac2e0ac2c666ed5bb29c4eff910bd406add778fdb82b327451",
+        "after": "93744614da4b41badf2645509c88b8c081bb191b18aee9952af80a63a405d0e3"
+    },
+    "app/controllers/admin/CatalogWorkflowController.php": {
+        "before": "f45e8a763ded7ff49f8bd1ee45194cb83e0fdf497a4e8d6129a08b933a5ec9fe",
+        "after": "f77b010933511e1b2dc7fe8d88a33794f34a2e29e2b7d3573708f560840d8be7"
+    },
+    "app/data/catalog-properties-v1.json": {
+        "before": "7e46ac9e8024fffe42310ac1792c4b6cf9a11fc3f347d66095d304f3ae4c986b",
+        "after": "612814108557668d1b903137631fdcc8ccc6948d6fb17458db7e3a14d44f9dd5"
+    },
+    "app/data/chain-category-images.json": {
+        "before": null,
+        "after": "d37c4e41936e62a24d7334ba10ec3ecb5d3d3866e6ab93927ddffa48af430b93"
+    },
+    "app/data/chain-seo-content.json": {
+        "before": null,
+        "after": "af83051528651976506098d3cdcd83b58a2348cfe39cbecbdbc2d400b4cc9e5a"
+    },
+    "app/data/tsep-chain-images.json": {
+        "before": null,
+        "after": "89dc40eff0e1b4b5c930d66c56d0a24c2d6983bb345fad76eff83ddedb9dad9e"
+    },
+    "app/data/tsep-chains.json": {
+        "before": null,
+        "after": "60b0e9984f6dd52021267cc86f21e2b8f520bb9a99d563f3aac796357a6fcb21"
+    },
+    "app/models/Cart.php": {
+        "before": "cd84e62cf8071068946c519f49bb8e2c2705418180b21f8a88a1e9d067930182",
+        "after": "aa5b40a22f7ed47cc27a2dd035f10cb35530be8efa8d798ef09ea0c40f1abd9d"
+    },
+    "app/models/Order.php": {
+        "before": "1c3e0d7772c167446172ac39161510ccaea2f31cc5cbb446314bb1bf3712f10c",
+        "after": "b23d6ed0ea5b21ec4f10ede4313a7bbf07414d8879f1febf25aa5a4071c8d8ed"
+    },
+    "app/models/User.php": {
+        "before": "490bfd45647ec85545ac468b83c141762472583f6b7377ac0bd597c9eff6ad20",
+        "after": "e3a29b31f132b8e1edf308d9ea71e8da55d856100c6828a6aa8d14b5f5a1b533"
+    },
+    "app/services/CartRepeat.php": {
+        "before": null,
+        "after": "e238120a4745bd658555bbc58b08ced6add88daf64b42336c77ae2904b6b458b"
+    },
+    "app/services/CatalogFeedAudit.php": {
+        "before": null,
+        "after": "fafd38af6ca2102e30503af90d1c5eefde2c9ff42671259a7062a586b28a1cdb"
+    },
+    "app/services/CatalogLegacyPreview.php": {
+        "before": "63e9358650a785ee900615f58e8d24c723559b228c20fcc4a220809f9183726c",
+        "after": "010a91ddea80f93db2dc7d126e8a20586bd1a403e1a9b870298eddfcc7db6025"
+    },
+    "app/services/CatalogTaskStatus.php": {
+        "before": null,
+        "after": "83cd05abb9e388253edc089fe0923a819620535a84ca40351868ff0e9624fbec"
+    },
+    "app/services/CatalogUpdateHealth.php": {
+        "before": null,
+        "after": "85e827f19dc7f8505d3fd99297a965ea7723fe5135dae71328c9f2c3f2475a32"
+    },
+    "app/services/ChainSeoContent.php": {
+        "before": null,
+        "after": "7278c455ae7fef8ae3235ead13132bce9cdc442213f3aba193d27fee109dc7d1"
+    },
+    "app/services/CompleteInventory.php": {
+        "before": "41cfad6938d63da769b47cf84cf9771dd305bc565c830eed66f7993b7fadc015",
+        "after": "ce768121716f762c84299b465ece9e28eceaef59d09573d754d05843c4994b33"
+    },
+    "app/services/CompleteSimilar.php": {
+        "before": "05d48f54583095281e9b9948616757fb890b3fab870358d84c9aa59aea0ed6b9",
+        "after": "f7a74019322d887ca8ce3ca3b7c4667323ccc9be918013b106a51efa62950051"
+    },
+    "app/services/DirectGallerySelection.php": {
+        "before": null,
+        "after": "0215cb05d0e70fafa17455c2ae5602904fd9d09d0139d60e242c137ff0b9b0de"
+    },
+    "app/services/HomePreviewCatalog.php": {
+        "before": "121811b56169e1c527f05b53c3c9342ae9c1ec3c5fbff5779ad4b7ee098912af",
+        "after": null
+    },
+    "app/services/InventorySyncService.php": {
+        "before": "b2ea9f8d3449ab2b813472c62293a20e3883db997009b4a0dc72e0a72947a6d8",
+        "after": "01ae182101b358342770607529e6da251a5d735778f302deb33a82d7a1e2fc7f"
+    },
+    "app/services/MerchantTyreAttributes.php": {
+        "before": null,
+        "after": "04bccff0c73b79d889d793a8a970e0b1c16efcab2261f9b56ab2672c516b3a63"
+    },
+    "app/services/SpecialTyreFeedService.php": {
+        "before": "9306877624cc5d7e9b868ddfa14eda313a3680ff28ad5155bb63401d2776de64",
+        "after": "6214831ec7ade84eaded1423c9c63b5b905497223e50e6e9f54973dd02f042d3"
+    },
+    "app/services/YandexProductsCabinet.php": {
+        "before": "c85b6bf96853e6bbce50a99f68f774e7c7f952635db44fda95c822c0d25648d5",
+        "after": "acdc2117e41efe89daccaf3590f46b8e04802138ca399d17c0ce2a9688320f69"
+    },
+    "app/views/itscenter/Cart/cart_table.php": {
+        "before": "e4b391b5cb03930624a546f5e9ad937157d713cb1db0f7ec2c5a96db31774132",
+        "after": "d5359fd21e95f5b6a57dd468f257eebc35703e3af66cd6e216608f4dc3402ade"
+    },
+    "app/views/itscenter/Cart/promo_block.php": {
+        "before": null,
+        "after": "2413684f3835958c7343c3eb008efec0ad2612c25e40abbbda820cf33119a6e4"
+    },
+    "app/views/itscenter/Cart/view.php": {
+        "before": "71f35c23f758cb191989f3d51f3b55b40d7d24f849391634d4943ec0badaa39c",
+        "after": "c80ed7e78b039dea236e09bde97332c0cd69330d139690425b6cd79c8ecf81e5"
+    },
+    "app/views/itscenter/Comparison/index.php": {
+        "before": "dde04e264f04e5fbfde094231f4fda293adb5db1e3e1b218c88dbbc91c39dcdd",
+        "after": "5607050fcddee84a35009fd1848acdedaf1a269a19e8a92a1714f40da9be7622"
+    },
+    "app/views/itscenter/Complete/view.php": {
+        "before": "abd86d6cbd01a8c64a19a545c876d1b24e7b6cbb2f5bd7bb6cfbfd7f3ccd6cdc",
+        "after": "9b23c08e07065dd4425a5a3cd5f278fb1b4e4e7788649224b13c70353fbaca9a"
+    },
+    "app/views/itscenter/Cron/ymlfid-gallery.php": {
+        "before": null,
+        "after": "73e737ed39a4a20e0cb464eb6dc844e95c829e148d7cd3904894acde2e3668b1"
+    },
+    "app/views/itscenter/Cross/view.php": {
+        "before": "a650e16b2bc5e2953b425cc5314d090081bcdfa342f082361d1fd70f1823de5b",
+        "after": "0a0d83cc103def62898b2f213b00689877907bffe248ac92d7a9b4dcecbf380c"
+    },
+    "app/views/itscenter/Product/view.php": {
+        "before": "89d6e883e3a40fd590515176bbbaff7b8d32590e2e2045ad3f4421e727bce1b6",
+        "after": "eb8e4ad7082417ce08b5645407f5a3d43dfc2c4b0f200bdcfbab406daaac90fc"
+    },
+    "app/views/itscenter/Technics/view.php": {
+        "before": "d56cadf4d047f92454dc6a2ae80da763db9c324ec51d94ae60c6d8de730e16a3",
+        "after": "10d141d4f9dfa1c73482080ddb4e7cf1ddcbd08bc4b4597fe816a81de30058f1"
+    },
+    "app/views/itscenter/User/bookmarks.php": {
+        "before": "b1c79fb5e93ae159b20742e1d297d940498a24d23019f89d425078259bde7f15",
+        "after": "d9070142818078f674f81fd61560e919fbfed4ea311f93b02eb2a134d6a4df11"
+    },
+    "app/views/itscenter/User/order.php": {
+        "before": "6920606e7b6de78676b866d5734db948c54e66820138616f749777b85f7fe274",
+        "after": "208fe33b68a2c9c1b8c60fa1922491a6e0c6a880bf9d49234d57cd1ccf5c37bc"
+    },
+    "app/views/itscenter/User/orders.php": {
+        "before": "0a51ae29dcb55052bc82d22f41f5e4f2c469c66fe5dd15760b2937014a39a87d",
+        "after": "ba537386d4ed1359d58567259ff4755d98f4e2a7e917ddf1c711732fa852980d"
+    },
+    "app/views/itscenter/admin/CatalogWorkflow/index.php": {
+        "before": "c71ac4722b47d8cf27d40e826df9e4d692f5f44509ac444638f45eef0d57d50e",
+        "after": "9da6ae07426140884889d08f4addec3b10d8bc4e7b7f1d254ecdf8bae78126b7"
+    },
+    "app/views/itscenter/admin/CatalogWorkflow/updates.php": {
+        "before": null,
+        "after": "40c7a2872b1febd4be0565018bbc5fc1cfc9bd2630cbd42fe1e18fda6d43387d"
+    },
+    "app/views/itscenter/admin/Plagins/complete-add.php": {
+        "before": "74c2d1f2f2bb68a9b8d1931accba5b8bf0affdbf4be3ad6df52038ffa51d6ccf",
+        "after": "3191a07c51c0738c3a634d06a493b05495f86743c5eecc39793a4ee29ff4c002"
+    },
+    "app/views/itscenter/admin/Plagins/complete-edit.php": {
+        "before": "f6d2f5aeebd09624e9dff902179e541e1ce153bf96e7c1b38fad0d9a2c635621",
+        "after": "5fc2d391302e059f2718d55e9378b8a8157c3a33da05b885021d2fd0b5d997c2"
+    },
+    "app/views/itscenter/admin/Plagins/yandex-tovars.php": {
+        "before": "7d24444d1d53f61f1cc108aadba69d6df31fdfefd5f33c4ce881a98e6457cc52",
+        "after": "79d6124110a915560ec8f1507dc905d7ea356dfb44e5913dfb8f797b15094d54"
+    },
+    "app/views/itscenter/admin/Product/copy.php": {
+        "before": "08c7bdd8b4a823035f8c185ede4b752d890b718b5429c7936dcba7ac7a28b858",
+        "after": "e0663c9766fc520ce9ecab43f384350e38c59bd27b241e638267338a9528db30"
+    },
+    "app/views/itscenter/admin/Product/edit.php": {
+        "before": "5a37c21ba00b8133e3b0faf4a43ff0cbd087653aa1e86c0a0e5a1b7614e44ec3",
+        "after": "7b2fa9ba68cc5d8a94e3b05de1843d25b8faeb4c9e2c10b1609bb7da34880369"
+    },
+    "app/views/itscenter/admin/partials/catalog-workflow-nav.php": {
+        "before": "3b917983687e5b7e6dd71c275f6456a3be59538d497d48fe5cf23b38f2fb4cd4",
+        "after": "3e3841cfe77ff3bfc76f4d5819e15e1762fbdd9fceaa9340af455327314b08a8"
+    },
+    "app/views/itscenter/partials/footer.php": {
+        "before": "e9bb5121d2352418bd970fb9c13f200bf7a9857c6565b49ff4868fea50a20e74",
+        "after": "c4ad413239278bbd7775d84aad458ece20803002bf74592cb23c1b6ea92402c5"
+    },
+    "app/views/itscenter/partials/header.php": {
+        "before": "96a978ef292c486fa534e86b50ec311f4b9f18abc475e1f16c94663944cc9de5",
+        "after": "7045920cb4ffdd3cb8328e875e894090e108054abeb662b23f3845aa53c3c00b"
+    },
+    "app/views/itscenter/partials/modals.php": {
+        "before": "1380896db628e8c9c82e1fa8a59d02c00f8e5147ef5a19a1b519b5f2234a4bde",
+        "after": "fb78377283e75d92cf8a0363379bf55bbd0c83d16b30615fd0d9f803b524c682"
+    },
+    "app/widgets/complete/Complete.php": {
+        "before": "3c41d8ae83655f7f41c7770f16ea12820d33260b4c7e9124b921d2fe23eb26a6",
+        "after": "e4b23a9c54cb7ee99889850433b1fe00a16e8c50e518eb1e9dd7d210ae033f62"
+    },
+    "bin/audit_catalog_foundation.php": {
+        "before": null,
+        "after": "54ce0f77e01899ab8cee71125f4dfa89d956097acf4ad2459d36ab28611fbba2"
+    },
+    "bin/audit_merchant_tyres.php": {
+        "before": null,
+        "after": "328d4b387e5970c17964dc0b6632746b38e3888d6203ed1b7c00a42d1e444ee0"
+    },
+    "bin/collect_tsep_chains.php": {
+        "before": null,
+        "after": "b862e8f3b0e8285896462d9ac1d96d3e02ab05ab3d84a7d3cbcbc2f03f97127f"
+    },
+    "bin/export_low_stock_tires.php": {
+        "before": "a30939e79b4c8dfafdbd35baf0b3ec8dfc12a83f9392e74fd5b088501d8af5d6",
+        "after": null
+    },
+    "bin/generate_direct_gallery.php": {
+        "before": null,
+        "after": "bec4fa103a84af5d8bb549c20146dbc54efba4427dd7acef76b7618b7bdd7d60"
+    },
+    "bin/prepare_chain_category_images.php": {
+        "before": null,
+        "after": "d1b226f3ba67acbfe4f56d3ac19ff3ceda55794144ba463034430f30085f4418"
+    },
+    "bin/prepare_chain_filter_repair.php": {
+        "before": null,
+        "after": "beb5b5cacce4a8575a3a20196cb96e6cf376731d30ad9de4cec2ebec80a4e448"
+    },
+    "bin/prepare_chain_seo.php": {
+        "before": null,
+        "after": "600d0f3bd94e22b9260e857d873e641643f0bb634ddc02b9d87f4d20fae86fca"
+    },
+    "bin/prepare_tsep_chain_image_plan.php": {
+        "before": null,
+        "after": "2dea208754de6e7f0b4a7eb09c2b5ab90346dd124b339083e78d261b4348078c"
+    },
+    "bin/prepare_tsep_chain_images.php": {
+        "before": null,
+        "after": "a150ff26f9e33edb22442f25e9adb61d0c61415a941fe51702967942073a27e9"
+    },
+    "bin/register_direct_gallery.php": {
+        "before": null,
+        "after": "32f771f3bbed53d24fa7ff18932ba98a45ae5ce601bc7113b8284b856dc97cea"
+    },
+    "bin/sync_inventory_api.php": {
+        "before": "2106eec4127c732c2a61084536bf0b3dde002cee3b04b978663064debd12e5fa",
+        "after": "15b25594962b26cd5d7fe5332b1cb5a9b4a1668b0572b72ea115a9421536488c"
+    },
+    "bin/verify_chain_category_images.php": {
+        "before": null,
+        "after": "5943e4dcb04e82a82104263eaaba064df2af5515c039fa13985e1292d8310779"
+    },
+    "bin/verify_chain_filter_repair.php": {
+        "before": null,
+        "after": "6df2edde59e523a00372ac96927fa877d7de7c5e3a98190473fc444e137c93bb"
+    },
+    "bin/verify_chain_seo.php": {
+        "before": null,
+        "after": "663b07fb6bbc1519876f853bde7f9d15d22c8e223997f034fa593f0cb10d3157"
+    },
+    "bin/verify_tsep_chains.php": {
+        "before": null,
+        "after": "c5eee81c37d132170eeb7df9622f7ad3a2ae78299240317e23732a6deb17593e"
+    },
+    "public/cron/run_task_cli.php": {
+        "before": "fe2f87a33770fc9bb0e6da76af991c66e8b8624f81bd2da4889fa52fd12b917d",
+        "after": "0a7c2bdb28d1efa7054bd8a94bacd13ea445d0858a8c896af26f3a956d4effba"
+    },
+    "public/css/home-preview.css": {
+        "before": "b413fc7640f025f871857585898cd371dd7309c1a05141816fa1032cf43af7cd",
+        "after": null
+    },
+    "public/css/style.css": {
+        "before": "d6ead30803c41c86e8031f66c867c725eef493df893c41910a72cd5358010194",
+        "after": "ef9d24ac19e47d6ef2a12e4bf26939a601df86012004e6eb4c924255f241be36"
+    },
+    "public/images/home-preview/advantages-team-cartoon.webp": {
+        "before": "dcb5bcb11d8a86d722cf86f9a9885ee2a8ca182c5d11c9bc231a1d6af42bff90",
+        "after": null
+    },
+    "public/images/home-preview/atv-eos-studio.webp": {
+        "before": "2eda6458c6b60dc67b2165d492f15ef3f294d44d6f7faf67af0b054a14baca3b",
+        "after": null
+    },
+    "public/images/home-preview/atv-knight-studio.webp": {
+        "before": "cfd1ceefe634db2694ea57f43d6ef8c9fe98a1c98544eedbc08bcbae535f2b66",
+        "after": null
+    },
+    "public/images/home-preview/atv-p311-studio.webp": {
+        "before": "ba02ec97058e132863eafd8ab16dab84bb3e97e4a58502ed8531076e0920613f",
+        "after": null
+    },
+    "public/images/home-preview/atv-p357-studio.webp": {
+        "before": "b259732b25277d6003140f4389dc8ffb55f1fcb2e718c587d10ff6f48ffe3d08",
+        "after": null
+    },
+    "public/images/home-preview/callback-mascot-red.webp": {
+        "before": "998868a9398f6c897a220b3dd07a93077d9a897f24679a7d284d74b220b09c98",
+        "after": null
+    },
+    "public/images/home-preview/company-mascot-seated.webp": {
+        "before": "8e062a94342370bd18d8f2258500ae5af0e891ecb11885ae752aa7c8d95021c2",
+        "after": null
+    },
+    "public/images/home-preview/template-art.webp": {
+        "before": "62dff4ceb62653ee742266c761198ad19d0df05a81f2238e5725ba4f8a51c7d1",
+        "after": null
+    },
+    "public/images/home-preview/wheel-rims.webp": {
+        "before": "f65db4f14e9a7ef7fb8f1ce94bc6391417fa4dabf2f30b3e6a38ab238a2fccc5",
+        "after": null
+    },
+    "public/images/home/advantages-team.webp": {
+        "before": null,
+        "after": "792e8dc17b5def45bf7478e43425b0d442e585b8f0f73c1bdb80d00d2db8e13d"
+    },
+    "public/images/home/forklift.webp": {
+        "before": null,
+        "after": "be93cda2ea9bf9365ec487503eb4c60798629d89f89f3fc445ab67d8b9d8f09d"
+    },
+    "public/images/home/skid-steer.webp": {
+        "before": null,
+        "after": "1578890155634924f88e66fe96471e846a0ec620be5dc408e3a1e25754affa7c"
+    },
+    "public/images/home/wheel-loader.webp": {
+        "before": null,
+        "after": "53262c93de3d9c4c25dee84df68fc5a5dbbf421368369366119ad86245b33431"
+    },
+    "public/images/home/wheeled-excavator.webp": {
+        "before": null,
+        "after": "5ccfca22768e275d00444e997ac19e02334818becfba627b8cfeec328afef46e"
+    },
+    "public/js/home-preview.js": {
+        "before": "2de711bae8d5f888e57bc2fb208b7e32818bcbdebdd3c02524cd7c276873e52c",
+        "after": null
+    },
+    "public/js/main.js": {
+        "before": "934f0df69be939a7430eafa1886cb1be4a550ae8613d15aec09f8dfb016de92b",
+        "after": "33f279f3860a7a80c0391f0890dc469212ac679688a691ca60b6dcaf7225f28d"
+    },
+    "scripts/analyze_catalog_foundation.mjs": {
+        "before": null,
+        "after": "fe5cc8ed511c3224407f8a4fa87f02f35e62187a107602ac7a5a85c92c8b01cb"
+    },
+    "scripts/apply_approved_panel_shadow.php": {
+        "before": null,
+        "after": "16e32c3dc3ed29111844cfcfbae0f0ec7ffc944e036bd7c4c347a8cb6fe38be7"
+    },
+    "scripts/audit_catalog_stage7.php": {
+        "before": null,
+        "after": "57dfa363b7c33849b385d72976cde2ca765f6d0904b6ba63c2603e3b23ae3a7b"
+    },
+    "scripts/audit_catalog_stage9.php": {
+        "before": null,
+        "after": "6adcf87cd052f09834e2ec124316bc1feef722e67a3db4215632793452b1578d"
+    },
+    "scripts/audit_category_sizes.php": {
+        "before": null,
+        "after": "71d42d16d53693195d94efacff4bd73c5d2c1eea70ab05a18bc220111aebae49"
+    },
+    "scripts/build_cart_recovery.php": {
+        "before": null,
+        "after": "af396a23d5fd66c7669497a4a8f7d9a35d64376252ae05c6d5619cc02b0e8268"
+    },
+    "scripts/build_complete_recovery.php": {
+        "before": null,
+        "after": "50e8a8fd06bd6695c9101647a945b211629784fb32da8aaea6c170a249fee0cb"
+    },
+    "scripts/build_confirmed_recovery.php": {
+        "before": null,
+        "after": "8a75e79390129f8a26c4a82f1e1f6b6092a9b144ea90deffe39bda857df61072"
+    },
+    "scripts/build_project_chat_recovery_ledger_20261113.php": {
+        "before": null,
+        "after": "65884ff9338db49c1e796821aa6e6a307f2f1fc3d964f09904f4d27c0042bebe"
+    },
+    "scripts/build_recovery_control_report.php": {
+        "before": null,
+        "after": "9c09aafc0a3be452eb02a1c6b16025a02ddb67efd4b72c03fb1e0b4daa0e9eeb"
+    },
+    "scripts/build_rollback_restoration.php": {
+        "before": null,
+        "after": "0b459ef39dbbc6d5a20f389d9d25328d1b561fa275375e293e1a6e9d8e00543d"
+    },
+    "scripts/build_rollback_restoration_followup.php": {
+        "before": null,
+        "after": "6b2c807ad5388f73e8824e60d73ee7cf350532d17fcf14a936aa4437f078068e"
+    },
+    "scripts/build_stock_rollback_restoration.php": {
+        "before": null,
+        "after": "2c45d40fc9e5c328a319188cbb65d31b66a1638accf2ac22823482166701fd17"
+    },
+    "scripts/check_catalog_stage8.php": {
+        "before": null,
+        "after": "100810cba39c6060eb900dba245247d48cff7d84e5cc1f704bdcb06dc5a91e92"
+    },
+    "scripts/check_catalog_stage9.php": {
+        "before": null,
+        "after": "8e0eaf9d681240c4690a43ec673b0dec9a6ca1b31aca02d2b47794573c6c46b2"
+    },
+    "scripts/check_catalog_stage9_manual.php": {
+        "before": null,
+        "after": "6446f0bab0fc3849ce05e2809eff8f6786d64cd6ddfffeab22cb4ec6e1ec2bbb"
+    },
+    "scripts/complete_approved_shadow_coverage.php": {
+        "before": null,
+        "after": "63e3b7626cae3d888bc1a5c59e6bd40d2e2ede86734de439669123a2d5941eb3"
+    },
+    "scripts/connect_catalog_naming.php": {
+        "before": null,
+        "after": "61ecff7b460e07855cdabb80dbf849b2b5c148f9c768a10d1c3d720919d1f70d"
+    },
+    "scripts/connect_catalog_size_search.php": {
+        "before": null,
+        "after": "6740b7af56df6d0f755451b00803c64b0e4dfa4c714b1f9ba7bd5516f7508e76"
+    },
+    "scripts/connect_category_facet_bridge.php": {
+        "before": null,
+        "after": "8aa63bb785eb44d47a941381e47db797cfe98fefbedb6956f99e45672c9f86bf"
+    },
+    "scripts/connect_size_editor_status.php": {
+        "before": null,
+        "after": "0c4c5f93a775cd062902d20ba726edacad4544b6009b7fc4d1fe891dc7ea104a"
+    },
+    "scripts/create_p350_27_26_sets.php": {
+        "before": null,
+        "after": "ac07bf901256e178598d492fd475207cfd33fd1c133dddc903eab4ad4c5ebced"
+    },
+    "scripts/export_chain_price_request_data.php": {
+        "before": null,
+        "after": "45570e46f9efb6c7ce2f4676d22607491bdfe3a7cfe90d5e609e118014f44c14"
+    },
+    "scripts/finalize_ct08.php": {
+        "before": null,
+        "after": "8fb437bbf75781cac6d458d32e779e2a8c2cd1050c76a4ac5abdb5ac389f15b0"
+    },
+    "scripts/finalize_recovery_result.php": {
+        "before": null,
+        "after": "29bc56f5f9c31c1eb91866f58ac98a06a541c3ca3c152b51f11d09472be73b8f"
+    },
+    "scripts/finish_ct08.php": {
+        "before": null,
+        "after": "5174d56ac3b59a0cc9bd6ff851087f9ee7883a449f0872d107c9a6f8629bb74b"
+    },
+    "scripts/fix_atv_card_ply_template.php": {
+        "before": null,
+        "after": "35fe436501b4fedefcd54b4f9865e82e4989bff8ec46e8a61b3c69f675c7a519"
+    },
+    "scripts/fix_catalog_faq_grid.php": {
+        "before": null,
+        "after": "28cb8b9ce4bcf25dc2e47b185de3a09dc701c9b8bf675e782d70ca946c6d0546"
+    },
+    "scripts/fix_p350_11140_tread.php": {
+        "before": null,
+        "after": "29cef03444c542180276ecf86f5f5f91b1cbc02394b3f09f5acffa3b73533f60"
+    },
+    "scripts/hide_chain_order_note.php": {
+        "before": null,
+        "after": "fe5135ec8e164d921aea7c162eb77eb897ca668ba56b66b957a06f79a0214ba1"
+    },
+    "scripts/hide_chain_supplier.php": {
+        "before": null,
+        "after": "5e523135db8dbb4ac85ed2588851cc96fcc6620da6326008e542049906853188"
+    },
+    "scripts/import_tsep_chains.php": {
+        "before": null,
+        "after": "54e38c8da0ed073c5762dd6e96bf9411c3665c8a3ea7fa0db8de74643df0a38a"
+    },
+    "scripts/install_catalog_display.php": {
+        "before": null,
+        "after": "307732f7ee933ec82dc75e149edf49718108abf5bc6d6ee0cf25918aa4726a7c"
+    },
+    "scripts/install_chain_category_images.php": {
+        "before": null,
+        "after": "ac7c20a54fd60d88e6fdcd932468f280e9b41b41e2d146e367f5e4ca54d27901"
+    },
+    "scripts/install_chain_filter_repair.php": {
+        "before": null,
+        "after": "0467bfe9073ad40c1b9124665c48d9f506e844a2c1d8510751a7c452e87d85ba"
+    },
+    "scripts/install_complete_engagement.php": {
+        "before": "b7495b361dbeb0a12a23eb943f807f2c23d192fe8b684f1cec60774e81e3f74e",
+        "after": null
+    },
+    "scripts/install_ct08.php": {
+        "before": null,
+        "after": "8d99d8a01562fb6ef21efd5069edd509cbdd33a5f6b232b77656325af26a6033"
+    },
+    "scripts/install_direct_gallery_white_photos.php": {
+        "before": null,
+        "after": "9f3514da35a9c34154b86afca222972dd36c8ea7e37b0c907e5d93ed9f64e5ee"
+    },
+    "scripts/install_tsep_chain_images.php": {
+        "before": null,
+        "after": "402f93d11f1a5037b51cdc149f4fdd039942097bcd769a6f225ed7463bb615ab"
+    },
+    "scripts/link_complete_avito_ads.php": {
+        "before": "1d05c518b2666f25357f440235aa58d32a3dedaeb018563d33eb69fac7ac1c64",
+        "after": null
+    },
+    "scripts/match_rendered_product_surface.php": {
+        "before": null,
+        "after": "612ae4355ccae53fe0d6e80871635572810c11982e60d16c70994605d9d0c75f"
+    },
+    "scripts/package_catalog_dictionary.php": {
+        "before": null,
+        "after": "a2cde51cedf302a32bd4db333bf5ccbc78f5868863b462f3d161ba192bb90613"
+    },
+    "scripts/package_catalog_facet_bridge.php": {
+        "before": null,
+        "after": "3873f7a7a15d5285500131cb2bf80fe019fc43fcbdbb03d1978e42dbf800b7e4"
+    },
+    "scripts/package_catalog_foundation.mjs": {
+        "before": null,
+        "after": "23a55be0b8a96f6213777d999e9b319c9146d62bfeae9f9b5162578319e2bd15"
+    },
+    "scripts/package_catalog_legacy_rules.mjs": {
+        "before": null,
+        "after": "f99eea34b84c24e8c2455ffe74b5cec8c89cb67dab0348a09b9990091aec7f82"
+    },
+    "scripts/package_catalog_migration.mjs": {
+        "before": null,
+        "after": "66ce2b278a2b1c434b26a2675528724da4d1eea1b354f5439a5d50affaadde0b"
+    },
+    "scripts/package_catalog_naming.php": {
+        "before": null,
+        "after": "5b2b43992bbd42fb026e20d82205558a11861efe96dc110a834926446a1b3e55"
+    },
+    "scripts/package_catalog_quality.mjs": {
+        "before": null,
+        "after": "19b0b4b176c6c3da5e54b39b38c83abfb1e963d9bfa43cb12771ce7b1e68c705"
+    },
+    "scripts/package_catalog_size_search.php": {
+        "before": null,
+        "after": "e44be52321ad47889cf32aac8e6cc2142a1f7bed62dc581926f705f9472583bf"
+    },
+    "scripts/package_ct08_auto.php": {
+        "before": null,
+        "after": "398c84b6f06ce139a28b37b4cc880ae4e68916e2558833116879a943a9a7e055"
+    },
+    "scripts/package_ct08_layout.php": {
+        "before": null,
+        "after": "84fe7df1e9302a113ce142d26ba395a68a2eebbd4b7a88e7dd06f985b3a73b06"
+    },
+    "scripts/package_ct08_polish.php": {
+        "before": null,
+        "after": "88590d6f2d6bc4c74428129e98e9de3928e881fc5e7762383989a846e60e4005"
+    },
+    "scripts/package_ct08_settings.php": {
+        "before": null,
+        "after": "e2680b9d94df7ca938a4255c88d493be6ca8480022d34431128435897c0294a3"
+    },
+    "scripts/package_ct08_ux.php": {
+        "before": null,
+        "after": "68003877e775cdd0fd1fae99c8e77c3fb2cf3c42a5f40c819962ef06ab6f9ac4"
+    },
+    "scripts/package_quality_seo.php": {
+        "before": null,
+        "after": "74e87b01903c33e12ec09b0ea75ec1104e2cff2ffeb83835b24a9947dccb22bb"
+    },
+    "scripts/package_quality_text.php": {
+        "before": null,
+        "after": "9b0ca282f82185a2e81895359911d2047173bbf7919c1ae6e3bb45d44255fc25"
+    },
+    "scripts/package_quality_workflow.php": {
+        "before": null,
+        "after": "21f8e999f36a26e05820e6968c8d6000d142ef9ae05fbcb51c303e656c57ef88"
+    },
+    "scripts/package_rollout_stages4_5.php": {
+        "before": null,
+        "after": "c5d787f128cc186cf14571ef37d916121ac31445fb1a7b9d321afa24b673afc3"
+    },
+    "scripts/patch_chain_menu_faq.php": {
+        "before": null,
+        "after": "caca5b4b4e2791e7ab2063eda93817ed5c5aaeb096eaeeb7cab8e0ede3563d83"
+    },
+    "scripts/prepare_catalog_audit.php": {
+        "before": null,
+        "after": "73bf35a5ae46f659e04efb4843bc3a1a7e8d383faee45a44b1f6d337cffc4c28"
+    },
+    "scripts/prepare_catalog_stage7.php": {
+        "before": null,
+        "after": "b8d737d613a78f698a8fd6efdc1cef072af4e6f964939837c9b5e4f7b2fd0c0f"
+    },
+    "scripts/prepare_catalog_stage8.php": {
+        "before": null,
+        "after": "f9df923e7c01c67b35774c8abc6794b01c90d8c2886edd50a17c35631fd0d866"
+    },
+    "scripts/prepare_catalog_stage9.php": {
+        "before": null,
+        "after": "c2fbc4f24a06683d3f4b3a502177da7b312051b7334ac7689f15d9c4516c2ca8"
+    },
+    "scripts/prepare_chain_filter_actions.php": {
+        "before": null,
+        "after": "d007555cff07f48245cf6e045daa20b74ba6a16beea20cdae7c80bb61fa556ea"
+    },
+    "scripts/prepare_ct08.php": {
+        "before": null,
+        "after": "0575af703038969d419522c13e7bd685e1c04f055e9b63f6d00adfd4cb3eb643"
+    },
+    "scripts/prepare_ct08_polish.php": {
+        "before": null,
+        "after": "e475677225a291f26d80f540af1e53cae14b0333677f049b5ea9a5d0944c666d"
+    },
+    "scripts/prepare_ct08_unified.php": {
+        "before": null,
+        "after": "dcf2e8a66534d7a28d0e0032f1e864e0c896f0684f50a1515064097d75fbe86d"
+    },
+    "scripts/prepare_ct08_ux.php": {
+        "before": null,
+        "after": "dd4a9e3602135fda3899e481bc18a30464121102e6b27cb268b1fae20b3d0daa"
+    },
+    "scripts/prepare_dictionary_views.php": {
+        "before": null,
+        "after": "6db4fe8ef71d81d79e44e4ddb216920fbacd60b3443967ee3571ba6fbbf06e56"
+    },
+    "scripts/prepare_quality_seo.php": {
+        "before": null,
+        "after": "5a9b089d8148f285cfffb4aa347eb3df6d70fdc82ef348e20688e23e2b1a9e65"
+    },
+    "scripts/prepare_quality_text.php": {
+        "before": null,
+        "after": "36533ea3b80c0244fbadb1f9711e3e51754c2c018de4f137c78c6039699248a1"
+    },
+    "scripts/prepare_quality_workflow.php": {
+        "before": null,
+        "after": "962b2531581d31e86b72ae860f51051b7dfc77178239d8d88da39f388d198118"
+    },
+    "scripts/prepare_yandex_cabinet.php": {
+        "before": null,
+        "after": "7e20ef163760cd6f71748f0fa2bcdda0fb6f213b95f5d1a88072c1a249d39078"
+    },
+    "scripts/preview_catalog_stage8.php": {
+        "before": null,
+        "after": "86bf32d9a83b3ff6efb6990117fcef90fa98e29f6370013d9da8fe689095d7c1"
+    },
+    "scripts/publish_chain_seo.php": {
+        "before": null,
+        "after": "fb172bcff55456fc544d9ee5030057bf9b46d9109f158b8e2578602ca1160b43"
+    },
+    "scripts/publish_chain_size_block.php": {
+        "before": null,
+        "after": "c73cf31f70f6d7e6f4157fc218795d1fd7dcfa18537336055cffdd2670eaea9d"
+    },
+    "scripts/publish_ct08_first_batch.php": {
+        "before": null,
+        "after": "f5441d46382ef1a7400b1f6c72ba72a899b5922144d10ef4aca736cca1d01afb"
+    },
+    "scripts/publish_ct08_settings.php": {
+        "before": null,
+        "after": "85d9af7cca4768e7fd0ed2213d465ad2eb4074c8d0d70d7d848b189a7b661492"
+    },
+    "scripts/push_chain_filter_actions.ps1": {
+        "before": null,
+        "after": "0945a0d88091ffc4e32b9fbc000f2d64b86f4b77f8c0049c4e1160074903e596"
+    },
+    "scripts/refine_catalog_faq_spacing.php": {
+        "before": null,
+        "after": "1b9eba20dc07aa9466f3417a5b350cb09ac6ae26cdc3b4d96192b2e1b52576f5"
+    },
+    "scripts/refine_chain_card_names.php": {
+        "before": null,
+        "after": "f6e93a49737110696ac901891b3d5a9625f1588cdc30ed813b7a5ccbb0c8858a"
+    },
+    "scripts/refine_chain_order_labels.php": {
+        "before": null,
+        "after": "46dd8ebf7b3c424e89103381d2d7d8931868248145461808206be8c7e47d999e"
+    },
+    "scripts/remove_cdek_from_avito_tires.php": {
+        "before": "428196793901314f5a889d2705c178cb3da6e8e899e47ad4047b47fed628196f",
+        "after": null
+    },
+    "scripts/rename_home_chain_link.php": {
+        "before": null,
+        "after": "d8e9201e294c0af7d6743c9698d109e4c531a1f0d729a1d220630900cfff98ff"
+    },
+    "scripts/render_catalog_foundation.mjs": {
+        "before": null,
+        "after": "5ef929b461fc16bc9b1acbb0eebcd5dd6c339ac204edec3b8dc0ed443053d9d8"
+    },
+    "scripts/report_catalog_conflicts.php": {
+        "before": null,
+        "after": "0eb419f541ee0bf7ad9c57d498e3eb9108173bb20ef13cdc09b6735caf8bde90"
+    },
+    "scripts/report_catalog_publication.php": {
+        "before": null,
+        "after": "0f0aa5122eff511ae219a418fc449ffb63769db2f32e11f551094a8f62832820"
+    },
+    "scripts/report_catalog_remaining.php": {
+        "before": null,
+        "after": "8093902c5dab04db4d7af0045f38c6d41d87c61ae826600664dcc42c451ed1ea"
+    },
+    "scripts/report_catalog_specialized.php": {
+        "before": null,
+        "after": "3c42c63bcad435fc19ee22a5eb055197be3e4f64c411150ecb7302aacaa48d26"
+    },
+    "scripts/report_ct08_auto.php": {
+        "before": null,
+        "after": "356ec08e542bccdb714affb941b0a355020ce6c693a3a4d873e3bbdacfe7bd01"
+    },
+    "scripts/resolve_naming_baselines.php": {
+        "before": null,
+        "after": "129670aebf30e6a0861096449e7f02323b0a36bcb25dde85857dee22672663ff"
+    },
+    "scripts/restore_chain_green_notice.php": {
+        "before": null,
+        "after": "cd6522d57779b4c896c1a841f1073aa67e47c6295403b3e0b2bc884c18d53db8"
+    },
+    "scripts/restore_legacy_card_surface.php": {
+        "before": null,
+        "after": "02fe7101c4890027053e62c0254477effa44da3999850110800e4032761372d3"
+    },
+    "scripts/restore_pre_shadow_stylesheet.php": {
+        "before": null,
+        "after": "9905fa696dcf169b5891fb66360f391e01e37e845516faad309e3233a9616d44"
+    },
+    "scripts/rollback_all_shadow_experiments.php": {
+        "before": null,
+        "after": "62642d2c5544b69818a211443ccd7f08eeb4cb3c77feadfc9c27b8648ee281e2"
+    },
+    "scripts/rollback_approved_panel_shadow.php": {
+        "before": null,
+        "after": "cdc9ffafa3e6440e764f6a562920bd0b7d181e5828fefec1b11b1bfcc132be27"
+    },
+    "scripts/rollback_site_panel_surfaces.php": {
+        "before": null,
+        "after": "926c2ab210860a05afe3af93b8a30149fc06f8710703481add32f6f9b06a3961"
+    },
+    "scripts/seed_p350_complete.php": {
+        "before": null,
+        "after": "3695e714d3aa766e92cc55781fa2a82f32cb075e6af599a2eda52a8af6b04a47"
+    },
+    "scripts/set_p350_27_4pr_photos.php": {
+        "before": null,
+        "after": "7b3ec80bca4df364c732b0b3184f45d0d1855b99477dee0cb3e8bf831ef97b7f"
+    },
+    "scripts/unify_site_panel_surfaces.php": {
+        "before": null,
+        "after": "d1ab8076e545bb592cb57790e538034bf55a1a74359bde1f7b75dc56b038c7d5"
+    },
+    "scripts/verify_ct08_settings.php": {
+        "before": null,
+        "after": "ecebcf5294159eda37d9b97e6f52681c24e3a11d9ca757485c88788754be486d"
+    },
+    "scripts/verify_ct08_ux.php": {
+        "before": null,
+        "after": "6662cef5bfa99a436b39c9243244bd3ecd69bcf163c8f074b07f2f48ce1bd7e0"
+    },
+    "scripts/verify_recovered_images_20261113.php": {
+        "before": null,
+        "after": "6672eb4cd57e18a0f9adb9fc7a6014139c3ee174c1530f4155b93673fbee522c"
+    },
+    "scripts/yandex_cabinet_release_check.php": {
+        "before": null,
+        "after": "d5cb21b160f39555fd17c5fbda1444f0a676d598b91752721e86f3702ee8b6eb"
+    }
+}

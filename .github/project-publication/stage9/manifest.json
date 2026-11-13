@@ -1,0 +1,54 @@
+{
+    "app/services/CatalogTaskStatus.php": {
+        "before": null,
+        "after": "83cd05abb9e388253edc089fe0923a819620535a84ca40351868ff0e9624fbec"
+    },
+    "app/services/CatalogFeedAudit.php": {
+        "before": null,
+        "after": "fafd38af6ca2102e30503af90d1c5eefde2c9ff42671259a7062a586b28a1cdb"
+    },
+    "app/services/CatalogUpdateHealth.php": {
+        "before": null,
+        "after": "85e827f19dc7f8505d3fd99297a965ea7723fe5135dae71328c9f2c3f2475a32"
+    },
+    "app/views/itscenter/admin/CatalogWorkflow/updates.php": {
+        "before": null,
+        "after": "40c7a2872b1febd4be0565018bbc5fc1cfc9bd2630cbd42fe1e18fda6d43387d"
+    },
+    "app/services/InventorySyncService.php": {
+        "before": "b2ea9f8d3449ab2b813472c62293a20e3883db997009b4a0dc72e0a72947a6d8",
+        "after": "01ae182101b358342770607529e6da251a5d735778f302deb33a82d7a1e2fc7f"
+    },
+    "public/cron/run_task_cli.php": {
+        "before": "fe2f87a33770fc9bb0e6da76af991c66e8b8624f81bd2da4889fa52fd12b917d",
+        "after": "0a7c2bdb28d1efa7054bd8a94bacd13ea445d0858a8c896af26f3a956d4effba"
+    },
+    "bin/sync_inventory_api.php": {
+        "before": "2106eec4127c732c2a61084536bf0b3dde002cee3b04b978663064debd12e5fa",
+        "after": "15b25594962b26cd5d7fe5332b1cb5a9b4a1668b0572b72ea115a9421536488c"
+    },
+    "app/services/YandexProductsCabinet.php": {
+        "before": "c85b6bf96853e6bbce50a99f68f774e7c7f952635db44fda95c822c0d25648d5",
+        "after": "acdc2117e41efe89daccaf3590f46b8e04802138ca399d17c0ce2a9688320f69"
+    },
+    "app/views/itscenter/admin/Plagins/yandex-tovars.php": {
+        "before": "7d24444d1d53f61f1cc108aadba69d6df31fdfefd5f33c4ce881a98e6457cc52",
+        "after": "79d6124110a915560ec8f1507dc905d7ea356dfb44e5913dfb8f797b15094d54"
+    },
+    "app/services/SpecialTyreFeedService.php": {
+        "before": "9306877624cc5d7e9b868ddfa14eda313a3680ff28ad5155bb63401d2776de64",
+        "after": "6214831ec7ade84eaded1423c9c63b5b905497223e50e6e9f54973dd02f042d3"
+    },
+    "app/controllers/admin/CatalogWorkflowController.php": {
+        "before": "f45e8a763ded7ff49f8bd1ee45194cb83e0fdf497a4e8d6129a08b933a5ec9fe",
+        "after": "f77b010933511e1b2dc7fe8d88a33794f34a2e29e2b7d3573708f560840d8be7"
+    },
+    "app/views/itscenter/admin/partials/catalog-workflow-nav.php": {
+        "before": "3b917983687e5b7e6dd71c275f6456a3be59538d497d48fe5cf23b38f2fb4cd4",
+        "after": "3e3841cfe77ff3bfc76f4d5819e15e1762fbdd9fceaa9340af455327314b08a8"
+    },
+    "app/views/itscenter/admin/CatalogWorkflow/index.php": {
+        "before": "c71ac4722b47d8cf27d40e826df9e4d692f5f44509ac444638f45eef0d57d50e",
+        "after": "9da6ae07426140884889d08f4addec3b10d8bc4e7b7f1d254ecdf8bae78126b7"
+    }
+}

@@ -1,4 +1,4 @@
-name: Audit accumulated project updates
+name: Publish audited project updates
 on:
   push:
     branches: [codex/project-publication-20261113]
@@ -11,9 +11,9 @@ concurrency:
   group: its-center-project-publication
   cancel-in-progress: false
 jobs:
-  audit:
+  publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       BEGET_HOST: ${{ secrets.BEGET_HOST }}
       BEGET_PORT: ${{ secrets.BEGET_PORT }}
@@ -44,17 +44,28 @@ jobs:
             ConnectTimeout 25
           EOF
           chmod 600 ~/.ssh/config
-      - name: Read checksums without exporting source contents
+      - name: Publish reviewed files with private backups and rollback
         run: |
           set -euo pipefail
           remote_dir="/home/s/shinaspec/project-publication-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          tar -C .github/project-publication -czf project-release.tar.gz .
           ssh project-beget "umask 077; mkdir '$remote_dir'"
-          scp .github/project-publication/inventory.json "project-beget:$remote_dir/inventory.json"
-          scp .github/project-publication/audit.php "project-beget:$remote_dir/audit.php"
-          ssh project-beget "/usr/local/bin/php8.2 '$remote_dir/audit.php'"
-          scp "project-beget:$remote_dir/server-audit.json" server-audit.json
+          scp project-release.tar.gz "project-beget:$remote_dir/release.tar.gz"
+          ssh project-beget "tar -xzf '$remote_dir/release.tar.gz' -C '$remote_dir'; /usr/local/bin/php8.2 '$remote_dir/install.php'"
+      - name: Retrieve result reports only
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          remote_dir="/home/s/shinaspec/project-publication-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          for report in receipt.json failure.json smoke.json chains.json stage9/verification.json; do
+            if ssh project-beget "test -f '$remote_dir/$report'"; then
+              scp "project-beget:$remote_dir/$report" "reports/$(basename "$report")"
+            fi
+          done
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: project-checksum-audit
-          path: server-audit.json
-          retention-days: 7
+          name: project-publication-results
+          path: reports/*.json
+          retention-days: 14
