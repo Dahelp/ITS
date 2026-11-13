@@ -3,2298 +3,2702 @@
         "path": "app/controllers/CartController.php",
         "action": "write",
         "sha256": "5d4e40f200d34a4e339e9c6b18cfc71028eebcda08196454b3c484477e7153e1",
+        "normalized_sha256": "5d4e40f200d34a4e339e9c6b18cfc71028eebcda08196454b3c484477e7153e1",
         "bytes": 38379
     },
     {
         "path": "app/controllers/CatalogController.php",
         "action": "write",
         "sha256": "943d936f879a021da86c3b96453ea2d8949b02c92198e99f1587112d02f262d6",
+        "normalized_sha256": "943d936f879a021da86c3b96453ea2d8949b02c92198e99f1587112d02f262d6",
         "bytes": 5985
     },
     {
         "path": "app/controllers/CategoryController.php",
         "action": "write",
         "sha256": "2b6d4c85a0e1fd52fcb74aeb393bdc3b4060098ad52b6f8780f8fb12978e864b",
+        "normalized_sha256": "2b6d4c85a0e1fd52fcb74aeb393bdc3b4060098ad52b6f8780f8fb12978e864b",
         "bytes": 54863
     },
     {
         "path": "app/controllers/CompleteController.php",
         "action": "write",
         "sha256": "07e635f0b0b0aa33053c5a47d2120529dd8a41f9e26043176be52658c2a15877",
+        "normalized_sha256": "c93c50cc01da757809189d296377b701796a9790a105ff0b4cceaf423958d6ec",
         "bytes": 9111
     },
     {
         "path": "app/controllers/CronController.php",
         "action": "write",
         "sha256": "370b44b39c7e0be2ea46c8288fbc351ae00a0b112b23c99c84b45b9863917813",
+        "normalized_sha256": "5eb3519ce3c177a0b4019929be62c7a4b80b9efee26e030d0b46cc1779a220cf",
         "bytes": 13820
     },
     {
         "path": "app/controllers/MainController.php",
         "action": "write",
         "sha256": "55981726d49ca062e5920ea3fbee2d072946669deb32b3e07647c781c5f4b630",
+        "normalized_sha256": "c7a76870c09c70720b00fadba7022e9cd15b3de0e92749c9cac669c43dd7f060",
         "bytes": 8038
     },
     {
         "path": "app/controllers/ProductController.php",
         "action": "write",
         "sha256": "407e1619a9a414735e488485c3709eb29600672adbe372971c83ae902885a4e0",
+        "normalized_sha256": "407e1619a9a414735e488485c3709eb29600672adbe372971c83ae902885a4e0",
         "bytes": 23745
     },
     {
         "path": "app/controllers/UserController.php",
         "action": "write",
         "sha256": "337624f2df9fda8452cb5ae1787c3318aa6dee7c55e5e0e3321dee0e4c010306",
+        "normalized_sha256": "337624f2df9fda8452cb5ae1787c3318aa6dee7c55e5e0e3321dee0e4c010306",
         "bytes": 33659
     },
     {
         "path": "app/controllers/admin/AvitoChatController.php",
         "action": "write",
         "sha256": "bbdad44e42a94b5855fc015bd0c338b5b760898828a4afb97919e54ec7da545e",
+        "normalized_sha256": "bbdad44e42a94b5855fc015bd0c338b5b760898828a4afb97919e54ec7da545e",
         "bytes": 4446
     },
     {
         "path": "app/controllers/admin/AvitoController.php",
         "action": "write",
         "sha256": "46b1200b76e4ca4975fa64e3778ddf4695660648e45069bec75afc60e08fb60b",
+        "normalized_sha256": "46b1200b76e4ca4975fa64e3778ddf4695660648e45069bec75afc60e08fb60b",
         "bytes": 40955
     },
     {
         "path": "app/controllers/admin/CatalogDisplayController.php",
         "action": "write",
         "sha256": "74cd78bc9032410518422c818574d22ecb45ce2285ceef1051ed279b7e726daf",
+        "normalized_sha256": "74cd78bc9032410518422c818574d22ecb45ce2285ceef1051ed279b7e726daf",
         "bytes": 3292
     },
     {
         "path": "app/controllers/admin/CatalogFacetBindingsController.php",
         "action": "write",
         "sha256": "571a98d418cd3f95b4f20f60e37c81df08b47bc916cbda758fc5dd18cda951b6",
+        "normalized_sha256": "571a98d418cd3f95b4f20f60e37c81df08b47bc916cbda758fc5dd18cda951b6",
         "bytes": 3688
     },
     {
         "path": "app/controllers/admin/CatalogNamesController.php",
         "action": "write",
         "sha256": "894a6e2db772a18519d968b5b3ac109d5b489327574840ee8a77bc424bbec5d5",
+        "normalized_sha256": "894a6e2db772a18519d968b5b3ac109d5b489327574840ee8a77bc424bbec5d5",
         "bytes": 6091
     },
     {
         "path": "app/controllers/admin/CatalogPropertiesController.php",
         "action": "write",
         "sha256": "a179bb917345648f7470896550a228d73d5b2c345948729dc3bae16953066483",
+        "normalized_sha256": "a179bb917345648f7470896550a228d73d5b2c345948729dc3bae16953066483",
         "bytes": 13764
     },
     {
         "path": "app/controllers/admin/CatalogWorkflowController.php",
         "action": "write",
         "sha256": "f77b010933511e1b2dc7fe8d88a33794f34a2e29e2b7d3573708f560840d8be7",
+        "normalized_sha256": "f77b010933511e1b2dc7fe8d88a33794f34a2e29e2b7d3573708f560840d8be7",
         "bytes": 2946
     },
     {
         "path": "app/controllers/admin/ImportController.php",
         "action": "write",
         "sha256": "fa402cc1859db2e2bb0abbba22296508b3e048019850e461dbc21e91e23955ed",
+        "normalized_sha256": "ef66be650f75a8181769cecfa0c3760cbd883cce24d62c08915bf0be9478bced",
         "bytes": 4686
     },
     {
         "path": "app/controllers/admin/PlaginsController.php",
         "action": "write",
         "sha256": "da69a4bc0df9f46d0d69f074f0c01f1761ee16f2956f03ba6cb19404baf1f842",
+        "normalized_sha256": "da69a4bc0df9f46d0d69f074f0c01f1761ee16f2956f03ba6cb19404baf1f842",
         "bytes": 80583
     },
     {
         "path": "app/controllers/admin/ProductController.php",
         "action": "write",
         "sha256": "bf39adc56fdf61e78981914d6d1eea8a7f767d2a487b541f05e6d5f7f1c572ae",
+        "normalized_sha256": "bf39adc56fdf61e78981914d6d1eea8a7f767d2a487b541f05e6d5f7f1c572ae",
         "bytes": 39841
     },
     {
         "path": "app/data/catalog-properties-v1.json",
         "action": "write",
         "sha256": "612814108557668d1b903137631fdcc8ccc6948d6fb17458db7e3a14d44f9dd5",
+        "normalized_sha256": "bc0aa7ef0a80ad37a4e8b66fbca732a4804d499f9766a3d118017901604921a2",
         "bytes": 62379
     },
     {
         "path": "app/data/chain-category-images.json",
         "action": "write",
         "sha256": "d37c4e41936e62a24d7334ba10ec3ecb5d3d3866e6ab93927ddffa48af430b93",
+        "normalized_sha256": "d37c4e41936e62a24d7334ba10ec3ecb5d3d3866e6ab93927ddffa48af430b93",
         "bytes": 801
     },
     {
         "path": "app/data/chain-seo-content.json",
         "action": "write",
         "sha256": "af83051528651976506098d3cdcd83b58a2348cfe39cbecbdbc2d400b4cc9e5a",
+        "normalized_sha256": "af83051528651976506098d3cdcd83b58a2348cfe39cbecbdbc2d400b4cc9e5a",
         "bytes": 503977
     },
     {
         "path": "app/data/tsep-chain-images.json",
         "action": "write",
         "sha256": "89dc40eff0e1b4b5c930d66c56d0a24c2d6983bb345fad76eff83ddedb9dad9e",
+        "normalized_sha256": "e7700c5f7e01f43fdeb456168fc4ba40d64d60fa6b9686587d91e71809c1e47a",
         "bytes": 15218
     },
     {
         "path": "app/data/tsep-chains.json",
         "action": "write",
         "sha256": "60b0e9984f6dd52021267cc86f21e2b8f520bb9a99d563f3aac796357a6fcb21",
+        "normalized_sha256": "60b0e9984f6dd52021267cc86f21e2b8f520bb9a99d563f3aac796357a6fcb21",
         "bytes": 42125
     },
     {
         "path": "app/helpers/SchemaHelper.php",
         "action": "write",
         "sha256": "6562f8a285ded3e435161e1ca1fedd0cdad56f2ea9f1dae7442e520bc18b5af0",
+        "normalized_sha256": "6562f8a285ded3e435161e1ca1fedd0cdad56f2ea9f1dae7442e520bc18b5af0",
         "bytes": 23463
     },
     {
         "path": "app/models/Cart.php",
         "action": "write",
         "sha256": "aa5b40a22f7ed47cc27a2dd035f10cb35530be8efa8d798ef09ea0c40f1abd9d",
+        "normalized_sha256": "aa5b40a22f7ed47cc27a2dd035f10cb35530be8efa8d798ef09ea0c40f1abd9d",
         "bytes": 28479
     },
     {
         "path": "app/models/Order.php",
         "action": "write",
         "sha256": "64d68873c164d21e5895e6386d2b8e042a1407d99d83278cc744cfb7352a3dc9",
+        "normalized_sha256": "64d68873c164d21e5895e6386d2b8e042a1407d99d83278cc744cfb7352a3dc9",
         "bytes": 9332
     },
     {
         "path": "app/models/User.php",
         "action": "write",
         "sha256": "e3a29b31f132b8e1edf308d9ea71e8da55d856100c6828a6aa8d14b5f5a1b533",
+        "normalized_sha256": "3d426ec9b5fb4409e99fe507e1c84faa0d8e7133440d4d714628709e40fa95d4",
         "bytes": 3608
     },
     {
         "path": "app/models/admin/Avito.php",
         "action": "write",
         "sha256": "d286e880b64dfe15848852f5759a0004b43c6810a2dd00b802d40859a01ce574",
+        "normalized_sha256": "d286e880b64dfe15848852f5759a0004b43c6810a2dd00b802d40859a01ce574",
         "bytes": 82785
     },
     {
         "path": "app/models/admin/Cron.php",
         "action": "write",
         "sha256": "9e8cb01aa66ee33fd8d516f92c86eb929c2fc1ff5fcb8f7184dfb896ec4acea1",
+        "normalized_sha256": "bb8f0d4e6a6431a341dd0ece64b8662da35c66861a93f0b549df6e50427ca13a",
         "bytes": 40212
     },
     {
         "path": "app/models/admin/PlaginsComplete.php",
         "action": "write",
         "sha256": "cb4c8e344c12f60ea7e02654ee3e906f90fde3b5bb68a53b78319494c82ce2e0",
+        "normalized_sha256": "0bf34dd687d81feaab7b0538c7ec93ac07bb22e0cab3b93375696cb2929d75f6",
         "bytes": 6440
     },
     {
         "path": "app/models/admin/Product.php",
         "action": "write",
         "sha256": "583aa045ae16c55146f3d135aca77a62ac94f7a0467fadf8dc15d165ce521346",
+        "normalized_sha256": "fbebedc361ee38187f2c0223c0dcc547de753f0fd939abd3258d74ec33b2604e",
         "bytes": 16233
     },
     {
         "path": "app/services/AvitoApiClient.php",
         "action": "write",
         "sha256": "19b5448a8d0f2960359ea06f9c16f5d27835a02b5b80c64be7792efea1694f8a",
+        "normalized_sha256": "2631d3ec03a0a80c9cb7f667f633fa68fc04831f960f07b29fdd413f0d882b1b",
         "bytes": 5032
     },
     {
         "path": "app/services/AvitoChatOperations.php",
         "action": "write",
         "sha256": "bd232bb2a19dee0150cca1b204a320782d6db010c8bc4826c29fe71f79010e28",
+        "normalized_sha256": "bd232bb2a19dee0150cca1b204a320782d6db010c8bc4826c29fe71f79010e28",
         "bytes": 5724
     },
     {
         "path": "app/services/CartRepeat.php",
         "action": "write",
         "sha256": "e238120a4745bd658555bbc58b08ced6add88daf64b42336c77ae2904b6b458b",
+        "normalized_sha256": "e238120a4745bd658555bbc58b08ced6add88daf64b42336c77ae2904b6b458b",
         "bytes": 1926
     },
     {
         "path": "app/services/CatalogDictionary.php",
         "action": "write",
         "sha256": "531439b6cf092647246404683b25d73001f5045df9fe245f6b281187eb93f123",
+        "normalized_sha256": "531439b6cf092647246404683b25d73001f5045df9fe245f6b281187eb93f123",
         "bytes": 10581
     },
     {
         "path": "app/services/CatalogDisplay.php",
         "action": "write",
         "sha256": "52418f453110a70c524f8d812ad6dd13f788a2638fede4b2aab59a2950cbf70b",
+        "normalized_sha256": "52418f453110a70c524f8d812ad6dd13f788a2638fede4b2aab59a2950cbf70b",
         "bytes": 4064
     },
     {
         "path": "app/services/CatalogFacetBridge.php",
         "action": "write",
         "sha256": "c1ed96b8c7e024da470ee50d5636c44c116d8b624a38b031625f2c1f6dcd7fd3",
+        "normalized_sha256": "c1ed96b8c7e024da470ee50d5636c44c116d8b624a38b031625f2c1f6dcd7fd3",
         "bytes": 14601
     },
     {
         "path": "app/services/CatalogFacets.php",
         "action": "write",
         "sha256": "31ec579be9545485ef6c2bfa88c08ad961979b1b676025109278438b20455a14",
+        "normalized_sha256": "31ec579be9545485ef6c2bfa88c08ad961979b1b676025109278438b20455a14",
         "bytes": 3435
     },
     {
         "path": "app/services/CatalogFeedAudit.php",
         "action": "write",
         "sha256": "fafd38af6ca2102e30503af90d1c5eefde2c9ff42671259a7062a586b28a1cdb",
+        "normalized_sha256": "fafd38af6ca2102e30503af90d1c5eefde2c9ff42671259a7062a586b28a1cdb",
         "bytes": 4972
     },
     {
         "path": "app/services/CatalogLegacyPreview.php",
         "action": "write",
         "sha256": "010a91ddea80f93db2dc7d126e8a20586bd1a403e1a9b870298eddfcc7db6025",
+        "normalized_sha256": "010a91ddea80f93db2dc7d126e8a20586bd1a403e1a9b870298eddfcc7db6025",
         "bytes": 14299
     },
     {
         "path": "app/services/CatalogMigration.php",
         "action": "write",
         "sha256": "4048e6c7c79c99b5c02699159040b92958f2f57a2c0d468b51ce37fbdd20ef7f",
+        "normalized_sha256": "4048e6c7c79c99b5c02699159040b92958f2f57a2c0d468b51ce37fbdd20ef7f",
         "bytes": 12467
     },
     {
         "path": "app/services/CatalogMigrationPlan.php",
         "action": "write",
         "sha256": "63dc89b2941ead4d9f0cde204b45e074d2d8f785939f4164595885ef5b9743b7",
+        "normalized_sha256": "63dc89b2941ead4d9f0cde204b45e074d2d8f785939f4164595885ef5b9743b7",
         "bytes": 4134
     },
     {
         "path": "app/services/CatalogMigrationSource.php",
         "action": "write",
         "sha256": "0b0f5e73e79be509410592bd435150524497dfc7763f6c4c8e1d0e328a04a77f",
+        "normalized_sha256": "0b0f5e73e79be509410592bd435150524497dfc7763f6c4c8e1d0e328a04a77f",
         "bytes": 4770
     },
     {
         "path": "app/services/CatalogNaming.php",
         "action": "write",
         "sha256": "e0a1c1c6aa682cf86b84269035b6a8c7a9213a10918583be2e8b6d06e0754257",
+        "normalized_sha256": "e0a1c1c6aa682cf86b84269035b6a8c7a9213a10918583be2e8b6d06e0754257",
         "bytes": 12098
     },
     {
         "path": "app/services/CatalogProperties.php",
         "action": "write",
         "sha256": "5c8994c00d6b28e42b468d36addb5ec422604e2b4385ddebd917e18eb3415b33",
+        "normalized_sha256": "5c8994c00d6b28e42b468d36addb5ec422604e2b4385ddebd917e18eb3415b33",
         "bytes": 27425
     },
     {
         "path": "app/services/CatalogPropertyAccess.php",
         "action": "write",
         "sha256": "55608ff57ac7ca4452356d6be9f1002291803018f1da58a54602a2cc5974475e",
+        "normalized_sha256": "55608ff57ac7ca4452356d6be9f1002291803018f1da58a54602a2cc5974475e",
         "bytes": 723
     },
     {
         "path": "app/services/CatalogPropertySchema.php",
         "action": "write",
         "sha256": "c8b2e5aef65c368e4bdfa9b6e98ce469e2b9f24331c1d8c300d20797f242399c",
+        "normalized_sha256": "c8b2e5aef65c368e4bdfa9b6e98ce469e2b9f24331c1d8c300d20797f242399c",
         "bytes": 7522
     },
     {
         "path": "app/services/CatalogPublishedAttributes.php",
         "action": "write",
         "sha256": "f88ddbc011eb500d99ceb22bcab95d056930fb9c13572274c95c678d395ea95e",
+        "normalized_sha256": "f88ddbc011eb500d99ceb22bcab95d056930fb9c13572274c95c678d395ea95e",
         "bytes": 10460
     },
     {
         "path": "app/services/CatalogQuality.php",
         "action": "write",
         "sha256": "c08cf7fb58ab6325c59a59280f4134b15aa57b726d2d36e593c0878eaee483e7",
+        "normalized_sha256": "c08cf7fb58ab6325c59a59280f4134b15aa57b726d2d36e593c0878eaee483e7",
         "bytes": 11231
     },
     {
         "path": "app/services/CatalogReview.php",
         "action": "write",
         "sha256": "1ea0cf028b33fd9544d596077ae9c1673cfeba9a986705ac3f6088c57e2258d7",
+        "normalized_sha256": "1ea0cf028b33fd9544d596077ae9c1673cfeba9a986705ac3f6088c57e2258d7",
         "bytes": 6730
     },
     {
         "path": "app/services/CatalogSelection.php",
         "action": "write",
         "sha256": "bfa195c8c7d7d82befc9371f787c75079b87c2d45010656fda3e568483b905dd",
+        "normalized_sha256": "bfa195c8c7d7d82befc9371f787c75079b87c2d45010656fda3e568483b905dd",
         "bytes": 4087
     },
     {
         "path": "app/services/CatalogSeoAudit.php",
         "action": "write",
         "sha256": "cfcf25f409604ce8c8d5cbb318268c836305496716a171890fa770622620d55d",
+        "normalized_sha256": "cfcf25f409604ce8c8d5cbb318268c836305496716a171890fa770622620d55d",
         "bytes": 3784
     },
     {
         "path": "app/services/CatalogSize.php",
         "action": "write",
         "sha256": "961df9959cb684138003dbb9b6ee3c9739e05d9eae8e0ba84101a87c6eddaa39",
+        "normalized_sha256": "961df9959cb684138003dbb9b6ee3c9739e05d9eae8e0ba84101a87c6eddaa39",
         "bytes": 3878
     },
     {
         "path": "app/services/CatalogSizeSearch.php",
         "action": "write",
         "sha256": "9486858cab9c41bfb2d73c77808faa145411f7f5fb0c3f18c011441f63b03fb9",
+        "normalized_sha256": "9486858cab9c41bfb2d73c77808faa145411f7f5fb0c3f18c011441f63b03fb9",
         "bytes": 11129
     },
     {
         "path": "app/services/CatalogTaskStatus.php",
         "action": "write",
         "sha256": "83cd05abb9e388253edc089fe0923a819620535a84ca40351868ff0e9624fbec",
+        "normalized_sha256": "83cd05abb9e388253edc089fe0923a819620535a84ca40351868ff0e9624fbec",
         "bytes": 3540
     },
     {
         "path": "app/services/CatalogUpdateHealth.php",
         "action": "write",
         "sha256": "85e827f19dc7f8505d3fd99297a965ea7723fe5135dae71328c9f2c3f2475a32",
+        "normalized_sha256": "85e827f19dc7f8505d3fd99297a965ea7723fe5135dae71328c9f2c3f2475a32",
         "bytes": 1183
     },
     {
         "path": "app/services/CatalogWorkflow.php",
         "action": "write",
         "sha256": "bac659284d4381927a4cab0309710ec97689133fccb694589d2cd1cc733ae0c3",
+        "normalized_sha256": "bac659284d4381927a4cab0309710ec97689133fccb694589d2cd1cc733ae0c3",
         "bytes": 7154
     },
     {
         "path": "app/services/ChainSeoContent.php",
         "action": "write",
         "sha256": "7278c455ae7fef8ae3235ead13132bce9cdc442213f3aba193d27fee109dc7d1",
+        "normalized_sha256": "7278c455ae7fef8ae3235ead13132bce9cdc442213f3aba193d27fee109dc7d1",
         "bytes": 36531
     },
     {
         "path": "app/services/CompleteAvito.php",
         "action": "write",
         "sha256": "31d259a97b3c69bc816f670bdbcd301b3d8b7f8c713a0b0e66d41240d886da2d",
+        "normalized_sha256": "31d259a97b3c69bc816f670bdbcd301b3d8b7f8c713a0b0e66d41240d886da2d",
         "bytes": 4884
     },
     {
         "path": "app/services/CompleteAvitoLinker.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "app/services/CompleteAvitoPublication.php",
         "action": "write",
         "sha256": "303cfae09b51741c75cb7b5dc005562e99b9bad0bb2b3a251f267f09ea7e95c9",
+        "normalized_sha256": "303cfae09b51741c75cb7b5dc005562e99b9bad0bb2b3a251f267f09ea7e95c9",
         "bytes": 9470
     },
     {
         "path": "app/services/CompleteEngagement.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "app/services/CompleteInventory.php",
         "action": "write",
         "sha256": "4c2311ee55fa2aed29aeef9cd0d3ec28b7d13e18e36feebf24bfa98504007b20",
+        "normalized_sha256": "4c2311ee55fa2aed29aeef9cd0d3ec28b7d13e18e36feebf24bfa98504007b20",
         "bytes": 2864
     },
     {
         "path": "app/services/CompleteSimilar.php",
         "action": "write",
         "sha256": "f7a74019322d887ca8ce3ca3b7c4667323ccc9be918013b106a51efa62950051",
+        "normalized_sha256": "f7a74019322d887ca8ce3ca3b7c4667323ccc9be918013b106a51efa62950051",
         "bytes": 2391
     },
     {
         "path": "app/services/DirectGallerySelection.php",
         "action": "write",
         "sha256": "0215cb05d0e70fafa17455c2ae5602904fd9d09d0139d60e242c137ff0b9b0de",
+        "normalized_sha256": "e3157da1087a07999052356e7123a4a3e6ff0d34ac46d216774d9262f73f566a",
         "bytes": 4614
     },
     {
         "path": "app/services/HomeCatalog.php",
         "action": "write",
         "sha256": "77d66c67e8372bc744385a564359d70ee56c26f5823a78d164427beb8243c4d2",
+        "normalized_sha256": "ac3286b0ab036ef6b68a4b4e34d98ab3d43a433ccaba9263562c317088a501b4",
         "bytes": 3595
     },
     {
         "path": "app/services/HomePreviewCatalog.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "app/services/InventoryCsvExportService.php",
         "action": "write",
         "sha256": "b454194294ea6297e23533d9ed6fa9f6fd943224537a79aabb11ef35f069f0d5",
+        "normalized_sha256": "3f5fbf6da867f075becf6444603ff7b723d9fdf01f054610f4f91c6fac1d1683",
         "bytes": 8405
     },
     {
         "path": "app/services/InventorySyncService.php",
         "action": "write",
         "sha256": "1c7f9e534447372bec7d2d212e1f63b6639a3a3e9c9f2b983b3b1ba06ff28901",
+        "normalized_sha256": "1c7f9e534447372bec7d2d212e1f63b6639a3a3e9c9f2b983b3b1ba06ff28901",
         "bytes": 8257
     },
     {
         "path": "app/services/MerchantTyreAttributes.php",
         "action": "write",
         "sha256": "04bccff0c73b79d889d793a8a970e0b1c16efcab2261f9b56ab2672c516b3a63",
+        "normalized_sha256": "04bccff0c73b79d889d793a8a970e0b1c16efcab2261f9b56ab2672c516b3a63",
         "bytes": 2522
     },
     {
         "path": "app/services/ProductAnalytics.php",
         "action": "write",
         "sha256": "26ef9c9c946ac4766d1a0fce495d8ba7470a913f72480502052c101fd0d06272",
+        "normalized_sha256": "26ef9c9c946ac4766d1a0fce495d8ba7470a913f72480502052c101fd0d06272",
         "bytes": 8396
     },
     {
         "path": "app/services/ProductFilterSelection.php",
         "action": "write",
         "sha256": "db4662bb30786db89271c015de3ea896ba86f6801ea493afe8880dd525361a2d",
+        "normalized_sha256": "db4662bb30786db89271c015de3ea896ba86f6801ea493afe8880dd525361a2d",
         "bytes": 772
     },
     {
         "path": "app/services/SpecialTyreFeedService.php",
         "action": "write",
         "sha256": "6214831ec7ade84eaded1423c9c63b5b905497223e50e6e9f54973dd02f042d3",
+        "normalized_sha256": "dd85d4300435885ca17a98e72ebfa388982b422f745b7cb9a15c33243101aecc",
         "bytes": 13232
     },
     {
         "path": "app/services/StockAdjustment.php",
         "action": "write",
         "sha256": "ce6cbcd5e41b44b86b6a3efbbcad2289c8aa2a9828c7aefafd50c7d8c7ab47c1",
+        "normalized_sha256": "ce6cbcd5e41b44b86b6a3efbbcad2289c8aa2a9828c7aefafd50c7d8c7ab47c1",
         "bytes": 4245
     },
     {
         "path": "app/services/TsepChainCatalog.php",
         "action": "write",
         "sha256": "da0b47e0cedee35f541790a9045e00a1ca55139c9d8ed983ee24bfa9d0869efc",
+        "normalized_sha256": "da0b47e0cedee35f541790a9045e00a1ca55139c9d8ed983ee24bfa9d0869efc",
         "bytes": 9873
     },
     {
         "path": "app/services/YandexProductsCabinet.php",
         "action": "write",
         "sha256": "acdc2117e41efe89daccaf3590f46b8e04802138ca399d17c0ce2a9688320f69",
+        "normalized_sha256": "acdc2117e41efe89daccaf3590f46b8e04802138ca399d17c0ce2a9688320f69",
         "bytes": 2293
     },
     {
         "path": "app/services/search/SearchCandidateProvider.php",
         "action": "write",
         "sha256": "81a5f9cf0edc8f8c1e7c7be131906e0f607a201359934333f6daf9ca4f140b7d",
+        "normalized_sha256": "26101d796c6cb6577aa4bc6da0b47195669c751d8bd4dcd51ae6c29fff782b7a",
         "bytes": 27984
     },
     {
         "path": "app/services/search/SearchRanker.php",
         "action": "write",
         "sha256": "b29f38414ec3f1cfb61b47249e49057a1f9c72046dc956fb4e8f559f665dc9df",
+        "normalized_sha256": "84d5d20aab2881e4fd897e44742ea27b939ac3f640a1637731e833874de8120a",
         "bytes": 17814
     },
     {
         "path": "app/views/itscenter/Cart/cart_table.php",
         "action": "write",
         "sha256": "d5359fd21e95f5b6a57dd468f257eebc35703e3af66cd6e216608f4dc3402ade",
+        "normalized_sha256": "e4b4b8b95abc6df9bb4a95484e86cb868753831c00cea38cbcdc403ec6411e47",
         "bytes": 15375
     },
     {
         "path": "app/views/itscenter/Cart/promo_block.php",
         "action": "write",
         "sha256": "2413684f3835958c7343c3eb008efec0ad2612c25e40abbbda820cf33119a6e4",
+        "normalized_sha256": "30e2d9e8ddb881963299080869b0e935cbe5c9b04d23b3d76c115d626eea0cd7",
         "bytes": 2464
     },
     {
         "path": "app/views/itscenter/Cart/view.php",
         "action": "write",
         "sha256": "c80ed7e78b039dea236e09bde97332c0cd69330d139690425b6cd79c8ecf81e5",
+        "normalized_sha256": "c80ed7e78b039dea236e09bde97332c0cd69330d139690425b6cd79c8ecf81e5",
         "bytes": 28207
     },
     {
         "path": "app/views/itscenter/Catalog/index.php",
         "action": "write",
         "sha256": "971a35aa36539d893ce7080b1a5c681584b80c628a3285e62deeac8c9c207224",
+        "normalized_sha256": "971a35aa36539d893ce7080b1a5c681584b80c628a3285e62deeac8c9c207224",
         "bytes": 4418
     },
     {
         "path": "app/views/itscenter/Category/view.php",
         "action": "write",
         "sha256": "d7b8c8fbfc626a6ae7482b9fa21a6c97b6ae43ef6c0f29d6df326dd761d9b4b1",
+        "normalized_sha256": "d7b8c8fbfc626a6ae7482b9fa21a6c97b6ae43ef6c0f29d6df326dd761d9b4b1",
         "bytes": 15506
     },
     {
         "path": "app/views/itscenter/Comparison/index.php",
         "action": "write",
         "sha256": "5607050fcddee84a35009fd1848acdedaf1a269a19e8a92a1714f40da9be7622",
+        "normalized_sha256": "5607050fcddee84a35009fd1848acdedaf1a269a19e8a92a1714f40da9be7622",
         "bytes": 17569
     },
     {
         "path": "app/views/itscenter/Complete/view.php",
         "action": "write",
         "sha256": "febdca1b88e87a621882ded57a1947f126b6757150e91325e21e84a896b81d12",
+        "normalized_sha256": "febdca1b88e87a621882ded57a1947f126b6757150e91325e21e84a896b81d12",
         "bytes": 35327
     },
     {
         "path": "app/views/itscenter/Cron/refresh-atv-server.php",
         "action": "write",
         "sha256": "c11d190a0efe173d73d72e4b24a4df412dc21f907f784768712257ddf2b14cd7",
+        "normalized_sha256": "2da76809182193b2bfeb0e448f3788bb50e512578c14778f0f3d3c2c981c3b8e",
         "bytes": 18980
     },
     {
         "path": "app/views/itscenter/Cron/refresh-diski-server.php",
         "action": "write",
         "sha256": "09c5c33e61c6ea314a7d2562878567e93b3239a15ccf8da0621f5de39ff83ccd",
+        "normalized_sha256": "da39145e127a940963fd44d32e7ac8046135ecb98e3ab7c13334dfec695e7e70",
         "bytes": 19018
     },
     {
         "path": "app/views/itscenter/Cron/refresh-kamery.php",
         "action": "write",
         "sha256": "06cc217a521c0910a65ffa7bd645fe0e796d50cec06c673ea03046cb6a0e5df3",
+        "normalized_sha256": "2e397fe5777f27223240f91746d9ede88239129782b18af172612fa8cdf38f72",
         "bytes": 7501
     },
     {
         "path": "app/views/itscenter/Cron/refresh-tovars.php",
         "action": "write",
         "sha256": "395871ae8d7d294e945cc7c07b603dfb7669637ef8312577ca7b22d99cb93562",
+        "normalized_sha256": "acd5f2939a65e7d9a530a5ff3e7b34dde1a858905d9c7093132c020c97b053d4",
         "bytes": 11246
     },
     {
         "path": "app/views/itscenter/Cron/ymlfid-gallery.php",
         "action": "write",
         "sha256": "73e737ed39a4a20e0cb464eb6dc844e95c829e148d7cd3904894acde2e3668b1",
+        "normalized_sha256": "73e737ed39a4a20e0cb464eb6dc844e95c829e148d7cd3904894acde2e3668b1",
         "bytes": 751
     },
     {
         "path": "app/views/itscenter/Cron/ymlfid-specshiny.php",
         "action": "write",
         "sha256": "1b745a732801c650098bb4462dec74af5ea3643f88f1b1b81e6f26c74367ccb3",
+        "normalized_sha256": "59ab10e82a503eafb2f86fbaf03be409968ba8198f9ef4893f971961d314b1dc",
         "bytes": 1160
     },
     {
         "path": "app/views/itscenter/Cross/view.php",
         "action": "write",
         "sha256": "0a0d83cc103def62898b2f213b00689877907bffe248ac92d7a9b4dcecbf380c",
+        "normalized_sha256": "0a0d83cc103def62898b2f213b00689877907bffe248ac92d7a9b4dcecbf380c",
         "bytes": 36056
     },
     {
         "path": "app/views/itscenter/Main/catalog.php",
         "action": "write",
         "sha256": "d8d2eae9eac2e63fc1db39a979e581f8a366b33e9d9b58fe013794de56a73307",
+        "normalized_sha256": "d8d2eae9eac2e63fc1db39a979e581f8a366b33e9d9b58fe013794de56a73307",
         "bytes": 8058
     },
     {
         "path": "app/views/itscenter/Main/index.php",
         "action": "write",
         "sha256": "86018f138b0ed26ae8d30efd6311b2a8d0e4218ccf636851ddb3b36fc13160f6",
+        "normalized_sha256": "86018f138b0ed26ae8d30efd6311b2a8d0e4218ccf636851ddb3b36fc13160f6",
         "bytes": 9162
     },
     {
         "path": "app/views/itscenter/Product/view.php",
         "action": "write",
         "sha256": "eb8e4ad7082417ce08b5645407f5a3d43dfc2c4b0f200bdcfbab406daaac90fc",
+        "normalized_sha256": "eb8e4ad7082417ce08b5645407f5a3d43dfc2c4b0f200bdcfbab406daaac90fc",
         "bytes": 99724
     },
     {
         "path": "app/views/itscenter/Search/index.php",
         "action": "write",
         "sha256": "cff208234986912d40d99e57f6a77f26d2aadc45f0fc3af7dfe79bf1e385c683",
+        "normalized_sha256": "753ada338851ca952dedec718bfbf2fba29922e14722f10f0c417ab29081a600",
         "bytes": 2653
     },
     {
         "path": "app/views/itscenter/Technics/view.php",
         "action": "write",
         "sha256": "10d141d4f9dfa1c73482080ddb4e7cf1ddcbd08bc4b4597fe816a81de30058f1",
+        "normalized_sha256": "10d141d4f9dfa1c73482080ddb4e7cf1ddcbd08bc4b4597fe816a81de30058f1",
         "bytes": 39861
     },
     {
         "path": "app/views/itscenter/User/bookmarks.php",
         "action": "write",
         "sha256": "d9070142818078f674f81fd61560e919fbfed4ea311f93b02eb2a134d6a4df11",
+        "normalized_sha256": "d9070142818078f674f81fd61560e919fbfed4ea311f93b02eb2a134d6a4df11",
         "bytes": 5264
     },
     {
         "path": "app/views/itscenter/User/order.php",
         "action": "write",
         "sha256": "208fe33b68a2c9c1b8c60fa1922491a6e0c6a880bf9d49234d57cd1ccf5c37bc",
+        "normalized_sha256": "208fe33b68a2c9c1b8c60fa1922491a6e0c6a880bf9d49234d57cd1ccf5c37bc",
         "bytes": 11133
     },
     {
         "path": "app/views/itscenter/User/orders.php",
         "action": "write",
         "sha256": "ba537386d4ed1359d58567259ff4755d98f4e2a7e917ddf1c711732fa852980d",
+        "normalized_sha256": "494c55ce204c2098eabf9b894091e5c72a3f7e43728c879aebfff423c0d8d2b1",
         "bytes": 6107
     },
     {
         "path": "app/views/itscenter/User/wishlist.php",
         "action": "write",
         "sha256": "9841b245543664f7bf65cadc81874205569c62a48e5b1fa89ccefe1111031e5f",
+        "normalized_sha256": "9841b245543664f7bf65cadc81874205569c62a48e5b1fa89ccefe1111031e5f",
         "bytes": 5919
     },
     {
         "path": "app/views/itscenter/admin/Avito/index.php",
         "action": "write",
         "sha256": "77c307f080e60bd5e4cf38fc2849426afd69708c1aa08e39d5ee49b8848c7534",
+        "normalized_sha256": "77c307f080e60bd5e4cf38fc2849426afd69708c1aa08e39d5ee49b8848c7534",
         "bytes": 4936
     },
     {
         "path": "app/views/itscenter/admin/CatalogDisplay/index.php",
         "action": "write",
         "sha256": "33e3af56ea736c844be4362ba5ee995c42767e0da99c18677e2bdf5e08dd47a4",
+        "normalized_sha256": "33e3af56ea736c844be4362ba5ee995c42767e0da99c18677e2bdf5e08dd47a4",
         "bytes": 5007
     },
     {
         "path": "app/views/itscenter/admin/CatalogFacetBindings/index.php",
         "action": "write",
         "sha256": "7b459b87895fd4cf58468fc190c80b637bfd481c9c11c64d5b81aa3af6a8769c",
+        "normalized_sha256": "7b459b87895fd4cf58468fc190c80b637bfd481c9c11c64d5b81aa3af6a8769c",
         "bytes": 8370
     },
     {
         "path": "app/views/itscenter/admin/CatalogNames/index.php",
         "action": "write",
         "sha256": "0d4f92a0e0708b517056fab7f6cf24a90b85a6fb1529d7acf465615bf5a32acc",
+        "normalized_sha256": "0d4f92a0e0708b517056fab7f6cf24a90b85a6fb1529d7acf465615bf5a32acc",
         "bytes": 7556
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/dictionaries.php",
         "action": "write",
         "sha256": "cb4139b7e16bcc9e2beac6eddc22e854ee86cba7d5bad526ada83bae3e2a9c2f",
+        "normalized_sha256": "cb4139b7e16bcc9e2beac6eddc22e854ee86cba7d5bad526ada83bae3e2a9c2f",
         "bytes": 5083
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/dictionary-edit.php",
         "action": "write",
         "sha256": "27d23e00bd6803999a847bc738362b4b77636c51268aee9c168f3039f0e18dcd",
+        "normalized_sha256": "461d9d90e65ffbc21f219720741dd30fedd6e933abb955a9dbb10ae876ce5110",
         "bytes": 7218
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/edit.php",
         "action": "write",
         "sha256": "c2de23d8e348165faac4ddc12c8b02f62d5d28f32f15d4a212f65b3793099ffa",
+        "normalized_sha256": "c2de23d8e348165faac4ddc12c8b02f62d5d28f32f15d4a212f65b3793099ffa",
         "bytes": 15574
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/index.php",
         "action": "write",
         "sha256": "1b6ac65bfca45934cd1ddce46b41d1eab6dd7f3017c6a76da70c8537c2c3e774",
+        "normalized_sha256": "1b6ac65bfca45934cd1ddce46b41d1eab6dd7f3017c6a76da70c8537c2c3e774",
         "bytes": 2900
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/migrations.php",
         "action": "write",
         "sha256": "3bfd865577f2485a904c4cd530c9cb66a39af64e4923c289037f0437d49ac748",
+        "normalized_sha256": "3bfd865577f2485a904c4cd530c9cb66a39af64e4923c289037f0437d49ac748",
         "bytes": 5137
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/quality.php",
         "action": "write",
         "sha256": "227f2918fd3b785bc80b1bf6aad27e914c61600cec7328fef3cb96ec6fb0eb47",
+        "normalized_sha256": "227f2918fd3b785bc80b1bf6aad27e914c61600cec7328fef3cb96ec6fb0eb47",
         "bytes": 12829
     },
     {
         "path": "app/views/itscenter/admin/CatalogProperties/reviews.php",
         "action": "write",
         "sha256": "b2830b2570a4a3c1a0cc2f3b16dc488de62cf1b17705cdc52c9d6e798293e206",
+        "normalized_sha256": "b2830b2570a4a3c1a0cc2f3b16dc488de62cf1b17705cdc52c9d6e798293e206",
         "bytes": 4864
     },
     {
         "path": "app/views/itscenter/admin/CatalogWorkflow/history.php",
         "action": "write",
         "sha256": "f4201b4e0ded99715b2ef905393c79735589db6e209e17d197e883b25f62f63f",
+        "normalized_sha256": "f4201b4e0ded99715b2ef905393c79735589db6e209e17d197e883b25f62f63f",
         "bytes": 2078
     },
     {
         "path": "app/views/itscenter/admin/CatalogWorkflow/index.php",
         "action": "write",
         "sha256": "9da6ae07426140884889d08f4addec3b10d8bc4e7b7f1d254ecdf8bae78126b7",
+        "normalized_sha256": "9da6ae07426140884889d08f4addec3b10d8bc4e7b7f1d254ecdf8bae78126b7",
         "bytes": 5138
     },
     {
         "path": "app/views/itscenter/admin/CatalogWorkflow/landings.php",
         "action": "write",
         "sha256": "21496592514020fe6c0c5a256760c7b2bfc4477f4813ac3b0adac2d1846bc201",
+        "normalized_sha256": "21496592514020fe6c0c5a256760c7b2bfc4477f4813ac3b0adac2d1846bc201",
         "bytes": 2310
     },
     {
         "path": "app/views/itscenter/admin/CatalogWorkflow/product.php",
         "action": "write",
         "sha256": "ab7aa337d8f11edd52b9fb8802f1125c9807dbb9a46ef2ebaf13bb3b20896636",
+        "normalized_sha256": "ab7aa337d8f11edd52b9fb8802f1125c9807dbb9a46ef2ebaf13bb3b20896636",
         "bytes": 3894
     },
     {
         "path": "app/views/itscenter/admin/CatalogWorkflow/updates.php",
         "action": "write",
         "sha256": "40c7a2872b1febd4be0565018bbc5fc1cfc9bd2630cbd42fe1e18fda6d43387d",
+        "normalized_sha256": "40c7a2872b1febd4be0565018bbc5fc1cfc9bd2630cbd42fe1e18fda6d43387d",
         "bytes": 4798
     },
     {
         "path": "app/views/itscenter/admin/Category/edit.php",
         "action": "write",
         "sha256": "1ce1ba22a8baf9645fb027edff53087fbe921ad65f4fbabc8720f0d6e7fe3b11",
+        "normalized_sha256": "312afb8eb703fa22a67719875b49fe2895935efc893679851fa6ae44c03d18d9",
         "bytes": 20130
     },
     {
         "path": "app/views/itscenter/admin/Plagins/complete-add.php",
         "action": "write",
         "sha256": "3191a07c51c0738c3a634d06a493b05495f86743c5eecc39793a4ee29ff4c002",
+        "normalized_sha256": "371147708c57c1c8529688d3c7ffefac8b121612b04e6198630be2f5d4df6eb9",
         "bytes": 18800
     },
     {
         "path": "app/views/itscenter/admin/Plagins/complete-edit.php",
         "action": "write",
         "sha256": "5fc2d391302e059f2718d55e9378b8a8157c3a33da05b885021d2fd0b5d997c2",
+        "normalized_sha256": "5f415d35b5cf6578a5c6b33514f34c52157283f37ac529ab4fe4944c066c5e90",
         "bytes": 24384
     },
     {
         "path": "app/views/itscenter/admin/Plagins/complete.php",
         "action": "write",
         "sha256": "8ddeac6f0396b1ca0d9e006dcff6a18d6b503557a06bf64a2543b0da425e317b",
+        "normalized_sha256": "4e5e516e052a1603ec892e2bb450a34f263e4ba95012f869d7d97d94784b0140",
         "bytes": 10386
     },
     {
         "path": "app/views/itscenter/admin/Plagins/yandex-tovars.php",
         "action": "write",
         "sha256": "79d6124110a915560ec8f1507dc905d7ea356dfb44e5913dfb8f797b15094d54",
+        "normalized_sha256": "2c1da607aecafb9516bf2e17655316ba99f20072053b45b9cc01dea0a464a685",
         "bytes": 7726
     },
     {
         "path": "app/views/itscenter/admin/Product/add.php",
         "action": "write",
         "sha256": "0f246f21ce218b7e4146371d8315abf1f46282aaac7557f02ea4cb647b052830",
+        "normalized_sha256": "11f1659c3a4d4251956db2c5a5f2604753488ff023a2d1d8357e719690ff5f16",
         "bytes": 30908
     },
     {
         "path": "app/views/itscenter/admin/Product/copy.php",
         "action": "write",
         "sha256": "e0663c9766fc520ce9ecab43f384350e38c59bd27b241e638267338a9528db30",
+        "normalized_sha256": "4c5fa91c71977cc618ad4c973927e568132ba287c62d7dd021ee748c158aa8b6",
         "bytes": 36499
     },
     {
         "path": "app/views/itscenter/admin/Product/edit.php",
         "action": "write",
         "sha256": "7b2fa9ba68cc5d8a94e3b05de1843d25b8faeb4c9e2c10b1609bb7da34880369",
+        "normalized_sha256": "1ac78855b54a9539eaedca1f2830119af1710b8ae8c435bb887613e96100b169",
         "bytes": 42534
     },
     {
         "path": "app/views/itscenter/admin/Product/index.php",
         "action": "write",
         "sha256": "407250711008b2dba2f9880f600dccb7f5d36ff202caa19c4e7388c0291596e1",
+        "normalized_sha256": "407250711008b2dba2f9880f600dccb7f5d36ff202caa19c4e7388c0291596e1",
         "bytes": 6703
     },
     {
         "path": "app/views/itscenter/admin/partials/catalog-workflow-history.php",
         "action": "write",
         "sha256": "d27e68257104198285c27dab6c847703c0c2eb1d050facf1b56276e63bee244b",
+        "normalized_sha256": "d27e68257104198285c27dab6c847703c0c2eb1d050facf1b56276e63bee244b",
         "bytes": 1086
     },
     {
         "path": "app/views/itscenter/admin/partials/catalog-workflow-nav.php",
         "action": "write",
         "sha256": "3e3841cfe77ff3bfc76f4d5819e15e1762fbdd9fceaa9340af455327314b08a8",
+        "normalized_sha256": "3e3841cfe77ff3bfc76f4d5819e15e1762fbdd9fceaa9340af455327314b08a8",
         "bytes": 1456
     },
     {
         "path": "app/views/itscenter/layouts/admin.php",
         "action": "write",
         "sha256": "293e10d9832a39d0821caae6db0e5e859487f643063260d0095259850ee1fb9b",
+        "normalized_sha256": "973c35a743d66cb01e27b0d1aa2a0a4c72d945582ae15d9059e73d385e6fe27a",
         "bytes": 24184
     },
     {
         "path": "app/views/itscenter/partials/catalog-controls.php",
         "action": "write",
         "sha256": "ed140a9c3b7739f80b0c9f8b2e2f14b0a3e363f232679eb5b71d070520808af1",
+        "normalized_sha256": "ed140a9c3b7739f80b0c9f8b2e2f14b0a3e363f232679eb5b71d070520808af1",
         "bytes": 2537
     },
     {
         "path": "app/views/itscenter/partials/catalog-facets.php",
         "action": "write",
         "sha256": "646d97b9b2686b6aed337b4a24cb14a1523d487668fc8afa56338ef5fbc78e5c",
+        "normalized_sha256": "646d97b9b2686b6aed337b4a24cb14a1523d487668fc8afa56338ef5fbc78e5c",
         "bytes": 3296
     },
     {
         "path": "app/views/itscenter/partials/catalog-menu.php",
         "action": "write",
         "sha256": "e54021fe64ab0dab1ce772e6a160da933e6cd4fa2d6c79ee4a6faffb2c8da9da",
+        "normalized_sha256": "a40f993d1b9f7fc90d6126c05eb99ed5f6024de15d1f9209b816e6f52f7564d3",
         "bytes": 26564
     },
     {
         "path": "app/views/itscenter/partials/category-size-links.php",
         "action": "write",
         "sha256": "d64eca446a937ac14d07a7a831c8bb11fa296b46c80539caf8ab3e4a6774a772",
+        "normalized_sha256": "d64eca446a937ac14d07a7a831c8bb11fa296b46c80539caf8ab3e4a6774a772",
         "bytes": 1293
     },
     {
         "path": "app/views/itscenter/partials/decide-block.php",
         "action": "write",
         "sha256": "f05a48602de87e667dacdc5c989cd3d445fd2f4db787f3f29b2e0743859f0cd8",
+        "normalized_sha256": "f05a48602de87e667dacdc5c989cd3d445fd2f4db787f3f29b2e0743859f0cd8",
         "bytes": 10376
     },
     {
         "path": "app/views/itscenter/partials/footer.php",
         "action": "write",
         "sha256": "c4ad413239278bbd7775d84aad458ece20803002bf74592cb23c1b6ea92402c5",
+        "normalized_sha256": "1dedb9cf032f98d173fd3ccbba8ff1db05fea16d0ce633982c84792b19b4b9a2",
         "bytes": 10489
     },
     {
         "path": "app/views/itscenter/partials/header.php",
         "action": "write",
         "sha256": "7045920cb4ffdd3cb8328e875e894090e108054abeb662b23f3845aa53c3c00b",
+        "normalized_sha256": "7045920cb4ffdd3cb8328e875e894090e108054abeb662b23f3845aa53c3c00b",
         "bytes": 6334
     },
     {
         "path": "app/views/itscenter/partials/modals.php",
         "action": "write",
         "sha256": "fb78377283e75d92cf8a0363379bf55bbd0c83d16b30615fd0d9f803b524c682",
+        "normalized_sha256": "fb78377283e75d92cf8a0363379bf55bbd0c83d16b30615fd0d9f803b524c682",
         "bytes": 13593
     },
     {
         "path": "app/widgets/complete/Complete.php",
         "action": "write",
         "sha256": "e4b23a9c54cb7ee99889850433b1fe00a16e8c50e518eb1e9dd7d210ae033f62",
+        "normalized_sha256": "5f742c1857419c6e3818ceb8ec6eb4f7466d213bfadbaa3e9b12ef52aa1438dc",
         "bytes": 2114
     },
     {
         "path": "app/widgets/filter/Filter.php",
         "action": "write",
         "sha256": "837c8b4860aae0f767a0e52c957aa0a00807b67be4387046246af1b9a3e4923c",
+        "normalized_sha256": "837c8b4860aae0f767a0e52c957aa0a00807b67be4387046246af1b9a3e4923c",
         "bytes": 4959
     },
     {
         "path": "app/widgets/product/card.php",
         "action": "write",
         "sha256": "2c06379f9118642d4b8d25267cd08c3ab25e0f72adc48591eddfcceaa784678e",
+        "normalized_sha256": "2c06379f9118642d4b8d25267cd08c3ab25e0f72adc48591eddfcceaa784678e",
         "bytes": 9161
     },
     {
         "path": "app/widgets/product/product_tpl.php",
         "action": "write",
         "sha256": "8704669131767b5f8e64d17607f0aae71efd4ed65a64c81f3f99d10d05a7971b",
+        "normalized_sha256": "a0bfdc7f4094beaacea2da4e44f4768bc4896cca4cfef0893d5e2feb09ab7ecc",
         "bytes": 8438
     },
     {
         "path": "bin/audit_catalog_foundation.php",
         "action": "write",
         "sha256": "54ce0f77e01899ab8cee71125f4dfa89d956097acf4ad2459d36ab28611fbba2",
+        "normalized_sha256": "54ce0f77e01899ab8cee71125f4dfa89d956097acf4ad2459d36ab28611fbba2",
         "bytes": 6451
     },
     {
         "path": "bin/audit_merchant_tyres.php",
         "action": "write",
         "sha256": "328d4b387e5970c17964dc0b6632746b38e3888d6203ed1b7c00a42d1e444ee0",
+        "normalized_sha256": "328d4b387e5970c17964dc0b6632746b38e3888d6203ed1b7c00a42d1e444ee0",
         "bytes": 2838
     },
     {
         "path": "bin/catalog_foundation.php",
         "action": "write",
         "sha256": "0ed271f9497e92a512f65233e0cf7d9cc8896e2c0efbfaba5bd7aeef7ed26a69",
+        "normalized_sha256": "0ed271f9497e92a512f65233e0cf7d9cc8896e2c0efbfaba5bd7aeef7ed26a69",
         "bytes": 4045
     },
     {
         "path": "bin/catalog_foundation_preflight.php",
         "action": "write",
         "sha256": "c7bab40fb18bd63d12a45bac03b9bddbbad338e009a472f01f95b925d3171063",
+        "normalized_sha256": "c7bab40fb18bd63d12a45bac03b9bddbbad338e009a472f01f95b925d3171063",
         "bytes": 3344
     },
     {
         "path": "bin/catalog_migrate.php",
         "action": "write",
         "sha256": "1e925dc887419c5ab24eb71c10907f97ea95243070c37cdd0779cd7e2e2b5c52",
+        "normalized_sha256": "1e925dc887419c5ab24eb71c10907f97ea95243070c37cdd0779cd7e2e2b5c52",
         "bytes": 2119
     },
     {
         "path": "bin/catalog_migration_plan.php",
         "action": "write",
         "sha256": "e94a9986e09e513a3a69ab9f1b84c77ce0d96fcb0e8e43fc72de4a303c49648c",
+        "normalized_sha256": "e94a9986e09e513a3a69ab9f1b84c77ce0d96fcb0e8e43fc72de4a303c49648c",
         "bytes": 713
     },
     {
         "path": "bin/catalog_quality.php",
         "action": "write",
         "sha256": "ff6fc2aba2426591d8f57d87757bfa1ed7ffb3fa191c29594029cbcce6a86c9d",
+        "normalized_sha256": "ff6fc2aba2426591d8f57d87757bfa1ed7ffb3fa191c29594029cbcce6a86c9d",
         "bytes": 924
     },
     {
         "path": "bin/collect_tsep_chains.php",
         "action": "write",
         "sha256": "b862e8f3b0e8285896462d9ac1d96d3e02ab05ab3d84a7d3cbcbc2f03f97127f",
+        "normalized_sha256": "b862e8f3b0e8285896462d9ac1d96d3e02ab05ab3d84a7d3cbcbc2f03f97127f",
         "bytes": 4322
     },
     {
         "path": "bin/export_low_stock_tires.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "bin/generate_direct_gallery.php",
         "action": "write",
         "sha256": "bec4fa103a84af5d8bb549c20146dbc54efba4427dd7acef76b7618b7bdd7d60",
+        "normalized_sha256": "32ea3fc0925bfc281480b605c662c4623b8fe5a3fd25dc414895bde408c312db",
         "bytes": 785
     },
     {
         "path": "bin/migrate_stock_adjustment.php",
         "action": "write",
         "sha256": "624b239ffaebbe7d12af2fede8ccf67e68a738000361019a217924e7d8c502cd",
+        "normalized_sha256": "624b239ffaebbe7d12af2fede8ccf67e68a738000361019a217924e7d8c502cd",
         "bytes": 201
     },
     {
         "path": "bin/prepare_chain_category_images.php",
         "action": "write",
         "sha256": "d1b226f3ba67acbfe4f56d3ac19ff3ceda55794144ba463034430f30085f4418",
+        "normalized_sha256": "d1b226f3ba67acbfe4f56d3ac19ff3ceda55794144ba463034430f30085f4418",
         "bytes": 1791
     },
     {
         "path": "bin/prepare_chain_filter_repair.php",
         "action": "write",
         "sha256": "beb5b5cacce4a8575a3a20196cb96e6cf376731d30ad9de4cec2ebec80a4e448",
+        "normalized_sha256": "beb5b5cacce4a8575a3a20196cb96e6cf376731d30ad9de4cec2ebec80a4e448",
         "bytes": 3291
     },
     {
         "path": "bin/prepare_chain_seo.php",
         "action": "write",
         "sha256": "600d0f3bd94e22b9260e857d873e641643f0bb634ddc02b9d87f4d20fae86fca",
+        "normalized_sha256": "600d0f3bd94e22b9260e857d873e641643f0bb634ddc02b9d87f4d20fae86fca",
         "bytes": 8067
     },
     {
         "path": "bin/prepare_tsep_chain_image_plan.php",
         "action": "write",
         "sha256": "2dea208754de6e7f0b4a7eb09c2b5ab90346dd124b339083e78d261b4348078c",
+        "normalized_sha256": "2dea208754de6e7f0b4a7eb09c2b5ab90346dd124b339083e78d261b4348078c",
         "bytes": 5719
     },
     {
         "path": "bin/prepare_tsep_chain_images.php",
         "action": "write",
         "sha256": "a150ff26f9e33edb22442f25e9adb61d0c61415a941fe51702967942073a27e9",
+        "normalized_sha256": "a150ff26f9e33edb22442f25e9adb61d0c61415a941fe51702967942073a27e9",
         "bytes": 2786
     },
     {
         "path": "bin/register_direct_gallery.php",
         "action": "write",
         "sha256": "32f771f3bbed53d24fa7ff18932ba98a45ae5ce601bc7113b8284b856dc97cea",
+        "normalized_sha256": "32f771f3bbed53d24fa7ff18932ba98a45ae5ce601bc7113b8284b856dc97cea",
         "bytes": 1256
     },
     {
         "path": "bin/sync_complete_avito.php",
         "action": "write",
         "sha256": "91b258784014fa8f10ea2141eaf61a50cef7f2cf404420669c1f6d8bc6efe9e0",
+        "normalized_sha256": "91b258784014fa8f10ea2141eaf61a50cef7f2cf404420669c1f6d8bc6efe9e0",
         "bytes": 315
     },
     {
         "path": "bin/sync_inventory_api.php",
         "action": "write",
         "sha256": "15b25594962b26cd5d7fe5332b1cb5a9b4a1668b0572b72ea115a9421536488c",
+        "normalized_sha256": "15b25594962b26cd5d7fe5332b1cb5a9b4a1668b0572b72ea115a9421536488c",
         "bytes": 2442
     },
     {
         "path": "bin/verify_chain_category_images.php",
         "action": "write",
         "sha256": "5943e4dcb04e82a82104263eaaba064df2af5515c039fa13985e1292d8310779",
+        "normalized_sha256": "5943e4dcb04e82a82104263eaaba064df2af5515c039fa13985e1292d8310779",
         "bytes": 1604
     },
     {
         "path": "bin/verify_chain_filter_repair.php",
         "action": "write",
         "sha256": "6df2edde59e523a00372ac96927fa877d7de7c5e3a98190473fc444e137c93bb",
+        "normalized_sha256": "6df2edde59e523a00372ac96927fa877d7de7c5e3a98190473fc444e137c93bb",
         "bytes": 2884
     },
     {
         "path": "bin/verify_chain_seo.php",
         "action": "write",
         "sha256": "663b07fb6bbc1519876f853bde7f9d15d22c8e223997f034fa593f0cb10d3157",
+        "normalized_sha256": "663b07fb6bbc1519876f853bde7f9d15d22c8e223997f034fa593f0cb10d3157",
         "bytes": 4251
     },
     {
         "path": "bin/verify_tsep_chains.php",
         "action": "write",
         "sha256": "c5eee81c37d132170eeb7df9622f7ad3a2ae78299240317e23732a6deb17593e",
+        "normalized_sha256": "c5eee81c37d132170eeb7df9622f7ad3a2ae78299240317e23732a6deb17593e",
         "bytes": 4176
     },
     {
         "path": "public/.htaccess",
         "action": "write",
         "sha256": "5334f33295da82d9b6c25a7fbaf6cc8484d88519a436fe0bab0899fe797da31f",
+        "normalized_sha256": "d8d0213137328c962f404676e1f474bfd50ee2715b7c24dca84dda5e55fb0474",
         "bytes": 4539
     },
     {
         "path": "public/cron/run_task_cli.php",
         "action": "write",
         "sha256": "8eb6bfae29a12940ec99582088000e62b1a6a4ef553c3dd6c4fe63ccd08a6e42",
+        "normalized_sha256": "0a7c2bdb28d1efa7054bd8a94bacd13ea445d0858a8c896af26f3a956d4effba",
         "bytes": 6353
     },
     {
         "path": "public/css/catalog-facets.css",
         "action": "write",
         "sha256": "893342e7e192ec5a3687a3f61837bdf52e6198056297a6154c0a2cf83b65a926",
+        "normalized_sha256": "9ded079e27c6b01dc2d6ae7d7cc49349a2d1a4c0cb21bea1e305c7b939abeaaa",
         "bytes": 7089
     },
     {
         "path": "public/css/complete-catalog.css",
         "action": "write",
         "sha256": "078619291cb87679da06ac2852b532d70062d9f8d43ce9d813c2ce32ff0b5ce8",
+        "normalized_sha256": "832e4d5eeba6fa4dcecdfb148f1ede4697a3724ec224f193db67476813b55768",
         "bytes": 1408
     },
     {
         "path": "public/css/home-preview.css",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/css/home.css",
         "action": "write",
         "sha256": "9f89c5b4067bca47c1f8e498e7b808fa5d762a321c7cfab2cbf34cffde9547aa",
+        "normalized_sha256": "9f89c5b4067bca47c1f8e498e7b808fa5d762a321c7cfab2cbf34cffde9547aa",
         "bytes": 19914
     },
     {
         "path": "public/css/product-badges.css",
         "action": "write",
         "sha256": "c1673cc7b40ab2978f847add7e8630b53aba4717ab264a44b1e876aab573a706",
+        "normalized_sha256": "c1673cc7b40ab2978f847add7e8630b53aba4717ab264a44b1e876aab573a706",
         "bytes": 243
     },
     {
         "path": "public/css/product-fulfilment.css",
         "action": "write",
         "sha256": "d2baad5309c292b6e6d35097cdd3d434733ec138c7a08c62bfdb6c5539fc0d97",
+        "normalized_sha256": "d2baad5309c292b6e6d35097cdd3d434733ec138c7a08c62bfdb6c5539fc0d97",
         "bytes": 1136
     },
     {
         "path": "public/css/style.css",
         "action": "write",
         "sha256": "ef9d24ac19e47d6ef2a12e4bf26939a601df86012004e6eb4c924255f241be36",
+        "normalized_sha256": "ef9d24ac19e47d6ef2a12e4bf26939a601df86012004e6eb4c924255f241be36",
         "bytes": 190584
     },
     {
         "path": "public/images/category/baseimg/snow-chains-category-v1.webp",
         "action": "write",
         "sha256": "e30196622e57bcdc11e81d166c7c10a044ad47df5ae072ada72ed4f7900bfa5e",
+        "normalized_sha256": null,
         "bytes": 69936
     },
     {
         "path": "public/images/category/baseimg/snow-chains-forklift-category-v1.webp",
         "action": "write",
         "sha256": "edc4b3357e540eb26846e6017e873cc8844e46cff974fce8e671ca35ba6d341a",
+        "normalized_sha256": null,
         "bytes": 49560
     },
     {
         "path": "public/images/category/baseimg/snow-chains-special-equipment-category-v1.webp",
         "action": "write",
         "sha256": "1137a4d18d31fb9412b6e8402e98f0f4a24baea1ce7b2f6ed4e945523f5ad576",
+        "normalized_sha256": null,
         "bytes": 61136
     },
     {
         "path": "public/images/category/mini/snow-chains-category-v1.webp",
         "action": "write",
         "sha256": "be91a40e6e780914788cd78cf693b905fd64f32e2177b1af9f16eb9c6a5d0e64",
+        "normalized_sha256": null,
         "bytes": 14494
     },
     {
         "path": "public/images/category/mini/snow-chains-forklift-category-v1.webp",
         "action": "write",
         "sha256": "22e677cc46d537f15e3a6ae858ae65c5f8b43360f67c7c815ada974a1eae06cc",
+        "normalized_sha256": null,
         "bytes": 10110
     },
     {
         "path": "public/images/category/mini/snow-chains-special-equipment-category-v1.webp",
         "action": "write",
         "sha256": "a5df2a1f5a4ed193c862e60ac048a75f86d0e465199af4851f26535a22006955",
+        "normalized_sha256": null,
         "bytes": 12080
     },
     {
         "path": "public/images/home-preview/advantages-team-cartoon.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/atv-eos-studio.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/atv-knight-studio.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/atv-p311-studio.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/atv-p357-studio.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/callback-mascot-red.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/company-mascot-seated.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/template-art.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home-preview/wheel-rims.webp",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/images/home/advantages-team-cartoon.webp",
         "action": "write",
         "sha256": "dcb5bcb11d8a86d722cf86f9a9885ee2a8ca182c5d11c9bc231a1d6af42bff90",
+        "normalized_sha256": null,
         "bytes": 48420
     },
     {
         "path": "public/images/home/advantages-team.webp",
         "action": "write",
         "sha256": "792e8dc17b5def45bf7478e43425b0d442e585b8f0f73c1bdb80d00d2db8e13d",
+        "normalized_sha256": null,
         "bytes": 58906
     },
     {
         "path": "public/images/home/atv-eos-studio.webp",
         "action": "write",
         "sha256": "2eda6458c6b60dc67b2165d492f15ef3f294d44d6f7faf67af0b054a14baca3b",
+        "normalized_sha256": null,
         "bytes": 73102
     },
     {
         "path": "public/images/home/atv-knight-studio.webp",
         "action": "write",
         "sha256": "cfd1ceefe634db2694ea57f43d6ef8c9fe98a1c98544eedbc08bcbae535f2b66",
+        "normalized_sha256": null,
         "bytes": 60026
     },
     {
         "path": "public/images/home/atv-p311-studio.webp",
         "action": "write",
         "sha256": "ba02ec97058e132863eafd8ab16dab84bb3e97e4a58502ed8531076e0920613f",
+        "normalized_sha256": null,
         "bytes": 60372
     },
     {
         "path": "public/images/home/atv-p357-studio.webp",
         "action": "write",
         "sha256": "b259732b25277d6003140f4389dc8ffb55f1fcb2e718c587d10ff6f48ffe3d08",
+        "normalized_sha256": null,
         "bytes": 80534
     },
     {
         "path": "public/images/home/callback-mascot-red.webp",
         "action": "write",
         "sha256": "998868a9398f6c897a220b3dd07a93077d9a897f24679a7d284d74b220b09c98",
+        "normalized_sha256": null,
         "bytes": 51856
     },
     {
         "path": "public/images/home/company-mascot-seated.webp",
         "action": "write",
         "sha256": "8e062a94342370bd18d8f2258500ae5af0e891ecb11885ae752aa7c8d95021c2",
+        "normalized_sha256": null,
         "bytes": 78362
     },
     {
         "path": "public/images/home/forklift.webp",
         "action": "write",
         "sha256": "be93cda2ea9bf9365ec487503eb4c60798629d89f89f3fc445ab67d8b9d8f09d",
+        "normalized_sha256": null,
         "bytes": 31038
     },
     {
         "path": "public/images/home/skid-steer.webp",
         "action": "write",
         "sha256": "1578890155634924f88e66fe96471e846a0ec620be5dc408e3a1e25754affa7c",
+        "normalized_sha256": null,
         "bytes": 39882
     },
     {
         "path": "public/images/home/template-art.webp",
         "action": "write",
         "sha256": "62dff4ceb62653ee742266c761198ad19d0df05a81f2238e5725ba4f8a51c7d1",
+        "normalized_sha256": null,
         "bytes": 310202
     },
     {
         "path": "public/images/home/wheel-loader.webp",
         "action": "write",
         "sha256": "53262c93de3d9c4c25dee84df68fc5a5dbbf421368369366119ad86245b33431",
+        "normalized_sha256": null,
         "bytes": 37882
     },
     {
         "path": "public/images/home/wheel-rims.webp",
         "action": "write",
         "sha256": "f65db4f14e9a7ef7fb8f1ce94bc6391417fa4dabf2f30b3e6a38ab238a2fccc5",
+        "normalized_sha256": null,
         "bytes": 40364
     },
     {
         "path": "public/images/home/wheeled-excavator.webp",
         "action": "write",
         "sha256": "5ccfca22768e275d00444e997ac19e02334818becfba627b8cfeec328afef46e",
+        "normalized_sha256": null,
         "bytes": 48828
     },
     {
         "path": "public/images/product/baseimg/ekka-p350-27x11-14-4pr-12488.webp",
         "action": "write",
         "sha256": "d6c35c0d0a1f9caf0db9a0d15cf6c8acfe13c23ac0136ef5c7a46d03330858f1",
+        "normalized_sha256": null,
         "bytes": 51564
     },
     {
         "path": "public/images/product/baseimg/ekka-p350-27x9-14-4pr-12487.webp",
         "action": "write",
         "sha256": "abb61e053efeffe15e11ee07ccf40644371eb32c6bc8b3a28baf68185b490ab9",
+        "normalized_sha256": null,
         "bytes": 51398
     },
     {
         "path": "public/images/product/baseimg/snow-chain-forklift-honeycomb-6-6-v1.webp",
         "action": "write",
         "sha256": "f9812338e87cfee420e0c04067aa2083c1dcadeefb146d0a3e27454ac2ddb8ff",
+        "normalized_sha256": null,
         "bytes": 122856
     },
     {
         "path": "public/images/product/baseimg/snow-chain-forklift-honeycomb-8-8-v1.webp",
         "action": "write",
         "sha256": "ab8342e3b0bbc8804dce67fabd9ded019aa468dfae14fc14d5a15492ae83a9b4",
+        "normalized_sha256": null,
         "bytes": 115384
     },
     {
         "path": "public/images/product/baseimg/snow-chain-forklift-ladder-6-6-v1.webp",
         "action": "write",
         "sha256": "e20cab715a19000754496bedacdc012f0dc22b658adb2b04a35dabe6b66317fc",
+        "normalized_sha256": null,
         "bytes": 95138
     },
     {
         "path": "public/images/product/baseimg/snow-chain-forklift-ladder-8-6-v1.webp",
         "action": "write",
         "sha256": "70b48084889f249d1ab4f190401ac43641639e2547788ab8d1bd0fcfd74ce404",
+        "normalized_sha256": null,
         "bytes": 105548
     },
     {
         "path": "public/images/product/baseimg/snow-chain-forklift-zigzag-8-6-v1.webp",
         "action": "write",
         "sha256": "3353776c636fbb86c54000528ed86327dd41616df6b6034c8f3bffb10d9c5812",
+        "normalized_sha256": null,
         "bytes": 108998
     },
     {
         "path": "public/images/product/baseimg/snow-chain-special-honeycomb-10-10-v1.webp",
         "action": "write",
         "sha256": "08ee310aaa5043c639cbcf89300116aeda882897366c314ccd58499614029b2b",
+        "normalized_sha256": null,
         "bytes": 114090
     },
     {
         "path": "public/images/product/baseimg/snow-chain-special-ladder-10-10-v1.webp",
         "action": "write",
         "sha256": "e9a2ea90bfa03924909bdb6c2427775d4b76434e1df720a8a2c86139e4ce5c3a",
+        "normalized_sha256": null,
         "bytes": 105502
     },
     {
         "path": "public/images/product/baseimg/snow-chain-special-ladder-10-8-v1.webp",
         "action": "write",
         "sha256": "222dee20fc24fb2d989813ac607d5d3505a5bf2669205f8bb59d4df82538473c",
+        "normalized_sha256": null,
         "bytes": 115020
     },
     {
         "path": "public/images/product/baseimg/snow-chain-special-ladder-8-8-v1.webp",
         "action": "write",
         "sha256": "c6fd877827f2bfbc97298e6059a388e57327ec810d52c1494b9dab871a01f2ff",
+        "normalized_sha256": null,
         "bytes": 105594
     },
     {
         "path": "public/images/product/baseimg/tsep-chain-placeholder.jpg",
         "action": "write",
         "sha256": "32af707c32d984752d5d4afaa53f957a0437f2860317c981adde2e6862d14a63",
+        "normalized_sha256": null,
         "bytes": 4676
     },
     {
         "path": "public/images/product/baseimg/tsep-forklift-honeycomb-6-6-v1.webp",
         "action": "write",
         "sha256": "f9812338e87cfee420e0c04067aa2083c1dcadeefb146d0a3e27454ac2ddb8ff",
+        "normalized_sha256": null,
         "bytes": 122856
     },
     {
         "path": "public/images/product/baseimg/tsep-forklift-honeycomb-8-8-v1.webp",
         "action": "write",
         "sha256": "ab8342e3b0bbc8804dce67fabd9ded019aa468dfae14fc14d5a15492ae83a9b4",
+        "normalized_sha256": null,
         "bytes": 115384
     },
     {
         "path": "public/images/product/baseimg/tsep-forklift-ladder-6-6-v1.webp",
         "action": "write",
         "sha256": "e20cab715a19000754496bedacdc012f0dc22b658adb2b04a35dabe6b66317fc",
+        "normalized_sha256": null,
         "bytes": 95138
     },
     {
         "path": "public/images/product/baseimg/tsep-forklift-ladder-8-6-v1.webp",
         "action": "write",
         "sha256": "70b48084889f249d1ab4f190401ac43641639e2547788ab8d1bd0fcfd74ce404",
+        "normalized_sha256": null,
         "bytes": 105548
     },
     {
         "path": "public/images/product/baseimg/tsep-forklift-zigzag-8-6-v1.webp",
         "action": "write",
         "sha256": "3353776c636fbb86c54000528ed86327dd41616df6b6034c8f3bffb10d9c5812",
+        "normalized_sha256": null,
         "bytes": 108998
     },
     {
         "path": "public/images/product/baseimg/tsep-special-honeycomb-10-10-v1.webp",
         "action": "write",
         "sha256": "08ee310aaa5043c639cbcf89300116aeda882897366c314ccd58499614029b2b",
+        "normalized_sha256": null,
         "bytes": 114090
     },
     {
         "path": "public/images/product/baseimg/tsep-special-ladder-10-10-v1.webp",
         "action": "write",
         "sha256": "e9a2ea90bfa03924909bdb6c2427775d4b76434e1df720a8a2c86139e4ce5c3a",
+        "normalized_sha256": null,
         "bytes": 105502
     },
     {
         "path": "public/images/product/baseimg/tsep-special-ladder-10-8-v1.webp",
         "action": "write",
         "sha256": "222dee20fc24fb2d989813ac607d5d3505a5bf2669205f8bb59d4df82538473c",
+        "normalized_sha256": null,
         "bytes": 115020
     },
     {
         "path": "public/images/product/baseimg/tsep-special-ladder-8-8-v1.webp",
         "action": "write",
         "sha256": "c6fd877827f2bfbc97298e6059a388e57327ec810d52c1494b9dab871a01f2ff",
+        "normalized_sha256": null,
         "bytes": 105594
     },
     {
         "path": "public/images/product/mini/ekka-p350-27x11-14-4pr-12488.webp",
         "action": "write",
         "sha256": "f821fee38e7f2fd41953659de67d941f61425b6089574407a3e71cf5398d37f7",
+        "normalized_sha256": null,
         "bytes": 13856
     },
     {
         "path": "public/images/product/mini/ekka-p350-27x9-14-4pr-12487.webp",
         "action": "write",
         "sha256": "5441b43d6481f3a29afa90f6e1a828216b0abcc04f3527ee6d1a917f863b2cd1",
+        "normalized_sha256": null,
         "bytes": 13804
     },
     {
         "path": "public/images/product/mini/snow-chain-forklift-honeycomb-6-6-v1.webp",
         "action": "write",
         "sha256": "e53217d8ceb924761c0da2c9c9f7393746166f5e645eda8ce6aa0dc7c227d606",
+        "normalized_sha256": null,
         "bytes": 18072
     },
     {
         "path": "public/images/product/mini/snow-chain-forklift-honeycomb-8-8-v1.webp",
         "action": "write",
         "sha256": "8eca56e1dcc60bd3d246360b70b7cda5b7f9b50f243ffdc33b1694c3fec7c291",
+        "normalized_sha256": null,
         "bytes": 17242
     },
     {
         "path": "public/images/product/mini/snow-chain-forklift-ladder-6-6-v1.webp",
         "action": "write",
         "sha256": "bc07704d7423c6635d87247d0ceec0d7b7a78c417e4f6ffd32927e2631c214c8",
+        "normalized_sha256": null,
         "bytes": 15260
     },
     {
         "path": "public/images/product/mini/snow-chain-forklift-ladder-8-6-v1.webp",
         "action": "write",
         "sha256": "347e1577fb0f081814d64c71b7386c76394719ca1538abe53e406ef97d5aca6b",
+        "normalized_sha256": null,
         "bytes": 16002
     },
     {
         "path": "public/images/product/mini/snow-chain-forklift-zigzag-8-6-v1.webp",
         "action": "write",
         "sha256": "8a57c2ae51392a63439b0439b60f632a3dc4a8c00bf047b168068a0a10e685c2",
+        "normalized_sha256": null,
         "bytes": 16144
     },
     {
         "path": "public/images/product/mini/snow-chain-special-honeycomb-10-10-v1.webp",
         "action": "write",
         "sha256": "d2c2403f4a8c0e431067a75ddf5e01a3f0e94444a7a361888b7a0fb38d2167bd",
+        "normalized_sha256": null,
         "bytes": 16912
     },
     {
         "path": "public/images/product/mini/snow-chain-special-ladder-10-10-v1.webp",
         "action": "write",
         "sha256": "bbd8df98e7d1a1f153ec562a92ddfed1f4aa9547246f5d1d75bb56686d3306e1",
+        "normalized_sha256": null,
         "bytes": 15794
     },
     {
         "path": "public/images/product/mini/snow-chain-special-ladder-10-8-v1.webp",
         "action": "write",
         "sha256": "28753cc6c49111e663427efb03b53a8c159eb20d236f2d3ab7d1111d05fbd596",
+        "normalized_sha256": null,
         "bytes": 16644
     },
     {
         "path": "public/images/product/mini/snow-chain-special-ladder-8-8-v1.webp",
         "action": "write",
         "sha256": "5ea3289f3040d6fbc619242db255102bbca1a099044fed168f5618a8ab60be32",
+        "normalized_sha256": null,
         "bytes": 16212
     },
     {
         "path": "public/images/product/mini/tsep-chain-placeholder.jpg",
         "action": "write",
         "sha256": "32af707c32d984752d5d4afaa53f957a0437f2860317c981adde2e6862d14a63",
+        "normalized_sha256": null,
         "bytes": 4676
     },
     {
         "path": "public/images/product/mini/tsep-forklift-honeycomb-6-6-v1.webp",
         "action": "write",
         "sha256": "e53217d8ceb924761c0da2c9c9f7393746166f5e645eda8ce6aa0dc7c227d606",
+        "normalized_sha256": null,
         "bytes": 18072
     },
     {
         "path": "public/images/product/mini/tsep-forklift-honeycomb-8-8-v1.webp",
         "action": "write",
         "sha256": "8eca56e1dcc60bd3d246360b70b7cda5b7f9b50f243ffdc33b1694c3fec7c291",
+        "normalized_sha256": null,
         "bytes": 17242
     },
     {
         "path": "public/images/product/mini/tsep-forklift-ladder-6-6-v1.webp",
         "action": "write",
         "sha256": "bc07704d7423c6635d87247d0ceec0d7b7a78c417e4f6ffd32927e2631c214c8",
+        "normalized_sha256": null,
         "bytes": 15260
     },
     {
         "path": "public/images/product/mini/tsep-forklift-ladder-8-6-v1.webp",
         "action": "write",
         "sha256": "347e1577fb0f081814d64c71b7386c76394719ca1538abe53e406ef97d5aca6b",
+        "normalized_sha256": null,
         "bytes": 16002
     },
     {
         "path": "public/images/product/mini/tsep-forklift-zigzag-8-6-v1.webp",
         "action": "write",
         "sha256": "8a57c2ae51392a63439b0439b60f632a3dc4a8c00bf047b168068a0a10e685c2",
+        "normalized_sha256": null,
         "bytes": 16144
     },
     {
         "path": "public/images/product/mini/tsep-special-honeycomb-10-10-v1.webp",
         "action": "write",
         "sha256": "d2c2403f4a8c0e431067a75ddf5e01a3f0e94444a7a361888b7a0fb38d2167bd",
+        "normalized_sha256": null,
         "bytes": 16912
     },
     {
         "path": "public/images/product/mini/tsep-special-ladder-10-10-v1.webp",
         "action": "write",
         "sha256": "bbd8df98e7d1a1f153ec562a92ddfed1f4aa9547246f5d1d75bb56686d3306e1",
+        "normalized_sha256": null,
         "bytes": 15794
     },
     {
         "path": "public/images/product/mini/tsep-special-ladder-10-8-v1.webp",
         "action": "write",
         "sha256": "28753cc6c49111e663427efb03b53a8c159eb20d236f2d3ab7d1111d05fbd596",
+        "normalized_sha256": null,
         "bytes": 16644
     },
     {
         "path": "public/images/product/mini/tsep-special-ladder-8-8-v1.webp",
         "action": "write",
         "sha256": "5ea3289f3040d6fbc619242db255102bbca1a099044fed168f5618a8ab60be32",
+        "normalized_sha256": null,
         "bytes": 16212
     },
     {
         "path": "public/images/product/original/snow-chain-forklift-honeycomb-6-6-v1.webp",
         "action": "write",
         "sha256": "09c7223bce2e4065731661f2f54324574dca5b3b69ecb39b6dfda7b3c8cf5aca",
+        "normalized_sha256": null,
         "bytes": 267962
     },
     {
         "path": "public/images/product/original/snow-chain-forklift-honeycomb-8-8-v1.webp",
         "action": "write",
         "sha256": "b778b8dd55c5a90a7e232a025e5262211968e6b1b294c0441f1cd11496256c43",
+        "normalized_sha256": null,
         "bytes": 252492
     },
     {
         "path": "public/images/product/original/snow-chain-forklift-ladder-6-6-v1.webp",
         "action": "write",
         "sha256": "db1126fab55851f2c75d1afffea1374933a0694ffac23469e3987c45114dee45",
+        "normalized_sha256": null,
         "bytes": 207344
     },
     {
         "path": "public/images/product/original/snow-chain-forklift-ladder-8-6-v1.webp",
         "action": "write",
         "sha256": "a8c0c5a21b9b89dc3aa637b3d34680061aace567463c135efbe12caf6b1de0b4",
+        "normalized_sha256": null,
         "bytes": 232158
     },
     {
         "path": "public/images/product/original/snow-chain-forklift-zigzag-8-6-v1.webp",
         "action": "write",
         "sha256": "bb670d484b3302cb75fd832f0482d5c36850f231ed7bd8123ed540983ecd913c",
+        "normalized_sha256": null,
         "bytes": 245992
     },
     {
         "path": "public/images/product/original/snow-chain-special-honeycomb-10-10-v1.webp",
         "action": "write",
         "sha256": "edd138d06cfbee4989baf7eaaa8d54eacb250e58a31f2eb27e53c4db2b147129",
+        "normalized_sha256": null,
         "bytes": 248948
     },
     {
         "path": "public/images/product/original/snow-chain-special-ladder-10-10-v1.webp",
         "action": "write",
         "sha256": "45951e9c51d9a30e48b46843d44494bcb39395b7db206713f2eb008193783aaf",
+        "normalized_sha256": null,
         "bytes": 220314
     },
     {
         "path": "public/images/product/original/snow-chain-special-ladder-10-8-v1.webp",
         "action": "write",
         "sha256": "f26a3c1260808aff96a61dd2c042f7e51eeabc9a37dc9c29304d605d7bea5dd1",
+        "normalized_sha256": null,
         "bytes": 253594
     },
     {
         "path": "public/images/product/original/snow-chain-special-ladder-8-8-v1.webp",
         "action": "write",
         "sha256": "25b4211a927c4adf4eb0b9a8f51591cf5f25f3b0f354c0e75baaeaf1b091df73",
+        "normalized_sha256": null,
         "bytes": 219642
     },
     {
         "path": "public/images/product/original/tsep-chain-placeholder.jpg",
         "action": "write",
         "sha256": "32af707c32d984752d5d4afaa53f957a0437f2860317c981adde2e6862d14a63",
+        "normalized_sha256": null,
         "bytes": 4676
     },
     {
         "path": "public/images/product/original/tsep-forklift-honeycomb-6-6-v1.webp",
         "action": "write",
         "sha256": "09c7223bce2e4065731661f2f54324574dca5b3b69ecb39b6dfda7b3c8cf5aca",
+        "normalized_sha256": null,
         "bytes": 267962
     },
     {
         "path": "public/images/product/original/tsep-forklift-honeycomb-8-8-v1.webp",
         "action": "write",
         "sha256": "b778b8dd55c5a90a7e232a025e5262211968e6b1b294c0441f1cd11496256c43",
+        "normalized_sha256": null,
         "bytes": 252492
     },
     {
         "path": "public/images/product/original/tsep-forklift-ladder-6-6-v1.webp",
         "action": "write",
         "sha256": "db1126fab55851f2c75d1afffea1374933a0694ffac23469e3987c45114dee45",
+        "normalized_sha256": null,
         "bytes": 207344
     },
     {
         "path": "public/images/product/original/tsep-forklift-ladder-8-6-v1.webp",
         "action": "write",
         "sha256": "a8c0c5a21b9b89dc3aa637b3d34680061aace567463c135efbe12caf6b1de0b4",
+        "normalized_sha256": null,
         "bytes": 232158
     },
     {
         "path": "public/images/product/original/tsep-forklift-zigzag-8-6-v1.webp",
         "action": "write",
         "sha256": "bb670d484b3302cb75fd832f0482d5c36850f231ed7bd8123ed540983ecd913c",
+        "normalized_sha256": null,
         "bytes": 245992
     },
     {
         "path": "public/images/product/original/tsep-special-honeycomb-10-10-v1.webp",
         "action": "write",
         "sha256": "edd138d06cfbee4989baf7eaaa8d54eacb250e58a31f2eb27e53c4db2b147129",
+        "normalized_sha256": null,
         "bytes": 248948
     },
     {
         "path": "public/images/product/original/tsep-special-ladder-10-10-v1.webp",
         "action": "write",
         "sha256": "45951e9c51d9a30e48b46843d44494bcb39395b7db206713f2eb008193783aaf",
+        "normalized_sha256": null,
         "bytes": 220314
     },
     {
         "path": "public/images/product/original/tsep-special-ladder-10-8-v1.webp",
         "action": "write",
         "sha256": "f26a3c1260808aff96a61dd2c042f7e51eeabc9a37dc9c29304d605d7bea5dd1",
+        "normalized_sha256": null,
         "bytes": 253594
     },
     {
         "path": "public/images/product/original/tsep-special-ladder-8-8-v1.webp",
         "action": "write",
         "sha256": "25b4211a927c4adf4eb0b9a8f51591cf5f25f3b0f354c0e75baaeaf1b091df73",
+        "normalized_sha256": null,
         "bytes": 219642
     },
     {
         "path": "public/images/product/unload/direct-gallery-10437-white-v1.png",
         "action": "write",
         "sha256": "00f73ac15836ea0b9872e038bcd8e0e493bbc7b20488de9ac945b20aa0c09ab7",
+        "normalized_sha256": null,
         "bytes": 1441875
     },
     {
         "path": "public/images/product/unload/direct-gallery-10438-white-v1.png",
         "action": "write",
         "sha256": "00f73ac15836ea0b9872e038bcd8e0e493bbc7b20488de9ac945b20aa0c09ab7",
+        "normalized_sha256": null,
         "bytes": 1441875
     },
     {
         "path": "public/images/product/unload/direct-gallery-10439-white-v1.png",
         "action": "write",
         "sha256": "e9d1a5fbb35caa1564fd86bb0269216854dbcea48331db3e5c03eafca62c972e",
+        "normalized_sha256": null,
         "bytes": 1511238
     },
     {
         "path": "public/images/product/unload/direct-gallery-10680-white-v1.png",
         "action": "write",
         "sha256": "7191cefd30b99e42da0c00314aa207bf558e7dcd93d1bf1c3bfe1c5c4a62530a",
+        "normalized_sha256": null,
         "bytes": 1444527
     },
     {
         "path": "public/images/product/unload/direct-gallery-11007-white-v1.png",
         "action": "write",
         "sha256": "62265b3470002eaeb84853aa89d6be439f193d1355dea12cdf8311482ac18946",
+        "normalized_sha256": null,
         "bytes": 1436290
     },
     {
         "path": "public/images/product/unload/direct-gallery-11009-white-v1.png",
         "action": "write",
         "sha256": "62265b3470002eaeb84853aa89d6be439f193d1355dea12cdf8311482ac18946",
+        "normalized_sha256": null,
         "bytes": 1436290
     },
     {
         "path": "public/images/product/unload/direct-gallery-11012-white-v1.png",
         "action": "write",
         "sha256": "62265b3470002eaeb84853aa89d6be439f193d1355dea12cdf8311482ac18946",
+        "normalized_sha256": null,
         "bytes": 1436290
     },
     {
         "path": "public/images/product/unload/direct-gallery-12097-white-v1.png",
         "action": "write",
         "sha256": "62265b3470002eaeb84853aa89d6be439f193d1355dea12cdf8311482ac18946",
+        "normalized_sha256": null,
         "bytes": 1436290
     },
     {
         "path": "public/js/admin-product-catalog.js",
         "action": "write",
         "sha256": "6f3585c24873f30175bcc9778c4bd01001c39eb7b32efd230ded631d4661c9fa",
+        "normalized_sha256": "6f3585c24873f30175bcc9778c4bd01001c39eb7b32efd230ded631d4661c9fa",
         "bytes": 8602
     },
     {
         "path": "public/js/catalog-controls.js",
         "action": "write",
         "sha256": "c0ae9b2f207e409ec9b4e9a7665dc6546d9fdb0c59c7b039deebb59699acc7e7",
+        "normalized_sha256": "c0ae9b2f207e409ec9b4e9a7665dc6546d9fdb0c59c7b039deebb59699acc7e7",
         "bytes": 701
     },
     {
         "path": "public/js/catalog-facets.js",
         "action": "write",
         "sha256": "145be0f1168ab0ed3ea66a6ece4c0b539dd424eaaa86334a7c138c3bdf64456a",
+        "normalized_sha256": "145be0f1168ab0ed3ea66a6ece4c0b539dd424eaaa86334a7c138c3bdf64456a",
         "bytes": 10648
     },
     {
         "path": "public/js/home-preview.js",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "public/js/home.js",
         "action": "write",
         "sha256": "3c29f384b33390e817cfc9a52466eff8af5100374ac0fd28fd9a41106e6390d6",
+        "normalized_sha256": "2de711bae8d5f888e57bc2fb208b7e32818bcbdebdd3c02524cd7c276873e52c",
         "bytes": 2793
     },
     {
         "path": "public/js/main.js",
         "action": "write",
         "sha256": "33f279f3860a7a80c0391f0890dc469212ac679688a691ca60b6dcaf7225f28d",
+        "normalized_sha256": "33f279f3860a7a80c0391f0890dc469212ac679688a691ca60b6dcaf7225f28d",
         "bytes": 96373
     },
     {
         "path": "scripts/analyze_catalog_foundation.mjs",
         "action": "write",
         "sha256": "fe5cc8ed511c3224407f8a4fa87f02f35e62187a107602ac7a5a85c92c8b01cb",
+        "normalized_sha256": "fe5cc8ed511c3224407f8a4fa87f02f35e62187a107602ac7a5a85c92c8b01cb",
         "bytes": 11438
     },
     {
         "path": "scripts/apply_approved_panel_shadow.php",
         "action": "write",
         "sha256": "16e32c3dc3ed29111844cfcfbae0f0ec7ffc944e036bd7c4c347a8cb6fe38be7",
+        "normalized_sha256": "16e32c3dc3ed29111844cfcfbae0f0ec7ffc944e036bd7c4c347a8cb6fe38be7",
         "bytes": 2171
     },
     {
         "path": "scripts/audit_catalog_stage7.php",
         "action": "write",
         "sha256": "57dfa363b7c33849b385d72976cde2ca765f6d0904b6ba63c2603e3b23ae3a7b",
+        "normalized_sha256": "57dfa363b7c33849b385d72976cde2ca765f6d0904b6ba63c2603e3b23ae3a7b",
         "bytes": 7073
     },
     {
         "path": "scripts/audit_catalog_stage9.php",
         "action": "write",
         "sha256": "6adcf87cd052f09834e2ec124316bc1feef722e67a3db4215632793452b1578d",
+        "normalized_sha256": "6adcf87cd052f09834e2ec124316bc1feef722e67a3db4215632793452b1578d",
         "bytes": 4759
     },
     {
         "path": "scripts/audit_category_sizes.php",
         "action": "write",
         "sha256": "71d42d16d53693195d94efacff4bd73c5d2c1eea70ab05a18bc220111aebae49",
+        "normalized_sha256": "71d42d16d53693195d94efacff4bd73c5d2c1eea70ab05a18bc220111aebae49",
         "bytes": 1460
+    },
+    {
+        "path": "scripts/audit_project_publication.php",
+        "action": "write",
+        "sha256": "0ca1d95c8aa8a6ac359b2978dd7b773a7aaa37fc8dd326aca4d91d50645226e4",
+        "normalized_sha256": "0ca1d95c8aa8a6ac359b2978dd7b773a7aaa37fc8dd326aca4d91d50645226e4",
+        "bytes": 1718
     },
     {
         "path": "scripts/build_cart_recovery.php",
         "action": "write",
         "sha256": "af396a23d5fd66c7669497a4a8f7d9a35d64376252ae05c6d5619cc02b0e8268",
+        "normalized_sha256": "af396a23d5fd66c7669497a4a8f7d9a35d64376252ae05c6d5619cc02b0e8268",
         "bytes": 3855
     },
     {
         "path": "scripts/build_complete_recovery.php",
         "action": "write",
         "sha256": "50e8a8fd06bd6695c9101647a945b211629784fb32da8aaea6c170a249fee0cb",
+        "normalized_sha256": "50e8a8fd06bd6695c9101647a945b211629784fb32da8aaea6c170a249fee0cb",
         "bytes": 9491
     },
     {
         "path": "scripts/build_confirmed_recovery.php",
         "action": "write",
         "sha256": "8a75e79390129f8a26c4a82f1e1f6b6092a9b144ea90deffe39bda857df61072",
+        "normalized_sha256": "8a75e79390129f8a26c4a82f1e1f6b6092a9b144ea90deffe39bda857df61072",
         "bytes": 2818
     },
     {
         "path": "scripts/build_project_chat_recovery_ledger_20261113.php",
         "action": "write",
         "sha256": "65884ff9338db49c1e796821aa6e6a307f2f1fc3d964f09904f4d27c0042bebe",
+        "normalized_sha256": "65884ff9338db49c1e796821aa6e6a307f2f1fc3d964f09904f4d27c0042bebe",
         "bytes": 11546
     },
     {
         "path": "scripts/build_recovery_control_report.php",
         "action": "write",
         "sha256": "9c09aafc0a3be452eb02a1c6b16025a02ddb67efd4b72c03fb1e0b4daa0e9eeb",
+        "normalized_sha256": "9c09aafc0a3be452eb02a1c6b16025a02ddb67efd4b72c03fb1e0b4daa0e9eeb",
         "bytes": 15175
     },
     {
         "path": "scripts/build_rollback_restoration.php",
         "action": "write",
         "sha256": "0b459ef39dbbc6d5a20f389d9d25328d1b561fa275375e293e1a6e9d8e00543d",
+        "normalized_sha256": "0b459ef39dbbc6d5a20f389d9d25328d1b561fa275375e293e1a6e9d8e00543d",
         "bytes": 13032
     },
     {
         "path": "scripts/build_rollback_restoration_followup.php",
         "action": "write",
         "sha256": "6b2c807ad5388f73e8824e60d73ee7cf350532d17fcf14a936aa4437f078068e",
+        "normalized_sha256": "6b2c807ad5388f73e8824e60d73ee7cf350532d17fcf14a936aa4437f078068e",
         "bytes": 2001
     },
     {
         "path": "scripts/build_stock_rollback_restoration.php",
         "action": "write",
         "sha256": "2c45d40fc9e5c328a319188cbb65d31b66a1638accf2ac22823482166701fd17",
+        "normalized_sha256": "2c45d40fc9e5c328a319188cbb65d31b66a1638accf2ac22823482166701fd17",
         "bytes": 1620
     },
     {
         "path": "scripts/check_catalog_stage8.php",
         "action": "write",
         "sha256": "100810cba39c6060eb900dba245247d48cff7d84e5cc1f704bdcb06dc5a91e92",
+        "normalized_sha256": "100810cba39c6060eb900dba245247d48cff7d84e5cc1f704bdcb06dc5a91e92",
         "bytes": 4693
     },
     {
         "path": "scripts/check_catalog_stage9.php",
         "action": "write",
         "sha256": "8e0eaf9d681240c4690a43ec673b0dec9a6ca1b31aca02d2b47794573c6c46b2",
+        "normalized_sha256": "8e0eaf9d681240c4690a43ec673b0dec9a6ca1b31aca02d2b47794573c6c46b2",
         "bytes": 3868
     },
     {
         "path": "scripts/check_catalog_stage9_manual.php",
         "action": "write",
         "sha256": "6446f0bab0fc3849ce05e2809eff8f6786d64cd6ddfffeab22cb4ec6e1ec2bbb",
+        "normalized_sha256": "6446f0bab0fc3849ce05e2809eff8f6786d64cd6ddfffeab22cb4ec6e1ec2bbb",
         "bytes": 3644
+    },
+    {
+        "path": "scripts/check_project_publication.php",
+        "action": "write",
+        "sha256": "b6a6a0818f9010d6eb973bfe153906926fef8da4139d283ba0b6b6a8ae38be49",
+        "normalized_sha256": "b6a6a0818f9010d6eb973bfe153906926fef8da4139d283ba0b6b6a8ae38be49",
+        "bytes": 2828
     },
     {
         "path": "scripts/complete_approved_shadow_coverage.php",
         "action": "write",
         "sha256": "63e3b7626cae3d888bc1a5c59e6bd40d2e2ede86734de439669123a2d5941eb3",
+        "normalized_sha256": "63e3b7626cae3d888bc1a5c59e6bd40d2e2ede86734de439669123a2d5941eb3",
         "bytes": 741
     },
     {
         "path": "scripts/connect_catalog_naming.php",
         "action": "write",
         "sha256": "61ecff7b460e07855cdabb80dbf849b2b5c148f9c768a10d1c3d720919d1f70d",
+        "normalized_sha256": "509bd4bed9a92283d218693f034e21f78f2082b284312b88e2ef9c1aec2bd162",
         "bytes": 5907
     },
     {
         "path": "scripts/connect_catalog_size_search.php",
         "action": "write",
         "sha256": "6740b7af56df6d0f755451b00803c64b0e4dfa4c714b1f9ba7bd5516f7508e76",
+        "normalized_sha256": "8f92b6211c6d5bb5a5bd77d4ce7f09532c08f7dff98a773bd5f7b0bdad736bee",
         "bytes": 2334
     },
     {
         "path": "scripts/connect_category_facet_bridge.php",
         "action": "write",
         "sha256": "8aa63bb785eb44d47a941381e47db797cfe98fefbedb6956f99e45672c9f86bf",
+        "normalized_sha256": "9f0d2123d61aa03bf46d4b6cc5a20c556288d9cf8dfda98088af4e5cfe716fa1",
         "bytes": 2249
     },
     {
         "path": "scripts/connect_size_editor_status.php",
         "action": "write",
         "sha256": "0c4c5f93a775cd062902d20ba726edacad4544b6009b7fc4d1fe891dc7ea104a",
+        "normalized_sha256": "000660efea802c3cea5f9deca828b599cb8aa7dc4380673789dc0dcbabbd0b6a",
         "bytes": 1327
     },
     {
         "path": "scripts/create_p350_27_26_sets.php",
         "action": "write",
         "sha256": "ac07bf901256e178598d492fd475207cfd33fd1c133dddc903eab4ad4c5ebced",
+        "normalized_sha256": "ac07bf901256e178598d492fd475207cfd33fd1c133dddc903eab4ad4c5ebced",
         "bytes": 8442
     },
     {
         "path": "scripts/export_chain_price_request_data.php",
         "action": "write",
         "sha256": "45570e46f9efb6c7ce2f4676d22607491bdfe3a7cfe90d5e609e118014f44c14",
+        "normalized_sha256": "45570e46f9efb6c7ce2f4676d22607491bdfe3a7cfe90d5e609e118014f44c14",
         "bytes": 1165
     },
     {
         "path": "scripts/finalize_ct08.php",
         "action": "write",
         "sha256": "8fb437bbf75781cac6d458d32e779e2a8c2cd1050c76a4ac5abdb5ac389f15b0",
+        "normalized_sha256": "8fb437bbf75781cac6d458d32e779e2a8c2cd1050c76a4ac5abdb5ac389f15b0",
         "bytes": 1548
     },
     {
         "path": "scripts/finalize_recovery_result.php",
         "action": "write",
         "sha256": "29bc56f5f9c31c1eb91866f58ac98a06a541c3ca3c152b51f11d09472be73b8f",
+        "normalized_sha256": "29bc56f5f9c31c1eb91866f58ac98a06a541c3ca3c152b51f11d09472be73b8f",
         "bytes": 10234
     },
     {
         "path": "scripts/finish_ct08.php",
         "action": "write",
         "sha256": "5174d56ac3b59a0cc9bd6ff851087f9ee7883a449f0872d107c9a6f8629bb74b",
+        "normalized_sha256": "5174d56ac3b59a0cc9bd6ff851087f9ee7883a449f0872d107c9a6f8629bb74b",
         "bytes": 1904
     },
     {
         "path": "scripts/fix_atv_card_ply_template.php",
         "action": "write",
         "sha256": "35fe436501b4fedefcd54b4f9865e82e4989bff8ec46e8a61b3c69f675c7a519",
+        "normalized_sha256": "35fe436501b4fedefcd54b4f9865e82e4989bff8ec46e8a61b3c69f675c7a519",
         "bytes": 1465
     },
     {
         "path": "scripts/fix_catalog_faq_grid.php",
         "action": "write",
         "sha256": "28cb8b9ce4bcf25dc2e47b185de3a09dc701c9b8bf675e782d70ca946c6d0546",
+        "normalized_sha256": "28cb8b9ce4bcf25dc2e47b185de3a09dc701c9b8bf675e782d70ca946c6d0546",
         "bytes": 985
     },
     {
         "path": "scripts/fix_p350_11140_tread.php",
         "action": "write",
         "sha256": "29cef03444c542180276ecf86f5f5f91b1cbc02394b3f09f5acffa3b73533f60",
+        "normalized_sha256": "29cef03444c542180276ecf86f5f5f91b1cbc02394b3f09f5acffa3b73533f60",
         "bytes": 1903
     },
     {
         "path": "scripts/hide_chain_order_note.php",
         "action": "write",
         "sha256": "fe5135ec8e164d921aea7c162eb77eb897ca668ba56b66b957a06f79a0214ba1",
+        "normalized_sha256": "fe5135ec8e164d921aea7c162eb77eb897ca668ba56b66b957a06f79a0214ba1",
         "bytes": 587
     },
     {
         "path": "scripts/hide_chain_supplier.php",
         "action": "write",
         "sha256": "5e523135db8dbb4ac85ed2588851cc96fcc6620da6326008e542049906853188",
+        "normalized_sha256": "5e523135db8dbb4ac85ed2588851cc96fcc6620da6326008e542049906853188",
         "bytes": 4792
     },
     {
         "path": "scripts/import_tsep_chains.php",
         "action": "write",
         "sha256": "54e38c8da0ed073c5762dd6e96bf9411c3665c8a3ea7fa0db8de74643df0a38a",
+        "normalized_sha256": "54e38c8da0ed073c5762dd6e96bf9411c3665c8a3ea7fa0db8de74643df0a38a",
         "bytes": 11559
     },
     {
         "path": "scripts/install_catalog_display.php",
         "action": "write",
         "sha256": "307732f7ee933ec82dc75e149edf49718108abf5bc6d6ee0cf25918aa4726a7c",
+        "normalized_sha256": "307732f7ee933ec82dc75e149edf49718108abf5bc6d6ee0cf25918aa4726a7c",
         "bytes": 262
     },
     {
         "path": "scripts/install_chain_category_images.php",
         "action": "write",
         "sha256": "ac7c20a54fd60d88e6fdcd932468f280e9b41b41e2d146e367f5e4ca54d27901",
+        "normalized_sha256": "ac7c20a54fd60d88e6fdcd932468f280e9b41b41e2d146e367f5e4ca54d27901",
         "bytes": 2638
     },
     {
         "path": "scripts/install_chain_filter_repair.php",
         "action": "write",
         "sha256": "0467bfe9073ad40c1b9124665c48d9f506e844a2c1d8510751a7c452e87d85ba",
+        "normalized_sha256": "0467bfe9073ad40c1b9124665c48d9f506e844a2c1d8510751a7c452e87d85ba",
         "bytes": 4733
     },
     {
         "path": "scripts/install_complete_engagement.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "scripts/install_ct08.php",
         "action": "write",
         "sha256": "8d99d8a01562fb6ef21efd5069edd509cbdd33a5f6b232b77656325af26a6033",
+        "normalized_sha256": "8d99d8a01562fb6ef21efd5069edd509cbdd33a5f6b232b77656325af26a6033",
         "bytes": 2163
     },
     {
         "path": "scripts/install_direct_gallery_white_photos.php",
         "action": "write",
         "sha256": "9f3514da35a9c34154b86afca222972dd36c8ea7e37b0c907e5d93ed9f64e5ee",
+        "normalized_sha256": "9f3514da35a9c34154b86afca222972dd36c8ea7e37b0c907e5d93ed9f64e5ee",
         "bytes": 1531
     },
     {
         "path": "scripts/install_tsep_chain_images.php",
         "action": "write",
         "sha256": "402f93d11f1a5037b51cdc149f4fdd039942097bcd769a6f225ed7463bb615ab",
+        "normalized_sha256": "402f93d11f1a5037b51cdc149f4fdd039942097bcd769a6f225ed7463bb615ab",
         "bytes": 2902
     },
     {
         "path": "scripts/link_complete_avito_ads.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "scripts/match_rendered_product_surface.php",
         "action": "write",
         "sha256": "612ae4355ccae53fe0d6e80871635572810c11982e60d16c70994605d9d0c75f",
+        "normalized_sha256": "612ae4355ccae53fe0d6e80871635572810c11982e60d16c70994605d9d0c75f",
         "bytes": 676
     },
     {
         "path": "scripts/package_catalog_dictionary.php",
         "action": "write",
         "sha256": "a2cde51cedf302a32bd4db333bf5ccbc78f5868863b462f3d161ba192bb90613",
+        "normalized_sha256": "5328203260bcd1ac5ef4ecd6ec6a339e6d66be01b6a4931a8ab06f23d44e4f78",
         "bytes": 6729
     },
     {
         "path": "scripts/package_catalog_facet_bridge.php",
         "action": "write",
         "sha256": "3873f7a7a15d5285500131cb2bf80fe019fc43fcbdbb03d1978e42dbf800b7e4",
+        "normalized_sha256": "616c1e497fdeedfd80cf1bfa74ef0b15731d14cdd1dd332043a939fce1d31955",
         "bytes": 5655
     },
     {
         "path": "scripts/package_catalog_foundation.mjs",
         "action": "write",
         "sha256": "23a55be0b8a96f6213777d999e9b319c9146d62bfeae9f9b5162578319e2bd15",
+        "normalized_sha256": "23a55be0b8a96f6213777d999e9b319c9146d62bfeae9f9b5162578319e2bd15",
         "bytes": 1535
     },
     {
         "path": "scripts/package_catalog_legacy_rules.mjs",
         "action": "write",
         "sha256": "f99eea34b84c24e8c2455ffe74b5cec8c89cb67dab0348a09b9990091aec7f82",
+        "normalized_sha256": "f99eea34b84c24e8c2455ffe74b5cec8c89cb67dab0348a09b9990091aec7f82",
         "bytes": 1494
     },
     {
         "path": "scripts/package_catalog_migration.mjs",
         "action": "write",
         "sha256": "66ce2b278a2b1c434b26a2675528724da4d1eea1b354f5439a5d50affaadde0b",
+        "normalized_sha256": "66ce2b278a2b1c434b26a2675528724da4d1eea1b354f5439a5d50affaadde0b",
         "bytes": 1492
     },
     {
         "path": "scripts/package_catalog_naming.php",
         "action": "write",
         "sha256": "5b2b43992bbd42fb026e20d82205558a11861efe96dc110a834926446a1b3e55",
+        "normalized_sha256": "811d88667e8372930b068414c2d3de8388d323a80cd7108167c752dd16f3f2a7",
         "bytes": 5059
     },
     {
         "path": "scripts/package_catalog_quality.mjs",
         "action": "write",
         "sha256": "19b0b4b176c6c3da5e54b39b38c83abfb1e963d9bfa43cb12771ce7b1e68c705",
+        "normalized_sha256": "19b0b4b176c6c3da5e54b39b38c83abfb1e963d9bfa43cb12771ce7b1e68c705",
         "bytes": 1508
     },
     {
         "path": "scripts/package_catalog_size_search.php",
         "action": "write",
         "sha256": "e44be52321ad47889cf32aac8e6cc2142a1f7bed62dc581926f705f9472583bf",
+        "normalized_sha256": "7086779026259ace9ed239ba0288ed48fe8ee6661544b7c141e84f6072eecd54",
         "bytes": 6154
     },
     {
         "path": "scripts/package_ct08_auto.php",
         "action": "write",
         "sha256": "398c84b6f06ce139a28b37b4cc880ae4e68916e2558833116879a943a9a7e055",
+        "normalized_sha256": "398c84b6f06ce139a28b37b4cc880ae4e68916e2558833116879a943a9a7e055",
         "bytes": 3515
     },
     {
         "path": "scripts/package_ct08_layout.php",
         "action": "write",
         "sha256": "84fe7df1e9302a113ce142d26ba395a68a2eebbd4b7a88e7dd06f985b3a73b06",
+        "normalized_sha256": "84fe7df1e9302a113ce142d26ba395a68a2eebbd4b7a88e7dd06f985b3a73b06",
         "bytes": 862
     },
     {
         "path": "scripts/package_ct08_polish.php",
         "action": "write",
         "sha256": "88590d6f2d6bc4c74428129e98e9de3928e881fc5e7762383989a846e60e4005",
+        "normalized_sha256": "88590d6f2d6bc4c74428129e98e9de3928e881fc5e7762383989a846e60e4005",
         "bytes": 2104
     },
     {
         "path": "scripts/package_ct08_settings.php",
         "action": "write",
         "sha256": "e2680b9d94df7ca938a4255c88d493be6ca8480022d34431128435897c0294a3",
+        "normalized_sha256": "e2680b9d94df7ca938a4255c88d493be6ca8480022d34431128435897c0294a3",
         "bytes": 3844
     },
     {
         "path": "scripts/package_ct08_ux.php",
         "action": "write",
         "sha256": "68003877e775cdd0fd1fae99c8e77c3fb2cf3c42a5f40c819962ef06ab6f9ac4",
+        "normalized_sha256": "68003877e775cdd0fd1fae99c8e77c3fb2cf3c42a5f40c819962ef06ab6f9ac4",
         "bytes": 746
     },
     {
         "path": "scripts/package_quality_seo.php",
         "action": "write",
         "sha256": "74e87b01903c33e12ec09b0ea75ec1104e2cff2ffeb83835b24a9947dccb22bb",
+        "normalized_sha256": "40f4f847a8b3f15344d95914d9671e3b7df751556a651aa5e59bc5e8f895b997",
         "bytes": 2672
     },
     {
         "path": "scripts/package_quality_text.php",
         "action": "write",
         "sha256": "9b0ca282f82185a2e81895359911d2047173bbf7919c1ae6e3bb45d44255fc25",
+        "normalized_sha256": "385b420166bd4b7b2a52125fb575a520d2f0608d77290be05fc45e7ff6c475dc",
         "bytes": 2675
     },
     {
         "path": "scripts/package_quality_workflow.php",
         "action": "write",
         "sha256": "21f8e999f36a26e05820e6968c8d6000d142ef9ae05fbcb51c303e656c57ef88",
+        "normalized_sha256": "235644d3e4f6a21ed567ff44d3cb237afc9e8cd611fccfb889d1b1768312f653",
         "bytes": 2004
     },
     {
         "path": "scripts/package_rollout_stages4_5.php",
         "action": "write",
         "sha256": "c5d787f128cc186cf14571ef37d916121ac31445fb1a7b9d321afa24b673afc3",
+        "normalized_sha256": "10b44bde7366b7373d6de595758273dae7e956a115211bbb61ed92d1ccf48d98",
         "bytes": 1349
     },
     {
         "path": "scripts/patch_chain_menu_faq.php",
         "action": "write",
         "sha256": "caca5b4b4e2791e7ab2063eda93817ed5c5aaeb096eaeeb7cab8e0ede3563d83",
+        "normalized_sha256": "caca5b4b4e2791e7ab2063eda93817ed5c5aaeb096eaeeb7cab8e0ede3563d83",
         "bytes": 5384
     },
     {
         "path": "scripts/prepare_catalog_audit.php",
         "action": "write",
         "sha256": "73bf35a5ae46f659e04efb4843bc3a1a7e8d383faee45a44b1f6d337cffc4c28",
+        "normalized_sha256": "6a32819be41936f8db4fa19bfb7f0affa595d2bee301ccf8bebc64c9c85c767c",
         "bytes": 4802
     },
     {
         "path": "scripts/prepare_catalog_stage7.php",
         "action": "write",
         "sha256": "b8d737d613a78f698a8fd6efdc1cef072af4e6f964939837c9b5e4f7b2fd0c0f",
+        "normalized_sha256": "b8d737d613a78f698a8fd6efdc1cef072af4e6f964939837c9b5e4f7b2fd0c0f",
         "bytes": 5155
     },
     {
         "path": "scripts/prepare_catalog_stage8.php",
         "action": "write",
         "sha256": "f9df923e7c01c67b35774c8abc6794b01c90d8c2886edd50a17c35631fd0d866",
+        "normalized_sha256": "f9df923e7c01c67b35774c8abc6794b01c90d8c2886edd50a17c35631fd0d866",
         "bytes": 6917
     },
     {
         "path": "scripts/prepare_catalog_stage9.php",
         "action": "write",
         "sha256": "c2fbc4f24a06683d3f4b3a502177da7b312051b7334ac7689f15d9c4516c2ca8",
+        "normalized_sha256": "c2fbc4f24a06683d3f4b3a502177da7b312051b7334ac7689f15d9c4516c2ca8",
         "bytes": 17938
     },
     {
         "path": "scripts/prepare_chain_filter_actions.php",
         "action": "write",
         "sha256": "d007555cff07f48245cf6e045daa20b74ba6a16beea20cdae7c80bb61fa556ea",
+        "normalized_sha256": "d007555cff07f48245cf6e045daa20b74ba6a16beea20cdae7c80bb61fa556ea",
         "bytes": 2611
     },
     {
         "path": "scripts/prepare_ct08.php",
         "action": "write",
         "sha256": "0575af703038969d419522c13e7bd685e1c04f055e9b63f6d00adfd4cb3eb643",
+        "normalized_sha256": "cb32113f6f396b2e554192a200c943e1ecd29d432ba9a304d3f2450b8784d813",
         "bytes": 4636
     },
     {
         "path": "scripts/prepare_ct08_polish.php",
         "action": "write",
         "sha256": "e475677225a291f26d80f540af1e53cae14b0333677f049b5ea9a5d0944c666d",
+        "normalized_sha256": "e475677225a291f26d80f540af1e53cae14b0333677f049b5ea9a5d0944c666d",
         "bytes": 4640
     },
     {
         "path": "scripts/prepare_ct08_unified.php",
         "action": "write",
         "sha256": "dcf2e8a66534d7a28d0e0032f1e864e0c896f0684f50a1515064097d75fbe86d",
+        "normalized_sha256": "dcf2e8a66534d7a28d0e0032f1e864e0c896f0684f50a1515064097d75fbe86d",
         "bytes": 2261
     },
     {
         "path": "scripts/prepare_ct08_ux.php",
         "action": "write",
         "sha256": "dd4a9e3602135fda3899e481bc18a30464121102e6b27cb268b1fae20b3d0daa",
+        "normalized_sha256": "dd4a9e3602135fda3899e481bc18a30464121102e6b27cb268b1fae20b3d0daa",
         "bytes": 3148
     },
     {
         "path": "scripts/prepare_dictionary_views.php",
         "action": "write",
         "sha256": "6db4fe8ef71d81d79e44e4ddb216920fbacd60b3443967ee3571ba6fbbf06e56",
+        "normalized_sha256": "a039851482edc60c5ae76f31e1d3c7d98e9afdff54fd88130057e6bf65e35d9b",
         "bytes": 1941
     },
     {
         "path": "scripts/prepare_project_publication.php",
         "action": "write",
-        "sha256": "3e5eeb883cbc83e63dcda4d236dbfee11495bb466a6a7f7a65970f8271b9faa9",
-        "bytes": 1839
+        "sha256": "12c77a02424d67e13f5f3d77f6facd6cac7f2f679f00445588dc784ec2464ef7",
+        "normalized_sha256": "12c77a02424d67e13f5f3d77f6facd6cac7f2f679f00445588dc784ec2464ef7",
+        "bytes": 2083
     },
     {
         "path": "scripts/prepare_quality_seo.php",
         "action": "write",
         "sha256": "5a9b089d8148f285cfffb4aa347eb3df6d70fdc82ef348e20688e23e2b1a9e65",
+        "normalized_sha256": "69f0a7f0073fc788f02c507af641bc171a2c58b8853cb1fa85e508b04d7725e3",
         "bytes": 5673
     },
     {
         "path": "scripts/prepare_quality_text.php",
         "action": "write",
         "sha256": "36533ea3b80c0244fbadb1f9711e3e51754c2c018de4f137c78c6039699248a1",
+        "normalized_sha256": "10db7dc11ace6f2a92b037f4b105a68bd5ef26c91859ceab2579e70eb575ca89",
         "bytes": 3479
     },
     {
         "path": "scripts/prepare_quality_workflow.php",
         "action": "write",
         "sha256": "962b2531581d31e86b72ae860f51051b7dfc77178239d8d88da39f388d198118",
+        "normalized_sha256": "4bf1261915427377f2c423d882f6356243e2dd747581bc80ebae3f29846ab32b",
         "bytes": 6307
     },
     {
         "path": "scripts/prepare_yandex_cabinet.php",
         "action": "write",
         "sha256": "7e20ef163760cd6f71748f0fa2bcdda0fb6f213b95f5d1a88072c1a249d39078",
+        "normalized_sha256": "7e20ef163760cd6f71748f0fa2bcdda0fb6f213b95f5d1a88072c1a249d39078",
         "bytes": 8292
     },
     {
         "path": "scripts/preview_catalog_stage8.php",
         "action": "write",
         "sha256": "86bf32d9a83b3ff6efb6990117fcef90fa98e29f6370013d9da8fe689095d7c1",
+        "normalized_sha256": "86bf32d9a83b3ff6efb6990117fcef90fa98e29f6370013d9da8fe689095d7c1",
         "bytes": 2345
     },
     {
         "path": "scripts/publish_chain_seo.php",
         "action": "write",
         "sha256": "fb172bcff55456fc544d9ee5030057bf9b46d9109f158b8e2578602ca1160b43",
+        "normalized_sha256": "fb172bcff55456fc544d9ee5030057bf9b46d9109f158b8e2578602ca1160b43",
         "bytes": 7892
     },
     {
         "path": "scripts/publish_chain_size_block.php",
         "action": "write",
         "sha256": "c73cf31f70f6d7e6f4157fc218795d1fd7dcfa18537336055cffdd2670eaea9d",
+        "normalized_sha256": "c73cf31f70f6d7e6f4157fc218795d1fd7dcfa18537336055cffdd2670eaea9d",
         "bytes": 2258
     },
     {
         "path": "scripts/publish_ct08_first_batch.php",
         "action": "write",
         "sha256": "f5441d46382ef1a7400b1f6c72ba72a899b5922144d10ef4aca736cca1d01afb",
+        "normalized_sha256": "f5441d46382ef1a7400b1f6c72ba72a899b5922144d10ef4aca736cca1d01afb",
         "bytes": 2121
     },
     {
         "path": "scripts/publish_ct08_settings.php",
         "action": "write",
         "sha256": "85d9af7cca4768e7fd0ed2213d465ad2eb4074c8d0d70d7d848b189a7b661492",
+        "normalized_sha256": "85d9af7cca4768e7fd0ed2213d465ad2eb4074c8d0d70d7d848b189a7b661492",
         "bytes": 2625
     },
     {
         "path": "scripts/push_chain_filter_actions.ps1",
         "action": "write",
         "sha256": "0945a0d88091ffc4e32b9fbc000f2d64b86f4b77f8c0049c4e1160074903e596",
+        "normalized_sha256": null,
         "bytes": 1819
+    },
+    {
+        "path": "scripts/push_scoped_snapshot.ps1",
+        "action": "write",
+        "sha256": "a10e34787ae39c426b7dc4a020017b31101a83a5bcb6164606c68eae84e2a76a",
+        "normalized_sha256": null,
+        "bytes": 2106
     },
     {
         "path": "scripts/refine_catalog_faq_spacing.php",
         "action": "write",
         "sha256": "1b9eba20dc07aa9466f3417a5b350cb09ac6ae26cdc3b4d96192b2e1b52576f5",
+        "normalized_sha256": "1b9eba20dc07aa9466f3417a5b350cb09ac6ae26cdc3b4d96192b2e1b52576f5",
         "bytes": 1206
     },
     {
         "path": "scripts/refine_chain_card_names.php",
         "action": "write",
         "sha256": "f6e93a49737110696ac901891b3d5a9625f1588cdc30ed813b7a5ccbb0c8858a",
+        "normalized_sha256": "f6e93a49737110696ac901891b3d5a9625f1588cdc30ed813b7a5ccbb0c8858a",
         "bytes": 2106
     },
     {
         "path": "scripts/refine_chain_order_labels.php",
         "action": "write",
         "sha256": "46dd8ebf7b3c424e89103381d2d7d8931868248145461808206be8c7e47d999e",
+        "normalized_sha256": "46dd8ebf7b3c424e89103381d2d7d8931868248145461808206be8c7e47d999e",
         "bytes": 2725
     },
     {
         "path": "scripts/remove_cdek_from_avito_tires.php",
         "action": "delete",
         "sha256": null,
+        "normalized_sha256": null,
         "bytes": 0
     },
     {
         "path": "scripts/rename_home_chain_link.php",
         "action": "write",
         "sha256": "d8e9201e294c0af7d6743c9698d109e4c531a1f0d729a1d220630900cfff98ff",
+        "normalized_sha256": "d8e9201e294c0af7d6743c9698d109e4c531a1f0d729a1d220630900cfff98ff",
         "bytes": 664
     },
     {
         "path": "scripts/render_catalog_foundation.mjs",
         "action": "write",
         "sha256": "5ef929b461fc16bc9b1acbb0eebcd5dd6c339ac204edec3b8dc0ed443053d9d8",
+        "normalized_sha256": "5ef929b461fc16bc9b1acbb0eebcd5dd6c339ac204edec3b8dc0ed443053d9d8",
         "bytes": 6543
     },
     {
         "path": "scripts/repair_chain_filter_sizes.php",
         "action": "write",
         "sha256": "916a880f36c73909c427ca9d39a47ed4ece26e7f29f6f3d360ff611465c4c208",
+        "normalized_sha256": "916a880f36c73909c427ca9d39a47ed4ece26e7f29f6f3d360ff611465c4c208",
         "bytes": 4291
     },
     {
         "path": "scripts/report_catalog_conflicts.php",
         "action": "write",
         "sha256": "0eb419f541ee0bf7ad9c57d498e3eb9108173bb20ef13cdc09b6735caf8bde90",
+        "normalized_sha256": "0eb419f541ee0bf7ad9c57d498e3eb9108173bb20ef13cdc09b6735caf8bde90",
         "bytes": 23618
     },
     {
         "path": "scripts/report_catalog_publication.php",
         "action": "write",
         "sha256": "0f0aa5122eff511ae219a418fc449ffb63769db2f32e11f551094a8f62832820",
+        "normalized_sha256": "0f0aa5122eff511ae219a418fc449ffb63769db2f32e11f551094a8f62832820",
         "bytes": 9502
     },
     {
         "path": "scripts/report_catalog_remaining.php",
         "action": "write",
         "sha256": "8093902c5dab04db4d7af0045f38c6d41d87c61ae826600664dcc42c451ed1ea",
+        "normalized_sha256": "8093902c5dab04db4d7af0045f38c6d41d87c61ae826600664dcc42c451ed1ea",
         "bytes": 9804
     },
     {
         "path": "scripts/report_catalog_specialized.php",
         "action": "write",
         "sha256": "3c42c63bcad435fc19ee22a5eb055197be3e4f64c411150ecb7302aacaa48d26",
+        "normalized_sha256": "3c42c63bcad435fc19ee22a5eb055197be3e4f64c411150ecb7302aacaa48d26",
         "bytes": 8784
     },
     {
         "path": "scripts/report_ct08_auto.php",
         "action": "write",
         "sha256": "356ec08e542bccdb714affb941b0a355020ce6c693a3a4d873e3bbdacfe7bd01",
+        "normalized_sha256": "356ec08e542bccdb714affb941b0a355020ce6c693a3a4d873e3bbdacfe7bd01",
         "bytes": 1326
     },
     {
         "path": "scripts/resolve_naming_baselines.php",
         "action": "write",
         "sha256": "129670aebf30e6a0861096449e7f02323b0a36bcb25dde85857dee22672663ff",
+        "normalized_sha256": "9bad007ec872390370924cbd48b34984b81b415cf674d5644e793c6478d5ecb4",
         "bytes": 1415
     },
     {
         "path": "scripts/restore_chain_green_notice.php",
         "action": "write",
         "sha256": "cd6522d57779b4c896c1a841f1073aa67e47c6295403b3e0b2bc884c18d53db8",
+        "normalized_sha256": "cd6522d57779b4c896c1a841f1073aa67e47c6295403b3e0b2bc884c18d53db8",
         "bytes": 1901
     },
     {
         "path": "scripts/restore_legacy_card_surface.php",
         "action": "write",
         "sha256": "02fe7101c4890027053e62c0254477effa44da3999850110800e4032761372d3",
+        "normalized_sha256": "02fe7101c4890027053e62c0254477effa44da3999850110800e4032761372d3",
         "bytes": 2235
     },
     {
         "path": "scripts/restore_pre_shadow_stylesheet.php",
         "action": "write",
         "sha256": "9905fa696dcf169b5891fb66360f391e01e37e845516faad309e3233a9616d44",
+        "normalized_sha256": "9905fa696dcf169b5891fb66360f391e01e37e845516faad309e3233a9616d44",
         "bytes": 954
     },
     {
         "path": "scripts/rollback_all_shadow_experiments.php",
         "action": "write",
         "sha256": "62642d2c5544b69818a211443ccd7f08eeb4cb3c77feadfc9c27b8648ee281e2",
+        "normalized_sha256": "62642d2c5544b69818a211443ccd7f08eeb4cb3c77feadfc9c27b8648ee281e2",
         "bytes": 1392
     },
     {
         "path": "scripts/rollback_approved_panel_shadow.php",
         "action": "write",
         "sha256": "cdc9ffafa3e6440e764f6a562920bd0b7d181e5828fefec1b11b1bfcc132be27",
+        "normalized_sha256": "cdc9ffafa3e6440e764f6a562920bd0b7d181e5828fefec1b11b1bfcc132be27",
         "bytes": 818
     },
     {
         "path": "scripts/rollback_site_panel_surfaces.php",
         "action": "write",
         "sha256": "926c2ab210860a05afe3af93b8a30149fc06f8710703481add32f6f9b06a3961",
+        "normalized_sha256": "926c2ab210860a05afe3af93b8a30149fc06f8710703481add32f6f9b06a3961",
         "bytes": 719
     },
     {
         "path": "scripts/seed_p350_complete.php",
         "action": "write",
         "sha256": "3695e714d3aa766e92cc55781fa2a82f32cb075e6af599a2eda52a8af6b04a47",
+        "normalized_sha256": "3695e714d3aa766e92cc55781fa2a82f32cb075e6af599a2eda52a8af6b04a47",
         "bytes": 4401
     },
     {
         "path": "scripts/set_p350_27_4pr_photos.php",
         "action": "write",
         "sha256": "7b3ec80bca4df364c732b0b3184f45d0d1855b99477dee0cb3e8bf831ef97b7f",
+        "normalized_sha256": "7b3ec80bca4df364c732b0b3184f45d0d1855b99477dee0cb3e8bf831ef97b7f",
         "bytes": 2746
     },
     {
         "path": "scripts/unify_site_panel_surfaces.php",
         "action": "write",
         "sha256": "d1ab8076e545bb592cb57790e538034bf55a1a74359bde1f7b75dc56b038c7d5",
+        "normalized_sha256": "d1ab8076e545bb592cb57790e538034bf55a1a74359bde1f7b75dc56b038c7d5",
         "bytes": 1357
     },
     {
         "path": "scripts/verify_ct08_settings.php",
         "action": "write",
         "sha256": "ecebcf5294159eda37d9b97e6f52681c24e3a11d9ca757485c88788754be486d",
+        "normalized_sha256": "ecebcf5294159eda37d9b97e6f52681c24e3a11d9ca757485c88788754be486d",
         "bytes": 1474
     },
     {
         "path": "scripts/verify_ct08_ux.php",
         "action": "write",
         "sha256": "6662cef5bfa99a436b39c9243244bd3ecd69bcf163c8f074b07f2f48ce1bd7e0",
+        "normalized_sha256": "6662cef5bfa99a436b39c9243244bd3ecd69bcf163c8f074b07f2f48ce1bd7e0",
         "bytes": 1208
     },
     {
         "path": "scripts/verify_recovered_images_20261113.php",
         "action": "write",
         "sha256": "6672eb4cd57e18a0f9adb9fc7a6014139c3ee174c1530f4155b93673fbee522c",
+        "normalized_sha256": "6672eb4cd57e18a0f9adb9fc7a6014139c3ee174c1530f4155b93673fbee522c",
         "bytes": 2953
     },
     {
         "path": "scripts/yandex_cabinet_release_check.php",
         "action": "write",
         "sha256": "d5cb21b160f39555fd17c5fbda1444f0a676d598b91752721e86f3702ee8b6eb",
+        "normalized_sha256": "d5cb21b160f39555fd17c5fbda1444f0a676d598b91752721e86f3702ee8b6eb",
         "bytes": 3344
     }
 ]

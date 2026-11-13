@@ -11,6 +11,10 @@ foreach($inventory as $item) {
     $file=$root.'/'.$path;$exists=is_file($file);
     $row=['path'=>$path,'exists'=>$exists,'sha256'=>$exists?hash_file('sha256',$file):null,'bytes'=>$exists?filesize($file):0];
     $row['state']=$item['action']==='delete'?($exists?'delete':'already_absent'):(!$exists?'new':($row['sha256']===$item['sha256']?'same':'different'));
+    if($exists&&!empty($item['normalized_sha256'])) {
+        $row['normalized_sha256']=hash('sha256',str_replace("\r\n","\n",file_get_contents($file)));
+        if($row['state']==='different'&&$row['normalized_sha256']===$item['normalized_sha256'])$row['state']='same_normalized';
+    }
     $report['files'][]=$row;
 }
 file_put_contents(__DIR__.'/server-audit.json',json_encode($report,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
