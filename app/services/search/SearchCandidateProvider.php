@@ -5,6 +5,16 @@ namespace app\services\search;
 class SearchCandidateProvider
 {
     public function findCandidates(array $parsed, int $limit = 200): array
+    {
+        $limit=max(1,min(1000,$limit));
+        $verified=\app\services\CatalogSizeSearch::candidates($parsed);
+        $legacy=$this->findLegacyCandidates($parsed,$limit);
+        $byId=[];foreach($verified as$r)$byId[(int)$r['id']]=$r;
+        foreach($legacy as&$r)if(isset($byId[(int)$r['id']]))$r['catalog_size_match']=$byId[(int)$r['id']]['catalog_size_match'];unset($r);
+        $legacyById=[];foreach($legacy as$r)$legacyById[(int)$r['id']]=$r;foreach($verified as&$r)if(isset($legacyById[(int)$r['id']]))$r=$legacyById[(int)$r['id']];unset($r);
+        return $this->uniqueById(array_merge($verified,$legacy),$limit);
+    }
+    private function findLegacyCandidates(array $parsed, int $limit = 200): array
 	{
 		$queryType = (string)($parsed['query_type'] ?? '');
 		$rows = [];

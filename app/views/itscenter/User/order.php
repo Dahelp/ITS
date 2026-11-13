@@ -44,6 +44,14 @@
 
                     <div class="card-body">
                         <?php if (!empty($order) && $order_info): ?>
+<div class="mb-3">
+<form method="post" action="<?= PATH ?>/cart/repeat" class="d-inline-block" data-cart-confirm="Добавить товары из этого заказа к текущей корзине? Цены и свободные остатки будут актуальными. Комплекты добавятся отдельными товарами.">
+    <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($cartActionToken, ENT_QUOTES, 'UTF-8') ?>">
+    <input type="hidden" name="order_id" value="<?= (int)$id ?>">
+    <button type="submit" class="btn btn-outline-primary btn-sm">Повторить заказ</button>
+</form>
+<div class="small text-muted mt-2">Товары добавятся в корзину по текущим ценам и свободным остаткам. Комплекты — отдельными товарами.</div>
+</div>
 
                             <?php
                             $summa_sum = 0;

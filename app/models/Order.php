@@ -71,7 +71,7 @@ class Order extends AppModel {
     }
 
     public static function saveOrderProduct($order_id){
-		\app\services\CompleteEngagement::ensureSchema();
+        \app\services\CompleteEngagement::ensureSchema();
 		$sql_part = '';
 
 		$promoCode = trim((string)($_SESSION['promocart'] ?? ''));
@@ -87,16 +87,13 @@ class Order extends AppModel {
 			$completeId = !empty($product['set']) && !empty($product['complete_discount_active']) ? (int)$product['set'] : 0;
 			$completeSql = $completeId > 0 ? (string)$completeId : 'NULL';
 
-			if ($promoCode !== '') {
-				$prods = \R::getRow('SELECT * FROM product WHERE id = ?', [$pid]);
-				$promo = \R::getRow('SELECT * FROM plagins_promocode WHERE promocode = ?', [$promoCode]);
-
-				$promoVal = (float)($promo['value'] ?? 0);
+			if ($promoCode !== '' && !empty($product['promo_applied'])) {
+				$promoVal = (float)($product['promo_rate'] ?? 0);
 
 				// ВАЖНО: базовая цена для расчёта промо (до скидки)
 				$base = (float)($product['base_price'] ?? $product['price'] ?? 0);
 
-				$discount = ($base / 100) * $promoVal;
+				$discount = max(0, round($base - (float)$product['price'], 2));
 				$discount_amount = $discount * (int)($product['qty'] ?? 0);
 
 				$sql_part .= "('".$order_id."', '".$pid."', '".$product['article']."', '".$product['qty']."', '".$product['unit']."', '".$product['name']."', '".$base."', '".$promoVal."', '3', '".$discount."', '".$product['price']."', '".$discount_amount."', ".$completeSql."),";

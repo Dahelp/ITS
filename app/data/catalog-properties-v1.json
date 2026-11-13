@@ -1,0 +1,1742 @@
+{
+  "version": 1,
+  "properties": {
+    "brand": {
+      "label": "Бренд",
+      "kind": "external",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        8
+      ],
+      "legacy_filter_group_ids": [
+        4
+      ],
+      "note": "Бренд хранится в существующем справочнике товара. Здесь он не дублируется.",
+      "required_for": "physical_products",
+      "not_applicable_for": []
+    },
+    "manufacturer": {
+      "label": "Изготовитель",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Изготовитель не всегда совпадает с брендом или продавцом.",
+      "required_for": "recommended_if_known",
+      "not_applicable_for": []
+    },
+    "country_of_manufacture": {
+      "label": "Страна производства",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "CN": "Китай",
+        "IN": "Индия",
+        "RU": "Россия",
+        "BY": "Беларусь",
+        "LK": "Шри-Ланка",
+        "TH": "Таиланд",
+        "VN": "Вьетнам",
+        "KR": "Республика Корея",
+        "JP": "Япония",
+        "TR": "Турция",
+        "US": "США",
+        "DE": "Германия",
+        "FR": "Франция",
+        "IT": "Италия",
+        "TW": "Тайвань"
+      },
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Страна выпуска конкретного товара. Не определять по стране регистрации бренда.",
+      "required_for": "recommended_if_known",
+      "not_applicable_for": []
+    },
+    "manufacturer_part_number": {
+      "label": "Артикул производителя",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Артикул, присвоенный изготовителем; внутренний IT-код его не заменяет.",
+      "required_for": "if_assigned_by_manufacturer",
+      "not_applicable_for": []
+    },
+    "barcode": {
+      "label": "Штрихкод производителя",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Сохраняются ведущие нули. Проверяется контрольная цифра.",
+      "required_for": "if_assigned_by_manufacturer",
+      "not_applicable_for": []
+    },
+    "model": {
+      "label": "Модель",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        52
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Модель не объединяется автоматически с протектором или исполнением.",
+      "required_for": "profile_dependent",
+      "not_applicable_for": []
+    },
+    "tread_model": {
+      "label": "Модель протектора",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        9
+      ],
+      "legacy_filter_group_ids": [
+        3
+      ],
+      "note": "Одинаковое обозначение у разных брендов не означает одну модель.",
+      "required_for": "tyre_if_assigned",
+      "not_applicable_for": []
+    },
+    "tire_size": {
+      "label": "Типоразмер шины",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        4
+      ],
+      "legacy_filter_group_ids": [
+        2
+      ],
+      "note": "Основная маркировка товара. Альтернативные обозначения указываются отдельными связями ниже.",
+      "required_for": [
+        "tyre_pneumatic",
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "not_applicable_for": []
+    },
+    "compatible_tire_sizes": {
+      "label": "Совместимые размеры шин",
+      "kind": "size_relations",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        4,
+        67,
+        85
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Совместимость камеры, ленты или цепи не означает взаимозаменяемость самих шин.",
+      "required_for": [
+        "tube",
+        "flap",
+        "chain"
+      ],
+      "not_applicable_for": []
+    },
+    "rim_diameter_in": {
+      "label": "Посадочный диаметр",
+      "kind": "decimal",
+      "unit": "in",
+      "options": [],
+      "legacy_attribute_ids": [
+        7
+      ],
+      "legacy_filter_group_ids": [
+        1
+      ],
+      "note": "",
+      "required_for": "tyres_except_ambiguous_bandage",
+      "not_applicable_for": []
+    },
+    "section_width_in": {
+      "label": "Номинальная ширина профиля",
+      "kind": "decimal",
+      "unit": "in",
+      "options": [],
+      "legacy_attribute_ids": [
+        65
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": "if_marking_uses_inches",
+      "not_applicable_for": []
+    },
+    "section_width_mm": {
+      "label": "Ширина профиля",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Ширина профиля и ширина протектора — разные размеры.",
+      "required_for": "if_confirmed",
+      "not_applicable_for": []
+    },
+    "aspect_ratio_pct": {
+      "label": "Относительная высота профиля",
+      "kind": "decimal",
+      "unit": "%",
+      "options": [],
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Процент профиля не подставляется из поля высоты в миллиметрах.",
+      "required_for": "if_present_in_marking",
+      "not_applicable_for": []
+    },
+    "overall_diameter_mm": {
+      "label": "Наружный диаметр",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        14,
+        21,
+        38
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Наружный диаметр не равен посадочному; размеры элементов фильтра сюда не переносятся.",
+      "required_for": "recommended_for_tyres",
+      "not_applicable_for": []
+    },
+    "nominal_height_in": {
+      "label": "Номинальная высота в маркировке",
+      "kind": "decimal",
+      "unit": "in",
+      "options": [],
+      "legacy_attribute_ids": [
+        64
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": "if_present_in_marking",
+      "not_applicable_for": []
+    },
+    "tire_type": {
+      "label": "Тип шины",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "pneumatic": "Пневматическая",
+        "solid": "Цельнолитая",
+        "bandage": "Бандажная"
+      },
+      "legacy_attribute_ids": [
+        61
+      ],
+      "legacy_filter_group_ids": [
+        11
+      ],
+      "note": "TT/TL — герметизация, TTF — маркировка комплектации. Они не являются типом шины.",
+      "required_for": "tyres",
+      "not_applicable_for": [],
+      "legacy_aliases": {
+        "пневматические": "pneumatic",
+        "пневматическая": "pneumatic",
+        "цельнолитые": "solid",
+        "цельнолитая": "solid"
+      }
+    },
+    "construction": {
+      "label": "Конструкция каркаса",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "radial": "Радиальная",
+        "bias": "Диагональная"
+      },
+      "legacy_attribute_ids": [
+        63
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Цельнолитая — тип шины, а не радиальная/диагональная конструкция.",
+      "required_for": [
+        "tyre_pneumatic"
+      ],
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "legacy_aliases": {
+        "радиальная": "radial",
+        "диагональная": "bias"
+      }
+    },
+    "sealing": {
+      "label": "Герметизация",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "tube_type": "Камерная (TT)",
+        "tubeless": "Бескамерная (TL)"
+      },
+      "legacy_attribute_ids": [
+        16
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": [
+        "tyre_pneumatic"
+      ],
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "legacy_aliases": {
+        "TL": "tubeless",
+        "TT": "tube_type",
+        "TTF": "tube_type",
+        "TL (Бескамерная шина)": "tubeless",
+        "TTF - Шинокомплект (шина, камера, ободная лента)": "tube_type",
+        "(TL) Бескамерная шина": "tubeless",
+        "TT - камерная": "tube_type",
+        "(TTF) Шинокомплект (шина, камера, ободная лента)": "tube_type",
+        "бескамерная": "tubeless",
+        "TL - бескамерная": "tubeless",
+        "TT камерная": "tube_type",
+        "TT (Камерная шина)": "tube_type",
+        "камерное": "tube_type"
+      }
+    },
+    "package": {
+      "label": "Комплектация",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "tyre_only": "Шина отдельно",
+        "tyre_and_tube": "Шина и камера",
+        "tyre_tube_flap": "Шина, камера и ободная лента",
+        "wheel_with_rim": "Колесо в сборе с диском"
+      },
+      "legacy_attribute_ids": [
+        16
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Комплектация проверяется отдельно. По фотографии её определять нельзя.",
+      "required_for": "physical_products_where_relevant",
+      "not_applicable_for": []
+    },
+    "ply_rating": {
+      "label": "Норма слойности PR",
+      "kind": "integer",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        5
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Звёздная норма прочности хранится отдельно от числового PR.",
+      "required_for": "pneumatic_if_assigned",
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ]
+    },
+    "star_rating": {
+      "label": "Звёздная норма прочности",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "one": "*",
+        "two": "**",
+        "three": "***"
+      },
+      "legacy_attribute_ids": [
+        5
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Звёзды не заменяются числом слоёв PR.",
+      "required_for": "if_assigned",
+      "not_applicable_for": []
+    },
+    "service_ratings": {
+      "label": "Индексы нагрузки и скорости",
+      "kind": "ratings",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        70,
+        71,
+        73
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Составные режимы нагрузки и скорости сохраняются целиком до проверки.",
+      "required_for": "if_marked_or_documented",
+      "not_applicable_for": []
+    },
+    "manufacturer_load_kg": {
+      "label": "Нагрузка по данным изготовителя",
+      "kind": "decimal",
+      "unit": "kg",
+      "options": [],
+      "legacy_attribute_ids": [
+        13
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Нужны условия изготовителя: скорость, давление и режим установки. Индекс нагрузки не подменяется этим значением.",
+      "required_for": "if_documented",
+      "not_applicable_for": []
+    },
+    "inflation_pressure_kpa": {
+      "label": "Давление",
+      "kind": "decimal",
+      "unit": "kPa",
+      "options": [],
+      "legacy_attribute_ids": [
+        18
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Ввод в кПа. Исходные значения PSI нельзя переносить без проверки единиц.",
+      "required_for": "pneumatic_if_documented",
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ]
+    },
+    "tread_depth_mm": {
+      "label": "Глубина протектора",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        10
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": "recommended_if_known",
+      "not_applicable_for": []
+    },
+    "tread_width_mm": {
+      "label": "Ширина протектора",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        17
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": "recommended_if_known",
+      "not_applicable_for": []
+    },
+    "tread_pattern": {
+      "label": "Рисунок протектора",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        60
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": "recommended_if_known",
+      "not_applicable_for": []
+    },
+    "solid_mounting": {
+      "label": "Монтажное исполнение",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "with_lip": "С буртом",
+        "without_lip": "Без бурта"
+      },
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "CLIP, QUICK и EasyFit требуют подтверждения применимости к конкретной модели.",
+      "required_for": [
+        "tyre_solid"
+      ],
+      "not_applicable_for": []
+    },
+    "non_marking": {
+      "label": "Немаркое исполнение",
+      "kind": "boolean",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Неизвестно отличается от «Нет». NM не определяет точный цвет.",
+      "required_for": "solid_if_confirmed",
+      "not_applicable_for": []
+    },
+    "colour": {
+      "label": "Цвет",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "black": "Чёрная",
+        "white": "Белая",
+        "grey": "Серая"
+      },
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": "if_confirmed",
+      "not_applicable_for": []
+    },
+    "equipment_application": {
+      "label": "Тип техники",
+      "kind": "multi_option",
+      "unit": "",
+      "options": {
+        "forklift": "Вилочный погрузчик",
+        "skid_steer": "Минипогрузчик",
+        "backhoe": "Экскаватор-погрузчик",
+        "wheel_loader": "Фронтальный погрузчик",
+        "excavator": "Колёсный экскаватор",
+        "roller": "Каток",
+        "grader": "Грейдер",
+        "mining": "Шахтная техника",
+        "crane": "Мобильный кран",
+        "atv": "Квадроцикл",
+        "truck": "Грузовая техника",
+        "agricultural": "Сельхозтехника",
+        "garden": "Садовая техника",
+        "golf_cart": "Гольф-кар",
+        "trailer": "Прицеп",
+        "excavator_generic": "Экскаватор",
+        "soil_roller": "Грунтовый каток",
+        "light_truck": "Легкогрузовая техника",
+        "paver": "Асфальтоукладчик",
+        "lawn_mower": "Газонокосилка"
+      },
+      "legacy_attribute_ids": [
+        15
+      ],
+      "legacy_filter_group_ids": [
+        5
+      ],
+      "note": "Совместимость с конкретной моделью техники подтверждается отдельно.",
+      "required_for": "physical_products_where_relevant",
+      "not_applicable_for": [],
+      "legacy_aliases": {
+        "Колесный экскаватор": "excavator",
+        "Мини-погрузчик": "skid_steer",
+        "сельскохозяйственная техника": "agricultural",
+        "гольфкар": "golf_cart",
+        "Шахтную технику": "mining",
+        "минипогрузчик типа BOBCAT": "skid_steer",
+        "минипогрузчик типа LONKING": "skid_steer",
+        "минипогрузчик Lonking": "skid_steer"
+      }
+    },
+    "surface": {
+      "label": "Рабочее покрытие",
+      "kind": "multi_option",
+      "unit": "",
+      "options": {
+        "hard": "Асфальт и бетон",
+        "soil": "Грунт",
+        "mud": "Грязь",
+        "rock": "Скальный грунт",
+        "gravel": "Щебень и гравий",
+        "road": "Дорожное покрытие",
+        "sand": "Песок",
+        "construction_site": "Стройплощадка",
+        "clay": "Глина",
+        "quarry": "Карьер",
+        "crushed_stone": "Щебень",
+        "loose_gravel": "Гравий"
+      },
+      "legacy_attribute_ids": [
+        62
+      ],
+      "legacy_filter_group_ids": [
+        12
+      ],
+      "note": "Разные формулировки покрытий проверяются перед объединением.",
+      "required_for": "recommended_for_tyres",
+      "not_applicable_for": [],
+      "legacy_aliases": {
+        "асфальт, бетон": "hard",
+        "асфальт": "hard",
+        "бетон": "hard",
+        "стройка": "construction_site",
+        "строй площадка": "construction_site",
+        "карьерный": "quarry",
+        "щебён": "crushed_stone"
+      }
+    },
+    "rim_designation": {
+      "label": "Маркировка диска / рекомендуемый обод",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        59
+      ],
+      "legacy_filter_group_ids": [
+        10
+      ],
+      "note": "Рекомендуемый обод шины и маркировка самого диска имеют разные роли.",
+      "required_for": "profile_dependent",
+      "not_applicable_for": []
+    },
+    "rim_width_in": {
+      "label": "Ширина диска",
+      "kind": "decimal",
+      "unit": "in",
+      "options": [],
+      "legacy_attribute_ids": [
+        6
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": [
+        "rim"
+      ],
+      "not_applicable_for": []
+    },
+    "offset_mm": {
+      "label": "Вылет ET",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        58
+      ],
+      "legacy_filter_group_ids": [
+        6
+      ],
+      "note": "",
+      "required_for": "rim_if_applicable",
+      "not_applicable_for": []
+    },
+    "hub_mm": {
+      "label": "Центральное отверстие HUB",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        54
+      ],
+      "legacy_filter_group_ids": [
+        7
+      ],
+      "note": "",
+      "required_for": "rim_if_applicable",
+      "not_applicable_for": []
+    },
+    "pcd_mm": {
+      "label": "Диаметр крепёжной окружности PCD",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        55
+      ],
+      "legacy_filter_group_ids": [
+        8
+      ],
+      "note": "",
+      "required_for": "rim_if_applicable",
+      "not_applicable_for": []
+    },
+    "bolt_count": {
+      "label": "Количество крепёжных отверстий",
+      "kind": "integer",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        57
+      ],
+      "legacy_filter_group_ids": [
+        9
+      ],
+      "note": "",
+      "required_for": "rim_if_applicable",
+      "not_applicable_for": []
+    },
+    "rim_ring_type": {
+      "label": "Тип кольца диска",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "bead": "Бортовое",
+        "lock": "Замковое",
+        "conical": "Коническое"
+      },
+      "legacy_attribute_ids": [
+        75
+      ],
+      "legacy_filter_group_ids": [
+        13
+      ],
+      "note": "",
+      "required_for": "rim_ring_profile",
+      "not_applicable_for": [],
+      "legacy_aliases": {
+        "Коническое посадочное": "conical"
+      }
+    },
+    "weight_kg": {
+      "label": "Масса единицы товара",
+      "kind": "decimal",
+      "unit": "kg",
+      "options": [],
+      "legacy_attribute_ids": [
+        19
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Масса единицы товара не равна массе упаковки или комплекта.",
+      "required_for": "recommended_physical_products",
+      "not_applicable_for": []
+    },
+    "volume_m3": {
+      "label": "Транспортный объём",
+      "kind": "decimal",
+      "unit": "m3",
+      "options": [],
+      "legacy_attribute_ids": [
+        20
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Уточните, относится ли объём к единице или комплекту.",
+      "required_for": "recommended_physical_products",
+      "not_applicable_for": []
+    },
+    "valve": {
+      "label": "Тип вентиля",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        66
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "",
+      "required_for": [
+        "tube"
+      ],
+      "not_applicable_for": []
+    },
+    "seal_section_diameter_mm": {
+      "label": "Диаметр сечения уплотнительного кольца",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        68
+      ],
+      "legacy_filter_group_ids": [
+        14
+      ],
+      "note": "Сечение кольца не является посадочным диаметром шины.",
+      "required_for": [
+        "seal"
+      ],
+      "not_applicable_for": []
+    },
+    "seasonality": {
+      "label": "Сезонность",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "summer": "Летняя",
+        "winter": "Зимняя",
+        "all_season": "Всесезонная"
+      },
+      "legacy_attribute_ids": [],
+      "legacy_filter_group_ids": [],
+      "note": "Не добавлять сезонность промышленной шине по примеру конкурента.",
+      "required_for": "only_if_relevant_and_documented",
+      "not_applicable_for": []
+    },
+    "equivalent_tire_sizes": {
+      "label": "Взаимозаменяемые размеры для этого товара",
+      "kind": "size_relations",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        67
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Подтверждённая связь только этого товара. Основной размер и диаметр сохраняются."
+    },
+    "legacy_max_pressure_psi": {
+      "label": "Исходное максимальное давление (PSI)",
+      "kind": "decimal",
+      "unit": "PSI",
+      "options": [],
+      "legacy_attribute_ids": [
+        12
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Значение и единица из старой карточки. Требует сверки маркировки; это не рекомендация рабочего давления. Не пересчитывается автоматически в кПа.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": []
+    },
+    "legacy_max_pressure_kgf_cm2": {
+      "label": "Исходное максимальное давление (кгс/см²)",
+      "kind": "decimal",
+      "unit": "kgf/cm2",
+      "options": [],
+      "legacy_attribute_ids": [
+        72
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Сохранение исходной единицы без пересчёта. Требует сверки документации; не считать рабочим давлением.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": []
+    },
+    "section_height_mm": {
+      "label": "Высота профиля по исходным данным",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        69
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Не подменяет относительную высоту в процентах и не вычисляется из типоразмера.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": []
+    },
+    "manufacturer_max_speed_kmh": {
+      "label": "Максимальная скорость по исходным данным",
+      "kind": "decimal",
+      "unit": "km/h",
+      "options": [],
+      "legacy_attribute_ids": [
+        73
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Отдельное числовое значение из карточки. Не переводится автоматически в индекс скорости и не подтверждает режим нагрузки.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": []
+    },
+    "recommended_axle": {
+      "label": "Рекомендуемая ось",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "steer": "Рулевая",
+        "drive": "Ведущая",
+        "drive_rear": "Ведущая (задняя ось)",
+        "trailer": "Прицепная",
+        "all_position": "Всепозиционная",
+        "universal": "Универсальная"
+      },
+      "legacy_attribute_ids": [
+        74
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Рекомендация из исходных данных; применимость к машине требует проверки.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "legacy_aliases": {
+        "прицеп": "trailer"
+      }
+    },
+    "rim_construction": {
+      "label": "Конструкция диска",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "split": "Сборный",
+        "welded": "Сварной"
+      },
+      "legacy_attribute_ids": [
+        16
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Конструкция диска, а не герметизация шины. Устанавливается по явному значению исходного поля.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "legacy_aliases": {
+        "Диск сборный": "split",
+        "Диск сварной": "welded"
+      }
+    },
+    "filter_outer_diameter_mm": {
+      "label": "Фильтр — Наружный диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        21,
+        14
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 21. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_diameter_1_mm": {
+      "label": "Фильтр — Наружный диаметр 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        22
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 22. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_diameter_2_mm": {
+      "label": "Фильтр — Наружный диаметр 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        23
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 23. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_diameter_mm": {
+      "label": "Фильтр — Внутренний диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        24
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 24. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_diameter_1_mm": {
+      "label": "Фильтр — Внутренний диаметр 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        25
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 25. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_diameter_2_mm": {
+      "label": "Фильтр — Внутренний диаметр 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        26
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 26. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_height_mm": {
+      "label": "Фильтр — Высота, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        27
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 27. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_thread": {
+      "label": "Фильтр — Резьба",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        28
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 28. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_length_mm": {
+      "label": "Фильтр — Длина, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        29
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 29. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_pipe_diameter_raw": {
+      "label": "Фильтр — Диаметр патрубка",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        30
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 30. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_outer_diameter_mm": {
+      "label": "Фильтр — Внешняя часть: Наружный диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        31
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 31. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_outer_diameter_1_mm": {
+      "label": "Фильтр — Внешняя часть: Наружный диаметр 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        32
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 32. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_outer_diameter_2_mm": {
+      "label": "Фильтр — Внешняя часть: Наружный диаметр 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        33
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 33. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_inner_diameter_mm": {
+      "label": "Фильтр — Внешняя часть: Внутренний диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        34
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 34. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_inner_diameter_1_mm": {
+      "label": "Фильтр — Внешняя часть: Внутренний диаметр 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        35
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 35. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_inner_diameter_2_mm": {
+      "label": "Фильтр — Внешняя часть: Внутренний диаметр 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        36
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 36. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_height_mm": {
+      "label": "Фильтр — Внешняя часть: Высота, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        37
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 37. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_legacy_diameter_38_mm": {
+      "label": "Фильтр — Наружный диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        38
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 38. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения. В старом справочнике поле 38 перенесено в общую группу; не объединять с диаметрами внешней или внутренней части.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_outer_diameter_1_mm": {
+      "label": "Фильтр — Внутренняя часть: Наружный диаметр 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        39
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 39. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_outer_diameter_2_mm": {
+      "label": "Фильтр — Внутренняя часть: Наружный диаметр 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        40
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 40. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_inner_diameter_mm": {
+      "label": "Фильтр — Внутренняя часть: Внутренний диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        41
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 41. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_inner_diameter_1_mm": {
+      "label": "Фильтр — Внутренняя часть: Внутренний диаметр 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        42
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 42. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_inner_diameter_2_mm": {
+      "label": "Фильтр — Внутренняя часть: Внутренний диаметр 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        43
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 43. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_height_mm": {
+      "label": "Фильтр — Внутренняя часть: Высота, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        44
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 44. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_height_1_mm": {
+      "label": "Фильтр — Высота 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        45
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 45. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_height_2_mm": {
+      "label": "Фильтр — Высота 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        46
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 46. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_height_1_mm": {
+      "label": "Фильтр — Внешняя часть: Высота 1, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        47
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 47. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_outer_height_2_mm": {
+      "label": "Фильтр — Внешняя часть: Высота 2, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        48
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 48. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_width_mm": {
+      "label": "Фильтр — Ширина, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        49
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 49. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_previous_designation": {
+      "label": "Фильтр — Старое наименование",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        50
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 50. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_flow_raw": {
+      "label": "Фильтр — Производительность фильтра",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        51
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 51. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "filter_inner_outer_diameter_mm": {
+      "label": "Фильтр — Внутренняя часть: Наружный диаметр, мм",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        53
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 53. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "filter"
+      ]
+    },
+    "chain_manufacturer": {
+      "label": "Изготовитель цепи",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        76
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 76. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_application": {
+      "label": "Назначение цепи",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "forklift": "Вилочные погрузчики",
+        "special": "Спецтехника"
+      },
+      "legacy_attribute_ids": [
+        77
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 77. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_model": {
+      "label": "Модель цепи",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        78
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 78. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_pattern": {
+      "label": "Рисунок цепи",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "ladder": "Лесенка",
+        "honeycomb": "Сота",
+        "zigzag": "Сота (Зигзаг)"
+      },
+      "legacy_attribute_ids": [
+        79
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 79. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_caliber_raw": {
+      "label": "Калибр рабочей / боковой цепи (исходный)",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        80
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 80. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_working_caliber": {
+      "label": "Калибр рабочей цепи",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        81
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 81. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_side_caliber_raw": {
+      "label": "Калибр боковой цепи (исходный)",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        82
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 82. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения. Варианты «5 или 6» остаются текстом, единственное число не выбирается.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_studs": {
+      "label": "Шипы цепи",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "without": "Без шипов",
+        "with": "С шипами"
+      },
+      "legacy_attribute_ids": [
+        83
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 83. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_strength": {
+      "label": "Прочность цепи",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "normal": "Обычная"
+      },
+      "legacy_attribute_ids": [
+        84
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 84. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_supply": {
+      "label": "Условия поставки цепи",
+      "kind": "option",
+      "unit": "",
+      "options": {
+        "made_to_order": "Изготовление под заказ"
+      },
+      "legacy_attribute_ids": [
+        86
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 86. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_connector_material": {
+      "label": "Материал соединительного звена",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        87
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 87. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_fastening": {
+      "label": "Элементы крепления цепи",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        88
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 88. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_clearance_a": {
+      "label": "Минимальный зазор A",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        89
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 89. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_clearance_c": {
+      "label": "Минимальный зазор C",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        90
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 90. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_package": {
+      "label": "Комплектация цепей",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        91
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 91. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_manufacturer_designation": {
+      "label": "Обозначение цепи у изготовителя",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        92
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 92. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_link_height": {
+      "label": "Высота звена цепи",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        93
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 93. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_connection": {
+      "label": "Соединение частей цепи",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        94
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 94. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_set_weight": {
+      "label": "Масса комплекта цепей",
+      "kind": "decimal",
+      "unit": "kg",
+      "options": [],
+      "legacy_attribute_ids": [
+        95
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходное поле 95. Сохраняется отдельно, без вывода значений из названия и без автоматического подтверждения.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "chain_fitment_raw": {
+      "label": "Размер шин для цепи — исходная запись",
+      "kind": "text",
+      "unit": "",
+      "options": [],
+      "legacy_attribute_ids": [
+        85
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Исходная запись сохраняется целиком. Конкретные размеры дополнительно сохраняются как совместимость только этого товара; подбор под заказ не является размером.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "chain"
+      ]
+    },
+    "bolt_hole_diameter_mm": {
+      "label": "Диаметр крепёжного отверстия",
+      "kind": "decimal",
+      "unit": "mm",
+      "options": [],
+      "legacy_attribute_ids": [
+        56
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Диаметр отдельного отверстия. Не равен PCD — диаметру окружности крепёжных отверстий.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "rim",
+        "wheel_assembly"
+      ]
+    },
+    "recommended_rim_width_in": {
+      "label": "Рекомендуемая ширина обода шины",
+      "kind": "decimal",
+      "unit": "in",
+      "options": {},
+      "legacy_attribute_ids": [
+        6
+      ],
+      "legacy_filter_group_ids": [],
+      "note": "Ширина обода из характеристики шины. Не означает наличие диска в комплекте и не заменяет ширину диска как отдельного изделия. Историческое значение требует подтверждения изготовителем.",
+      "required_for": "optional_if_documented",
+      "not_applicable_for": [],
+      "profile_types": [
+        "tyre_pneumatic",
+        "tyre_solid",
+        "tyre_bandage"
+      ]
+    }
+  }
+}

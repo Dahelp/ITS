@@ -4,6 +4,7 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0">Категории</h1>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="<?=ADMIN?>/catalog-display?id=<?=(int)$category->id?>">Сетка и порядок фильтров</a>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">

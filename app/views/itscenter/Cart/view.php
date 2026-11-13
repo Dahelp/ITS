@@ -24,6 +24,16 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 <!--prdt-starts-->
 <div class="prdt">
     <div class="container">
+        <?php if (!empty($_SESSION['cart.action_notice'])): ?>
+            <div class="alert alert-info" role="status"><?= htmlspecialchars((string)$_SESSION['cart.action_notice'], ENT_QUOTES, 'UTF-8') ?></div>
+            <?php if ($userId): ?><a href="<?= PATH ?>/user/wishlist">Открыть избранное</a><?php endif; ?>
+            <?php unset($_SESSION['cart.action_notice']); ?>
+        <?php endif; ?>
+        <?php if ($userId): ?>
+            <form id="saveCartLater" method="post" action="<?= PATH ?>/cart/save-later">
+                <input type="hidden" name="checkout_token" value="<?= htmlspecialchars($_SESSION['checkout_token'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+            </form>
+        <?php endif; ?>
 		<div class="col-md-12 cart-block" <?php if(!empty($_SESSION['cart'])){ ?>style="display:block"<?php }else{ ?>style="display:none"<?php } ?>>
 			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-customer-group="<?= (int)($checkoutCustomerGroup ?? 0) ?>" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
                 <link rel="stylesheet" href="/css/checkout-progress.css?v=<?= (int)filemtime(WWW.'/css/checkout-progress.css') ?>">
@@ -67,9 +77,16 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 								<?php unset($_SESSION['cart.notice']); ?>
 							<?php endif; ?>
 
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button type="button" class="btn btn-outline-secondary js-clear-cart">Очистить корзину</button>
+                                <?php if ($userId): ?>
+                                    <button type="submit" class="btn btn-outline-primary" form="saveCartLater" data-cart-confirm="Перенести все товары в избранное и очистить корзину? В избранном сохраняются товары без количества и состава комплектов.">Перенести товары в избранное</button>
+                                <?php else: ?>
+                                    <a class="btn btn-outline-primary" href="<?= PATH ?>/user/login">Войти для сохранения в избранное</a>
+                                <?php endif; ?>
+                            </div>
 							<!-- сюда будет подмена HTML при +/- -->
-							<div class="cart-clear-tools"><button type="button" class="btn btn-outline-secondary js-clear-cart">Очистить корзину</button><span>Все позиции будут удалены из корзины.</span></div>
-                                <div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
+							<div id="cartTableWrap" class="bg-light rounded-3 py-4 px-4">
 								<?php require __DIR__ . '/cart_table.php'; ?>
 							</div>
 
@@ -119,11 +136,13 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 								<hr>
 
 								<div class="d-flex justify-content-between align-items-center" style="font-size:18px;">
-									<span><b>Итого</b></span>
-									<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b>
+									<span><b>Стоимость товаров</b></span>
+									<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b><span class="visually-hidden"> — стоимость товаров</span>
 								</div>
+<div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
 								</div>
+                                <?php require __DIR__ . '/promo_block.php'; ?>
 
 							</div>
 							</aside>
@@ -132,6 +151,14 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 						</section>
 
 
+
+                        <div id="cartCheckoutDock" class="cart-checkout-dock" hidden aria-label="Оформление заказа">
+                            <div class="cart-checkout-dock__total">
+                                <span>В корзине: <b class="js-qty">0</b> шт.</span>
+                                <strong class="js-total" aria-label="Стоимость товаров"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></strong>
+                            </div>
+                            <button type="button" class="btn btn-success" id="btnDockToStep2">К оформлению</button>
+                        </div>
 
 						<!-- STEP 2 -->
 						<section id="step2_delivery" data-step="2" style="display:none">
@@ -284,60 +311,16 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 									<hr>
 
 									<div class="d-flex justify-content-between align-items-center" style="font-size:18px;">
-										<span><b>Итого</b></span>
-										<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b>
+										<span><b>Стоимость товаров</b></span>
+										<b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b><span class="visually-hidden"> — стоимость товаров</span>
 									</div>
+<div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
 									</div>
 
 
 								<!-- промокод ниже -->
-								<div class="bg-light rounded-3 py-4 px-4 mt-3" id="promoBlock">
-									<div class="fw-semibold mb-2">Промокод</div>
-
-									<?php $promoApplied = trim((string)($_SESSION['promocart'] ?? '')); ?>
-
-									<div class="input-group">
-										<input
-										type="text"
-										class="form-control"
-										id="promoCodeInput"
-										placeholder="Введите промокод"
-										value="<?= htmlspecialchars($promoApplied, ENT_QUOTES, 'UTF-8') ?>"
-										<?= $promoApplied !== '' ? 'readonly' : '' ?>
-										>
-
-										<button
-										class="btn btn-outline-secondary"
-										type="button"
-										id="btnApplyPromo"
-										<?= $promoApplied !== '' ? 'disabled' : '' ?>
-										>
-										Применить
-										</button>
-
-										<button
-										class="btn btn-outline-danger"
-										type="button"
-										id="btnClearPromo"
-										style="<?= $promoApplied !== '' ? '' : 'display:none' ?>"
-										>
-										Сбросить
-										</button>
-									</div>
-
-									<div class="small text-muted mt-2">
-										Промокод не суммируется со скидкой на комплект.
-									</div>
-
-									<div
-										class="small mt-2"
-										id="promoMsg"
-										style="<?= $promoApplied !== '' ? '' : 'display:none' ?>; color:#16a34a;"
-									>
-										✅ Промокод применён
-									</div>
-								</div>
+                                <?php require __DIR__ . '/promo_block.php'; ?>
 
 							</div>
 							</aside>
@@ -548,9 +531,10 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
           <hr>
 
           <div class="d-flex justify-content-between align-items-center" style="font-size:18px;">
-            <span><b>Итого</b></span>
-            <b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b>
+            <span><b>Стоимость товаров</b></span>
+            <b class="js-total"><?= htmlspecialchars($curL . '0' . $curR, ENT_QUOTES, 'UTF-8') ?></b><span class="visually-hidden"> — стоимость товаров</span>
           </div>
+<div class="small text-muted mt-2">Доставка рассчитывается отдельно менеджером.<br>Выбор «С НДС / Без НДС» определяет оформление счёта и не меняет стоимость товаров.</div>
 
         </div>
 

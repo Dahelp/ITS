@@ -210,7 +210,7 @@ class Cron extends AppModel
         if (!$mod) return;
 
         $update_data = [
-            'quantity'   => $quantity,
+            'inventory_quantity' => $quantity,
             'spec_price' => $price_spec,
             'opt_price'  => $price_opt,
         ];
@@ -272,8 +272,8 @@ class Cron extends AppModel
             'spec_price'      => $res["price_spec"],
             'opt_price'       => $res["price_opt"],
             'price'           => $res["price_rozn"],
-            'quantity'        => $quantity,
-            'rest'            => $res["rest"],
+            'inventory_quantity' => $quantity,
+            'inventory_rest' => $res["rest"],
             'reserve'         => $res["reserve"],
             'wait'            => $res["wait"],
             'wait_date'       => $res["wait_date"],
@@ -328,7 +328,7 @@ class Cron extends AppModel
      */
     public static function updateProductFromFileFast(
         array $fields,
-        array $productRow,   // ожидаем: id, alias, stock_status_id, opt_price, price, quantity, rest, reserve, wait, wait_date, data_edit_price, data_edit_all
+        array $productRow,   // ожидаем: id, alias, stock_status_id, opt_price, price, quantity, rest, inventory_quantity, inventory_rest, reserve, wait, wait_date, data_edit_price, data_edit_all
         bool $hasAction,
         string $date_price,
         string $date_update,
@@ -340,9 +340,11 @@ class Cron extends AppModel
             return null;
         }
 
-        $rest     = (int)($fields['Свободно'] ?? 0);
+        // Our fallback CSV contains effective stock plus source metadata to prevent
+        // applying a permanent correction again when that export is imported.
+        $rest     = (int)($fields['inventory_source_rest'] ?? $fields['Свободно'] ?? 0);
         $reserve  = (int)($fields['Резерв'] ?? 0);
-        $quantity = $rest + $reserve;
+        $quantity = (int)($fields['inventory_source_quantity'] ?? ($rest + $reserve));
 
         $opt_price_raw  = (string)($fields['ЦенаОпт'] ?? '0');
         $rozn_price_raw = (string)($fields['ЦенаРозн'] ?? '0');
@@ -359,8 +361,8 @@ class Cron extends AppModel
         $update = [
             'opt_price'        => $opt_price,
             'price'            => $rozn_price,
-            'quantity'         => $quantity,
-            'rest'             => $rest,
+            'inventory_quantity' => $quantity,
+            'inventory_rest' => $rest,
             'reserve'          => $reserve,
             'wait'             => $wait,
             'wait_date'        => $wait_date,
@@ -381,7 +383,7 @@ class Cron extends AppModel
 
         $changed = false;
 
-        foreach (['quantity','rest','reserve','stock_status_id'] as $k) {
+        foreach (['inventory_quantity','inventory_rest','reserve','stock_status_id'] as $k) {
             if ((int)($current[$k] ?? 0) !== (int)($update[$k] ?? 0)) { $changed = true; break; }
         }
 
@@ -768,7 +770,7 @@ class Cron extends AppModel
                 $sql = "
                     SELECT
                         id, article, alias, stock_status_id,
-                        opt_price, price, quantity, rest, reserve,
+                        opt_price, price, quantity, rest, inventory_quantity, inventory_rest, reserve,
                         wait, wait_date, data_edit_price, data_edit_all
                     FROM product
                     WHERE article IN ($placeholders)
@@ -795,6 +797,8 @@ class Cron extends AppModel
                         'opt_price'       => (float)($p['opt_price'] ?? 0),
                         'price'           => (float)($p['price'] ?? 0),
                         'quantity'        => (int)($p['quantity'] ?? 0),
+                        'inventory_quantity' => (int)($p['inventory_quantity'] ?? $p['quantity'] ?? 0),
+                        'inventory_rest' => (int)($p['inventory_rest'] ?? $p['rest'] ?? 0),
                         'rest'            => (int)($p['rest'] ?? 0),
                         'reserve'         => (int)($p['reserve'] ?? 0),
                         'wait'            => (string)($p['wait'] ?? ''),

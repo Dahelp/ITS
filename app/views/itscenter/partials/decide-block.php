@@ -1,7 +1,7 @@
 <?php
 $tell_zv = $tell_zv ?? \ishop\App::options('option_telefon');
 $telefon_href = str_replace(['(', ')', ' ', '-'], '', (string)$tell_zv);
-$callbackMascot = 'images/home-preview/callback-mascot-red.webp';
+$callbackMascot = 'images/home/callback-mascot-red.webp';
 
 if (empty($_SESSION['callback_token'])) {
     $_SESSION['callback_token'] = bin2hex(random_bytes(32));

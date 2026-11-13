@@ -58,6 +58,10 @@ if (!empty($context['seoNameByProductId'][$pid])) {
         : (string)($product['name'] ?? $product->name ?? '');
 }
 
+// Naming is batched when the normal widget context is available.
+\app\services\CatalogNaming::prime(array_map(static fn($id)=>['id'=>(int)$id],array_keys($context['seoNameByProductId']??[$pid=>''])));
+$seoName=\app\services\CatalogNaming::apply($pid,'catalog',(string)$seoName);
+
 // CURRENCY
 $curr = $curr ?? ['symbol_left' => '', 'symbol_right' => '', 'value' => 1];
 $curr['value'] = (float)($curr['value'] ?? 1);
@@ -179,7 +183,7 @@ if (isset($context['modificationsByProductId'][$pid])) {
 $productQuantity = (int)($product['quantity'] ?? $product->quantity ?? 0);
 $productReserve = (int)($product['reserve'] ?? $product->reserve ?? 0);
 
-$quantity = $productQuantity - $productReserve;
+$quantity = max(0, $productQuantity);
 $maxP = $final;
 
 if (!empty($modification)) {
@@ -191,7 +195,7 @@ if (!empty($modification)) {
         $prices[] = (float)($item['price'] ?? 0);
     }
 
-    $quantity = $qtyMods + $productQuantity - $productReserve;
+    $quantity = max(0, $qtyMods + $productQuantity);
     $maxP = max($prices);
 }
 

@@ -197,6 +197,9 @@ class SearchRanker
             }
         }
 
+        if(!empty($row['catalog_size_match'])){
+            $boost=($row['catalog_size_match']['role']??'')==='primary'?1000:850;$score+=$boost;$reasons['catalog_confirmed_size_relation']=$boost;
+        }
         // 2. size relevance
         foreach ((array)($parsed['sizes'] ?? []) as $size) {
             $canonical = mb_strtolower((string)($size['canonical'] ?? ''), 'UTF-8');

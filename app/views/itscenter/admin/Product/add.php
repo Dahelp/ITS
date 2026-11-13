@@ -170,6 +170,10 @@
 							</div>
                         </div>
 						<div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="stock_adjustment">Корректировка наличия</label>
+                            <div class="col-sm-9"><input type="number" name="stock_adjustment" id="stock_adjustment" class="form-control" step="1" min="-1000000000" max="1000000000" value="0"><small>−1 — недостача, +4 — излишек; 0 — без поправки.</small></div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="unit">Единица измерения</label>
 							<div class="col-sm-9">
 							<select name="unit" class="form-control" style="width: 100%;">
@@ -499,7 +503,9 @@ function add_new_modification(){
            .attr('id','quantity_'+mtotal)
            .attr('name','product_mods['+mtotal+'][quantity]')
 		   .attr('class','form-control')
-       )                             
+       )
+       .append($('<label>').text('Поправка'))
+       .append($('<input>').attr({type:'number', step:'1', min:'-1000000000', max:'1000000000', name:'product_mods['+mtotal+'][stock_adjustment]', class:'form-control', value:'0'}))
                               
     )
 	.append (

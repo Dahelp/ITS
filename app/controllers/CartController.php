@@ -253,6 +253,7 @@ class CartController extends AppController {
             $this->redirectCartView(302);
         }
 
+        (new Cart())->reconcileAvailability();
         $this->loadView('cart_state');
         $this->sessClose();
         return;
@@ -340,6 +341,16 @@ class CartController extends AppController {
         return;
     }
 
+    public function restoreAction(): void
+    {
+        $this->sessOpenRW();
+        if (!$this->isAjax()) $this->redirectCartView(302);
+        $restored = (new Cart())->restoreRemoved((string)($_GET['token'] ?? ''));
+        if (!$restored) $_SESSION['cart.quantity_notice'] = 'Не удалось восстановить товар. Проверьте наличие и добавьте его из каталога.';
+        $this->loadView('cart_table');
+        $this->sessClose();
+    }
+
     public function deletecartAction()
     {
         $this->sessOpenRW();
@@ -352,6 +363,7 @@ class CartController extends AppController {
 
         if ($id !== null && isset($_SESSION['cart'][$id])) {
             $cart = new Cart();
+            $cart->rememberRemoved((string)$id);
             $cart->deleteItem($id);
         }
 
@@ -373,6 +385,7 @@ class CartController extends AppController {
 
         if ($id !== null && isset($_SESSION['cart'][$id])) {
             $cart = new Cart();
+            $cart->rememberRemoved((string)$id);
             $cart->deletecompleteItem($id, $completeId);
         }
 
@@ -478,6 +491,74 @@ class CartController extends AppController {
         return;
     }
 
+    private function requireCartActionUser(): int
+    {
+        $this->sessOpenRW();
+        $userId = (int)($_SESSION['user']['id'] ?? 0);
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$userId ||
+            empty($_SESSION['checkout_token']) ||
+            !hash_equals((string)$_SESSION['checkout_token'], (string)($_POST['checkout_token'] ?? ''))) {
+            $_SESSION['cart.action_notice'] = 'Войдите в личный кабинет и обновите страницу корзины перед действием.';
+            $this->redirectCartView(303);
+        }
+        return $userId;
+    }
+
+    public function saveLaterAction(): void
+    {
+        $userId = $this->requireCartActionUser();
+        $ids = [];
+        foreach ($_SESSION['cart'] ?? [] as $row) {
+            $id = (int)($row['product_id'] ?? 0);
+            if ($id > 0) $ids[$id] = $id;
+        }
+        if (!$ids) $this->redirectCartView(303);
+        try {
+            \R::begin();
+            foreach ($ids as $id) {
+                if (!\R::count('product_wishlists', 'product_id = ? AND user_id = ?', [$id, $userId])) {
+                    \R::exec('INSERT INTO product_wishlists (product_id, user_id) VALUES (?, ?)', [$id, $userId]);
+                }
+            }
+            \R::commit();
+        } catch (\Throwable $e) {
+            \R::rollback();
+            error_log('Cart save later failed: ' . $e->getMessage());
+            $_SESSION['cart.action_notice'] = 'Не удалось сохранить товары. Корзина сохранена, попробуйте позже.';
+            $this->redirectCartView(303);
+        }
+        $this->emptyCart();
+        $_SESSION['cart.action_notice'] = 'Товары перенесены в избранное. Количество и состав комплектов нужно будет выбрать заново.';
+        $this->redirectCartView(303);
+    }
+
+    public function repeatAction(): void
+    {
+        $userId = $this->requireCartActionUser();
+        // Accept a selected order only after checking ownership; prices remain current.
+        $selectedId = (int)($_POST['order_id'] ?? 0);
+        $orderId = $selectedId > 0 ? (int)\R::getCell(
+            'SELECT id FROM `order` WHERE user_id = ? AND id = ?', [$userId, $selectedId]
+        ) : 0;
+        if (!$orderId) {
+            $_SESSION['cart.action_notice'] = 'Заказ не найден или недоступен для повторения.';
+            $this->redirectCartView(303);
+        }
+        $snapshot = $_SESSION;
+        try {
+            $rows = \R::getAll('SELECT product_id, article, SUM(qty) AS qty FROM order_product WHERE order_id = ? GROUP BY product_id, article', [$orderId]);
+            $result = (new \app\services\CartRepeat())->addRows($rows, new Cart());
+            unset($_SESSION['cart.quantity_notice']);
+            $_SESSION['cart.action_notice'] = 'Заказ №' . $orderId . ': добавлено ' . $result['added'] . ' шт. по текущим ценам. ' .
+                'Пропущено позиций: ' . $result['skipped'] . '; ограничено остатком: ' . $result['limited'] . '. Проверьте корзину перед оформлением.';
+        } catch (\Throwable $e) {
+            $_SESSION = $snapshot;
+            error_log('Cart repeat failed: ' . $e->getMessage());
+            $_SESSION['cart.action_notice'] = 'Не удалось повторить заказ. Исходная корзина сохранена, попробуйте позже.';
+        }
+        $this->redirectCartView(303);
+    }
+
     private function emptyCart(): void
     {
         foreach (['cart','cart.qty','cart.sum','cart.weight','cart.volume','cart.currency',
@@ -502,6 +583,7 @@ class CartController extends AppController {
     public function viewAction()
     {
         $this->sessOpenRW();
+        (new Cart())->reconcileAvailability();
 
         if (empty($_SESSION['checkout_token'])) {
             $_SESSION['checkout_token'] = bin2hex(random_bytes(32));
@@ -633,6 +715,11 @@ class CartController extends AppController {
 	}
 
     // Токен одноразовый
+    if ((new Cart())->reconcileAvailability()) {
+        $_SESSION['error'] = 'Наличие или условия скидки изменились. Стоимость и количество обновлены. Проверьте корзину перед оформлением.';
+        $_SESSION['form_data'] = $_POST;
+        $this->redirectCartView(303);
+    }
     unset($_SESSION['checkout_token']);
 
     // ========= ANTI-BOT: honeypot =========

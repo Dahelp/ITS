@@ -227,6 +227,9 @@
                 </li>
 
                 <li class="nav-header">Каталог и склад</li>
+                <?php if(($_SESSION['user']['role']??'')==='admin'): ?>
+                <li class="nav-item"><a class="nav-link" href="<?=ADMIN?>/catalog-workflow"><i class="nav-icon fas fa-tasks"></i><p>Рабочий центр каталога</p></a></li>
+                <?php endif ?>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="nav-icon fas fa-box-open"></i>
@@ -247,6 +250,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/category"><i class="fas fa-folder-tree nav-icon"></i><p>Категории</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/catalog-display"><i class="fas fa-th nav-icon"></i><p>Вывод каталога</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/brand"><i class="fas fa-copyright nav-icon"></i><p>Производители</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/attribute"><i class="fas fa-sliders-h nav-icon"></i><p>Атрибуты</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/filtrs/attribute-group"><i class="fas fa-filter nav-icon"></i><p>Группы фильтров</p></a></li>

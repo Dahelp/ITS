@@ -14,7 +14,7 @@ class PlaginsComplete extends AppModel{
         'description' => '',		
         'keywords' => '',
 		'alias' => '',
-		'hide' => '',
+		'hide' => 'show',
     ];
 
     public $rules = [
@@ -22,6 +22,31 @@ class PlaginsComplete extends AppModel{
             ['name'],            
         ],        
     ];
+
+    public function load($data){
+        parent::load($data);
+        $this->attributes['category_id'] = max(0, (int)$this->attributes['category_id']);
+        if (!in_array($this->attributes['hide'], ['show', 'hide', 'lock'], true)) {
+            $this->attributes['hide'] = 'show';
+        }
+    }
+
+    public function save($table, $valid = true){
+        $this->attributes['img'] = $this->attributes['img'] ?? '';
+        return parent::save($table, false);
+    }
+
+    public function validate($data){
+        if (!parent::validate($data)) { return false; }
+        try {
+            self::normalizeItems($data['complete'] ?? []);
+            \app\services\CompleteAvito::saveLinks((int)($data['id'] ?? $_GET['id'] ?? 0), (string)($data['avito_ids'] ?? ''), true);
+        } catch (\InvalidArgumentException $e) {
+            $this->errors['complete'][] = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
 
 	public function checkUnique(){
         $attribute = \R::findOne('plagins_complete', 'name = ?', [$this->attributes['name']]);
@@ -35,37 +60,38 @@ class PlaginsComplete extends AppModel{
     }
 
 	public function editProductComplete($id, $data){
-        $complete_product = \R::getCol('SELECT complete_id FROM plagins_complete_product WHERE complete_id = ?', [$id]);
-        // если менеджер убрал связанные товары - удаляем их
-        if(empty($data['complete']) && !empty($complete_product)){
-            \R::exec("DELETE FROM plagins_complete_product WHERE complete_id = ?", [$id]);
-            return;
-        }
-        // если добавляются связанные товары
-        if(empty($complete_product) && !empty($data['complete'])){
-            $sql_part = '';
-            foreach($data['complete'] as $v){                
-                $sql_part .= "($id, '".$v["product_id"]."', '".$v["quantity"]."', '".$v["price"]."', '".$v["discount"]."', '".$v["discount_amount"]."'),";            }
-            $sql_part = rtrim($sql_part, ',');
-            \R::exec("INSERT INTO plagins_complete_product (complete_id, product_id, qty, price, discount, discount_amount) VALUES $sql_part");
-            return;
-        }
-        // если изменились связанные товары - удалим и запишем новые
-        if(!empty($data['complete'])){
-            $result = array_diff($complete_product, $data['complete']);
-            if(!empty($result) || count($complete_product) != count($data['complete'])){
-                \R::exec("DELETE FROM plagins_complete_product WHERE complete_id = ?", [$id]);
-                $sql_part = '';
-                foreach($data['complete'] as $v){                   
-                    $sql_part .= "($id, '".$v["product_id"]."', '".$v["quantity"]."', '".$v["price"]."', '".$v["discount"]."', '".$v["discount_amount"]."'),";
-                }
-                $sql_part = rtrim($sql_part, ',');
-                \R::exec("INSERT INTO plagins_complete_product (complete_id, product_id, qty, price, discount, discount_amount) VALUES $sql_part");
+        $rows = self::normalizeItems($data['complete'] ?? []);
+        \R::begin();
+        try {
+            \R::exec('DELETE FROM plagins_complete_product WHERE complete_id = ?', [$id]);
+            foreach ($rows as $row) {
+                \R::exec('INSERT INTO plagins_complete_product (complete_id, product_id, qty, price, discount, discount_amount) VALUES (?, ?, ?, ?, ?, ?)',
+                    [$id, $row['product_id'], $row['qty'], $row['price'], $row['discount'], $row['discount'] * $row['qty']]);
             }
+            \R::commit();
+        } catch (\Throwable $e) {
+            \R::rollback();
+            throw $e;
         }
     }
-	
-	public function getImg(){
+
+    public static function normalizeItems(array $items): array {
+        $rows = [];
+        foreach ($items as $item) {
+            $pid = (int)($item['product_id'] ?? 0);
+            if ($pid <= 0) { continue; }
+            $product = \R::getRow('SELECT price FROM product WHERE id = ?', [$pid]);
+            if (!$product) { throw new \InvalidArgumentException('Товар комплекта не найден'); }
+            $qty = max(1, (int)($item['quantity'] ?? 1));
+            $price = ($item['price'] ?? '') === '' ? (float)$product['price'] : max(0, (float)$item['price']);
+            $discount = min($price, max(0, (float)($item['discount'] ?? 0)));
+            if (isset($rows[$pid])) { $rows[$pid]['qty'] += $qty; continue; }
+            $rows[$pid] = ['product_id' => $pid, 'qty' => $qty, 'price' => $price, 'discount' => $discount];
+        }
+        return array_values($rows);
+    }
+
+    public function getImg(){
         if(!empty($_SESSION['single'])){
             $this->attributes['img'] = $_SESSION['single'];
             unset($_SESSION['single']);
@@ -79,7 +105,9 @@ class PlaginsComplete extends AppModel{
                 $sql_part .= "('$v', $id),";
             }
             $sql_part = rtrim($sql_part, ',');
-            \R::exec("INSERT INTO plagins_complete_gallery (complete_id, img) VALUES $sql_part");
+            foreach ($_SESSION['multi'] as $img) {
+                \R::exec('INSERT INTO plagins_complete_gallery (complete_id, img) VALUES (?, ?)', [$id, $img]);
+            }
             unset($_SESSION['multi']);
         }
     }
@@ -87,10 +115,10 @@ class PlaginsComplete extends AppModel{
 	public function uploadImg($name, $wmax, $hmax, $wmaxmini, $hmaxmini){		
         $ext = strtolower(preg_replace("#.+\.([a-z]+)$#i", "$1", $_FILES[$name]['name'])); // расширение картинки
         $types = array("image/gif", "image/png", "image/jpeg", "image/pjpeg", "image/x-png"); // массив допустимых расширений
-		$size = \R::findOne('options', 'alt_name = ?', [option_size_product]);
+		$size = \R::findOne('options', 'alt_name = ?', ['option_size_product']);
 		$size_product = $size->znachenie * 1048576;
         if($_FILES[$name]['size'] > $size_product){
-            $res = array("error" => "Ошибка! Максимальный вес файла - ".$size." Мб!");
+            $res = array("error" => "Ошибка! Максимальный вес файла - ".$size->znachenie." Мб!");
             exit(json_encode($res));
         }
         if($_FILES[$name]['error']){
@@ -101,7 +129,10 @@ class PlaginsComplete extends AppModel{
             $res = array("error" => "Допустимые расширения - .gif, .jpg, .png");
             exit(json_encode($res));
         }
-        $new_name = md5(time()).".$ext";
+        $new_name = bin2hex(random_bytes(16)).".$ext";
+        foreach (['tmp', 'baseimg', 'gallery', 'mini'] as $dir) {
+            if (!is_dir(WWW.'/images/complete/'.$dir)) { mkdir(WWW.'/images/complete/'.$dir, 0775, true); }
+        }
 		
 		$tmpdir = WWW . '/images/complete/tmp/'.$new_name.'';
         $basedir = WWW . '/images/complete/baseimg/'.$new_name.'';

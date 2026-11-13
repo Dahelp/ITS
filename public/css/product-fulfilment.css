@@ -1,0 +1,13 @@
+/* Product payment and delivery summary next to purchase actions. */
+.product-fulfilment{padding:20px 22px;color:#475569;font-size:14px;line-height:1.5;}
+.product-fulfilment__section{scroll-margin-top:100px;}
+.product-fulfilment__section + .product-fulfilment__section{margin-top:16px;padding-top:16px;border-top:1px solid #e8edf3;}
+.product-fulfilment h2{display:flex;align-items:center;gap:10px;margin:0 0 10px;color:#1e293b;font-size:16px;font-weight:700;line-height:1.4;}
+.product-fulfilment h2 i{width:20px;color:#64748b;font-size:17px;text-align:center;}
+.product-fulfilment ul{margin:0 0 8px;padding-left:18px;}
+.product-fulfilment li + li{margin-top:6px;}
+.product-fulfilment p{margin:0 0 8px;}
+.product-fulfilment a{display:inline-flex;align-items:center;gap:8px;min-height:32px;max-width:100%;color:#a52e25;font-weight:600;text-decoration:underline;text-underline-offset:3px;}
+.product-fulfilment a:hover{color:#7f221c;}
+.product-fulfilment a:focus-visible{outline:2px solid #a52e25;outline-offset:4px;border-radius:3px;}
+@media(max-width:575px){.product-fulfilment{padding:18px 20px;}.product-fulfilment a{min-height:44px;}}

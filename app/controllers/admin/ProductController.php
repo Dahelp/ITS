@@ -167,7 +167,9 @@ class ProductController extends AppController {
 								$itog_nalichie = "<span class='text-primary'>Под заказ</span>";
 							}
 						}
-						return ''.$curr['symbol_left'].''.$product['price'].' '.$curr['symbol_right'].'<br />'.$itog_nalichie.'';
+						$adjustedMods = \R::getAll('SELECT article, inventory_quantity, quantity, stock_adjustment FROM modification WHERE product_id = ? AND stock_adjustment <> 0 ORDER BY id', [(int)$d]);
+                        $adjustments = \app\services\StockAdjustment::adminIndicators($product->export(), $adjustedMods);
+                        return ''.$curr['symbol_left'].''.$product['price'].' '.$curr['symbol_right'].'<br />'.$itog_nalichie.$adjustments;
 					}
 			),
             array('db'=>'id','dt'=>6,'formatter'=>function($d,$row){

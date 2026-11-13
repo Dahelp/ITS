@@ -34,13 +34,19 @@ class PlaginsController extends AppController {
 	
 /*YANDEX PRODUCTS*/	
 	public function yandexTovarsAction(){
-		$yatovars = new PlaginsYandexTovars();
-		$parsed = $yatovars->yandexTovars();
-		//$yandex_tovars = \R::getAll("SELECT * FROM plagins_yandex_tovars ORDER BY id");
-        $this->setMeta('Настройка Яндекс товаров');
-        $this->set(compact('parsed'));
-		
-	}
+        $feeds=[]; $preview=null; $error=null;
+        try {
+            $feeds=\app\services\YandexProductsCabinet::snapshot(WWW);
+            if (($_GET['preview']??'')==='1') {
+                $preview=(new \app\services\SpecialTyreFeedService(WWW,'https://its-center.ru'))->diagnose();
+            }
+        } catch (\Throwable $e) {
+            error_log('Yandex cabinet local diagnostics failed: '.get_class($e));
+            $error='Локальная диагностика временно недоступна. Данные товаров и опубликованный XML не изменены.';
+        }
+        $this->setMeta('Яндекс Товары — состояние выгрузок');
+        $this->set(compact('feeds','preview','error'));
+    }
 /*YANDEX PRODUCTS*/	
 	
 /*PROMOCODE*/
@@ -1267,6 +1273,7 @@ class PlaginsController extends AppController {
                 $p->alias = $alias;
                 \R::store($p);
 				$complete->editProductComplete($id, $data);
+                \app\services\CompleteAvito::saveLinks((int)$id, (string)($data['avito_ids'] ?? ''));
 				\app\services\CompleteSimilar::save((int)$id,(array)($data['similar']??[]));
 				
 				// API IndexNow
@@ -1302,6 +1309,7 @@ class PlaginsController extends AppController {
 				
                 $alias = AppModel::createAlias('plagins_complete', 'alias', $data["name"], $id);
 				$complete->editProductComplete($id, $data);
+                \app\services\CompleteAvito::saveLinks((int)$id, (string)($data['avito_ids'] ?? ''));
 				\app\services\CompleteSimilar::save((int)$id,(array)($data['similar']??[]));
                 $complete = \R::load('plagins_complete', $id);
 				if($data['alias']!=""){ $complete->alias = $data['alias'];}

@@ -11,7 +11,7 @@ final class InventoryCsvExportService
         'НоменклатураКод', 'ЦенаРозн', 'ЦенаОпт', 'Свободно', 'Резерв',
         'Климовск', 'КлимовскР', 'Краснодар', 'КраснодарР', 'Воронеж',
         'ВоронежР', 'СанктПетербург', 'СанктПетербургР', 'Екатеринбург',
-        'ЕкатеринбургР', 'Ожидается', 'Дата', '',
+        'ЕкатеринбургР', 'Ожидается', 'Дата', '', 'inventory_source_rest', 'inventory_source_quantity',
     ];
 
     private const EXPORTS = [
@@ -64,12 +64,13 @@ final class InventoryCsvExportService
     {
         $in = implode(',', array_map('intval', $categories));
         $products = \R::getAll(
-            "SELECT id, article, price, opt_price, quantity, rest, reserve
+            "SELECT id, article, price, opt_price, quantity, rest, reserve, inventory_quantity, inventory_rest
              FROM product WHERE category_id IN ({$in}) AND article IS NOT NULL AND article <> ''
              ORDER BY article"
         );
         $modifications = \R::getAll(
-            "SELECT m.article, m.price, m.opt_price, m.quantity, 0 AS rest, 0 AS reserve
+            "SELECT m.article, m.price, m.opt_price, m.quantity, 0 AS rest, 0 AS reserve,
+                    m.inventory_quantity, m.inventory_quantity AS inventory_rest
              FROM modification m
              INNER JOIN product p ON p.id = m.product_id
              WHERE p.category_id IN ({$in}) AND m.article IS NOT NULL AND m.article <> ''
@@ -112,6 +113,8 @@ final class InventoryCsvExportService
             is_array($cached) ? ($cached['wait'] ?? '') : '',
             is_array($cached) ? ($cached['wait_date'] ?? '') : '',
             '',
+            (int)($item['inventory_rest'] ?? $item['rest'] ?? $quantity),
+            (int)($item['inventory_quantity'] ?? $quantity),
         ]);
     }
 

@@ -150,6 +150,9 @@ if ($discountServer < 0.01) $discountServer = 0.0;
 // HIDDEN MARKERS (РОВНО 1 РАЗ)
 // -------------------------
 ?>
+<?php if (!empty($_SESSION['cart.undo']) && $_SESSION['cart.undo']['expires'] >= time()): ?>
+<span class="cart-undo-data d-none" data-token="<?= htmlspecialchars($_SESSION['cart.undo']['token'], ENT_QUOTES, 'UTF-8') ?>" data-expires="<?= (int)$_SESSION['cart.undo']['expires'] ?>"></span>
+<?php endif; ?>
 <!-- скрытые значения для JS пересчёта -->
 <span class="cart-qty d-none"><?= $cartQty ?></span>
 <span class="cart-sum d-none"><?= htmlspecialchars($curL . $cartSum . $curR, ENT_QUOTES, 'UTF-8') ?></span>
@@ -160,6 +163,8 @@ if ($discountServer < 0.01) $discountServer = 0.0;
 
 <span class="promo-code d-none"><?= htmlspecialchars((string)($_SESSION['promocart'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
 <span class="promo-code-val d-none"><?= htmlspecialchars((string)($_SESSION['promocart'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
+<?php $promoSavings = 0.0; foreach ($cart as $promoRow) { $promoSavings += max(0.0, (float)($promoRow['promo_discount'] ?? 0)) * (int)$promoRow['qty']; } ?>
+<span class="promo-savings d-none"><?= $promoSavings ?></span>
 <span class="promo-applied d-none"><?= !empty($_SESSION['promocart']) ? '1' : '0' ?></span>
 
 <span class="promo-state d-none"
@@ -167,6 +172,12 @@ if ($discountServer < 0.01) $discountServer = 0.0;
       data-msg="<?= htmlspecialchars($promoMsg, ENT_QUOTES, 'UTF-8') ?>"></span>
 
 <div class="cart-list">
+  <?php if (!empty($_SESSION['cart.quantity_notice'])): ?>
+    <div class="alert alert-warning" role="status">
+      <?= htmlspecialchars((string)$_SESSION['cart.quantity_notice'], ENT_QUOTES, 'UTF-8') ?>
+    </div>
+    <?php unset($_SESSION['cart.quantity_notice']); ?>
+  <?php endif; ?>
   <?php if (empty($cart)): ?>
 
     <div class="cart-empty text-center py-5">
@@ -247,8 +258,8 @@ $rrs       = $p ? (float)($p->price_rrs ?? 0) : 0.0;
         $setNum = (int)($item['set'] ?? 0);
 
         // наличие: приоритет БД, fallback на max
-        $stockQty = $p ? (int)($p->quantity ?? 0) : (($max === PHP_INT_MAX) ? 0 : (int)$max);
-        $plusDisabled = ($stockQty > 0 && $qty >= $stockQty);
+        $stockQty = (new \app\models\Cart())->availableForRow($rowKey, $item);
+        $plusDisabled = ($qty >= $stockQty);
 
         // сохраняем “витринные” признаки, чтобы Step2 мог показать то же самое без БД
         $_SESSION['cart'][$rowKey]['old_price']   = (float)$oldPrice;
@@ -342,7 +353,11 @@ $rrs       = $p ? (float)($p->price_rrs ?? 0) : 0.0;
               <?php if ($isSet): ?>data-complete-id="<?= $setNum ?>"<?php endif; ?>
               aria-label="Уменьшить">–</button>
 
-            <span class="qty-item"><?= $qty ?></span>
+            <input type="number" class="qty-item js-cart-quantity"
+                   value="<?= $qty ?>" min="1" step="1"
+                   max="<?= max($qty, min($max, max(0, $stockQty))) ?>"
+                   data-id="<?= htmlspecialchars((string)$id, ENT_QUOTES, 'UTF-8') ?>"
+                   aria-label="Количество товара" inputmode="numeric">
 
             <button type="button"
               class="qty-btn <?= !$isSet ? 'my-plus-cart' : 'my-plus-complete-cart' ?><?= $plusDisabled ? ' is-disabled' : '' ?>"

@@ -43,6 +43,7 @@ class CronController extends AppController {
     public function ymlfidCompleteAction() { return "Задание выполнено!"; }
     public function exportYmlBbSpectyreAction() { return "Задание выполнено!"; }
     public function ymlfidDirectAction() { return "Задание выполнено!"; }
+    public function ymlfidGalleryAction() { return "Задание выполнено!"; }
     public function refreshDiskiServerAction() { return "Задание выполнено!"; }
     public function refreshAtvServerAction() { return "Задание выполнено!"; }
     public function mailAvailabilityAction() { return "Задание выполнено!"; }

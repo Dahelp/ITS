@@ -1,0 +1,1126 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Единые характеристики — этап 2А</title><style>body{font:16px/1.55 system-ui;max-width:1200px;margin:40px auto;padding:0 24px;color:#203247}h1,h2{color:#135a83}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccd7e1;padding:12px;text-align:left;vertical-align:top}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;background:#f2f6fa;padding:12px}.notice{background:#e6f3fb;padding:20px}code{background:#f2f6fa}</style><h1>Единые характеристики: пилот 2А</h1><p>11 ноября 2026. Реализовано и проверено локально. На рабочий сайт изменения не опубликованы.</p><p class="notice">Это фундамент справочника и редактора. Публичный каталог, H1, URL, остатки, старые характеристики, фильтры, InSEO и YML продолжают работать по прежней схеме. Массового переноса товаров не было.</p><h2>Что реализовано</h2><ul><li>45 определений свойств, 12 профилей изделий, правила обязательности и применимости. Постоянные значения выбираются из справочников.</li><li>Разделение «неизвестно», «известно» и «неприменимо»; ноль и «нет» не теряются. Сведения требуют источника при подтверждении.</li><li>Отдельные типизированные значения, множественные варианты, исходная маркировка индексов, связи размеров, журнал изменений. 12 новых таблиц InnoDB; ALTER старых таблиц отсутствует.</li><li>Административный список и редактор: <code>/admin/catalog-properties</code>, <code>/admin/catalog-properties/edit?id=357</code>. Доступ администратора, CSRF, транзакционное сохранение, защита от одновременного редактирования, восстановление версии.</li><li>Предпросмотр переноса не сохраняет данные. Непонятные и противоречивые значения сохраняются в отчёте для проверки, без вычисления характеристик догадкой.</li><li>В существующий раздел Яндекс Товары добавлена ссылка на пилот. Его API и экспорт не переключались.</li></ul><h2>Взаимозаменяемые размеры</h2><p>Для IT000007251: основной размер <b>12-16.5</b>, посадочный диаметр <b>16.5 дюйма</b>, взаимозаменяемый размер <b>33x12-20</b>. Основание подтверждения — ваше уточнение для этого товара. Это не универсальное равенство двух типоразмеров.</p><p>Связь имеет роль (взаимозаменяемый / совместимый), статус проверки, источник и ограничения применения. Несколько размеров поддерживаются. Подтверждение не переносится на другие товары. Совместимый размер камеры или ободной ленты не считается синонимом размера самой шины.</p><p>Подготовлена и протестирована функция сопоставления: основной размер либо подтверждённая взаимозаменяемость конкретного товара; условные связи учитываются только с явно принятым условием. Подключение к поиску и CT-08 ещё предстоит. Геометрия, URL и основной размер из альтернативы не рассчитываются.</p><h2>12 товаров: пробный перенос</h2><p>Источник — снимок рабочей базы от 2026-11-11T13:57:38+03:00. Режим dry run: предложенные записи не внесены в товары. Историческое значение не становится подтверждённым автоматически.</p><table><thead><tr><th>Артикул</th><th>Товар</th><th>Профиль</th><th>Данные</th></tr></thead><tbody><tr><td>IT000007251</td><td>12-16.5 (33х12-20) Колесо цельнолитое WHEELS STANDARD IST (в сборе с диском)</td><td>wheel_assembly</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;wheel_assembly&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;WHEELS STANDARD&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;WHEELS STANDARD&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12-16.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;16.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 7&quot;
+      },
+      &quot;tire_type&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;solid&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 61&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;4850&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 13&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;280&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 17&quot;
+      },
+      &quot;tread_pattern&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;клюшка&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 60&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;skid_steer&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 15&quot;
+      },
+      &quot;surface&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;soil&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 62&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;148&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.212&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007251 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [
+      {
+        &quot;size&quot;: &quot;33x12-20&quot;,
+        &quot;role&quot;: &quot;equivalent&quot;,
+        &quot;verification&quot;: &quot;confirmed&quot;,
+        &quot;source_ref&quot;: &quot;Подтверждено владельцем в задаче 11.11.2026: IT000007251, 12-16.5 ↔ 33x12-20&quot;,
+        &quot;conditions&quot;: &quot;&quot;
+      }
+    ],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: []
+}</pre></details></td></tr><tr><td>IT000012032</td><td>6.50-10 12PR TTF QH207 134A5 SUPERGUIDER Шина для вилочного погрузчика </td><td>tyre_pneumatic</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;tyre_pneumatic&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;QH207&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;QH207&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;6.50-10&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;10&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 7&quot;
+      },
+      &quot;section_width_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;6.50&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 65&quot;
+      },
+      &quot;overall_diameter_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;590&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 14&quot;
+      },
+      &quot;tire_type&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;pneumatic&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 61&quot;
+      },
+      &quot;construction&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;bias&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 63&quot;
+      },
+      &quot;sealing&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;tube_type&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 16&quot;
+      },
+      &quot;ply_rating&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 5&quot;
+      },
+      &quot;tread_depth_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;15&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 10&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;165&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 17&quot;
+      },
+      &quot;tread_pattern&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;блочный&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 60&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;forklift&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 15&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.05&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000012032 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: [
+      {
+        &quot;raw_marking&quot;: &quot;134 A5&quot;,
+        &quot;load_single&quot;: &quot;134&quot;,
+        &quot;load_dual&quot;: null,
+        &quot;speed_symbol&quot;: &quot;A5&quot;,
+        &quot;operating_mode&quot;: &quot;manufacturer_other&quot;,
+        &quot;pressure_kpa&quot;: null,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;source_ref&quot;: &quot;Исторические атрибуты 70/71: требуется проверить связанные условия&quot;
+      }
+    ]
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;surface&quot;,
+      &quot;raw&quot;: &quot;асфальт, бетон&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000009159</td><td>6.00-9 10PR TTF C601 EKKA Шина для вилочного погрузчика</td><td>tyre_pneumatic</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;tyre_pneumatic&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;C601&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;C601&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;6.00-9&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;9&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 7&quot;
+      },
+      &quot;section_width_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;6.00&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 65&quot;
+      },
+      &quot;tire_type&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;pneumatic&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 61&quot;
+      },
+      &quot;construction&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;bias&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 63&quot;
+      },
+      &quot;sealing&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;tube_type&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 16&quot;
+      },
+      &quot;ply_rating&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;10&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 5&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;1515&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 13&quot;
+      },
+      &quot;inflation_pressure_kpa&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;860&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 18&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;160&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 17&quot;
+      },
+      &quot;tread_pattern&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;блочный&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 60&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;forklift&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 15&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12.1&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.048&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009159 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;surface&quot;,
+      &quot;raw&quot;: &quot;асфальт, бетон&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000007267</td><td>15х4 1/2-8 CLIP NM белая IST Шина цельнолитая для вилочного погрузчика</td><td>tyre_solid</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;tyre_solid&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;CLIP NM&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;CLIP NM&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;15x4 1/2-8&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;8&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 7&quot;
+      },
+      &quot;nominal_height_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;15&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 64&quot;
+      },
+      &quot;tire_type&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;solid&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 61&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;118&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 17&quot;
+      },
+      &quot;tread_pattern&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;блочный&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 60&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;forklift&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 15&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;11.2&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.017&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007267 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;section_width_in&quot;,
+      &quot;raw&quot;: &quot;4 1/2&quot;,
+      &quot;reason&quot;: &quot;Номинальная ширина профиля: укажите число в единице in&quot;
+    },
+    {
+      &quot;code&quot;: &quot;surface&quot;,
+      &quot;raw&quot;: &quot;асфальт, бетон&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000007241</td><td>4.00-8 Standart IST Шина цельнолитая для вилочного погрузчика</td><td>tyre_solid</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;tyre_solid&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;Standart&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;Standart&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;4.00-8&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;8&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 7&quot;
+      },
+      &quot;section_width_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;4.00&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 65&quot;
+      },
+      &quot;tire_type&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;solid&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 61&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;1020&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 13&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;115&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 17&quot;
+      },
+      &quot;tread_pattern&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;блочный&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 60&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;forklift&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 15&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;11.8&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.019&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000007241 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;surface&quot;,
+      &quot;raw&quot;: &quot;асфальт, бетон&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000010449</td><td>23.5R25 185B/201A2 ** BOTO GCB5 E3/L3 Шина для фронтального погрузчика</td><td>unclassified</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;unclassified&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;GCB5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;GCB5 E3/L3&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;23.5R25&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;25&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 7&quot;
+      },
+      &quot;section_width_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;23.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 65&quot;
+      },
+      &quot;overall_diameter_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;1617&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 14&quot;
+      },
+      &quot;construction&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;radial&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 63&quot;
+      },
+      &quot;star_rating&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;two&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / product.model&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;14500&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 13&quot;
+      },
+      &quot;inflation_pressure_kpa&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;650&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 18&quot;
+      },
+      &quot;tread_depth_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;32&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 10&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;597&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 17&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;wheel_loader&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 15&quot;
+      },
+      &quot;rim_designation&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;22.00/3.0&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 59&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;325&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;1.561&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010449 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [
+    &quot;Размер фильтра 23.5-25 отличается от основного и не указан отдельной связью: нужна проверка.&quot;
+  ],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;tire_type&quot;,
+      &quot;raw&quot;: &quot;TL (Бескамерная шина)&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    },
+    {
+      &quot;code&quot;: &quot;surface&quot;,
+      &quot;raw&quot;: &quot;асфальт, бетон, стройплощадка&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000010446</td><td>14.00R25 170E *** BOTO GCA5 E-2 Шина для мобильного крана</td><td>unclassified</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;unclassified&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;GCA5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;GCA5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;14.00R25&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / attribute 4&quot;
+      },
+      &quot;star_rating&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;three&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / product.model&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;6000&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / attribute 13&quot;
+      },
+      &quot;rim_designation&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;10.00/1.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / attribute 59&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;153&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.72&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010446 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;tire_type&quot;,
+      &quot;raw&quot;: &quot;TL (Бескамерная шина)&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000010809</td><td>275/70R22.5 NU-301 КАМА Шина грузовая универсальная</td><td>unclassified</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;unclassified&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;NU-301&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;NU-301&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;275/70R22.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;22.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 7&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;3550&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 13&quot;
+      },
+      &quot;tread_depth_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;20&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 10&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;275&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 17&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;52.6&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.218&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000010809 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: [
+      {
+        &quot;raw_marking&quot;: &quot;152/148 J&quot;,
+        &quot;load_single&quot;: null,
+        &quot;load_dual&quot;: null,
+        &quot;speed_symbol&quot;: &quot;J&quot;,
+        &quot;operating_mode&quot;: &quot;manufacturer_other&quot;,
+        &quot;pressure_kpa&quot;: null,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;source_ref&quot;: &quot;Исторические атрибуты 70/71: требуется проверить связанные условия&quot;
+      }
+    ]
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: []
+}</pre></details></td></tr><tr><td>IT000009315</td><td>12.5/80-18 12PR EKR-4 EKKA Шина для экскаватора-погрузчика</td><td>tyre_pneumatic</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;tyre_pneumatic&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;EKR-4&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / product.model&quot;
+      },
+      &quot;tread_model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;EKR-4&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 9&quot;
+      },
+      &quot;tire_size&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12.5/80-18&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 4&quot;
+      },
+      &quot;rim_diameter_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;18&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 7&quot;
+      },
+      &quot;section_width_in&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 65&quot;
+      },
+      &quot;overall_diameter_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;987&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 14&quot;
+      },
+      &quot;tire_type&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;pneumatic&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 61&quot;
+      },
+      &quot;construction&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;bias&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 63&quot;
+      },
+      &quot;sealing&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;tubeless&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 16&quot;
+      },
+      &quot;ply_rating&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;12&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 5&quot;
+      },
+      &quot;manufacturer_load_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;2430&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 13&quot;
+      },
+      &quot;inflation_pressure_kpa&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;310&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 18&quot;
+      },
+      &quot;tread_depth_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;25.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 10&quot;
+      },
+      &quot;tread_width_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;300&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 17&quot;
+      },
+      &quot;tread_pattern&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;клюшка&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 60&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;backhoe&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 15&quot;
+      },
+      &quot;rim_designation&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;W9x18&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 59&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;42.9&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.3&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000009315 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;surface&quot;,
+      &quot;raw&quot;: &quot;грунт, песок&quot;,
+      &quot;reason&quot;: &quot;Нет точного утверждённого соответствия справочнику&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000006569</td><td>Камера 9.50-16 для шин</td><td>tube</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;tube&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;9.50-16&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006569 / attribute 52&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;skid_steer&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006569 / attribute 15&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;2.45&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006569 / attribute 19&quot;
+      }
+    },
+    &quot;sizes&quot;: [
+      {
+        &quot;size&quot;: &quot;10-16.5&quot;,
+        &quot;role&quot;: &quot;compatible&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;source_ref&quot;: &quot;Исторический атрибут 4/67 товара IT000006569&quot;,
+        &quot;conditions&quot;: &quot;&quot;
+      },
+      {
+        &quot;size&quot;: &quot;12-16.5&quot;,
+        &quot;role&quot;: &quot;compatible&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;source_ref&quot;: &quot;Исторический атрибут 4/67 товара IT000006569&quot;,
+        &quot;conditions&quot;: &quot;&quot;
+      }
+    ],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [
+    &quot;Размер фильтра 9.50-16 отличается от основного и не указан отдельной связью: нужна проверка.&quot;
+  ],
+  &quot;unmapped&quot;: []
+}</pre></details></td></tr><tr><td>IT000006507</td><td>9.75x16.5 ET0 PCD8x203.2 HUB152.4 LANTIAN Диск для минипогрузчика</td><td>rim</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;rim&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;9.75x16.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / product.model&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;skid_steer&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 15&quot;
+      },
+      &quot;rim_designation&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;9.75x16.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 59&quot;
+      },
+      &quot;offset_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 58&quot;
+      },
+      &quot;hub_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;152.4&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 54&quot;
+      },
+      &quot;pcd_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;203.2&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 55&quot;
+      },
+      &quot;bolt_count&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;8&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 57&quot;
+      },
+      &quot;weight_kg&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;23.6&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 19&quot;
+      },
+      &quot;volume_m3&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;0.066&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000006507 / attribute 20&quot;
+      }
+    },
+    &quot;sizes&quot;: [
+      {
+        &quot;size&quot;: &quot;12-16.5&quot;,
+        &quot;role&quot;: &quot;compatible&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;source_ref&quot;: &quot;Исторический атрибут 4/67 товара IT000006507&quot;,
+        &quot;conditions&quot;: &quot;&quot;
+      }
+    ],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [],
+  &quot;unmapped&quot;: [
+    {
+      &quot;code&quot;: &quot;sealing&quot;,
+      &quot;raw&quot;: &quot;Диск сварной&quot;,
+      &quot;reason&quot;: &quot;Не применяется к предполагаемому профилю&quot;
+    }
+  ]
+}</pre></details></td></tr><tr><td>IT000011197</td><td>W15x28 ET-50 PCD10x335 HUB281.5 EKKA Диск для экскаватора-погрузчика</td><td>rim</td><td><details><summary>Предложения и замечания</summary><pre>{
+  &quot;proposed&quot;: {
+    &quot;type&quot;: &quot;rim&quot;,
+    &quot;values&quot;: {
+      &quot;model&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;W15x28&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / product.model&quot;
+      },
+      &quot;equipment_application&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: [
+          &quot;backhoe&quot;
+        ],
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / attribute 15&quot;
+      },
+      &quot;rim_designation&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;W15x28&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / attribute 59&quot;
+      },
+      &quot;offset_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;-50&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / attribute 58&quot;
+      },
+      &quot;hub_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;281.5&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / attribute 54&quot;
+      },
+      &quot;pcd_mm&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;335&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / attribute 55&quot;
+      },
+      &quot;bolt_count&quot;: {
+        &quot;state&quot;: &quot;known&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;value&quot;: &quot;10&quot;,
+        &quot;source_ref&quot;: &quot;Исторические данные IT000011197 / attribute 57&quot;
+      }
+    },
+    &quot;sizes&quot;: [
+      {
+        &quot;size&quot;: &quot;16.9x28&quot;,
+        &quot;role&quot;: &quot;compatible&quot;,
+        &quot;verification&quot;: &quot;legacy_unverified&quot;,
+        &quot;source_ref&quot;: &quot;Исторический атрибут 4/67 товара IT000011197&quot;,
+        &quot;conditions&quot;: &quot;&quot;
+      }
+    ],
+    &quot;ratings&quot;: []
+  },
+  &quot;warnings&quot;: [
+    &quot;Размер фильтра 16.9-28 отличается от основного и не указан отдельной связью: нужна проверка.&quot;
+  ],
+  &quot;unmapped&quot;: []
+}</pre></details></td></tr></tbody></table><h2>Проверки</h2><ul><li>Валидация значений, применимость, размеры, составные индексы, проверка администратора и CSRF.</li><li>Локальная БД: ключи справочников, SQL-параметры, транзакционный откат, конфликт версий, журнал, восстановление. Контрольные отпечатки старых таблиц до и после совпали; временные записи тестов удалены.</li><li>Все 12 предложений проходят нормализацию. Отдельно проверено сохранение геометрии примера IT000007251.</li><li>Рендер реального шаблона редактора: экранирование введённого текста, версия и CSRF, оба размера; визуальная проверка локального статического предпросмотра.</li></ul><h2>Установка и возврат</h2><p>Установщик запускается только явно: <code>bin/catalog_foundation.php install --apply</code>. Локальная схема установлена. Для производственной среды предусмотрен дополнительный флаг, но установка там не выполнялась. Автоматического DDL при открытии страницы нет.</p><p>Возврат отдельного товара выполняется через журнал: создаётся новая версия с прежними значениями. Для отключения пилота достаточно убрать административную ссылку и маршруты; публичный каталог не зависит от новых таблиц. Удалять таблицы с журналом и данными нельзя: при откате публикации их следует сохранить. Перед публикацией обязательна резервная копия рабочей БД.</p><h2>Следующая согласуемая работа</h2><ol><li>Публикация изолированного пилота в рабочей админке и проверка выбранных товаров пользователем. Без массового переноса и переключения YML.</li><li>Подтверждение справочников и правил; редактор справочников, массовая очередь качества, проверка производителей и источников. Справочник стран сейчас первоначальный и расширяемый.</li><li>Управляемый перенос с журналом и сверкой. После него подключение общих свойств к карточке, поиску, YML и боковым фильтрам CT-08.</li><li>Отдельные правила H1 / названия для экспорта, фасетный поиск OR внутри группы / AND между группами, счётчики и мобильная панель. Сохранение существующих SEO-страниц и URL.</li></ol><p>Перевод индексов в скорость/нагрузку, полнота SEO/фото и обновление дизайна не входят в этот пилот и пока не реализованы. Платные внешние сервисы не подключались.</p></html>

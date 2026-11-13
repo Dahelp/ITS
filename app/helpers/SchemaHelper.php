@@ -162,7 +162,9 @@ class SchemaHelper
     {
         // Имя: если в InSEO есть шаблон, прогоняем через seoreplace
         $name = $product->name;
-        if ($inseo && !empty($inseo->name)) {
+        if (\app\services\TsepChainCatalog::isChain($product) && !empty($product->seo_h1)) {
+            $name = \ishop\App::seoreplace($product->seo_h1, $product->id);
+        } elseif ($inseo && !empty($inseo->name)) {
             $name = \ishop\App::seoreplace($inseo->name, $product->id);
         }
         $name = self::htmlToPlain((string)$name, 300);
@@ -225,6 +227,14 @@ class SchemaHelper
             }
         }
 
+        if (\app\services\TsepChainCatalog::isChain($product)) {
+            unset($data['mpn'], $data['brand']);
+            $data['sku'] = (string)($product->sku ?: $product->id);
+            if (isset($data['additionalProperty'])) {
+                $data['additionalProperty'] = \app\services\TsepChainCatalog::publicSpecifications($data['additionalProperty']);
+            }
+        }
+
         // offers
         $agg = self::buildAggregateOffer($product, $mods, $curr);
         if ($agg) {
@@ -232,6 +242,8 @@ class SchemaHelper
         } else {
             $data['offers'] = self::buildSingleOffer($product, $curr, $price, $productUrl);
         }
+
+        if (\app\services\TsepChainCatalog::priceOnRequest($product)) { unset($data['offers']); }
 
         // чистим null
         $data = self::arrayFilterNulls($data);

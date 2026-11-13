@@ -31,7 +31,8 @@ class Product extends AppModel {
 		'opt_price' => '',
         'spec_price' => '',
 		'stock_status_id' => '',
-		'quantity' => '',
+        'inventory_quantity' => '',
+        'stock_adjustment' => 0,
 		'url_video' => '',
 		'note' => '',
     ];
@@ -44,8 +45,33 @@ class Product extends AppModel {
         ],
         'integer' => [
             ['category_id'],
+            ['stock_adjustment'],
         ],
+        'min' => [['stock_adjustment', -1000000000]],
+        'max' => [['stock_adjustment', 1000000000]],
     ];
+
+    public function load($data){
+        if (array_key_exists('quantity', $data)) $data['inventory_quantity'] = $data['quantity'];
+        if (isset($data['stock_adjustment']) && is_string($data['stock_adjustment'])
+            && preg_match('/^[+-]?\d+$/D', trim($data['stock_adjustment']))) {
+            $data['stock_adjustment'] = (int)trim($data['stock_adjustment']);
+        }
+        parent::load($data);
+    }
+
+    public function validate($data){
+        try {
+            $data['stock_adjustment'] = \app\services\StockAdjustment::parse($data['stock_adjustment'] ?? 0);
+            foreach ($data['product_mods'] ?? [] as $mod) {
+                \app\services\StockAdjustment::parse($mod['stock_adjustment'] ?? 0);
+            }
+        } catch (\InvalidArgumentException $e) {
+            $this->errors['stock_adjustment'] = [$e->getMessage()];
+            return false;
+        }
+        return parent::validate($data);
+    }
 	
     public function editRelatedProduct($id, $data){
         $related_product = \R::getCol('SELECT related_id FROM related_product WHERE product_id = ?', [$id]);
@@ -226,16 +252,12 @@ class Product extends AppModel {
         if(!empty($data['product_mods'])){
             
                 \R::exec("DELETE FROM modification WHERE product_id = ?", [$id]);
-                $sql_part = '';
                 foreach($data['product_mods'] as $v){
 					if($v["name_modification"] !="") {						
-						$sql_part .= "($id, '".$v["article"]."', '".$v["name_modification"]."', '".$v["price"]."', '".$v["quantity"]."', '".$v["unit"]."'),";
+                        \R::exec('INSERT INTO modification (product_id, article, name_modification, price, inventory_quantity, stock_adjustment, unit) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                            [$id, $v['article'], $v['name_modification'], $v['price'], (int)$v['quantity'], (int)($v['stock_adjustment'] ?? 0), $v['unit']]);
 					}
                 }
-				if($sql_part == ""){ } else {
-					$sql_part = rtrim($sql_part, ',');
-					\R::exec("INSERT INTO modification (product_id, article, name_modification, price, quantity, unit) VALUES $sql_part");
-				}
         }else{
 			\R::exec("DELETE FROM modification WHERE product_id = ?", [$id]);
 		}

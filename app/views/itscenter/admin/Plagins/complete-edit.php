@@ -38,6 +38,15 @@
 				<div class="tab-content">
                   <div class="tab-pane active" id="tab_1">
                     <div class="box-body">
+<?php
+\app\services\CompleteAvito::ensureSchema();
+$linkedIds = !empty($complete->id) ? \R::getCol('SELECT avito_id FROM avito_ad WHERE complete_id = ?', [$complete->id]) : [];
+?>
+<div class="form-group row">
+ <label class="col-sm-3 col-form-label" for="avito_ids">ID объявлений Авито</label>
+ <div class="col-sm-9"><input class="form-control" id="avito_ids" name="avito_ids" value="<?=htmlspecialchars($_SESSION['form_data']['avito_ids'] ?? implode(', ', $linkedIds), ENT_QUOTES, 'UTF-8')?>">
+ <small>Числовые ID импортированных объявлений через запятую. Цена и наличие рассчитываются за полный комплект из товарных позиций.</small></div>
+</div>
 						<div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="name">Название комплекта <span class="text-danger">*</span></label>
 							<div class="col-sm-9">
@@ -227,7 +236,22 @@
 				</div><!-- /.card-body -->
 					</div>
                   <!-- /.tab-pane -->                  
-                  <div class="tab-pane" id="tab_4"><div class="box-body"><div class="form-group row"><label class="col-sm-3 col-form-label" for="similar_complete">Похожие комплекты</label><div class="col-sm-9"><select id="similar_complete" name="similar[]" class="form-control" multiple style="width:100%"><?php foreach(($similar_complete??[]) as $item): ?><option value="<?=(int)$item['id']?>" selected><?=h($item['name'])?></option><?php endforeach; ?></select><small class="form-text text-muted">Начните вводить название комплекта.</small></div></div></div></div>
+                  <div class="tab-pane" id="tab_4">
+                    <div class="box-body">
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="similar_complete">Похожие комплекты</label>
+                        <div class="col-sm-9">
+                          <select id="similar_complete" name="similar[]" class="form-control" multiple="multiple" style="width:100%">
+                            <?php foreach (($similar_complete ?? []) as $item): ?>
+                              <option value="<?=(int)$item['id']?>" selected><?=h($item['name'])?></option>
+                            <?php endforeach; ?>
+                          </select>
+                          <small class="form-text text-muted">Начните вводить название комплекта. Порядок выбранных значений используется на сайте.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
                 </div>
                 <!-- /.tab-content -->
 				
@@ -431,7 +455,17 @@ $(function(){
     $("#add_prod").on("click", function(){
         add_new_orders();
     });
-    $("#similar_complete").select2({placeholder:"Найдите и выберите похожие комплекты",minimumInputLength:1,ajax:{url:adminpath+"/plagins/searchcomplete",delay:250,dataType:"json",data:function(params){return {q:params.term,exclude:<?=(int)$complete->id?>};},processResults:function(data){return {results:data.items||[]};}}});
+    $("#similar_complete").select2({
+        placeholder: "Найдите и выберите похожие комплекты",
+        minimumInputLength: 1,
+        ajax: {
+            url: adminpath + "/plagins/searchcomplete",
+            delay: 250,
+            dataType: "json",
+            data: function(params) { return {q: params.term, exclude: <?=(int)$complete->id?>}; },
+            processResults: function(data) { return {results: data.items || []}; }
+        }
+    });
 });
 
 function change_price(total) {

@@ -90,13 +90,21 @@ $categories = trim((string)(cron_cli_arg($argv ?? [], 'categories', (string)($cr
 $limit = max(1, min(100, $limit));
 $pauseMs = max(0, min(5000, $pauseMs));
 
-$lockPath = sys_get_temp_dir() . '/its_cron_task_' . $id . '.lock';
+$lockPath = \app\services\CatalogTaskStatus::lockPath($id, $task);
 $lock = @fopen($lockPath, 'c');
 if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) {
     fwrite(STDERR, "Task {$id} is already running\n");
     exit(4);
 }
 
+$statusStore = null; $statusRun = null;
+if (in_array($task, ['refresh-tovars-server','ymlfid-specshiny'], true)) {
+    $statusStore = new \app\services\CatalogTaskStatus(ROOT . '/storage/catalog-task-status');
+    $statusRun = $statusStore->start($id,$task,$task==='ymlfid-specshiny'?'feed':'live');
+    register_shutdown_function(static function() use ($statusStore,$statusRun,$id): void {
+        try { if (($statusStore->read($id)['state']??'')==='running') $statusStore->finish($id,$statusRun,'interrupted'); } catch (\Throwable $ignored) {}
+    });
+}
 $startedAt = time();
 cron_cli_log("START id={$id} task={$task}");
 fwrite(STDOUT, "START id={$id} task={$task}\n");
@@ -113,6 +121,9 @@ try {
         $json = json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         fwrite(STDOUT, $json . PHP_EOL);
         cron_cli_log("DONE_API id={$id} stats={$json}");
+        $noFresh=($stats['api']+$stats['cache']+$stats['modifications_api']+$stats['modifications_cache'])===0 && ($stats['seen']+$stats['modifications_seen'])>0;
+        if ($statusRun) $statusStore->finish($id,$statusRun,$noFresh?'error':(($stats['db_fallback']??0)>0?'partial':'success'),$stats);
+        if($noFresh)exit(5);
         exit(0);
     }
 
@@ -138,8 +149,10 @@ try {
 
     fwrite(STDOUT, "DONE id={$id} task={$task}\n");
     cron_cli_log("DONE id={$id} task={$task}");
+    if ($statusRun) $statusStore->finish($id,$statusRun,'success',is_array($result??null)?$result:[]);
     exit(0);
 } catch (Throwable $e) {
+    if ($statusRun) { try { $statusStore->finish($id,$statusRun,'error',is_array($stats??null)?$stats:[]); } catch (\Throwable $ignored) {} }
     cron_cli_log("ERROR id={$id} task={$task} " . $e->getMessage());
     fwrite(STDERR, "ERROR: " . $e->getMessage() . "\n");
     exit(1);

@@ -89,9 +89,11 @@
 
         <?php endif; ?>
 
-        <div class="pc-row pc-row--price">
+        <div class="pc-row pc-row--price"<?= \app\services\TsepChainCatalog::priceOnRequest($product) ? ' style="flex-direction:column;align-items:flex-start;gap:4px;"' : '' ?>>
             <div class="pc-price">
-                <?php if (!empty($modification)): ?>
+                <?php if (\app\services\TsepChainCatalog::priceOnRequest($product)): ?>
+<div class="pc-price__main"><span class="item_price">Цена по запросу</span></div>
+<?php elseif (!empty($modification)): ?>
                     <div class="pc-price__main">
                         <span class="item_price">
                             <?= $curr['symbol_left']; ?> <?= ($maxP * $curr['value']); ?> <?= $curr['symbol_right']; ?>
@@ -181,6 +183,9 @@
                 <input type="hidden" class="modification" value="<?= $pid ?>" name="modification">
                 <link itemprop="availability" href="http://schema.org/InStock">
 
+            <?php elseif (\app\services\TsepChainCatalog::isChain($product) && $stockStatusId === 2): ?>
+                <link itemprop="availability" href="https://schema.org/PreOrder">
+                <a class="btn btn-danger pc-buy" href="<?= $cardUrl ?>">Подробнее</a>
             <?php else: ?>
                 <link itemprop="availability" href="http://schema.org/OutOfStock">
                 <button class="btn btn-stock-notify pc-buy" type="button"

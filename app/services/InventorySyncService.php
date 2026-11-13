@@ -55,12 +55,8 @@ final class InventorySyncService
                 $stats['fixed_stock_updated']++;
             }
             $apiQty = (int)$data['rest'];
-            $dbQty = (int)$product['quantity'];
-            $needsUpdate = $apiQty !== $dbQty
-                || (int)($data['rest'] ?? 0) !== (int)($product['rest'] ?? 0)
-                || (int)($data['reserve'] ?? 0) !== (int)($product['reserve'] ?? 0)
-                || abs((float)($data['price_rozn'] ?? 0) - (float)($product['price'] ?? 0)) > 0.009
-                || abs((float)($data['price_opt'] ?? 0) - (float)($product['opt_price'] ?? 0)) > 0.009;
+            $dbQty = (int)($product['inventory_quantity'] ?? $product['quantity']);
+            $needsUpdate = self::productNeedsUpdate($product, $data);
             if ($needsUpdate) $stats['changed']++;
             $canWrite = $mode === 'live' || ($mode === 'canary' && (abs(crc32($article)) % 100) < max(0, min(100, $canaryPercent)));
             if ($canWrite && $needsUpdate) { Cron::updateProduct($product, $data, $date, $dateTime); $stats['updated']++; }
@@ -69,15 +65,18 @@ final class InventorySyncService
         $mods = $productIds ? \R::getAll('SELECT * FROM modification WHERE product_id IN (' . implode(',', $productIds) . ') ORDER BY id') : [];
         $stats['modifications_seen'] = count($mods);
         $stats['modifications_updated'] = 0;
+        $stats['modifications_api'] = 0;
+        $stats['modifications_cache'] = 0;
         foreach ($mods as $index => $mod) {
             $this->keepDatabaseConnectionAlive($index);
             $article = InventoryApiClient::normalizeArticle((string)$mod['article']);
             $result = $this->client->fetch($article);
             if (empty($result['ok'])) { $stats['db_fallback']++; continue; }
             if (($result['source'] ?? '') === 'stale_cache') { $stats['db_fallback']++; continue; }
+            $stats[$result['source'] === 'api' ? 'modifications_api' : 'modifications_cache']++;
             $data = $result['data'];
             $apiQty = (int)$data['rest'];
-            $dbQty = (int)$mod['quantity'];
+            $dbQty = (int)($mod['inventory_quantity'] ?? $mod['quantity']);
             $needsUpdate = $apiQty !== $dbQty
                 || abs((float)($data['price_rozn'] ?? 0) - (float)($mod['price'] ?? 0)) > 0.009
                 || abs((float)($data['price_spec'] ?? 0) - (float)($mod['spec_price'] ?? 0)) > 0.009
@@ -89,10 +88,25 @@ final class InventorySyncService
             }
         }
         Cron::writeLog('[INVENTORY_API] ' . json_encode($stats, JSON_UNESCAPED_UNICODE), $cronId);
-        if ($mode !== 'shadow' && $stats['updated'] > 0) Cron::finalizeCronUpdate($cronId, $dateTime, $date);
+        if ($mode !== 'shadow' && ($stats['api'] + $stats['cache'] + $stats['modifications_api'] + $stats['modifications_cache']) > 0) Cron::finalizeCronUpdate($cronId, $dateTime, $date);
+        if ($mode !== 'shadow') {
+            try { $stats['avito_completes'] = CompleteAvitoPublication::run(); }
+            catch (\Throwable $e) { $stats['avito_completes'] = ['errors'=>[$e->getMessage()]]; }
+        }
         return $stats;
     }
 
+    /** Compare source inventory fields, before permanent storefront adjustments. */
+    public static function productNeedsUpdate(array $product,array $data): bool
+    {
+        foreach(['rest'=>'inventory_quantity','reserve'=>'reserve'] as$key=>$field)if((int)($data[$key]??0)!==(int)($product[$field]??($field==='inventory_quantity'?($product['quantity']??0):0)))return true;
+        if((int)($data['rest']??0)!==(int)($product['inventory_rest']??$product['rest']??0))return true;
+        foreach(['price_rozn'=>'price','price_opt'=>'opt_price','price_spec'=>'spec_price']as$key=>$field)if(abs((float)($data[$key]??0)-(float)($product[$field]??0))>0.009)return true;
+        if((int)($data['wait']??0)!==(int)($product['wait']??0))return true;
+        $date=static function($value):string {$value=trim((string)$value);if(preg_match('/^\d{4}-\d{2}-\d{2}/D',$value))$value=substr($value,0,10);return$value==='0000-00-00'?'':$value;};
+        if($date($data['wait_date']??null)!==$date($product['wait_date']??null))return true;
+        return false;
+    }
     /** @return array<int, int> category ID => fixed quantity */
     private function fixedStockByCategoryId(): array
     {
@@ -113,8 +127,8 @@ final class InventorySyncService
         $updated = 0;
         foreach ($fixedStockByCategoryId as $categoryId => $quantity) {
             $updated += \R::exec(
-                'UPDATE product SET quantity = ?, rest = ?, reserve = 0, stock_status_id = 1 '
-                . 'WHERE category_id = ? AND (quantity <> ? OR rest <> ? OR reserve <> 0 OR stock_status_id <> 1)',
+                'UPDATE product SET inventory_quantity = ?, inventory_rest = ?, reserve = 0, stock_status_id = 1 '
+                . 'WHERE category_id = ? AND (inventory_quantity <> ? OR inventory_rest <> ? OR reserve <> 0 OR stock_status_id <> 1)',
                 [$quantity, $quantity, $categoryId, $quantity, $quantity]
             );
         }

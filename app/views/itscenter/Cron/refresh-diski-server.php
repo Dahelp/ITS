@@ -59,57 +59,57 @@ if($testserver->getStatusCode() == 200){
 				
 				if($pssql["stock_status_id"]==2){
 					if($stock_status_id == 1){
-						$updt[] = \R::exec("UPDATE product SET opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");					
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 					if($stock_status_id == 0){
-						$updt[] = \R::exec("UPDATE product SET opt_price = '".$res["price_opt"]."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', opt_price = '".$res["price_opt"]."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				if($pssql["stock_status_id"]==3){
 					if($stock_status_id == 1){
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 					if($stock_status_id == 0){
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				if($pssql["stock_status_id"]==0){
 					if($t == "") {
-						$updt[] = \R::exec("UPDATE product SET opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}else{
-						$updt[] = \R::exec("UPDATE product SET opt_price = '".$res["price_opt"]."', stock_status_id = '3', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', opt_price = '".$res["price_opt"]."', stock_status_id = '3', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				if($pssql["stock_status_id"]==1){						
-						$updt[] = \R::exec("UPDATE product SET opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");						
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 				}
 			}else{
 				
 				if($pssql["stock_status_id"]==2){
 					if($stock_status_id == 1){
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 					if($stock_status_id == 0){
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				if($pssql["stock_status_id"]==3){
 					if($stock_status_id == 1){
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 					if($stock_status_id == 0){
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				if($pssql["stock_status_id"]==0){
 					if($t == "") {
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}else{
-						$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '3', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
+						$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '3', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				if($pssql["stock_status_id"]==1){						
-					$updt[] = \R::exec("UPDATE product SET price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");						
+					$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$res["rest"]."', price = '".$res["price_rozn"]."', data_edit_price = '".$date_price."', opt_price = '".$res["price_opt"]."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$res["rest"]."' WHERE id = '".$pssql["id"]."'");
 				}
 				
 			}
@@ -173,7 +173,11 @@ if($testserver->getStatusCode() == 200){
 	$cnt = count($data);
 	for ($i=1;$i<count($data);$i++) {
 	 
-		list($c, $e, $o, $d, $r, $f, $rkl, $g, $rkr, $k, $rv, $l, $rspb, $ek, $ekr, $t, $p) = explode(";", $data[$i]);  
+		list($c, $e, $o, $d, $r, $f, $rkl, $g, $rkr, $k, $rv, $l, $rspb, $ek, $ekr, $t, $p) = explode(";", $data[$i]);
+    $sourceColumns = explode(";", trim($data[$i]));
+    if (count($sourceColumns) >= 20 && str_contains($data[0], "inventory_source_rest")) {
+        $d = (int)$sourceColumns[18];
+    }
 	  
 		$c = ltrim("$c", '0');
 		$c = trim($c); //article
@@ -197,7 +201,7 @@ if($testserver->getStatusCode() == 200){
 		if($c !="") {		  
 			  
 			$article = $c;
-			$quantity = $d+$r;
+			$quantity = (isset($sourceColumns[19]) && str_contains($data[0], "inventory_source_quantity")) ? (int)$sourceColumns[19] : $d+$r;
 			$price = $e;
 			$opt_price =$o;
 			if($quantity !="0") { $stock_status_id = "1"; }
@@ -211,57 +215,57 @@ if($testserver->getStatusCode() == 200){
 				if($action){
 					if($pssql["stock_status_id"]==2){
 						if($stock_status_id == 1){
-							$updt[] = \R::exec("UPDATE product SET opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 						if($stock_status_id == 0){
-							$updt[] = \R::exec("UPDATE product SET opt_price = '".$opt_price."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', opt_price = '".$opt_price."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 					}
 					if($pssql["stock_status_id"]==3){
 						if($stock_status_id == 1){
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 						if($stock_status_id == 0){
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 					}
 					if($pssql["stock_status_id"]==0){
 						if($t == "") {
-							$updt[] = \R::exec("UPDATE product SET opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}else{
-							$updt[] = \R::exec("UPDATE product SET opt_price = '".$opt_price."', stock_status_id = '3', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', opt_price = '".$opt_price."', stock_status_id = '3', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 					}
 					if($pssql["stock_status_id"]==1){						
-							$updt[] = \R::exec("UPDATE product SET opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");						
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				else{
 					if($pssql["stock_status_id"]==2){
 						if($stock_status_id == 1){
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 						if($stock_status_id == 0){
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 					}
 					if($pssql["stock_status_id"]==3){
 						if($stock_status_id == 1){
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 						if($stock_status_id == 0){
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 					}
 					if($pssql["stock_status_id"]==0){
 						if($t == "") {
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}else{
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '3', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '3', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 						}
 					}
 					if($pssql["stock_status_id"]==1){						
-							$updt[] = \R::exec("UPDATE product SET price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");						
+							$updt[] = \R::exec("UPDATE product SET inventory_rest = '".(int)$d."', price = '".$price."', data_edit_price = '".$date_price."', opt_price = '".$opt_price."', stock_status_id = '".$stock_status_id."', inventory_quantity = '".$quantity."' WHERE id = '".$pssql["id"]."'");
 					}
 				}
 				$branch = \R::getAll("SELECT * FROM branch_office");
@@ -304,10 +308,10 @@ if($testserver->getStatusCode() == 200){
 							
 					$action = \R::findOne('actions', 'product_id = ? AND date_end > ?', [$mdsql["id"], $date_update]);
 					if($action){
-						$updtmd[] = \R::exec("UPDATE modification SET quantity = '".$quantity."' WHERE id = '".$mdsql["id"]."'");
+						$updtmd[] = \R::exec("UPDATE modification SET inventory_quantity = '".$quantity."' WHERE id = '".$mdsql["id"]."'");
 					}
 					else{
-						$updtmd[] = \R::exec("UPDATE modification SET price = '".$price."', quantity = '".$quantity."' WHERE id = '".$mdsql["id"]."'");			
+						$updtmd[] = \R::exec("UPDATE modification SET price = '".$price."', inventory_quantity = '".$quantity."' WHERE id = '".$mdsql["id"]."'");
 					}
 					
 					$branch = \R::getAll("SELECT * FROM branch_office");

@@ -1,0 +1,21 @@
+{
+    "generated_on": "2026-10-30",
+    "method": "built-in image_gen",
+    "categories": [
+        {
+            "alias": "cepi-protivoskolzheniya",
+            "filename": "snow-chains-category-v1.webp",
+            "original_sha256": "bbd99ed907db074997a62d33405d3ca5e9ecf9ada2825886c30df42d773f9ea5"
+        },
+        {
+            "alias": "cepi-dlya-spectehniki",
+            "filename": "snow-chains-special-equipment-category-v1.webp",
+            "original_sha256": "806cbb9b471e3cc5557378e1569a5f53fad7c1308de04e5017364eb5df36e040"
+        },
+        {
+            "alias": "cepi-dlya-vilochnyh-pogruzchikov",
+            "filename": "snow-chains-forklift-category-v1.webp",
+            "original_sha256": "9265c3688486677622549f7c9694d25d97fff0fb43f2738168129a2d446d7595"
+        }
+    ]
+}

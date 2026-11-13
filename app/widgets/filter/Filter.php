@@ -132,12 +132,8 @@ class Filter{
     }
 
     public static function getFilter(){
-        $filter = null;
-        if(!empty($_GET['filter'])){
-            $filter = preg_replace("#[^\d,]+#", '', $_GET['filter']);
-            $filter = trim($filter, ',');
-        }
-        return $filter;
+        $ids = \app\services\CatalogFacets::ids($_GET['filter'] ?? []);
+        return $ids ? implode(',', $ids) : null;
     }
 
     public static function getCountGroups($filter){

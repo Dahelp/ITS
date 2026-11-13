@@ -485,13 +485,16 @@ document.addEventListener('click', function(e){
   'use strict';
 
   var NS = '.cartStable';
+  var inFlight = false;
   // Legacy cart links also navigate directly to the cart page.
   window.addEventListener('click', function(e){
-    var cartLink=e.target.closest('.js-open-cart, #getCart, [onclick*="getCart("]');
-    if(cartLink){e.preventDefault();e.stopImmediatePropagation();window.location.href=url('/cart/view');}
-  },true);
-
-  var inFlight = false;
+    var cartLink = e.target.closest('.js-open-cart, #getCart, [onclick*="getCart("]');
+    if (cartLink) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      window.location.href = url('/cart/view');
+    }
+  }, true);
 
   // BASE PATH (если сайт не в корне)
   var BASE = (typeof window.PATH !== 'undefined' && window.PATH !== null) ? String(window.PATH) : '';
@@ -574,7 +577,7 @@ document.addEventListener('click', function(e){
   function setHeader(qty, sumText){
     qty = parseIntSafe(qty);
 
-    $('#cart-total').text(String(qty));
+    $('#cart-total').attr('data-sum', sumText || '0 ₽').text(String(qty));
 
     if ($('.cart-block').length && $('.cart-no-product').length){
       if (qty > 0){
@@ -655,37 +658,49 @@ document.addEventListener('click', function(e){
   // Promo UI sync (Step2)
   // -------------------------
   function updatePromoUiFromCartTable(){
-    var $input = $('#promoCodeInput');
-    var $apply = $('#btnApplyPromo');
-    var $clear = $('#btnClearPromo');
-    var $msg   = $('#promoMsg');
-
-    if (!$input.length || !$apply.length) return;
     if (!$('#cartTableWrap').length) return;
-
     var st = readCartTableState();
+    var applied = st.promoApplied && !!st.promoCode;
+    var savings = parseFloatSafe($('#cartTableWrap .promo-savings').text());
+    $('.js-promo-block').each(function(){
+      var block = $(this);
+      var input = block.find('.js-promo-code');
+      if (applied) input.val(st.promoCode);
+      input.prop('readonly', applied);
+      block.find('.js-apply-promo').toggle(!applied).prop('disabled', applied);
+      block.find('.js-clear-promo').toggle(applied).prop('disabled', !applied);
+      var message = st.promoMsg || (applied ? 'Промокод «' + st.promoCode + '» применён' : '');
+      block.find('.js-promo-message').toggle(!!message).css('color', applied && !(st.promoMsg && !st.promoOk) ? '#16834b' : '#b42318').text(message);
+      block.find('.js-promo-savings').prop('hidden', !applied).text(
+        savings > 0 ? 'Скидка по промокоду: ' + formatMoneyWithCurrency(savings, st.sumText) :
+        'Для текущих товаров дополнительная скидка по промокоду не начислена.'
+      );
+    });
+  }
 
-    if (st.promoApplied && st.promoCode){
-      $input.val(st.promoCode).prop('readonly', true);
-      $apply.prop('disabled', true);
-      if ($clear.length) $clear.show().prop('disabled', false);
-
-      if ($msg.length){
-        var m = st.promoMsg || '✅ Промокод применён';
-        $msg.show().css('color', st.promoOk ? '#16a34a' : '#ef4444').text(m);
-      }
-    } else {
-      $input.prop('readonly', false);
-      $apply.prop('disabled', false);
-      if ($clear.length) $clear.hide().prop('disabled', true);
-      if ($msg.length) $msg.hide().text('');
-    }
+  var cartUndoTimer;
+  function syncCartUndo(){
+    clearTimeout(cartUndoTimer);
+    $('#cartUndoNotice').remove();
+    var marker = $('#cartTableWrap .cart-undo-data').first();
+    var remaining = Number(marker.attr('data-expires')) * 1000 - Date.now();
+    if (!marker.length || remaining <= 0) return;
+    var notice = $('<div>', { id:'cartUndoNotice', 'class':'cart-undo-notice', role:'status' })
+      .append($('<span>').text('Товар удалён'))
+      .append($('<button>', { type:'button', 'class':'btn btn-light btn-sm' }).text('Восстановить'))
+      .appendTo('body');
+    notice.find('button').on('click', function(){
+      if (inFlight) return;
+      requestCart('/cart/restore', { token:marker.attr('data-token') });
+    });
+    cartUndoTimer = setTimeout(function(){ notice.remove(); }, remaining);
   }
 
   function syncAllFromCartTable(){
     updateHeaderFromCartTable();
     updateSummaryFromCartTable();
     updatePromoUiFromCartTable();
+    syncCartUndo();
   }
 
   // -------------------------
@@ -832,6 +847,11 @@ document.addEventListener('click', function(e){
   function requestCart(endpoint, data){
   if (inFlight) return;
   inFlight = true;
+  var $cartControls = $('#cartTableWrap').find('button:not(:disabled), input:not(:disabled)');
+  var $storeControls = $('.js-store-controls').find('button:not(:disabled), input:not(:disabled)');
+  $storeControls.prop('disabled', true);
+  $cartControls.prop('disabled', true);
+  $('#cartTableWrap').attr('aria-busy', 'true');
 
   $.ajax({
     url: url(endpoint),
@@ -878,10 +898,21 @@ document.addEventListener('click', function(e){
       showCartFeedback('Не удалось обновить корзину. Повторите попытку.',true);
     },
     error: function(){
+      $('#cartTableWrap .js-cart-quantity').each(function(){
+        this.value = $(this).closest('.cart-item').attr('data-qty');
+      });
+      $('.js-store-controls').each(function(){ $(this).find('input').val($(this).attr('data-qty')); });
       alert('Ошибка! Попробуйте позже');
     },
     complete: function(){
       inFlight = false;
+      $cartControls.prop('disabled', false);
+      $storeControls.prop('disabled', false);
+      $('.js-store-controls').each(function(){
+        var $input = $(this).find('input');
+        $(this).find('.js-store-plus').prop('disabled', Number($input.val()) >= Number($input.attr('max')));
+      });
+      $('#cartTableWrap').removeAttr('aria-busy');
     }
   });
 }
@@ -1237,6 +1268,7 @@ document.addEventListener('click', function(e){
   };
 
   window.clearCart = function(){
+    if (!window.confirm('Очистить корзину и удалить данные незавершённого оформления?')) return;
     requestCart('/cart/clear', { ctx: 'page' });
   };
 
@@ -1268,8 +1300,6 @@ document.addEventListener('click', function(e){
       if (e.key === 'Enter') { e.preventDefault(); this.blur(); }
     });
 
-
-
     // Clear the server cart; clear its draft only after confirmed success.
     $('body').on('click' + NS, '.clear-cart, #clearCart, .js-clear-cart', function(e){
       e.preventDefault();e.stopPropagation();
@@ -1279,28 +1309,33 @@ document.addEventListener('click', function(e){
     // ADD TO CART
     $('body').on('click' + NS, '.add-to-cart-link', function(e){
       e.preventDefault();
+      e.stopPropagation();
       var $btn = $(this);
       var id = $btn.data('id');
+      var $quantity = $btn.closest('.product-order-actions, .product-card').find('input[name="quantity"]').first();
+      if (!$quantity.length) $quantity = $('.korzina-' + id).filter('input').first();
+      if ($quantity.length && !$quantity[0].checkValidity()) { $quantity[0].reportValidity(); return; }
 
       requestCart('/cart/add', {
         id:  id,
-        qty: ($('.quantity input').val() || 1),
+        qty: ($quantity.val() || 1),
         mod: $('.available select').val(),
         max: $btn.data('max')
       });
 
-      showInCartButton(id);
     });
 
     // ADD TO CART (mod)
     $('body').on('click' + NS, '.add-to-cart-mod', function(e){
       e.preventDefault();
+      e.stopPropagation();
       var $btn = $(this);
       var id = $btn.data('id');
 
       var qty = 1;
       var $qtyInput = $('.korzina-' + id).filter('input').first();
       if ($qtyInput.length) qty = ($qtyInput.val() || 1);
+      if ($qtyInput.length && !$qtyInput[0].checkValidity()) { $qtyInput[0].reportValidity(); return; }
 
       requestCart('/cart/add', {
         id: id,
@@ -1309,12 +1344,12 @@ document.addEventListener('click', function(e){
         max: $btn.data('max')
       });
 
-      showInCartButton(id);
     });
 
     // ADD COMPLETE
     $('body').on('click' + NS, '.add-to-cart-complete', function(e){
       e.preventDefault();
+      e.stopPropagation();
 
       var $btn = $(this);
       var $wrap = $btn.closest('.complete-summary__actions');
@@ -1333,6 +1368,21 @@ document.addEventListener('click', function(e){
     // -------------------------
     // +/- CART PAGE
     // -------------------------
+    $('body').on('change' + NS, '.js-cart-quantity', function(){
+      if (inFlight) {
+        this.value = $(this).closest('.cart-item').attr('data-qty');
+        return;
+      }
+      if (!this.checkValidity()) {
+        this.reportValidity();
+        this.value = $(this).closest('.cart-item').attr('data-qty');
+        return;
+      }
+      requestCart('/cart/quantity', { id: $(this).attr('data-id'), qty: this.value });
+    });
+    $('body').on('keydown' + NS, '.js-cart-quantity', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); this.blur(); }
+    });
     $('body').on('click' + NS, '.my-plus-cart', function(e){
       e.preventDefault();
       requestCart('/cart/pluscart', { id: $(this).data('id') });
@@ -1342,7 +1392,7 @@ document.addEventListener('click', function(e){
       e.preventDefault();
       var $btn = $(this);
       var $row = $btn.closest('.cart-item');
-      var qty = parseIntSafe($.trim($row.find('.qty-item').first().text()));
+      var qty = parseIntSafe($row.attr('data-qty'));
       var endpoint = (qty <= 1) ? '/cart/deletecart' : '/cart/minuscart';
       requestCart(endpoint, { id: $btn.data('id') });
     });
@@ -1360,7 +1410,7 @@ document.addEventListener('click', function(e){
       e.preventDefault();
       var $btn = $(this);
       var $row = $btn.closest('.cart-item');
-      var qty = parseIntSafe($.trim($row.find('.qty-item').first().text()));
+      var qty = parseIntSafe($row.attr('data-qty'));
       var endpoint = (qty <= 1) ? '/cart/deletecartcomplete' : '/cart/minuscartcomplete';
       requestCart(endpoint, {
         id: $btn.data('id'),
@@ -1373,6 +1423,7 @@ document.addEventListener('click', function(e){
       e.preventDefault();
       var $btn = $(this);
       var isComplete = $btn.hasClass('del-item-complete-cart');
+      if (!window.confirm('Удалить этот товар из корзины?')) return;
 
       var payload = { id: $btn.data('id') };
       if (isComplete){
@@ -1382,23 +1433,120 @@ document.addEventListener('click', function(e){
     });
 
     // PROMO
-    $('body').on('click' + NS, '#btnApplyPromo', function(){
-      var code = $.trim($('#promoCodeInput').val() || '');
+    $('body').on('click' + NS, '.js-apply-promo', function(){
+      var code = $.trim($(this).closest('.js-promo-block').find('.js-promo-code').val() || '');
       requestCart('/cart/promocart', { val: code });
     });
 
-    $('body').on('click' + NS, '#btnClearPromo', function(){
+    $('body').on('click' + NS, '.js-clear-promo', function(){
       requestCart('/cart/clearpromo', {});
     });
   }
 
   // -------------------------
+  // Keep checkout reachable while browsing a long basket.
+  function initCartCheckoutDock(){
+    var dock = document.getElementById('cartCheckoutDock');
+    var form = document.getElementById('checkoutForm');
+    var table = document.getElementById('cartTableWrap');
+    var original = document.getElementById('btnToStep2');
+    if (!dock || !form || !table || !original) return;
+    var scheduled = false;
+    function update(){
+      scheduled = false;
+      var step = form.getAttribute('data-current-step') || '1';
+      original = document.getElementById(step === '3' ? 'btnSubmitOrder' : (step === '2' ? 'btnToStep3' : 'btnToStep2'));
+      var activeStep = form.querySelector('[data-step="' + step + '"]');
+      var button = original.getBoundingClientRect();
+      document.getElementById('btnDockToStep2').textContent = original.textContent.trim();
+      document.getElementById('btnDockToStep2').className = original.className;
+      var bottom = 0;
+      ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
+        var blocker = document.querySelector(selector);
+        if (!blocker || !blocker.offsetHeight || getComputedStyle(blocker).visibility === 'hidden') return;
+        var rect = blocker.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) bottom = Math.max(bottom, window.innerHeight - rect.top + 8);
+      });
+      dock.style.setProperty('--cart-dock-bottom', bottom + 'px');
+      var buttonVisible = button.top >= 0 && button.bottom <= window.innerHeight - bottom;
+      dock.hidden = !window.matchMedia('(max-width: 992px)').matches || !activeStep.offsetHeight ||
+        readCartTableState().qty <= 0 ||
+        buttonVisible || bottom > window.innerHeight * .45;
+    }
+    function schedule(){ if (!scheduled) { scheduled = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', schedule, { passive:true });
+    window.addEventListener('resize', schedule);
+    $(document).on('cart:updated.cartDock', schedule);
+    new MutationObserver(schedule).observe(form, { attributes:true, attributeFilter:['data-current-step'] });
+    ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
+      var blocker = document.querySelector(selector);
+      if (!blocker) return;
+      new MutationObserver(schedule).observe(blocker, { attributes:true, attributeFilter:['style','class'] });
+      if (window.ResizeObserver) new ResizeObserver(schedule).observe(blocker);
+    });
+    document.getElementById('btnDockToStep2').addEventListener('click', function(){
+      if (inFlight) return;
+      var previousStep = form.getAttribute('data-current-step');
+      original.click();
+      update();
+      var nextStep = form.getAttribute('data-current-step');
+      if (previousStep !== nextStep) form.querySelector('[data-step="' + nextStep + '"]').scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+    schedule();
+  }
+
+  function initMobileCartAccess(){
+    var header = document.getElementById('headerShell');
+    var menu = document.querySelector('.right-menu');
+    var dock = null;
+    if (!document.getElementById('checkoutForm') && document.querySelector('.product-card, .product-order-actions')) {
+      dock = $('<div>', { id:'catalogCartDock', 'class':'cart-checkout-dock catalog-cart-dock', hidden:true, 'aria-label':'Ваша корзина' })
+        .append($('<div>', { 'class':'cart-checkout-dock__total' }).append($('<span>').append('В корзине: ').append($('<b>', { 'class':'js-catalog-cart-count' })).append(' шт.')).append($('<strong>', { 'class':'js-catalog-cart-sum', 'aria-label':'Стоимость товаров' })))
+        .append($('<a>', { href:url('/cart/view'), 'class':'btn btn-success' }).text('Перейти в корзину'))
+        .appendTo('body')[0];
+    }
+    var scheduled = false;
+    function update(){
+      scheduled = false;
+      var mobile = window.matchMedia('(max-width: 992px)').matches;
+      var pastHeader = !header || header.getBoundingClientRect().bottom <= 0;
+      if (menu) menu.classList.toggle('is-past-header', pastHeader);
+      if (!dock) return;
+      var qty = parseIntSafe($('#cart-total').text());
+      dock.querySelector('.js-catalog-cart-count').textContent = String(qty);
+      dock.querySelector('.js-catalog-cart-sum').textContent = $('#cart-total').attr('data-sum') || '0 ₽';
+      var bottom = 0;
+      ['#cookie-bar', '.aiz-mobile-bottom-nav'].forEach(function(selector){
+        var blocker = document.querySelector(selector);
+        if (!blocker || !blocker.offsetHeight || getComputedStyle(blocker).visibility === 'hidden') return;
+        var rect = blocker.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) bottom = Math.max(bottom, window.innerHeight - rect.top + 8);
+      });
+      dock.style.setProperty('--cart-dock-bottom', bottom + 'px');
+      dock.hidden = !mobile || qty <= 0 || bottom > window.innerHeight * .45;
+      document.body.classList.toggle('has-catalog-cart-dock', !dock.hidden);
+    }
+    function schedule(){ if (!scheduled) { scheduled = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', schedule, {passive:true});
+    window.addEventListener('resize', schedule);
+    $(document).on('cart:updated.mobileAccess', schedule);
+    var cookie = document.getElementById('cookie-bar');
+    if (cookie) new MutationObserver(schedule).observe(cookie,{ attributes:true, attributeFilter:['style','class'] });
+    if (dock && document.getElementById('cart-total')) new MutationObserver(schedule).observe(document.getElementById('cart-total'),{ childList:true,subtree:true });
+    if (window.ResizeObserver && header) new ResizeObserver(schedule).observe(header);
+    schedule();
+  }
+
   // INIT
   // -------------------------
   $(function(){
     bindHandlersOnce();
     initCheckoutSteps();
-    if ($('.product-card, .product-order-actions').length && !$('#cartTableWrap').length) requestCart('/cart/show', { ctx:'product', silent:true });
+    initCartCheckoutDock();
+    initMobileCartAccess();
+    if ($('.product-card, .product-order-actions').length && !$('#cartTableWrap').length) {
+      requestCart('/cart/show', { ctx:'product', silent:true });
+    }
 
     // первичная синхронизация
     if ($('#cartTableWrap').length){
@@ -2071,14 +2219,14 @@ document.addEventListener('DOMContentLoaded', function () {
           0: {
             slidesPerView: 1,
             spaceBetween: 12,
-            slidesOffsetBefore: 12,
-            slidesOffsetAfter: 12
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0
           },
           481: {
             slidesPerView: 2,
             spaceBetween: 14,
-            slidesOffsetBefore: 12,
-            slidesOffsetAfter: 12
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0
           },
           640: {
             slidesPerView: 3,
@@ -2301,6 +2449,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       function updateFieldState(field) {
+        if (field.hasAttribute('data-request-question')) {
+          field.setCustomValidity(/[^\s\u200B\uFEFF]/u.test(field.value) ? '' : 'Напишите, что вы хотите заказать или уточнить.');
+        }
         var valid = field.checkValidity();
 
         if (field.name === 'phone') {
@@ -2762,4 +2913,14 @@ $(function () {
             window.location.href = url;
         }, 0);
     });
+});
+
+// Confirm bulk cart actions before native POST, without checkout validation.
+document.addEventListener('click', function(event){
+  var button = event.target.closest('button[data-cart-confirm]');
+  if (button && !window.confirm(button.getAttribute('data-cart-confirm'))) event.preventDefault();
+});
+document.addEventListener('submit', function(event){
+  var message = event.target.getAttribute('data-cart-confirm');
+  if (message && !window.confirm(message)) event.preventDefault();
 });

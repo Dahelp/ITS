@@ -76,6 +76,7 @@ $ajaxQuery = $ajaxParams ? '?'.http_build_query($ajaxParams) : '';
 								<a class="btn btn-sm <?= $activeBadge === $badgeValue ? 'btn-primary' : 'btn-default'; ?>" href="<?= $productUrl($badgeValue); ?>"><?= $badgeTitle; ?></a>
 							<?php endforeach; ?>
 						</div>
+                        <a class="btn btn-sm <?= $insight === 'stock_adjusted' ? 'btn-warning' : 'btn-outline-warning' ?> ml-2" href="<?= htmlspecialchars($analyticsUrl('stock_adjusted'),ENT_QUOTES,'UTF-8') ?>"<?= $insight === 'stock_adjusted' ? ' aria-current="page"' : '' ?>>С корректировкой <span class="badge badge-light"><?= (int)($analytics['stock_adjusted'] ?? 0) ?></span></a>
 					</div>
 					<div class="product-table-wrap">
 						<table id="example" class="table product-table" width="100%">

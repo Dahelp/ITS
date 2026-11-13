@@ -1,6 +1,6 @@
-<link rel="stylesheet" href="<?= PATH ?>/css/home-preview.css?v=<?= (int)filemtime(WWW . "/css/home-preview.css") ?>">
+<link rel="stylesheet" href="<?= PATH ?>/css/home.css?v=<?= (int)filemtime(WWW . "/css/home.css") ?>">
 <?php require __DIR__ . '/catalog.php'; ?>
-<script src="<?= PATH ?>/js/home-preview.js?v=<?= (int)filemtime(WWW . '/js/home-preview.js') ?>" defer></script>
+<script src="<?= PATH ?>/js/home.js?v=<?= (int)filemtime(WWW . '/js/home.js') ?>" defer></script>
 <div class="uslugi-inner hp-services">
 	<div class="container">
 		<div class="row">
@@ -33,7 +33,7 @@
 				<p>Сотрудники компании знают о предлагаемых шинах и прочих товарах всё. Поэтому предоставят вам подробную информацию о любом интересующем товаре – от масляного фильтра и диска до шин на садовую тачку и цельнолитых шин на фронтальный погрузчик весом в полторы тонны. Вы купите то, что подходит на вашу технику.</p>
 			</div>
 			<div class="col-md-3 ocomp_img">
-				<img class="hp-company-illustration" src="images/home-preview/company-mascot-seated.webp" width="600" height="900" alt="Официальный сайт компании ИТС-ЦЕНТР" title="Официальный сайт компании ИТС-ЦЕНТР">
+				<img class="hp-company-illustration" src="images/home/company-mascot-seated.webp" width="600" height="900" alt="Официальный сайт компании ИТС-ЦЕНТР" title="Официальный сайт компании ИТС-ЦЕНТР">
 			</div>
 		</div>
 	</div>
@@ -43,7 +43,7 @@
 		<div class="pch_name"><h3>Почему клиенты выбирают ИТС-ЦЕНТР?</h3></div>
 		<div class="pch_m">
 			<div class="col-md-4 pch_img">
-				<img src="images/home-preview/advantages-team-cartoon.webp" width="600" height="659" alt="Команда консультантов ИТС-Центр" loading="lazy" decoding="async">
+				<img src="images/home/advantages-team-cartoon.webp" width="600" height="659" alt="Команда консультантов ИТС-Центр" loading="lazy" decoding="async">
 			</div>
 			<div class="pch_b col-md-8">
 				<div class="pch_info">

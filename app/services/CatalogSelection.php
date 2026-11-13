@@ -15,9 +15,17 @@ final class CatalogSelection
         $perpage=[24=>25,48=>50,96=>100][$perpage]??$perpage;
         return ['sort'=>isset(self::SORTS[$sort])?$sort:'stock','status'=>isset(self::STATUSES[$status])?$status:'','in_stock'=>($query['in_stock']??'')==='1','perpage'=>in_array($perpage,[25,50,100],true)?$perpage:25];
     }
+    public static function categoryState(array $query): array
+    {
+        $state=self::state($query);
+        $raw=is_scalar($query['perpage']??null)?(int)$query['perpage']:24;
+        $raw=[25=>24,50=>48,100=>96][$raw]??$raw;
+        $state['perpage']=in_array($raw,[24,48,96],true)?$raw:24;
+        return $state;
+    }
     public static function stock(): string
     {
-        return 'GREATEST(0,COALESCE(product.quantity,0)+COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id=product.id),0)-COALESCE(product.reserve,0))';
+        return 'GREATEST(0,COALESCE(product.quantity,0)+COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id=product.id),0))';
     }
     public static function price(): string
     {

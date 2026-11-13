@@ -167,11 +167,15 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label" for="quantity">Количество</label>
                                     <div class="col-sm-9">
-                                        <input type="text" name="quantity" class="form-control" id="quantity" placeholder="Количество" value="<?=$product->quantity;?>">
+                                        <input type="text" name="quantity" class="form-control" id="quantity" placeholder="Количество" value="<?=(int)($product->inventory_quantity ?? $product->quantity);?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label" for="unit">Единица измерения</label>
+                                    <label class="col-sm-3 col-form-label" for="stock_adjustment">Корректировка наличия</label>
+                            <div class="col-sm-9"><input type="number" name="stock_adjustment" id="stock_adjustment" class="form-control" step="1" min="-1000000000" max="1000000000" value="0"><small>−1 — недостача, +4 — излишек; 0 — без поправки.</small></div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="unit">Единица измерения</label>
                                     <div class="col-sm-9">
                                     <select name="unit" class="form-control" style="width: 100%;">
                                         <option value= "шт" <?php if($product->unit == "шт") { echo "selected=\"selected\""; } ?>>Штука</option>
@@ -313,8 +317,8 @@
 							<label class="col-sm-3 col-form-label"><?= $group_item ?></label>
 							<div class="col-sm-9">
 							<?php if(!empty($attrs[$group_id])): ?>
-							<?php $chainSizeMultiple = (int)$group_id === 2 && (strpos((string)($product->article ?? ''), 'TSEP-') === 0); ?>
-<select class="form-control" name="attrs[<?=$group_id ?>]<?= $chainSizeMultiple ? '[]' : '' ?>"<?= $chainSizeMultiple ? ' multiple size="6"' : '' ?>>            
+                            <?php $chainSizeMultiple = (int)$group_id === 2 && \app\services\TsepChainCatalog::isChain($product); ?>
+							<select class="form-control" name="attrs[<?=$group_id ?>]<?= $chainSizeMultiple ? '[]' : '' ?>"<?= $chainSizeMultiple ? ' multiple size="6"' : '' ?>>
 									<option value=""> Выбрать фильтр</option>
 									
 										
@@ -324,8 +328,8 @@
 										<option value="<?= $attr_id ?>" <?=$selected?>> <?= $value ?></option>
 									<?php endforeach; ?>                
 									
-								</select>
-<?php if ($chainSizeMultiple): ?><small class="form-text text-muted">Можно выбрать несколько размеров шин. Для 8.15-15 / 28x9-15 отметьте оба обозначения (Ctrl + щелчок).</small><?php endif; ?>
+							</select>
+                            <?php if ($chainSizeMultiple): ?><small class="form-text text-muted">Можно выбрать несколько размеров шин. Для 8.15-15 / 28x9-15 отметьте оба обозначения (Ctrl + щелчок).</small><?php endif; ?>
 							<?php endif; ?>
 								</div>
 						</div>
@@ -546,7 +550,9 @@ function add_new_modification(){
            .attr('id','quantity_'+mtotal)
            .attr('name','product_mods['+mtotal+'][quantity]')
 		   .attr('class','form-control')
-       )                             
+       )
+       .append($('<label>').text('Поправка'))
+       .append($('<input>').attr({type:'number', step:'1', min:'-1000000000', max:'1000000000', name:'product_mods['+mtotal+'][stock_adjustment]', class:'form-control', value:'0'}))
                               
     )
 	.append (

@@ -1,0 +1,13 @@
+<?php
+require dirname(__DIR__).'/vendor/autoload.php';use app\services\CatalogLegacyPreview as L;use app\services\CatalogMigrationPlan as M;
+function conflictReviewCheck($ok,$message){if(!$ok)throw new RuntimeException($message);}
+function conflictReviewPreview($type,$attrs,$name='Test'){$a=[];foreach($attrs as $id=>$value)$a[]=['attribute_id'=>$id,'attribute_text'=>$value];return L::forProduct(['id'=>1,'sku'=>'TEST','name'=>$name,'category_id'=>$type],$a,[['attr_group_id'=>2,'value'=>'21x8-9']]);}
+$r=conflictReviewPreview(18,[4=>'21х8-9',61=>'цельнолитые']);conflictReviewCheck(!$r['warnings'],'Cyrillic and Latin size separators must not create a conflict');
+$r=conflictReviewPreview(18,[4=>'21х8-9',61=>'цельнолитые',6=>'6.5']);conflictReviewCheck($r['proposed']['values']['recommended_rim_width_in']['value']==='6.5'&&!isset($r['proposed']['values']['rim_width_in']),'Recommended rim width never means a supplied rim');
+$r=conflictReviewPreview(26,[6=>'6.5']);conflictReviewCheck($r['proposed']['values']['rim_width_in']['value']==='6.5'&&!isset($r['proposed']['values']['recommended_rim_width_in']),'Actual rim retains its own width');
+$r=conflictReviewPreview(20,[4=>'21x8-9',16=>'Цельнолитая шина']);conflictReviewCheck($r['proposed']['type']==='tyre_solid'&&!$r['unmapped'],'Explicit suffix type marker recognized');
+$r=conflictReviewPreview(18,[4=>'21x8-9',61=>'цельнолитые',38=>'529']);conflictReviewCheck($r['proposed']['values']['overall_diameter_mm']['value']==='529'&&!isset($r['proposed']['values']['filter_legacy_diameter_38_mm']),'Source 38 outer diameter routed by product profile');
+$r=conflictReviewPreview(18,[4=>'21x8-9',61=>'цельнолитые',14=>'530',38=>'529']);conflictReviewCheck(count($r['warnings'])===1,'Conflicting diameter sources remain held');
+$r=conflictReviewPreview(9,[4=>'21x8-9',61=>'цельнолитые',15=>'минипогрузчик типа BOBCAT'],'Колесо в сборе с диском');conflictReviewCheck($r['proposed']['values']['equipment_application']['value']===['skid_steer']&&str_contains($r['proposed']['values']['equipment_application']['source_ref'],'BOBCAT'),'Application class recognized while original make remains in source');conflictReviewCheck($r['proposed']['values']['equipment_application']['verification']==='legacy_unverified','Application class does not confirm machine fitment');
+$r=conflictReviewPreview(31,[4=>'20x8-10']);conflictReviewCheck(M::decide($r,false)['decision']==='hold','Genuinely different tire dimensions stay held');
+echo "Conflict review: separator parity, recommended vs actual rim, explicit markers, profile routing and unresolved guards OK\n";

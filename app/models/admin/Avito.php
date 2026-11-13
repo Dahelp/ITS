@@ -915,7 +915,7 @@ class Avito extends AppModel
             $updated++;
         }
 
-        return $updated;
+        return $updated + \app\services\CompleteAvito::sync();
     }
 
     public static function publicationStatus(int $availableQuantity): string
@@ -1040,7 +1040,7 @@ class Avito extends AppModel
         $rows = \R::getAll("SELECT a.id, a.avito_id, a.ad_external_id
             FROM avito_ad a
             LEFT JOIN product p ON p.article = a.article
-            WHERE p.id IS NULL AND a.deletion_requested_at IS NULL
+            WHERE p.id IS NULL AND a.complete_id IS NULL AND a.deletion_requested_at IS NULL
               AND (a.avito_id REGEXP '^[0-9]+$' OR a.ad_external_id REGEXP '^[0-9]+$')");
         if (!$rows) {
             return 0;
@@ -1098,6 +1098,7 @@ class Avito extends AppModel
         $xml->addAttribute('target', 'Avito.ru');
 
         foreach ($rows as $r) {
+            if (!\app\services\CompleteAvito::canPublish($r)) continue;
             $r = \app\services\AvitoWarehouse::normalize($r);
             $ad = $xml->addChild('Ad');
             self::xmlAdd($ad, 'Id', !empty($r['ad_external_id']) ? (string)$r['ad_external_id'] : (string)$r['id']);
@@ -1915,7 +1916,7 @@ class Avito extends AppModel
         if (!empty($stats['errors'])) throw new \RuntimeException(implode(' ', $stats['errors']));
         return (int)$stats['assigned'];
     }
-    public static function pushLinkedAdsToApi(): array
+    public static function pushLinkedAdsToApi(int $completeId = 0): array
     {
         self::ensureSchema();
 
@@ -1935,8 +1936,12 @@ class Avito extends AppModel
             'errors' => [],
         ];
 
-        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE a.article IS NOT NULL AND a.article != '' AND a.deletion_requested_at IS NULL\n        ");
+        $rows = \R::getAll("\n            SELECT\n                a.id AS ad_id,\n                a.avito_id,\n                a.ad_external_id,\n                a.price_rub,\n                a.quantity,\n                a.complete_id, a.status, a.stock_quantity,\n                p.rest\n            FROM avito_ad a\n            LEFT JOIN product p ON p.article = a.article\n            WHERE (a.complete_id IS NOT NULL OR (a.article IS NOT NULL AND a.article != '')) AND a.deletion_requested_at IS NULL\n        ");
 
+        if ($completeId > 0) {
+            \app\services\CompleteAvito::sync();
+            $rows = \R::getAll('SELECT id AS ad_id,avito_id,ad_external_id,price_rub,quantity,complete_id,status,stock_quantity FROM avito_ad WHERE complete_id=? AND deletion_requested_at IS NULL',[$completeId]);
+        }
         if (!$rows) {
             return $stats;
         }
@@ -1954,7 +1959,8 @@ class Avito extends AppModel
         foreach ($rows as $row) {
             $itemId = self::apiItemId($row);
             $price = (int)round((float)($row['price_rub'] ?? 0));
-            $quantity = (int)($availableByAd[(int)$row['ad_id']] ?? 0);
+            if (!empty($row['complete_id']) && !\app\services\CompleteAvito::canPublish($row)) { $stats['skipped']++; continue; }
+            $quantity = !empty($row['complete_id']) ? (int)$row['stock_quantity'] : (int)($availableByAd[(int)$row['ad_id']] ?? 0);
             if ($quantity > 0) {
                 $stats['status_active']++;
             } else {

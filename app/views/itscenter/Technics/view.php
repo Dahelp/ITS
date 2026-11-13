@@ -515,8 +515,6 @@ if (!empty($complete)) {
                                                 data-set="<?= (int)$cpl['id'] ?>"
                                                 class="btn btn-danger add-to-cart-complete korzina-<?= (int)$cpl['id'] ?> clear-korzina"
                                                 href="<?= PATH ?>/cart/addcomplete?id=<?= h($prodid) ?>"
-                                                data-toggle="modal"
-                                                data-target="#exampleModalLive"
                                                 onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                                             >
                                                 <i class="fas fa-cart-plus"></i> Купить комплект
@@ -530,8 +528,6 @@ if (!empty($complete)) {
                                                 data-set="<?= (int)$cpl['id'] ?>"
                                                 class="btn btn-warning add-to-cart-complete korzina-<?= (int)$cpl['id'] ?> clear-korzina"
                                                 href="<?= PATH ?>/cart/addcomplete?id=<?= h($prodid) ?>"
-                                                data-toggle="modal"
-                                                data-target="#exampleModalLive"
                                                 onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                                             >
                                                 <i class="fas fa-cart-plus"></i> Купить неполный комплект

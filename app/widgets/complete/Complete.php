@@ -20,7 +20,9 @@ class Complete
             $discount += (float)$item['discount'] * (int)$item['qty'];
             $pieces += (int)$item['qty'];
         }
-        $inventory=\app\services\CompleteInventory::forComplete((int)$complete['id']);$quantity=max(0,(int)$inventory['available']);$stockText=$quantity>0?'В наличии: '.$quantity.' компл.':'Нет в наличии';
+        $inventory = \app\services\CompleteInventory::forComplete((int)$complete['id']);
+        $quantity = max(0, (int)$inventory['available']);
+        $stockText = $quantity > 0 ? 'В наличии: '.$quantity.' компл.' : 'Нет в наличии';
         $categoryName = htmlspecialchars((string)\R::getCell('SELECT name FROM category WHERE id = ?', [(int)$complete['category_id']]), ENT_QUOTES, 'UTF-8');
         $seoName = (string)$complete['name'];
         $cardUrl = htmlspecialchars(PATH . '/complete/' . (string)$complete['alias'], ENT_QUOTES, 'UTF-8');

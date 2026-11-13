@@ -166,6 +166,8 @@ class CatalogController extends AppController {
 			PATH . $path_controller . $path_alias
 		);
 
-		$this->set(compact('category', 'breadcrumbs', 'cats', 'h1'));
+		$categoryFaqRows = !empty($cats->id) ? \R::getAll("SELECT question, answer FROM category_faq WHERE category_id=? AND hide='show' AND question<>'' AND answer<>'' ORDER BY sort,id LIMIT 20", [(int)$cats->id]) : [];
+        $jsonLdFaq = \app\helpers\SchemaHelper::renderFaqPageJsonLd($categoryFaqRows);
+        $this->set(compact('category', 'breadcrumbs', 'cats', 'h1', 'categoryFaqRows', 'jsonLdFaq'));
 	}
 }

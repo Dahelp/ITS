@@ -1,0 +1,753 @@
+{
+  "status": "proposal_only_not_runtime_configuration",
+  "version": 1,
+  "scope": "All catalogue products, regardless of stock. Category and product type are distinct.",
+  "states": [
+    "unknown",
+    "known",
+    "not_applicable"
+  ],
+  "verification": [
+    "legacy_unverified",
+    "candidate",
+    "confirmed",
+    "conflict"
+  ],
+  "profiles": [
+    "tyre_pneumatic",
+    "tyre_solid",
+    "tyre_bandage",
+    "wheel_assembly",
+    "rim",
+    "tube",
+    "flap",
+    "seal",
+    "filter",
+    "chain",
+    "service",
+    "unclassified"
+  ],
+  "properties": [
+    {
+      "code": "brand",
+      "label": "Бренд",
+      "type": "brand_reference",
+      "legacy_attribute_ids": [
+        8
+      ],
+      "legacy_filter_group_ids": [
+        4
+      ],
+      "required_for": "physical_products",
+      "note": "Retain product.brand_id as the sole resolved reference; conflicting legacy values need review."
+    },
+    {
+      "code": "manufacturer",
+      "label": "Изготовитель",
+      "type": "manufacturer_reference",
+      "required_for": "recommended_if_known",
+      "note": "Not automatically equal to brand or seller."
+    },
+    {
+      "code": "country_of_manufacture",
+      "label": "Страна производства",
+      "type": "country_reference",
+      "required_for": "recommended_if_known",
+      "note": "Per SKU or verified production batch; never infer from brand headquarters."
+    },
+    {
+      "code": "manufacturer_part_number",
+      "label": "Артикул производителя",
+      "type": "text",
+      "required_for": "if_assigned_by_manufacturer",
+      "channel": "vendorCode",
+      "note": "Internal article/sku is not a substitute."
+    },
+    {
+      "code": "barcode",
+      "label": "Штрихкод производителя",
+      "type": "validated_text",
+      "required_for": "if_assigned_by_manufacturer",
+      "note": "Preserve leading zeros and validate checksum."
+    },
+    {
+      "code": "model",
+      "label": "Модель",
+      "type": "model_reference_or_text",
+      "legacy_attribute_ids": [
+        52
+      ],
+      "required_for": "profile_dependent",
+      "note": "Do not merge automatically with tread model or execution."
+    },
+    {
+      "code": "tread_model",
+      "label": "Модель протектора",
+      "type": "brand_scoped_reference",
+      "legacy_attribute_ids": [
+        9
+      ],
+      "legacy_filter_group_ids": [
+        3
+      ],
+      "required_for": "tyre_if_assigned",
+      "note": "The same model name across brands is not necessarily the same entity."
+    },
+    {
+      "code": "tire_size",
+      "label": "Типоразмер шины",
+      "type": "size_reference",
+      "legacy_attribute_ids": [
+        4
+      ],
+      "legacy_filter_group_ids": [
+        2
+      ],
+      "required_for": [
+        "tyre_pneumatic",
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "note": "Keep exact marking, normalized form and construction. A tube has compatible sizes, not one intrinsic tyre size."
+    },
+    {
+      "code": "compatible_tire_sizes",
+      "label": "Совместимые размеры шин",
+      "type": "multi_size_reference",
+      "legacy_attribute_ids": [
+        4,
+        67,
+        85
+      ],
+      "required_for": [
+        "tube",
+        "flap",
+        "chain"
+      ],
+      "note": "Review split values; never declare interchangeability solely from similar numbers."
+    },
+    {
+      "code": "rim_diameter_in",
+      "label": "Посадочный диаметр",
+      "type": "decimal",
+      "unit": "in",
+      "legacy_attribute_ids": [
+        7
+      ],
+      "legacy_filter_group_ids": [
+        1
+      ],
+      "required_for": "tyres_except_ambiguous_bandage",
+      "validation": "positive; source unit required"
+    },
+    {
+      "code": "section_width_in",
+      "label": "Номинальная ширина профиля",
+      "type": "decimal",
+      "unit": "in",
+      "legacy_attribute_ids": [
+        65
+      ],
+      "required_for": "if_marking_uses_inches"
+    },
+    {
+      "code": "section_width_mm",
+      "label": "Ширина профиля",
+      "type": "decimal",
+      "unit": "mm",
+      "required_for": "if_confirmed",
+      "note": "Do not map tread width to section width. Nominal marking and measured dimensions differ."
+    },
+    {
+      "code": "aspect_ratio_pct",
+      "label": "Относительная высота профиля",
+      "type": "decimal",
+      "unit": "%",
+      "required_for": "if_present_in_marking",
+      "note": "Legacy attribute 69 says mm; review before mapping. Do not invent 70/80 from a competitor."
+    },
+    {
+      "code": "overall_diameter_mm",
+      "label": "Наружный диаметр",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        14
+      ],
+      "required_for": "recommended_for_tyres",
+      "note": "IDs 21/31/38/53 describe filter components; map by profile and section, not by label alone."
+    },
+    {
+      "code": "nominal_height_in",
+      "label": "Номинальная высота в маркировке",
+      "type": "decimal",
+      "unit": "in",
+      "legacy_attribute_ids": [
+        64
+      ],
+      "required_for": "if_present_in_marking"
+    },
+    {
+      "code": "tire_type",
+      "label": "Тип шины",
+      "type": "single_option",
+      "options": [
+        "pneumatic",
+        "solid",
+        "bandage"
+      ],
+      "legacy_attribute_ids": [
+        61
+      ],
+      "legacy_filter_group_ids": [
+        11
+      ],
+      "required_for": "tyres",
+      "note": "TL/TTF in this field are misclassified facts; retain raw source and review."
+    },
+    {
+      "code": "construction",
+      "label": "Конструкция каркаса",
+      "type": "single_option",
+      "options": [
+        "radial",
+        "bias"
+      ],
+      "legacy_attribute_ids": [
+        63
+      ],
+      "required_for": [
+        "tyre_pneumatic"
+      ],
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "note": "Solid is tyre type, not carcass construction."
+    },
+    {
+      "code": "sealing",
+      "label": "Герметизация",
+      "type": "single_option",
+      "options": [
+        "tube_type",
+        "tubeless"
+      ],
+      "legacy_attribute_ids": [
+        16
+      ],
+      "required_for": [
+        "tyre_pneumatic"
+      ],
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ]
+    },
+    {
+      "code": "package",
+      "label": "Комплектация",
+      "type": "single_option_or_verified_text",
+      "options": [
+        "tyre_only",
+        "tyre_and_tube",
+        "tyre_tube_flap",
+        "wheel_with_rim"
+      ],
+      "legacy_attribute_ids": [
+        16
+      ],
+      "required_for": "physical_products_where_relevant",
+      "note": "TT describes sealing; TTF may specify package. Actual package must be confirmed; do not infer from an image."
+    },
+    {
+      "code": "ply_rating",
+      "label": "Норма слойности PR",
+      "type": "integer",
+      "legacy_attribute_ids": [
+        5
+      ],
+      "required_for": "pneumatic_if_assigned",
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "note": "Star rating is a separate property, not numeric PR."
+    },
+    {
+      "code": "star_rating",
+      "label": "Звёздная норма прочности",
+      "type": "single_option",
+      "options": [
+        "*",
+        "**",
+        "***"
+      ],
+      "legacy_attribute_ids": [
+        5
+      ],
+      "required_for": "if_assigned",
+      "note": "Explicit reviewed split from legacy PR."
+    },
+    {
+      "code": "service_ratings",
+      "label": "Индексы нагрузки и скорости",
+      "type": "structured_service_rating_rows",
+      "legacy_attribute_ids": [
+        70,
+        71,
+        73
+      ],
+      "required_for": "if_marked_or_documented",
+      "note": "Separate rows for operating modes; single/dual load indexes and associated speed, source and conditions. Supports 152/148, 148/145 149/146 and L/M without flattening."
+    },
+    {
+      "code": "manufacturer_load_kg",
+      "label": "Нагрузка по данным изготовителя",
+      "type": "conditional_decimal",
+      "unit": "kg",
+      "legacy_attribute_ids": [
+        13
+      ],
+      "required_for": "if_documented",
+      "note": "Keep associated speed, pressure, axle/application and mounting conditions. Does not overwrite the load-index lookup."
+    },
+    {
+      "code": "inflation_pressure_kpa",
+      "label": "Давление",
+      "type": "conditional_decimal",
+      "unit": "kPa",
+      "legacy_attribute_ids": [
+        12,
+        18,
+        72
+      ],
+      "required_for": "pneumatic_if_documented",
+      "not_applicable_for": [
+        "tyre_solid",
+        "tyre_bandage"
+      ],
+      "note": "Preserve original PSI/kPa/kgf/cm2 and conditions. Conversion only with known unit; suspect 825 PSI requires review."
+    },
+    {
+      "code": "tread_depth_mm",
+      "label": "Глубина протектора",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        10
+      ],
+      "required_for": "recommended_if_known"
+    },
+    {
+      "code": "tread_width_mm",
+      "label": "Ширина протектора",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        17
+      ],
+      "required_for": "recommended_if_known"
+    },
+    {
+      "code": "tread_pattern",
+      "label": "Рисунок протектора",
+      "type": "single_or_multi_option",
+      "legacy_attribute_ids": [
+        60
+      ],
+      "required_for": "recommended_if_known",
+      "note": "Independent from brand model designation."
+    },
+    {
+      "code": "solid_mounting",
+      "label": "Монтажное исполнение",
+      "type": "single_option",
+      "options": [
+        "with_lip",
+        "without_lip"
+      ],
+      "required_for": [
+        "tyre_solid"
+      ],
+      "note": "CLIP/EasyFit/QUICK brand-specific terms require verified mapping."
+    },
+    {
+      "code": "non_marking",
+      "label": "Немаркое исполнение",
+      "type": "boolean",
+      "required_for": "solid_if_confirmed",
+      "note": "Unknown is not false; NM does not establish exact colour."
+    },
+    {
+      "code": "colour",
+      "label": "Цвет",
+      "type": "single_option",
+      "required_for": "if_confirmed"
+    },
+    {
+      "code": "equipment_application",
+      "label": "Тип техники",
+      "type": "multi_option",
+      "legacy_attribute_ids": [
+        15
+      ],
+      "legacy_filter_group_ids": [
+        5
+      ],
+      "required_for": "physical_products_where_relevant",
+      "note": "Vehicle brand/model compatibility is a separate relation."
+    },
+    {
+      "code": "surface",
+      "label": "Рабочее покрытие",
+      "type": "multi_option",
+      "legacy_attribute_ids": [
+        62
+      ],
+      "legacy_filter_group_ids": [
+        12
+      ],
+      "required_for": "recommended_for_tyres",
+      "note": "Existing phrases need a curated synonym dictionary; textual mismatch is not proof of a contradiction."
+    },
+    {
+      "code": "rim_designation",
+      "label": "Маркировка диска / рекомендуемый обод",
+      "type": "text_or_reference",
+      "legacy_attribute_ids": [
+        59
+      ],
+      "legacy_filter_group_ids": [
+        10
+      ],
+      "required_for": "profile_dependent",
+      "note": "A tyre's recommended rim and a rim product's own size are different roles."
+    },
+    {
+      "code": "rim_width_in",
+      "label": "Ширина диска",
+      "type": "decimal",
+      "unit": "in",
+      "legacy_attribute_ids": [
+        6
+      ],
+      "required_for": [
+        "rim"
+      ]
+    },
+    {
+      "code": "offset_mm",
+      "label": "Вылет ET",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        58
+      ],
+      "legacy_filter_group_ids": [
+        6
+      ],
+      "required_for": "rim_if_applicable",
+      "validation": "signed number including zero"
+    },
+    {
+      "code": "hub_mm",
+      "label": "Центральное отверстие HUB",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        54
+      ],
+      "legacy_filter_group_ids": [
+        7
+      ],
+      "required_for": "rim_if_applicable"
+    },
+    {
+      "code": "pcd_mm",
+      "label": "Диаметр крепёжной окружности PCD",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        55
+      ],
+      "legacy_filter_group_ids": [
+        8
+      ],
+      "required_for": "rim_if_applicable"
+    },
+    {
+      "code": "bolt_count",
+      "label": "Количество крепёжных отверстий",
+      "type": "integer",
+      "legacy_attribute_ids": [
+        57
+      ],
+      "legacy_filter_group_ids": [
+        9
+      ],
+      "required_for": "rim_if_applicable"
+    },
+    {
+      "code": "rim_ring_type",
+      "label": "Тип кольца диска",
+      "type": "single_option",
+      "legacy_attribute_ids": [
+        75
+      ],
+      "legacy_filter_group_ids": [
+        13
+      ],
+      "required_for": "rim_ring_profile"
+    },
+    {
+      "code": "weight_kg",
+      "label": "Масса единицы товара",
+      "type": "decimal",
+      "unit": "kg",
+      "legacy_attribute_ids": [
+        19
+      ],
+      "required_for": "recommended_physical_products",
+      "note": "Compare product.weight and legacy attribute; no silent priority. Package weight is separate."
+    },
+    {
+      "code": "volume_m3",
+      "label": "Транспортный объём",
+      "type": "decimal",
+      "unit": "m3",
+      "legacy_attribute_ids": [
+        20
+      ],
+      "required_for": "recommended_physical_products",
+      "note": "Distinguish one unit and a set."
+    },
+    {
+      "code": "valve",
+      "label": "Тип вентиля",
+      "type": "single_option_or_text",
+      "legacy_attribute_ids": [
+        66
+      ],
+      "required_for": [
+        "tube"
+      ]
+    },
+    {
+      "code": "seal_section_diameter_mm",
+      "label": "Диаметр сечения уплотнительного кольца",
+      "type": "decimal",
+      "unit": "mm",
+      "legacy_attribute_ids": [
+        68
+      ],
+      "legacy_filter_group_ids": [
+        14
+      ],
+      "required_for": [
+        "seal"
+      ],
+      "note": "Not tyre rim diameter; confirm semantic meaning before migration."
+    },
+    {
+      "code": "seasonality",
+      "label": "Сезонность",
+      "type": "single_option",
+      "required_for": "only_if_relevant_and_documented",
+      "note": "Do not add summer to every industrial tyre because a competitor did so."
+    }
+  ],
+  "migration_policy": {
+    "preserve": [
+      "product.id",
+      "product.sku",
+      "product.alias",
+      "category aliases",
+      "attribute_value.id",
+      "attribute_value.alias",
+      "attribute_value_category_canonical",
+      "confirmed manual SEO"
+    ],
+    "automatic": [
+      "exact duplicates with identical values after backup",
+      "approved lexical aliases",
+      "unambiguous numeric units",
+      "explicit source-to-property mappings"
+    ],
+    "manual_review": [
+      "different tyre sizes",
+      "brand contradictions",
+      "alternative and compatible sizes",
+      "combined load/speed expressions",
+      "ambiguous rim diameter",
+      "country of manufacture",
+      "solid mounting terminology"
+    ],
+    "forbidden": [
+      "guess unknown values",
+      "rewrite live prices or stock during migration",
+      "regenerate URL from new name",
+      "bulk activate all filter combinations for indexing",
+      "treat service products as incomplete tyres"
+    ]
+  },
+  "additional_profile_mapping": {
+    "filter": {
+      "strategy": "Distinct property codes by component role (main, outer element, inner element); never merge identical Russian labels without role.",
+      "legacy_sections": {
+        "main": 1,
+        "outer_element": 2,
+        "inner_element": 3
+      },
+      "dimension_attribute_ids": [
+        14,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        51,
+        53
+      ],
+      "review": "IDs 14/21/38 may share a label in section 1; disambiguate by product type and actual usage. Thread and flow rate need their own typed properties."
+    },
+    "chain": {
+      "properties": [
+        {
+          "code": "chain_manufacturer",
+          "legacy_attribute_ids": [
+            76
+          ]
+        },
+        {
+          "code": "chain_application",
+          "legacy_attribute_ids": [
+            77
+          ],
+          "legacy_filter_group_ids": [
+            15
+          ]
+        },
+        {
+          "code": "chain_model",
+          "legacy_attribute_ids": [
+            78
+          ]
+        },
+        {
+          "code": "chain_pattern",
+          "legacy_attribute_ids": [
+            79
+          ],
+          "legacy_filter_group_ids": [
+            16
+          ]
+        },
+        {
+          "code": "chain_caliber_pair",
+          "legacy_attribute_ids": [
+            80
+          ],
+          "legacy_filter_group_ids": [
+            17
+          ]
+        },
+        {
+          "code": "chain_working_mm",
+          "legacy_attribute_ids": [
+            81
+          ],
+          "legacy_filter_group_ids": [
+            18
+          ]
+        },
+        {
+          "code": "chain_side_mm",
+          "legacy_attribute_ids": [
+            82
+          ],
+          "legacy_filter_group_ids": [
+            19
+          ]
+        },
+        {
+          "code": "chain_thorns",
+          "legacy_attribute_ids": [
+            83
+          ],
+          "legacy_filter_group_ids": [
+            20
+          ]
+        },
+        {
+          "code": "chain_strength",
+          "legacy_attribute_ids": [
+            84
+          ],
+          "legacy_filter_group_ids": [
+            21
+          ]
+        },
+        {
+          "code": "chain_compatible_sizes",
+          "legacy_attribute_ids": [
+            85
+          ]
+        },
+        {
+          "code": "chain_package",
+          "legacy_attribute_ids": [
+            91
+          ],
+          "legacy_filter_group_ids": [
+            22
+          ]
+        }
+      ],
+      "other_attribute_ids_to_preserve": [
+        86,
+        87,
+        88,
+        89,
+        90,
+        92,
+        93,
+        94,
+        95
+      ],
+      "review": "Do not convert 5 or 6 depending on model into one fixed calibre. Preserve size-specific fit and clearance limits."
+    },
+    "service": {
+      "required": "Service identification and commercial terms; no tyre load/pressure/stock-completeness requirements"
+    }
+  },
+  "authoritative_entities": {
+    "brand": "Existing product.brand_id -> brand; property adapter is a projection, not another independent editable brand field.",
+    "tire_type": "Validate consistency with catalog_type. For wheel assembly, tyre component type remains distinct from main product kind.",
+    "stock_and_price": "Existing inventory/pricing services; property migration must not replace these sources."
+  }
+}

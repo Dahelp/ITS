@@ -1,0 +1,5 @@
+<?php
+$p=dirname(__DIR__).'/app/views/itscenter/admin/CatalogProperties/edit.php';$s=file_get_contents($p);$needle=' <form method="post" id="catalog-property-form">';$block=<<<'HTML'
+ <div class="card"><div class="card-header">Поиск по связанным размерам</div><div class="card-body"><p>Показан результат для сохранённых данных. Условные связи не участвуют в автоматическом расширении поиска. Совместимые размеры ищутся только вместе с типом изделия, например «камера 6.50-10». При изменении основного размера перепроверьте взаимозаменяемость.</p><?php if(empty($sizeSearch)):?><p>Сохранённых связей для проверки поиска нет.</p><?php endif ?><?php foreach($sizeSearch??[]as$r):?><p><strong><?=$escape($r['size'])?></strong> · <?=$escape($r['role']==='equivalent'?'Взаимозаменяемый':'Совместимый')?> — <?=$escape($r['reason'])?></p><?php endforeach ?></div></div>
+HTML;
+if(substr_count($s,$needle)!==1)throw new RuntimeException('Editor target mismatch');file_put_contents($p,str_replace($needle,$block."\n".$needle,$s));

@@ -18,6 +18,7 @@
             </h1>
         </section>
 
+        <?php if(array_filter($products??[],static fn($p)=>!empty($p['catalog_size_match'])&&($p['catalog_size_match']['role']??'')!=='primary')):?><p class="alert alert-info">В результатах также есть товары, найденные по подтверждённому альтернативному или совместимому размеру. Основной размер и применимость указаны в характеристиках товара.</p><?php endif ?>
         <div class="prdt-top">
             <div class="col-md-12">
                 <?php if (!empty($products)): ?>

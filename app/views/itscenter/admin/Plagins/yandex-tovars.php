@@ -1,58 +1,28 @@
-<!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Яндекс товары</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<?=ADMIN;?>">Главная</a></li>
-			  <li class="breadcrumb-item"><a href="<?=ADMIN;?>/plagins">Компоненты</a></li>
-              <li class="breadcrumb-item active">Яндекс товары</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-<!-- Main content -->
+<?php require (defined('APP')?APP:dirname(__DIR__,4)).'/views/itscenter/admin/partials/catalog-workflow-nav.php'; ?>
+<?php
+$e=static fn($v)=>htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
+$feeds=$feeds??[];$preview=$preview??null;$error=$error??null;
+$q=is_string($_GET['q']??null)?trim($_GET['q']):'';
+$mode=in_array($_GET['state']??'',['included','excluded'],true)?$_GET['state']:'';
+$reason=is_string($_GET['reason']??null)?$_GET['reason']:'';
+?>
+<div class="content-header"><h1>Яндекс Товары</h1></div>
 <section class="content">
-    <div class="row">
-        <div class="col-md-12">			
-            <div class="card">
-				<div class="card-header">
-                    <h3 class="card-title">Список фидов</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">						
-					<div class="table-responsive">
-						<table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Фид</th>
-								<th>Статус</th>
-                                <th>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-						<?php foreach($parsed['feeds'] as $key): ?>
-								<tr class="cont_td_znach">
-									<td><?=$key['feedId'];?></td>
-									<td><?=$key['feedUrl'];?></td>
-									<td>
-										
-									</td>
-									<td><a target="_blank" href="<?=$key['feedUrl'];?>"><i class="fas fa-eye"></i></a></td>
-								</tr>
-							<?php endforeach; ?>
-							</tbody>
-                    </table>
-					</div>						
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
+<p><a href="<?=ADMIN?>/catalog-properties">Характеристики товаров</a> · <a href="<?=ADMIN?>/catalog-names">Названия</a> · <a href="<?=ADMIN?>/catalog-properties/quality">Качество карточек</a> · <a href="<?=ADMIN?>/cron">Задания выгрузки</a></p>
+<?php if($error):?><div class="alert alert-warning"><?=$e($error)?></div><?php endif?>
+<div class="alert alert-info">Кабинет показывает локальные файлы. «XML читается» означает проверку структуры файла, а не приём или одобрение Яндексом. <a href="https://merchants.yandex.ru/" target="_blank" rel="noopener noreferrer">Статус приёма и ошибки Яндекса — в кабинете площадки</a>. Внешний API не участвует в открытии этой страницы.</div>
+<p><a href="<?=ADMIN?>/catalog-workflow/updates">Обновление каталога и контроль запусков</a>. Проверка фото относится к требованиям Яндекс Товаров; порог 450×450 — внутреннее правило спецшин. Суммы замечаний могут пересекаться по товарам. Проверка не подтверждает доступность фото внешнему роботу и приём фида площадкой.</p><div class="card"><div class="card-header"><h2 class="card-title">Опубликованные выгрузки</h2></div><div class="card-body table-responsive"><table class="table table-bordered"><thead><tr><th>Задание / файл</th><th>Состояние файла</th><th>Предложений</th><th>Дата XML / изменение файла</th><th>Последнее выполнение задания</th><th>Размер</th><th>Диагностика товарного YML</th></tr></thead><tbody>
+<?php foreach($feeds as$f):?><tr><td>#<?=$e($f['id'])?> <?=$e($f['name'])?><br><a href="<?= $e('https://its-center.ru/cron/'.rawurlencode($f['url_download']))?>" target="_blank" rel="noopener noreferrer"><?=$e($f['url_download'])?></a></td><td><?=$e($f['status'])?></td><td><?=$e($f['offers']??'—')?></td><td><?=$e($f['generated']??'—')?><br><?=$e($f['date']??'—')?></td><td><?=$e($f['date_update']?:'—')?></td><td><?=$e(number_format($f['bytes']/1024,1,',',' '))?> КБ</td><td><?php $checks=$f['checks']??['errors'=>[],'warnings'=>[],'examples'=>[]]; ?><?php if(!isset($f['checks'])):?>Проверка полей не выполнена<?php elseif(!$checks['errors']&&!$checks['warnings']):?>Замечаний по выполненным проверкам нет<?php else:?><?php foreach(['errors'=>'Ошибки','warnings'=>'Предупреждения']as$kind=>$caption):if(!$checks[$kind])continue;?><details><summary><?= $e($caption)?>: <?=array_sum($checks[$kind])?></summary><ul><?php foreach($checks[$kind]as$key=>$count):?><li><?=$e(\app\services\CatalogFeedAudit::LABELS[$key]??$key)?>: <?=(int)$count?><?php if(!empty($checks['examples'][$key])):?><br><small>Примеры ID: <?=$e(implode(', ',$checks['examples'][$key]))?></small><?php endif ?></li><?php endforeach ?></ul></details><?php endforeach ?><?php endif ?></td></tr><?php endforeach?>
+<?php if(!$feeds):?><tr><td colspan="7">Задания с XML-файлами не найдены.</td></tr><?php endif?>
+</tbody></table></div></div>
+<div class="card"><div class="card-header"><h2 class="card-title">Предпросмотр фида спецшин</h2></div><div class="card-body">
+<p>Проверяются товары в дочерних категориях раздела шин, включая скрытые товары и товары без остатка. Другие фиды имеют собственные правила: их предпросмотр здесь пока не поддерживается. Просмотр не публикует XML и не меняет товары. Фактическая выгрузка может отличаться, если остатки или цены изменятся после проверки.</p>
+<?php if(!$preview):?><a class="btn btn-primary" href="<?=ADMIN?>/plagins/yandex-tovars?preview=1">Проверить текущую выгрузку и причины исключения</a><?php else:?>
+<p>Проверка: <?=$e($preview['checked_at'])?>. Товаров проверено: <?=count($preview['rows'])?>. В новом XML: <strong><?=$e($preview['offers'])?></strong>.</p>
+<form method="get" class="mb-3"><input type="hidden" name="preview" value="1"><label>Артикул или название <input name="q" value="<?=$e($q)?>" class="form-control"></label> <label>Состояние <select name="state" class="form-control"><option value="">Все</option><option value="included" <?=$mode==='included'?'selected':''?>>Включён</option><option value="excluded" <?=$mode==='excluded'?'selected':''?>>Исключён</option></select></label> <label>Причина <select name="reason" class="form-control"><option value="">Все причины</option><?php foreach($preview['counts']as$r=>$count):?><option value="<?=$e($r)?>" <?=$reason===$r?'selected':''?>><?=$e($r)?> (<?=$e($count)?>)</option><?php endforeach?></select></label> <button class="btn btn-primary">Найти</button></form>
+<p>У товара может быть несколько причин исключения. Нулевой остаток — штатное исключение, а не ошибка карточки.</p>
+<div class="table-responsive"><table class="table table-bordered"><thead><tr><th>Товар</th><th>Остаток / цена</th><th>Результат</th><th>Предпросмотр предложения</th></tr></thead><tbody>
+<?php $shown=0;$matched=0;foreach($preview['rows']as$row){if($mode==='included'&&!$row['included']||$mode==='excluded'&&$row['included']||$reason!==''&&!in_array($reason,$row['reasons'],true)||$q!==''&&mb_stripos($row['sku'].' '.$row['name'],$q)===false)continue;$matched++;if(++$shown>100)continue;?>
+<tr><td><a href="<?=ADMIN?>/catalog-workflow/product?id=<?=$e($row['id'])?>"><?=$e($row['sku'])?></a><br><?=$e($row['name'])?></td><td><?=$e($row['stock'])?> шт.<br><?=$e($row['price'])?> ₽</td><td><?php if($row['included']):?><span class="text-success">Включён</span><?php else:?><span class="text-danger">Исключён</span><ul><?php foreach($row['reasons']as$r):?><li><?=$e($r)?></li><?php endforeach?></ul><?php endif?></td><td><?php if($row['included']&&$row['xml']):?><details><summary>Название, фото, характеристики и XML</summary><pre style="white-space:pre-wrap;max-width:650px"><?=$e($row['xml'])?></pre></details><?php else:?>—<?php endif?></td></tr>
+<?php }?></tbody></table></div><p>Найдено: <?=$matched?>. Показано: <?=min(100,$matched)?>. Для уточнения используйте поиск и причину.</p>
+<?php endif?></div></div></section>

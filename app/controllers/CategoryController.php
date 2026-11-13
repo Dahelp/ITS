@@ -67,7 +67,7 @@ class CategoryController extends AppController
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $page = max(1, $page);
 
-    $selection = \app\services\CatalogSelection::state($_GET);
+    $selection = \app\services\CatalogSelection::categoryState($_GET);
     $perpage = $selection['perpage'];
 
     $sqlPart = '';
@@ -136,6 +136,11 @@ class CategoryController extends AppController
                     );
 
                     if (rtrim($target, '/') !== rtrim($currentUrl, '/')) {
+                        $keptQuery = [];
+                        foreach ($_GET as $key => $value) {
+                            if (preg_match('/^(filter|filter_[a-z0-9_]+|sort|status|in_stock|perpage|page)$/D', (string)$key) && (is_scalar($value) || is_array($value))) $keptQuery[$key] = $value;
+                        }
+                        if ($keptQuery) $target .= '?'.http_build_query($keptQuery);
                         $this->redirectPermanent($target);
                     }
                 }
@@ -161,21 +166,20 @@ class CategoryController extends AppController
     // общий набор фильтров
     $allFilterIds = array_values(array_unique(array_merge($allFilterIds, $extraFilterIds)));
 
-    if (!empty($allFilterIds)) {
-        $filterSql = implode(',', array_map('intval', $allFilterIds));
-        $cnt = count($allFilterIds);
-
-        $sqlPart = "AND product.id IN (
-            SELECT product_id
-            FROM attribute_product
-            WHERE attr_id IN ($filterSql)
-            GROUP BY product_id
-            HAVING COUNT(DISTINCT attr_id) = $cnt
-        )";
+    // A landing for one size/brand must not display an OR-union of that same group.
+    if (!empty($selectedAttrId) && !empty($extraFilterIds)) {
+        $routeGroups = \app\services\CatalogFacets::groups($allFilterIds);
+        if (count($routeGroups[(int)$selectedAttr->attr_group_id] ?? []) > 1) {
+            $query = ['filter' => implode(',', $allFilterIds)];
+            foreach (['sort','status','in_stock','perpage','page'] as $key) if (isset($_GET[$key]) && is_scalar($_GET[$key])) $query[$key] = $_GET[$key];
+            header('Location: '.PATH.'/category/'.rawurlencode((string)$category->alias).'?'.http_build_query($query), true, 302);
+            exit;
+        }
     }
+    $sqlPart = \app\services\CatalogFacets::predicate($allFilterIds);
 
     // fallback старого режима ?filter=94
-    if (empty($selectedAttrId) && $legacyFilter) {
+    if (empty($selectedAttrId) && $legacyFilter && count($allFilterIds) === 1) {
         $legacyIds = array_filter(array_map('intval', explode(',', $legacyFilter)));
         $firstId = $legacyIds[0] ?? 0;
 
@@ -192,11 +196,7 @@ class CategoryController extends AppController
                     [$selectedAttr->attr_group_id]
                 );
 
-                $sqlPart = "AND product.id IN (
-                    SELECT product_id
-                    FROM attribute_product
-                    WHERE attr_id = {$selectedAttrId}
-                )";
+                // The shared facet predicate above remains authoritative.
             }
         }
     }
@@ -205,7 +205,7 @@ class CategoryController extends AppController
     $sqlSort = \app\services\CatalogSelection::order($selection);
 
     $total = \R::count('product', "hide = 'show' AND category_id IN ($ids) $sqlPart");
-    if (!empty($selectedAttrId) && $total < 1 && $selection['status'] === '' && !$selection['in_stock']) {
+    if (!empty($selectedAttrId) && count($allFilterIds) === 1 && $total < 1 && $selection['status'] === '' && !$selection['in_stock']) {
         throw new \Exception('Страница не найдена', 404);
     }
 
@@ -458,6 +458,7 @@ class CategoryController extends AppController
         $keywords = $filterKeywords;
         $name = $filterH1;
 
+        $facetRelation=\app\services\CatalogFacetBridge::relationSql();
         $relatedSizes = \R::getAll(
             "SELECT DISTINCT
                 av.id,
@@ -478,9 +479,9 @@ class CategoryController extends AppController
             AND av.hide = 'show'
             AND EXISTS (
                     SELECT 1
-                    FROM attribute_product ap
-                    JOIN product p ON p.id = ap.product_id
-                    WHERE ap.attr_id = av.id
+                    FROM $facetRelation ap
+                    JOIN product p ON p.id=ap.product_id
+                    WHERE ap.attr_id=av.id
                     AND p.hide = 'show'
                     AND p.category_id IN ($ids)
                     LIMIT 1
@@ -577,8 +578,6 @@ class CategoryController extends AppController
     if (
         !empty($selectedAttrId)
         && !empty($categoryFilterSeo['canonical_url'])
-        && empty($_GET['filter'])
-        && empty($_GET['sort'])
         && $page <= 1
     ) {
         $canonicalUrl = (string)$categoryFilterSeo['canonical_url'];
@@ -599,6 +598,7 @@ class CategoryController extends AppController
     }
 
     if (!empty($_GET['sort']) || !empty($_GET['status']) || !empty($_GET['in_stock']) || !empty($_GET['perpage'])) $metaRobots = 'noindex, follow';
+    if (count($allFilterIds) > 1 || !empty($_GET['filter']) || !empty($namedFilterIds)) $metaRobots = 'noindex, follow';
 
     $productWidgetContext = \app\widgets\product\Product::buildContext($products);
 
@@ -645,7 +645,7 @@ class CategoryController extends AppController
     );
 
     if ($this->isAjax() && isset($_GET['lazy_products']) && $_GET['lazy_products'] === '1') {
-        $products = array_slice(array_values($products), 10);
+        $products = array_slice(array_values($products), 12);
         $productWidgetContext = \app\widgets\product\Product::buildContext($products);
         $this->loadView('lazy_products', compact('products', 'productWidgetContext'));
         die;
@@ -741,11 +741,12 @@ class CategoryController extends AppController
 
                 if ($selectedAlias !== '') {
                     $targetIds = $this->getCategoryIdsSql((int)$targetCategory['id']);
+                    $facetRelation=\app\services\CatalogFacetBridge::relationSql();
                     $hasProducts = (bool)\R::getCell(
                         "SELECT 1
                         FROM product p
-                        JOIN attribute_product ap ON ap.product_id = p.id
-                        JOIN attribute_value av ON av.id = ap.attr_id
+                        JOIN $facetRelation ap ON ap.product_id=p.id
+                        JOIN attribute_value av ON av.id=ap.attr_id
                         WHERE p.hide = 'show'
                         AND p.category_id IN ($targetIds)
                         AND av.alias = ?
@@ -885,6 +886,9 @@ class CategoryController extends AppController
             $sourceAttrJoin = 'JOIN attribute_product src_ap ON src_ap.product_id = src.id';
             $sourceAttrWhere = 'AND src_ap.attr_id = ?';
             $params[] = (int)$selectedAttrId;
+            $facetGroups=\app\services\CatalogFacets::groups([(int)$selectedAttrId]);
+            $facetGroup=(int)(array_key_first($facetGroups)??0);
+            if(\app\services\CatalogFacetBridge::hasOverrides($facetGroup)){$sourceAttrJoin='';$sourceAttrWhere=\app\services\CatalogFacets::predicate([(int)$selectedAttrId],'src');$params=[];}
         }
 
         return \R::getAll(
@@ -1196,12 +1200,13 @@ class CategoryController extends AppController
             $aliases[] = $normalizedAlias;
         }
 
+        $facetRelation=\app\services\CatalogFacetBridge::relationSql();
         foreach (array_values(array_unique($aliases)) as $alias) {
             $rows = \R::getAll(
                 "SELECT av.id, COUNT(DISTINCT p.id) AS product_count
                  FROM attribute_value av
-                 INNER JOIN attribute_product ap ON ap.attr_id = av.id
-                 INNER JOIN product p ON p.id = ap.product_id
+                 INNER JOIN $facetRelation ap ON ap.attr_id=av.id
+                 INNER JOIN product p ON p.id=ap.product_id
                  WHERE av.alias = ?
                    AND av.hide = 'show'
                    AND p.hide = 'show'

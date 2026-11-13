@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?= PATH ?>/css/product-badges.css?v=<?= (int)filemtime(WWW . '/css/product-badges.css') ?>">
+<link rel="stylesheet" href="<?= PATH ?>/css/product-fulfilment.css?v=<?= (int)filemtime(WWW . '/css/product-fulfilment.css') ?>">
 <?php use app\helpers\Img; ?>
 
 <?php
@@ -13,6 +15,7 @@ $hasAction = (isset($action) && is_object($action) && (int)$action->product_id =
 $actionType = $hasAction ? (string)$action->type_id : null;
 $actionVal  = $hasAction ? (float)$action->znachenie : 0.0;
 
+$chainPriceOnRequest = \app\services\TsepChainCatalog::priceOnRequest($product);
 $basePrice = (float)$product->price;
 $price = $basePrice;
 
@@ -94,11 +97,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 <div class="single contact">
     <div class="container">
         <section>
-          <?php if (!empty($product->note)) { ?>
-            <div class="alert alert-success product-note">
-                <?=$product->note;?>
-            </div>
-          <?php } ?>
+          <?php if (\app\services\TsepChainCatalog::isChain($product)): ?>
+            <div class="alert alert-success product-note">Изготавливается под заказ. Стоимость и сроки изготовления и доставки уточняются у менеджера.</div>
+          <?php elseif (!empty($product->note)): ?>
+            <div class="alert alert-success product-note"><?=$product->note;?></div>
+          <?php endif; ?>
 
           <section class="product-hero-its">
             <div class="product-hero-grid">
@@ -106,6 +109,13 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
               <aside class="product-col product-col--gallery">
                 <div class="product-sticky-wrap">
                   <div class="product-card product-gallery-card">
+                    <?php if (!empty($product->hit) || !empty($product->new_product) || $hasAction || ((float)$product->price_rrs > 0 && (float)$product->price_rrs > $basePrice)): ?>
+                      <div class="pc-badges product-gallery-badges" aria-label="Метки товара">
+                        <?php if (!empty($product->hit)): ?><span class="pc-badge pc-badge--hit">Хит</span><?php endif; ?>
+                        <?php if (!empty($product->new_product)): ?><span class="pc-badge pc-badge--new">Новинка</span><?php endif; ?>
+                        <?php if ($hasAction || ((float)$product->price_rrs > 0 && (float)$product->price_rrs > $basePrice)): ?><span class="pc-badge pc-badge--sale">Скидка</span><?php endif; ?>
+                      </div>
+                    <?php endif; ?>
                     <section class="slider">
                       <?php if (!empty($gallery)): ?>
                         <div id="slider" class="flexslider product-flexslider-main">
@@ -179,11 +189,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       $seoH1 = trim((string)($product->seo_h1 ?? ''));
 
                       if ($seoH1 !== '') {
-                          echo h(\ishop\App::seoreplace($seoH1, $product->id));
+                          echo h(\app\services\CatalogNaming::apply((int)$product->id,'h1',(string)\ishop\App::seoreplace($seoH1,$product->id)));
                       } elseif (isset($inseo) && is_object($inseo) && !empty($inseo->name)) {
-                          echo h(\ishop\App::seoreplace($inseo->name, $product->id));
+                          echo h(\app\services\CatalogNaming::apply((int)$product->id,'h1',(string)\ishop\App::seoreplace($inseo->name,$product->id)));
                       } else {
-                          echo h($product->name);
+                          echo h(\app\services\CatalogNaming::apply((int)$product->id,'h1',(string)$product->name));
                       }
                       ?>
                     </h1>
@@ -207,7 +217,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       <?php endif; ?>
                     </div>
 
-                    <?php if (!empty($product->note)) { ?>
+                    <?php if (!empty($product->note) && !\app\services\TsepChainCatalog::isChain($product)) { ?>
                       <div class="alert alert-success product-note mb-4">
                         <?=$product->note;?>
                       </div>
@@ -347,7 +357,9 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             <div class="product-block-title">Цена</div>
 
                             <div class="item_price_2 product-price-box text-accent" id="base-price" data-base="<?= $price * $curr['value']; ?>">
-                                <?php if ((isset($comp_priceopt["tip"]) ? (int)$comp_priceopt["tip"] : 0) != 2): ?>
+                                <?php if ($chainPriceOnRequest): ?>
+<div class="product-price-current">Цена по запросу</div>
+<?php elseif ((isset($comp_priceopt["tip"]) ? (int)$comp_priceopt["tip"] : 0) != 2): ?>
                                     <?php if ($hasAction): ?>
                                         <div class="product-price-old">
                                             <?= $curr['symbol_left']; ?><?= ($basePrice * $curr['value']); ?><?= $curr['symbol_right']; ?>
@@ -394,11 +406,12 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             <?php if ($quantity > 0): ?>
                                 <div class="current_price_success product-price-date">Цена актуальна на: <?= h($product->data_edit_price ?? '') ?></div>
                             <?php else: ?>
-                                <div class="current_price_warning product-price-date">Цену уточняйте у менеджера</div>
+                                <?php if (!\app\services\TsepChainCatalog::isChain($product)): ?><div class="current_price_warning product-price-date">Цену уточняйте у менеджера</div><?php endif; ?>
                             <?php endif; ?>
                         </div>
 
-                        <div class="product-stock-box">
+                        <?php if (!\app\services\TsepChainCatalog::isChain($product)): ?>
+<div class="product-stock-box">
                             <div class="product-block-title">Наличие</div>
                             <div class="vnalichie">
                                 <?php
@@ -410,7 +423,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                     }
                                 } else {
                                     if ($stockStatusId === 2) {
-                                        echo '<span class="nalich_no">Товар можно приобрести под заказ. Цена, наличие и срок доставки согласовываются с менеджером. Доставка 3-5 рабочих дней после поступления оплаты по счёту.</span>';
+                                        echo '<span class="nalich_no">' . (\app\services\TsepChainCatalog::isChain($product) ? \app\services\TsepChainCatalog::orderText() : 'Товар можно приобрести под заказ. Цена, наличие и срок доставки согласовываются с менеджером. Доставка 3-5 рабочих дней после поступления оплаты по счёту.') . '</span>';
                                     } elseif ($stockStatusId === 3) {
                                         echo '<span class="nalich_postuplenie">Ожидается поступление. Уточняйте у менеджера.</span>';
                                     } elseif ($reserve > 0 && $quantity > 0) {
@@ -422,6 +435,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                 ?>
                             </div>
                         </div>
+<?php endif; ?>
 
                         <div class="product-order-box">
                             <div class="product-block-title">Оформление заказа</div>
@@ -443,8 +457,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            style="display:none;"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -476,8 +488,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?= $product->id; ?> clear-korzina"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -499,7 +509,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                 <?php else: ?>
                                     <?php if ($stockStatusId === 2): ?>
                                         <button class="btn btn-warning" type="submit" data-bs-toggle="modal" data-bs-target="#ModalRequest">
-                                            Оформить под заказ
+                                            <?= \app\services\TsepChainCatalog::isChain($product) ? 'Оставить заявку' : 'Оформить под заказ' ?>
                                         </button>
                                     <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $quantity > 0)): ?>
                                         <button class="btn btn-stock-notify" type="button" data-bs-toggle="modal" data-bs-target="#ModalAvailability" data-product-id="<?= (int)$product->id ?>" data-product-name="<?= h($product->name) ?>" data-product-url="<?= PATH ?>/product/<?= h($product->alias) ?>">
@@ -536,7 +546,8 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             </div>
                         </div>
 
-                        <div class="product-stock-box">
+                        <?php if (!\app\services\TsepChainCatalog::isChain($product)): ?>
+<div class="product-stock-box">
                             <div class="product-block-title">Наличие</div>
                             <div class="vnalichie">
                                 <?php
@@ -548,7 +559,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                     }
                                 } else {
                                     if ($stockStatusId === 2) {
-                                        echo '<span class="nalich_no">Товар можно приобрести под заказ. Цена, наличие и срок доставки согласовываются с менеджером. Доставка 3-5 рабочих дней после поступления оплаты по счёту.</span>';
+                                        echo '<span class="nalich_no">' . (\app\services\TsepChainCatalog::isChain($product) ? \app\services\TsepChainCatalog::orderText() : 'Товар можно приобрести под заказ. Цена, наличие и срок доставки согласовываются с менеджером. Доставка 3-5 рабочих дней после поступления оплаты по счёту.') . '</span>';
                                     } elseif ($stockStatusId === 3) {
                                         echo '<span class="nalich_postuplenie">Ожидается поступление. Уточняйте у менеджера.</span>';
                                     } elseif ($reserve > 0 && $quantity > 0) {
@@ -560,6 +571,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                 ?>
                             </div>
                         </div>
+<?php endif; ?>
 
                         <?php if ($itog_qty > 0): ?>
                             <div class="product-order-box">
@@ -581,8 +593,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            style="display:none;"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -617,8 +627,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                            class="btn btn-soft-primary me-2 add-to-cart-mod korzina-<?= $product->id; ?> clear-korzina"
                                            href="cart/add?id=<?= $product->id; ?>"
                                            data-max="<?= $itog_qty; ?>"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#exampleModalLive"
                                            onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;">
                                             <i class="fas fa-cart-plus"></i> В корзину
                                         </a>
@@ -647,7 +655,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                 <div class="product-order-actions">
                                     <?php if ($stockStatusId === 2): ?>
                                         <button class="btn btn-warning" type="submit" data-bs-toggle="modal" data-bs-target="#ModalRequest">
-                                            Оформить под заказ
+                                            <?= \app\services\TsepChainCatalog::isChain($product) ? 'Оставить заявку' : 'Оформить под заказ' ?>
                                         </button>
                                     <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $quantity > 0)): ?>
                                         <button class="btn btn-stock-notify" type="button" data-bs-toggle="modal" data-bs-target="#ModalAvailability" data-product-id="<?= (int)$product->id ?>" data-product-name="<?= h($product->name) ?>" data-product-url="<?= PATH ?>/product/<?= h($product->alias) ?>">
@@ -692,6 +700,23 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       </div>
                     </div>
                   </div>
+                  <section class="product-card product-fulfilment" aria-label="Оплата и доставка">
+                    <div class="product-fulfilment__section" id="pills-delivery">
+                      <h2><i class="far fa-truck" aria-hidden="true"></i> Доставка</h2>
+                      <ul>
+                        <li>Самовывоз из Климовска — бесплатно.</li>
+                        <li>По России — транспортной компанией. Доставка до ТК — бесплатно.</li>
+                        <li>По Москве и области — условия согласует менеджер.</li>
+                      </ul>
+                      <a href="<?= PATH ?>/services/dostavka">Подробнее о доставке <span aria-hidden="true">→</span></a>
+                    </div>
+                    <div class="product-fulfilment__section" id="pills-pay">
+                      <h2><i class="far fa-wallet" aria-hidden="true"></i> Оплата</h2>
+                      <p>По счёту для юридических и физических лиц. Отгрузка после поступления оплаты.</p>
+                      <p>Наличными курьеру при доставке.</p>
+                      <a href="<?= PATH ?>/pages/oplata">Все способы и условия оплаты <span aria-hidden="true">→</span></a>
+                    </div>
+                  </section>
                 </div>
               </aside>
 
@@ -727,7 +752,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                   $prod_id .= $prod["product_id"] . ",";
                   $prod_qty .= $prod["qty"] . ",";
 
-                  $totalStock=max(0,(int)$prod['quantity']+(int)($prod['modification_quantity']??0));$freeStock=max(0,$totalStock-max(0,(int)($prod['reserve']??0)));$canUseProduct=($prod['hide']??'')!=='hide';$setsFromProduct=$canUseProduct?intdiv($freeStock,max(1,(int)$prod['qty'])):0;$availableSets=min($availableSets??PHP_INT_MAX,$setsFromProduct);
+                  $totalStock = max(0, (int)$prod["quantity"] + (int)($prod['modification_quantity'] ?? 0));
+                  $freeStock = max(0, $totalStock - max(0, (int)($prod['reserve'] ?? 0)));
+                  $canUseProduct = ($prod['hide'] ?? '') !== 'hide';
+                  $setsFromProduct = $canUseProduct ? intdiv($freeStock, max(1, (int)$prod['qty'])) : 0;
+                  $availableSets = min($availableSets ?? PHP_INT_MAX, $setsFromProduct);
                   if ($canUseProduct && $freeStock >= (int)$prod["qty"]) {
                     $quantity_ok = 1;
                     $prodid .= $prod["product_id"] . "-";
@@ -745,9 +774,11 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                 $prod_id = rtrim($prod_id, ',');
                 $prod_qty = rtrim($prod_qty, ',');
                 $prodid = rtrim($prodid, '-');
-                $availableSets=$availableSets??0;
+                $availableSets = $availableSets ?? 0;
 
-                $isFullAvailable=$availableSets>0&&count($prods)>0;$isPartialAvailable=!$isFullAvailable&&$itg_qty>0;$isUnavailable=!$isFullAvailable&&!$isPartialAvailable;
+                $isFullAvailable = ($availableSets > 0 && count($prods) > 0);
+                $isPartialAvailable = (!$isFullAvailable && $itg_qty > 0);
+                $isUnavailable = (!$isFullAvailable && !$isPartialAvailable);
 
                 $effective_discount_complete = ($isFullAvailable && $discount_complete > 0) ? $discount_complete : 0;
                 $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
@@ -809,18 +840,23 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       <div class="complete-premium__composition-drop" id="complete-composition-<?=$cpl["id"]?>" hidden>
                         <div class="complete-premium__composition-list">
                           <?php foreach ($prods as $prod): ?>
-                            <?php $totalStock=max(0,(int)$prod['quantity']+(int)($prod['modification_quantity']??0));$reserveStock=max(0,(int)($prod['reserve']??0));$freeStock=max(0,$totalStock-$reserveStock); ?>
+                            <?php
+                              $totalStock = max(0, (int)$prod['quantity'] + (int)($prod['modification_quantity'] ?? 0));
+                              $reserveStock = max(0, (int)($prod['reserve'] ?? 0));
+                              $freeStock = max(0, $totalStock - $reserveStock);
+                            ?>
                             <div class="complete-comp-item">
                               <div class="complete-comp-item__name"><?=$prod["name"]?></div>
                               <div class="complete-comp-item__meta">
                                 <span><?=$prod["qty"]?> шт.</span>
-                                <span>Свободно: <?=$freeStock?> шт.</span><?php if($reserveStock>0): ?><span>Резерв: <?=$reserveStock?> шт.</span><?php endif; ?>
+                                <span>Свободно: <?=$freeStock?> шт.</span>
+                                <?php if ($reserveStock > 0): ?><span>Резерв: <?=$reserveStock?> шт.</span><?php endif; ?>
                                 <span><?=number_format((float)$prod["price_complete"], 0, '.', ' ')?> <?=$curr['symbol_right'];?> / шт.</span>
 
-                                <?php if (($prod['hide']??'')!=='hide' && $freeStock >= (int)$prod["qty"]): ?>
+                                <?php if (($prod['hide'] ?? '') !== 'hide' && $freeStock >= (int)$prod["qty"]): ?>
                                   <span class="is-ok">Достаточно</span>
-                                <?php elseif (($prod['hide']??'')!=='hide' && $freeStock > 0): ?>
-                                  <span class="is-warn">Частично</span>
+                                <?php elseif (($prod['hide'] ?? '') !== 'hide' && $freeStock > 0): ?>
+                                  <span class="is-warn">Не хватает: <?=max(0, (int)$prod['qty'] - $freeStock)?> шт.</span>
                                 <?php else: ?>
                                   <span class="is-empty">Нет</span>
                                 <?php endif; ?>
@@ -872,8 +908,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             data-complete-id="<?=$cpl["id"];?>"
                             class="btn btn-danger add-to-cart-complete korzina-<?=$cpl["id"];?> clear-korzina"
                             href="cart/addcomplete?id=<?=$prodid;?>"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLive"
                             onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                           >
                             <i class="fas fa-cart-plus"></i> Купить комплект
@@ -886,8 +920,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             data-complete-id="<?=$cpl["id"];?>"
                             class="btn btn-warning add-to-cart-complete korzina-<?=$cpl["id"];?> clear-korzina"
                             href="cart/addcomplete?id=<?=$prodid;?>"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLive"
                             onclick="try{window.ym&&ym(87229051,'reachGoal','VKORZINU')}catch(e){}; return true;"
                           >
                             <i class="fas fa-cart-plus"></i> Купить неполный комплект
@@ -966,14 +998,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
             </li>
             <?php endif; ?>
 
-            <li class="nav-item">
-              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-delivery" type="button">Доставка</button>
-            </li>
-
-            <li class="nav-item">
-              <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-pay" type="button">Оплата</button>
-            </li>
-
             <?php if ($product->url_video): ?>
             <li class="nav-item">
               <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-video" type="button">Видео</button>
@@ -1002,7 +1026,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
           </thead>
           <tbody>
           <?php foreach ($attributesByGroup[(int)$group["attribute_group_id"]] ?? [] as $att): ?>
-          <tr><td><?=$att["attribute_name"]?></td><td><?=$att["attribute_text"]?></td></tr>
+          <tr><td><?=!empty($att['catalog_published'])?h($att['attribute_name']):$att['attribute_name']?></td><td><?=!empty($att['catalog_published'])?h($att['attribute_text']):$att['attribute_text']?></td></tr>
           <?php endforeach; ?>
           </tbody>
           <?php endforeach; ?>
@@ -1094,15 +1118,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
           </table>
           </div>
           <?php endif; ?>
-
-
-          <div class="tab-pane fade" id="pills-delivery">
-          <?= \ishop\App::options('option_dostavka'); ?>
-          </div>
-
-          <div class="tab-pane fade" id="pills-pay">
-          <?= \ishop\App::options('option_oplata'); ?>
-          </div>
 
           <?php if ($product->url_video): ?>
           <div class="tab-pane fade" id="pills-video">
@@ -1617,7 +1632,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content callback-modal">
             <div class="modal-header">
-                <div class="modal-title" id="ModalRequestLabel">Оформить товар под заказ</div>
+                <div class="modal-title" id="ModalRequestLabel"><?= \app\services\TsepChainCatalog::isChain($product) ? 'Оставить заявку' : 'Оформить товар под заказ' ?></div>
 
                 <button type="button"
                         class="btn-close"

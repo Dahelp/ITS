@@ -20,6 +20,8 @@ $renderSeoCategoryText = static function ($content) use ($renderCategoryText, $i
 
 $filterAttr = $filterLanding['attr'] ?? null;
 $filterGroup = $filterLanding['group'] ?? null;
+$brandGroupTitle = mb_strtolower((string)($filterGroup->title ?? $filterGroup->name ?? ''));
+$isBrandLanding = mb_strpos($brandGroupTitle, 'производ') !== false || mb_strpos($brandGroupTitle, 'бренд') !== false;
 $filterTopContent = $filterLanding['top_content'] ?? '';
 $categoryTopContent = !$isFilterLanding && !empty($category->top_content)
     ? trim((string)$category->top_content)
@@ -134,7 +136,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
           ? 'Типоразмер ' . $filterAttr->value . ' в категории ' . ($category->name ?? '')
           : $name;
       ?>
-      <div class="catalog-top-block mb-4">
+      <div class="catalog-top-block mb-4 <?= $isBrandLanding ? 'catalog-top-block--brand' : '' ?>">
         <?php if ($filterImage): ?>
           <div class="catalog-top-image">
             <img
@@ -170,29 +172,37 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
       </div>
     <?php endif; ?>
 
-    <section class="d-md-flex justify-content-between align-items-center pb-4">
-      <div class="w_sidebar col-md-12 fltr"
-           data-category-url="<?= PATH ?>/category/<?= h($category->alias ?? '') ?>">
-        <?php new \app\widgets\filter\Filter($ids, $allFilterIds ?? []); ?>
-      </div>
-    </section>
-
+    <link rel="stylesheet" href="/css/catalog-facets.css?v=20261112h">
+    <script src="/js/catalog-facets.js?v=stage7-20261113" defer></script>
+    <?php $catalogDisplay = (new \app\services\CatalogDisplay(\R::getPDO()))->read((int)$category->id); ?>
+    <div class="catalog-facet-layout" style="--catalog-columns: <?=$catalogDisplay['columns']?>">
+      <?php require APP.'/views/itscenter/partials/catalog-facets.php'; ?>
+      <div class="catalog-facet-results">
     <?php require APP.'/views/itscenter/partials/catalog-controls.php'; ?>
 
     <div class="prdt-top">
       <div class="col-md-12">
         <?php if (!empty($products)): ?>
           <div class="row gx-3 gy-3 product-one" data-category-lazy="1">
-            <?php foreach (array_slice(array_values($products), 0, 10) as $product): ?>
+            <?php foreach (array_slice(array_values($products), 0, (($_GET['all_products'] ?? '') === '1' ? count($products) : 12)) as $product): ?>
               <div class="col-xl-3 col-lg-6 col-md-4 col-sm-6 mb-3">
                 <?php new \app\widgets\product\Product($product, $curr, 'product_tpl.php', $productWidgetContext ?? []); ?>
               </div>
             <?php endforeach; ?>
 
-            <?php if (count($products) > 10): ?>
+            <?php if (count($products) > 12 && ($_GET['all_products'] ?? '') !== '1'): ?>
               <div class="col-12 category-products-lazy-sentinel"
                    data-category-lazy-sentinel
                    aria-hidden="true"></div>
+              <?php
+              $fullPageQuery = $_GET;
+              unset($fullPageQuery['lazy_products']);
+              $fullPageQuery['all_products'] = '1';
+              // Existing perpage policy keeps this fallback URL out of the index.
+              $fullPageQuery['perpage'] = (string)$perpage;
+              $fullPageUrl = PATH . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?' . http_build_query($fullPageQuery);
+              ?>
+              <noscript><div class="col-12 mb-3"><a class="btn btn-outline-primary" href="<?=h($fullPageUrl)?>">Показать все <?=count($products)?> товаров этой страницы без JavaScript</a></div></noscript>
             <?php endif; ?>
 
             <div class="clearfix"></div>
@@ -204,7 +214,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
             </div>
           </div>
         <?php else: ?>
-          <h3>
+          <p class="alert alert-info">По выбранным условиям товары не найдены. Измените фильтры или сбросьте выбор.</p><h3>
             "Живого" наличия позиций в данном типоразмере нет. Для уточнения возможной поставки товара
             "Под заказ" просьба связаться с нашими менеджерами по тел.: +7(495)424-98-90
             или написать нам на электронную почту: info@its-center.ru
@@ -236,6 +246,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
             </div>
           <?php endif; ?>
 
+          <?php if (!$isFilterLanding) require APP.'/views/itscenter/partials/category-size-links.php'; ?>
           <?php if ($isFilterLanding && !empty($filterBottomContent)): ?>
             <div class="catalog_text">
               <?=$renderSeoCategoryText($filterBottomContent);?>
@@ -299,7 +310,7 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
                 <div class="review-wrap">
                   <div class="wrap-container">
                     <div class="inner-container">
-                      <div class="swiper-container swiper2">
+                      <div class="swiper-container catalog-related-slider">
                         <div class="swiper-wrapper">
                           <?php foreach ($categoryAlsoViewed as $item): ?>
                             <div class="swiper-slide">
@@ -323,6 +334,8 @@ $currValue = !empty($curr['value']) ? (float)$curr['value'] : 1.0;
       </div>
 
       <div class="clearfix"></div>
+    </div>
+      </div>
     </div>
   </div>
 

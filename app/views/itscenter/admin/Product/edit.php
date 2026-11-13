@@ -1,3 +1,4 @@
+<?php require (defined('APP')?APP:dirname(__DIR__,4)).'/views/itscenter/admin/partials/catalog-workflow-nav.php'; ?>
 <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
@@ -192,12 +193,20 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-3 col-form-label" for="quantity">Количество</label>
+								<label class="col-sm-3 col-form-label" for="quantity">Количество до корректировки</label>
 								<div class="col-sm-9">
-									<input type="text" name="quantity" class="form-control" id="quantity" placeholder="Количество" value="<?=$product->quantity;?>">
+									<input type="text" name="quantity" class="form-control" id="quantity" placeholder="Количество" value="<?=(int)($product->inventory_quantity ?? $product->quantity);?>">
 								</div>
 							</div>
 							<div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="stock_adjustment">Корректировка наличия</label>
+                                <div class="col-sm-9">
+                                    <input type="number" step="1" min="-1000000000" max="1000000000" name="stock_adjustment" class="form-control" id="stock_adjustment" value="<?=(int)$product->stock_adjustment;?>">
+                                    <small class="form-text text-muted">Постоянная поправка для артикула товара: −1 при недостаче, +4 при излишке. 0 — отменить. Сохраняется после обмена с 1С. Для модификаций поправка задаётся в их строках.</small>
+                                    <small class="form-text">Сохранённый итоговый остаток: <?=(int)$product->quantity;?> <?=$product->unit;?>; свободно для выгрузок: <?=(int)$product->rest;?>.</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
 								<label class="col-sm-3 col-form-label" for="unit">Единица измерения</label>
 								<div class="col-sm-9">
 								<select name="unit" class="form-control" style="width: 100%;">
@@ -384,8 +393,8 @@
 							<label class="col-sm-3 col-form-label"><?= $group_item ?></label>
 							<div class="col-sm-9">
 							<?php if(!empty($attrs[$group_id])): ?>
-							<?php $chainSizeMultiple = (int)$group_id === 2 && (strpos((string)($product->article ?? ''), 'TSEP-') === 0); ?>
-<select class="form-control" name="attrs[<?=$group_id ?>]<?= $chainSizeMultiple ? '[]' : '' ?>"<?= $chainSizeMultiple ? ' multiple size="6"' : '' ?>>            
+                            <?php $chainSizeMultiple = (int)$group_id === 2 && \app\services\TsepChainCatalog::isChain($product); ?>
+							<select class="form-control" name="attrs[<?=$group_id ?>]<?= $chainSizeMultiple ? '[]' : '' ?>"<?= $chainSizeMultiple ? ' multiple size="6"' : '' ?>>
 									<option value=""> Выбрать фильтр</option>
 									
 										
@@ -395,8 +404,8 @@
 										<option value="<?= $attr_id ?>" <?=$selected?>> <?= $value ?></option>
 									<?php endforeach; ?>                
 									
-								</select>
-<?php if ($chainSizeMultiple): ?><small class="form-text text-muted">Можно выбрать несколько размеров шин. Для 8.15-15 / 28x9-15 отметьте оба обозначения (Ctrl + щелчок).</small><?php endif; ?>
+							</select>
+                            <?php if ($chainSizeMultiple): ?><small class="form-text text-muted">Можно выбрать несколько размеров шин. Для 8.15-15 / 28x9-15 отметьте оба обозначения (Ctrl + щелчок).</small><?php endif; ?>
 							<?php endif; ?>
 								</div>
 						</div>
@@ -424,7 +433,10 @@
 									<input style="padding: 5px 10px;" id="price_<?=$j?>" name="product_mods[<?=$j?>][price]" class="form-control" value="<?=$mod["price"]?>">									
 								</td>
 								<td id="td_quantity_<?=$j?>" style="padding: 5px 10px; width: 10%;">
-									<input style="padding: 5px 10px;" id="quantity_<?=$j?>" name="product_mods[<?=$j?>][quantity]" class="form-control" value="<?=$mod["quantity"]?>">									
+                                    <input style="padding: 5px 10px;" id="quantity_<?=$j?>" name="product_mods[<?=$j?>][quantity]" class="form-control" value="<?=(int)($mod['inventory_quantity'] ?? $mod['quantity'])?>">
+                                    <label for="mod_adjustment_<?=$j?>">Поправка</label>
+                                    <input type="number" step="1" min="-1000000000" max="1000000000" id="mod_adjustment_<?=$j?>" name="product_mods[<?=$j?>][stock_adjustment]" class="form-control" value="<?=(int)($mod['stock_adjustment'] ?? 0)?>">
+                                    <small>Итого: <?=(int)$mod['quantity']?></small>
 								</td>
 								<td id="td_unit_<?=$j?>" style="padding: 5px 10px; width: 10%;">
 									<select style="padding: 5px 10px;" id="unit_<?=$j?>" name="product_mods[<?=$j?>][unit]" class="form-control">
@@ -696,7 +708,9 @@ function add_new_modification(){
            .attr('id','quantity_'+mtotal)
            .attr('name','product_mods['+mtotal+'][quantity]')
 		   .attr('class','form-control')
-       )                             
+       )
+       .append($('<label>').text('Поправка'))
+       .append($('<input>').attr({type:'number', step:'1', min:'-1000000000', max:'1000000000', name:'product_mods['+mtotal+'][stock_adjustment]', class:'form-control', value:'0'}))
                               
     )
 	.append (

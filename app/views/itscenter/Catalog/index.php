@@ -79,31 +79,6 @@ $renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
 			</h1>
         </section>
 
-		<div class="catalog-description mb-4">
-			<p>
-				<strong>Каталог шин ИТС-Центр</strong> — это широкая номенклатура качественных комплектующих для <strong>складской, строительной и спецтехники</strong>.
-				Здесь вы найдёте <strong>индустриальные шины</strong> для погрузчиков и экскаваторов, <strong>шины для квадроциклов (ATV)</strong>,
-				<strong>колёсные диски</strong>, <strong>камеры и ободные ленты</strong>, а также <strong>фильтры</strong> для двигателей, гидравлики и топливной системы.
-				Все товары подобраны с учётом требований производителей техники и условий эксплуатации.
-			</p>
-			<p>
-				В нашем ассортименте представлена продукция ведущих мировых брендов: <strong>EKKA</strong>, <strong>IST</strong>, <strong>Superguider</strong>,
-				<strong>SOLID STAR</strong>, <strong>HERADE</strong>, <strong>HUITON</strong>, <strong>HALITRAX</strong>, <strong>Power Advance</strong>,
-				<strong>Jantsa</strong>, <strong>LANTIAN</strong> и многих других. Мы сотрудничаем только с проверенными поставщиками, гарантируя
-				<strong>оригинальное качество</strong> и <strong>долгий срок службы</strong> каждой позиции.
-			</p>
-			<p>
-				Удобная навигация по разделам позволит вам быстро найти нужный товар: выберите категорию, уточните параметры с помощью фильтров
-				или воспользуйтесь <strong>подбором по технике</strong> и <strong>по размеру</strong>. Для вашего удобства на сайте реализованы
-				<strong>сравнение товаров</strong>, <strong>корзина</strong> и <strong>личный кабинет</strong> с историей заказов.
-			</p>
-			<p>
-				Мы осуществляем <strong>доставку по всей территории Российской Федерации</strong>, включая <strong>Москву</strong>,
-				<strong>Луганск</strong> и <strong>Донецк</strong>. Для оптовых клиентов и юридических лиц действуют специальные условия
-				и система накопительных скидок. Если у вас возникли вопросы — наши менеджеры всегда готовы помочь с выбором и комплектацией заказа.
-			</p>
-		</div>
-
 		<?php if (!empty($cats) && !empty($cats->top_content)): ?>
 			<div class="catalog-top-block mb-4">
 				<div class="catalog-top-text">
@@ -149,6 +124,14 @@ $renderSeoCategoryText = static function ($content) use ($renderCategoryText) {
 				<?= $renderSeoCategoryText($cats->content); ?>
 			</div>
 		<?php endif; ?>
+<?php if (!empty($categoryFaqRows)): ?>
+<section class="faq-block catalog-faq mb-4">
+  <h2 class="h4 mb-3">Вопросы и ответы</h2>
+  <?php foreach ($categoryFaqRows as $faq): ?>
+  <div class="faq-item mb-3"><div class="faq-q mb-1"><strong><?= h($faq['question']) ?></strong></div><div class="faq-a"><?= nl2br(h($faq['answer'])) ?></div></div>
+  <?php endforeach; ?>
+</section>
+<?php endif; ?>
     </div>
 </div>
 <!--product-end-->

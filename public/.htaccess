@@ -26,6 +26,12 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 RewriteCond %{HTTPS} !=on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
+# Retired test homepage; keep previously indexed asset URLs working.
+RewriteRule ^home-preview/?$ - [G,L]
+RewriteRule ^images/home-preview/(.+)$ https://its-center.ru/images/home/$1 [R=301,L]
+RewriteRule ^css/home-preview\.css$ https://its-center.ru/css/home.css [R=301,L]
+RewriteRule ^js/home-preview\.js$ https://its-center.ru/js/home.js [R=301,L]
+
 # ✅ === FAST 404 ДЛЯ СТАТИКИ ===
 RewriteCond %{REQUEST_URI} \.(?:woff2?|ttf|eot|png|jpe?g|gif|webp|avif|svg|css|js)$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f

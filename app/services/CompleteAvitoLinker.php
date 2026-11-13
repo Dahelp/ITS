@@ -18,13 +18,15 @@ class CompleteAvitoLinker
         $indexes = self::indexes($completes);
         $where = \R::getCell("SHOW COLUMNS FROM avito_ad LIKE 'deletion_requested_at'")
             ? ' WHERE deletion_requested_at IS NULL' : '';
-        $ads = \R::getAll("SELECT id, complete_id, ad_external_id, article, title, description, images_json FROM avito_ad{$where}");
+        $ads = \R::getAll("SELECT id, complete_id, ad_external_id, article, title, description, images_json, manual_fields_json FROM avito_ad{$where}");
 
         foreach ($ads as $ad) {
             if (!empty($ad['complete_id'])) {
                 $stats['already_linked']++;
                 continue;
             }
+            // An explicit removal in the complete editor must survive automatic legacy matching.
+            if (in_array('complete_id', json_decode((string)($ad['manual_fields_json'] ?? ''), true) ?: [], true)) continue;
             $match = self::match($ad, $indexes);
             if (!$match['id']) {
                 $stats[$match['ambiguous'] ? 'ambiguous' : 'unmatched']++;

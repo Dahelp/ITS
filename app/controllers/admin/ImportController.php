@@ -56,7 +56,7 @@ class ImportController extends AppController {
 							$product->attributes['model'] = $row->model;
 							$brand_id = \R::findOne('brand', 'name = ?', [$row->vendor]);
 							$product->attributes['brand_id'] = $brand_id['id'];
-							$product->attributes['quantity'] = $row->quantity;
+							$product->attributes['inventory_quantity'] = $row->quantity;
 							$product->attributes['hide'] = 'show';
 							$product->attributes['hit'] = '0';
 							$product->attributes['new_product'] = '0';

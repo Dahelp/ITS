@@ -91,8 +91,8 @@ class MainController extends AppController
         );
         /* SEO */
 
-        $previewCatalog = \app\services\HomePreviewCatalog::load();
-        $this->set(compact('brands', 'hits', 'articles', 'hitsWidgetContext', 'previewCatalog'));
+        $homeCatalog = \app\services\HomeCatalog::load();
+        $this->set(compact('brands', 'hits', 'articles', 'hitsWidgetContext', 'homeCatalog'));
     }
 
     private function diversifyHits(array $products, int $limit): array

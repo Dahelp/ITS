@@ -534,7 +534,8 @@ class AvitoController extends AppController
             $legacyUpdated = Avito::syncLegacyStatusesFromApi();
             $urlsUpdated = Avito::syncUrlsFromApi();
             $apiStats = Avito::pushLinkedAdsToApi();
-            $autoload = Avito::triggerAutoloadUpload();
+            $publication = \app\services\CompleteAvitoPublication::run();
+            $autoload = !empty($publication['autoload_requested']) ? ['triggered'=>true,'message'=>'запущена; ожидается подтверждение публикаций'] : Avito::triggerAutoloadUpload();
 
             $message = 'Avito: синхронизировано объявлений с товарами: ' . (int)$updated
                 . ', старых объявлений обновлено по остатку API: ' . (int)$legacyUpdated

@@ -90,6 +90,13 @@ class ProductController extends AppController
         App::upRegistrLetter($alias);
 
         $product = \R::findOne('product', "alias = ? AND hide != 'hide'", [$alias]);
+        if (!$product && strpos($alias, 'cepi-tsep-nn-') === 0) {
+            $cleanAlias = 'cepi-' . substr($alias, strlen('cepi-tsep-nn-'));
+            if (\R::getCell("SELECT id FROM product WHERE alias=? AND article LIKE 'TSEP-%' AND hide != 'hide'", [$cleanAlias])) {
+                $this->redirectPermanent(PATH . '/product/' . $cleanAlias);
+            }
+        }
+
         if (!$product) {
             throw new \Exception('Страница не найдена', 404);
         }
@@ -241,6 +248,15 @@ class ProductController extends AppController
             [$product->id]
         );
 
+        $catalogProfiles = \app\services\CatalogPublishedAttributes::load(\R::getPDO(), (int)$product->id);
+        $catalogProjection = \app\services\CatalogPublishedAttributes::project($allAttributes, $catalogProfiles[(int)$product->id] ?? null);
+        $allAttributes = $catalogProjection['rows'];
+        if ($catalogProjection['changes'] && !array_filter($attribute_group, static fn($g) => (int)$g['attribute_group_id'] === 1)) {
+            $attribute_group[] = ['attribute_group_id'=>1, 'attribute_name'=>'Техническая информация'];
+        }
+        if (\app\services\TsepChainCatalog::isChain($product)) {
+            $allAttributes = \app\services\TsepChainCatalog::publicSpecifications($allAttributes);
+        }
         $attributesByGroup = [];
         $attributeValueMap = [];
         foreach ($allAttributes as $att) {
@@ -417,6 +433,7 @@ class ProductController extends AppController
         $similarWidgetContext = \app\widgets\product\Product::buildContext(array_values($similar ?: []));
 
         $title = $product->title ?: \ishop\App::seoreplace($inseo->title ?? '', $product->id);
+        $title=\app\services\CatalogNaming::apply((int)$product->id,'title',(string)$title);
         $description = $product->description ?: \ishop\App::seoreplace($inseo->description ?? '', $product->id);
         $keywords = $product->keywords ?: \ishop\App::seoreplace($inseo->keywords ?? '', $product->id);
 

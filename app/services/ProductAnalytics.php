@@ -8,6 +8,7 @@ final class ProductAnalytics
     {
         return [
             'all'=>'Все товары', 'active'=>'Активные на сайте', 'stock'=>'В наличии', 'out_of_stock'=>'Без свободного остатка',
+            'stock_adjusted'=>'С корректировкой',
             'avito_linked'=>'Есть объявление Авито', 'avito_missing'=>'Нет объявления Авито',
             'avito_missing_stock'=>'В наличии без объявления', 'avito_prepare'=>'Активные с ценой и остатком без объявления',
             'avito_published'=>'Опубликованы на Авито',
@@ -31,6 +32,7 @@ final class ProductAnalytics
         $a = $alias.'.';
         return [
             'all'=>'1=1', 'active'=>"{$a}hide = 'show'", 'stock'=>"{$a}free_stock > 0", 'out_of_stock'=>"{$a}free_stock = 0",
+            'stock_adjusted'=>"(COALESCE({$a}stock_adjustment,0) <> 0 OR EXISTS (SELECT 1 FROM modification adjusted_mod WHERE adjusted_mod.product_id = {$a}id AND COALESCE(adjusted_mod.stock_adjustment,0) <> 0))",
             'avito_linked'=>"{$a}has_avito = 1", 'avito_missing'=>"{$a}has_avito = 0",
             'avito_missing_stock'=>"{$a}has_avito = 0 AND {$a}free_stock > 0",
             'avito_prepare'=>"{$a}has_avito = 0 AND {$a}free_stock > 0 AND {$a}hide = 'show' AND {$a}price > 0",

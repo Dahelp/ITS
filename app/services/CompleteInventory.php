@@ -48,8 +48,8 @@ class CompleteInventory
 
     private static function rows(int $id): array
     {
-        $productAdjustment=(bool)\R::getCell("SHOW COLUMNS FROM product LIKE 'stock_adjustment'")?'p.stock_adjustment':'0';
-        $modificationAdjustment=(bool)\R::getCell("SHOW COLUMNS FROM modification LIKE 'stock_adjustment'")?'COALESCE((SELECT SUM(m.stock_adjustment) FROM modification m WHERE m.product_id = p.id),0)':'0';
+        $productAdjustment=array_key_exists('stock_adjustment', \R::inspect('product'))?'p.stock_adjustment':'0';
+        $modificationAdjustment=array_key_exists('stock_adjustment', \R::inspect('modification'))?'COALESCE((SELECT SUM(m.stock_adjustment) FROM modification m WHERE m.product_id = p.id),0)':'0';
         return \R::getAll("SELECT cp.qty, p.id AS product_id, p.article, p.name, p.quantity, p.reserve, p.hide,
             COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = p.id), 0) AS modification_quantity,
             $productAdjustment AS stock_adjustment, $modificationAdjustment AS modification_adjustment

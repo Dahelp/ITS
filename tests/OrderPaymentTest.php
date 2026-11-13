@@ -5,7 +5,7 @@ namespace {
 require dirname(__DIR__).'/vendor/autoload.php';
 class R {
  public static $stored;public static $delivery='Самовывоз';public static $writes=0;
- public static function getCell($sql,$params){return self::$delivery;}
+ public static function getCell($sql,$params=[]){return self::$delivery;}
  public static function dispense($table){return new \stdClass();}
  public static function findLast($table){return(object)['id'=>10];}
  public static function store($bean){self::$stored=$bean;self::$writes++;return 11;}

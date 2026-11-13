@@ -37,6 +37,15 @@
 				<div class="tab-content">
                   <div class="tab-pane active" id="tab_1">
                     <div class="box-body">
+<?php
+\app\services\CompleteAvito::ensureSchema();
+$linkedIds = !empty($complete->id) ? \R::getCol('SELECT avito_id FROM avito_ad WHERE complete_id = ?', [$complete->id]) : [];
+?>
+<div class="form-group row">
+ <label class="col-sm-3 col-form-label" for="avito_ids">ID объявлений Авито</label>
+ <div class="col-sm-9"><input class="form-control" id="avito_ids" name="avito_ids" value="<?=htmlspecialchars($_SESSION['form_data']['avito_ids'] ?? implode(', ', $linkedIds), ENT_QUOTES, 'UTF-8')?>">
+ <small>Числовые ID импортированных объявлений через запятую. Цена и наличие рассчитываются за полный комплект из товарных позиций.</small></div>
+</div>
 						<div class="form-group row">
                             <label class="col-sm-3 col-form-label" for="name">Название комплекта <span class="text-danger">*</span></label>
 							<div class="col-sm-9">
@@ -57,7 +66,7 @@
                                     'id' => 'category_id',
 									'onchange' => 'document.form1.parametr = !this.selectedIndex',
                                 ],
-                                'prepend' => '<option>Выберите категорию</option>',
+                                'prepend' => '<option value="0">Выберите категорию</option>',
                             ]) ?>
 							</div>
                         </div>

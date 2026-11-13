@@ -24,6 +24,7 @@
 						<li><a href="category/atv">Шины для квадроциклов (ATV)</a></li>
 						<li><a href="category/diski">Диски</a></li>
 						<li><a href="category/filtry">Фильтры</a></li>
+						<li><a href="/catalog/cepi-protivoskolzheniya">Цепи противоскольжения</a></li>
 						<li><a href="category/kamery-i-obodnye-lenty">Камеры и ободные ленты</a></li>
 						<li><a href="promo" class="is-accent">Акции</a></li>
 					</ul>

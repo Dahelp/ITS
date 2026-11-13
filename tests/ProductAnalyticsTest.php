@@ -11,6 +11,11 @@ $rows=[
  [6,2,'E','show',100,2,2,0,'Unique E','Desc','Keys','Text','e.webp',1,0,0],
 ];
 foreach($rows as$row)R::exec('INSERT INTO product VALUES('.implode(',',array_fill(0,count($row),'?')).')',$row);
+R::exec('ALTER TABLE product ADD stock_adjustment INTEGER DEFAULT 0');
+R::exec('UPDATE product SET stock_adjustment = -1 WHERE id = 1');
+R::exec('UPDATE product SET stock_adjustment = 4 WHERE id = 5');
+R::exec('CREATE TABLE modification(product_id INTEGER, stock_adjustment INTEGER)');
+R::exec('INSERT INTO modification VALUES(1,1),(2,-2),(6,0)');
 R::exec('CREATE TABLE avito_ad(id INTEGER,article TEXT,complete_id INTEGER,avito_publication_status TEXT,deletion_requested_at TEXT)');
 R::exec("INSERT INTO avito_ad VALUES(1,'A',NULL,'active',NULL),(2,'A',NULL,'old',NULL),(3,'B',25,'active',NULL),(4,'C',NULL,'active','2026-10-22')");
 R::exec('CREATE TABLE plagins_inseo(id INTEGER,category_id INTEGER,tip TEXT,hide TEXT,title TEXT,description TEXT,keywords TEXT,content TEXT,name TEXT)');
@@ -21,6 +26,7 @@ R::exec('CREATE TABLE contents(id INTEGER)');R::exec('INSERT INTO contents VALUE
 R::exec('CREATE TABLE content_related(content_id INTEGER,related_id INTEGER)');R::exec('INSERT INTO content_related VALUES(10,2),(999,6)');
 use app\services\ProductAnalytics as Analytics;
 $summary=Analytics::summary();
+if($summary['stock_adjusted']!==3 || Analytics::summary(1,'new_product')['stock_adjusted']!==1)throw new RuntimeException('Corrections: main/variant, category and badge scope');
 $expected=['all'=>6,'active'=>5,'stock'=>4,'out_of_stock'=>2,'avito_linked'=>2,'avito_missing'=>4,'avito_missing_stock'=>2,'avito_prepare'=>1,'avito_published'=>1,'seo_complete'=>2,'seo_incomplete'=>4,'meta_uncovered'=>1,'title_missing'=>2,'description_missing'=>3,'image_missing'=>2,'title_duplicate'=>2,'related_missing'=>4,'similar_missing'=>5,'content_missing'=>5,'incoming_missing'=>3,'isolated'=>3,'linked'=>3];
 foreach($expected as$key=>$count)if($summary[$key]!==$count)throw new RuntimeException($key.': '.$summary[$key].' != '.$count);
 foreach(Analytics::labels()as$key=>$label){$count=(int)R::getCell('SELECT COUNT(*) FROM ('.Analytics::query().') a WHERE '.Analytics::where($key));if($count!==$summary[$key])throw new RuntimeException('Counter/filter mismatch: '.$key);}

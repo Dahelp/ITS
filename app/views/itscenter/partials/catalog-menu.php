@@ -396,7 +396,19 @@ $industrialBrandsTotal = count(array_filter($industrialBrandCounts, static fn($c
 						</div>							
 					</div>
 				</div>
-				<a class="dropdown-item submenu" href="category/diski">Диски на технику</a>
+				<a class="dropdown-item submenu" href="/catalog/cepi-protivoskolzheniya">Цепи противоскольжения</a>
+                <div class="dropdown-menu-byp">
+                    <div class="mbl-1">
+                        <div class="menu-h2">Цепи на колёса под заказ</div>
+                        <a class="dropdown-item-byp" href="/category/cepi-dlya-spectehniki">Цепи для спецтехники</a>
+                        <a class="dropdown-item-byp" href="/category/cepi-dlya-vilochnyh-pogruzchikov">Цепи для вилочных погрузчиков</a>
+                        <a class="dropdown-item-byp" href="/catalog/cepi-protivoskolzheniya">Все цепи противоскольжения</a>
+                    </div>
+                    <div class="mbl-3">
+                        <div class="mbl-img"><img src="/images/category/baseimg/snow-chains-category-v1.webp" width="230" height="230" alt="Цепи противоскольжения для спецтехники и погрузчиков"></div>
+                    </div>
+                </div>
+                <a class="dropdown-item submenu" href="category/diski">Диски на технику</a>
 				<div class="dropdown-menu-byp">					
 					<div class="mbl-1">
 						<div class="menu-h2">Диски для погрузчиков и грузовых машин</div>
