@@ -3,12 +3,14 @@
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 require dirname(__DIR__).'/config/init.php';
 require CONF.'/db_bootstrap.php';
-$source=json_decode(file_get_contents(ROOT.'/app/data/tsep-chains.json'),true,512,JSON_THROW_ON_ERROR);
-$products=\app\services\TsepChainCatalog::products($source);
-$expected=array_values(array_filter($products, static function($p) {
-    return in_array('8.15-15',$p['filters']['size']??[],true) && in_array('28x9-15',$p['filters']['size']??[],true);
-}));
-if(count($expected)!==4) throw new RuntimeException('Unexpected alternative-size scope');
+// Reviewed identities from the source snapshot. The production runtime need not
+// contain the offline collection JSON used to prepare the original import.
+$expected=[
+    ['article'=>'TSEP-94036656E316','alias'=>'cepi-pogruzchiki-lesenka-6-6-8-15-15-28x9-15'],
+    ['article'=>'TSEP-F97CAEC332A7','alias'=>'cepi-pogruzchiki-lesenka-8-6-8-15-15-28x9-15'],
+    ['article'=>'TSEP-378642232913','alias'=>'cepi-pogruzchiki-sota-6-6-8-15-15-28x9-15'],
+    ['article'=>'TSEP-9C5A9FD11E4A','alias'=>'cepi-pogruzchiki-sota-8-8-8-15-15-28x9-15'],
+];
 $sizeIds=[];
 foreach(['8.15-15','28x9-15'] as $size) {
     $rows=R::getAll('SELECT id FROM attribute_value WHERE attr_group_id=2 AND value=? AND hide=?',[$size,'show']);
