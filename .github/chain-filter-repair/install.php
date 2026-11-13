@@ -48,11 +48,14 @@ $written=[];
 try {
     foreach($changes as $path=>$text){$written[]=$path;if(file_put_contents($siteRoot.'/'.$path,$text)===false)throw new RuntimeException('Write failed');}
     // The repair script backs up links and compensates its own insertions on failure.
-    $argv=[$siteRoot.'/scripts/repair_chain_filter_sizes.php','--apply'];
-    require $siteRoot.'/scripts/repair_chain_filter_sizes.php';
+    (static function(string $script) {
+        $argv=[$script,'--apply'];
+        require $script;
+    })($siteRoot.'/scripts/repair_chain_filter_sizes.php');
     foreach($changes as $path=>$text)if(hash_file('sha256',$siteRoot.'/'.$path)!==hash('sha256',$text))throw new RuntimeException('Installed hash mismatch');
 } catch(Throwable $e) {
     foreach(array_reverse($written) as $path){if($before[$path]===null)unlink($siteRoot.'/'.$path);else file_put_contents($siteRoot.'/'.$path,$before[$path]);}
+    fwrite(STDERR, 'Installation rolled back: '.$e->getMessage().PHP_EOL);
     throw $e;
 }
 file_put_contents($package.'/receipt.json',json_encode($report,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
