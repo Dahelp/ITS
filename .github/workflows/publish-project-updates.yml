@@ -1,0 +1,60 @@
+name: Audit accumulated project updates
+on:
+  push:
+    branches: [codex/project-publication-20261113]
+    paths:
+      - '.github/workflows/publish-project-updates.yml'
+      - '.github/project-publication/**'
+permissions:
+  contents: read
+concurrency:
+  group: its-center-project-publication
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BEGET_HOST: ${{ secrets.BEGET_HOST }}
+      BEGET_PORT: ${{ secrets.BEGET_PORT }}
+      BEGET_USER: ${{ secrets.BEGET_USER }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure existing SSH access
+        env:
+          SSH_KEY: ${{ secrets.BEGET_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test "$BEGET_HOST" = 'shinaspec.beget.tech'
+          test "$BEGET_USER" = 'shinaspec'
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/project_key
+          chmod 600 ~/.ssh/project_key
+          cp .github/project-publication/known_hosts ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host project-beget
+            HostName $BEGET_HOST
+            User $BEGET_USER
+            Port $BEGET_PORT
+            IdentityFile ~/.ssh/project_key
+            BatchMode yes
+            StrictHostKeyChecking yes
+            IPQoS none
+            ConnectTimeout 25
+          EOF
+          chmod 600 ~/.ssh/config
+      - name: Read checksums without exporting source contents
+        run: |
+          set -euo pipefail
+          remote_dir="/home/s/shinaspec/project-publication-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh project-beget "umask 077; mkdir '$remote_dir'"
+          scp .github/project-publication/inventory.json "project-beget:$remote_dir/inventory.json"
+          scp .github/project-publication/audit.php "project-beget:$remote_dir/audit.php"
+          ssh project-beget "/usr/local/bin/php8.2 '$remote_dir/audit.php'"
+          scp "project-beget:$remote_dir/server-audit.json" server-audit.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: project-checksum-audit
+          path: server-audit.json
+          retention-days: 7
