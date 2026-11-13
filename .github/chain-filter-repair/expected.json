@@ -1,0 +1,29 @@
+{
+    "8.15-15": [
+        "cepi-pogruzchiki-lesenka-6-6-8-15-15-28x9-15",
+        "cepi-pogruzchiki-lesenka-8-6-8-15-15-28x9-15",
+        "cepi-pogruzchiki-sota-6-6-8-15-15-28x9-15",
+        "cepi-pogruzchiki-sota-8-8-8-15-15-28x9-15"
+    ],
+    "28x9-15": [
+        "cepi-pogruzchiki-lesenka-6-6-8-15-15-28x9-15",
+        "cepi-pogruzchiki-lesenka-8-6-8-15-15-28x9-15",
+        "cepi-pogruzchiki-sota-6-6-8-15-15-28x9-15",
+        "cepi-pogruzchiki-sota-8-8-8-15-15-28x9-15"
+    ],
+    "10-16.5": [
+        "cepi-pogruzchiki-lesenka-6-6-10-16-5",
+        "cepi-pogruzchiki-lesenka-8-6-10-16-5",
+        "cepi-pogruzchiki-sota-6-6-10-16-5",
+        "cepi-pogruzchiki-sota-8-8-10-16-5"
+    ],
+    "12-16.5": [
+        "cepi-pogruzchiki-lesenka-6-6-12-16-5",
+        "cepi-pogruzchiki-lesenka-8-6-12-16-5",
+        "cepi-pogruzchiki-sota-6-6-12-16-5",
+        "cepi-pogruzchiki-sota-8-8-12-16-5"
+    ],
+    "4.5-12": [
+        "cepi-pogruzchiki-lesenka-6-6-4-5-12"
+    ]
+}

@@ -1,0 +1,54 @@
+[
+    {
+        "path": "app/models/admin/Product.php",
+        "kind": "replace",
+        "find": "$flag = traverseArray($value);",
+        "replace": "$flag = $this->traverseArray($value);"
+    },
+    {
+        "path": "app/models/admin/Product.php",
+        "kind": "method",
+        "start": "    public function editFilter(",
+        "end": "    public function getImg()",
+        "guard": "foreach($data['attrs'] as $s)",
+        "replace": "    public function editFilter($id, $data){\n        // Validate before deleting: a size group can now contain several IDs.\n        $ids = \\app\\services\\ProductFilterSelection::ids($data['attrs'] ?? []);\n        if ($ids) {\n            $found = \\R::getCol('SELECT id FROM attribute_value WHERE id IN ('.\\R::genSlots($ids).')', $ids);\n            if (count($found) !== count($ids)) throw new \\InvalidArgumentException('Фильтр не найден');\n        }\n        \\R::exec('DELETE FROM attribute_product WHERE product_id = ?', [(int)$id]);\n        if (!$ids) return;\n        $params = [];\n        foreach ($ids as $attrId) { $params[] = $attrId; $params[] = (int)$id; }\n        \\R::exec('INSERT INTO attribute_product (attr_id, product_id) VALUES '.implode(',', array_fill(0, count($ids), '(?,?)')), $params);\n    }\n\n"
+    },
+    {
+        "path": "app/controllers/CategoryController.php",
+        "kind": "replace",
+        "find": "$this->findApplicableFilterValue((string)$filterAlias, (string)$ids);",
+        "replace": "$this->findApplicableFilterValue((string)$filterAlias, (string)$ids, (int)$category->id);"
+    },
+    {
+        "path": "app/controllers/CategoryController.php",
+        "kind": "replace",
+        "find": "protected function findApplicableFilterValue(string $filterAlias, string $categoryIds)",
+        "replace": "protected function findApplicableFilterValue(string $filterAlias, string $categoryIds, int $sourceCategoryId = 0)"
+    },
+    {
+        "path": "app/controllers/CategoryController.php",
+        "kind": "replace",
+        "find": "        return null;\n    }\n\n    protected function getNamedFilterIdsFromQuery(): array",
+        "replace": "        // A moved assortment need not leave products in the old category. Only an\n        // explicit active redirect to a category with matching products is valid.\n        if ($sourceCategoryId > 0) {\n            foreach (array_values(array_unique($aliases)) as $alias) {\n                $redirects = \\R::getAll(\n                    \"SELECT av.id, avcc.redirect_category_id\n                     FROM attribute_value av\n                     INNER JOIN attribute_value_category_canonical avcc ON avcc.attr_value_id = av.id\n                     INNER JOIN category target ON target.id = avcc.redirect_category_id\n                     WHERE av.alias = ? AND av.hide = 'show'\n                       AND avcc.category_id = ? AND avcc.is_active = 1\n                       AND avcc.mode = 'redirect' AND target.hide = 'show'\n                       AND target.id <> avcc.category_id ORDER BY av.id\",\n                    [$alias, $sourceCategoryId]\n                );\n                foreach ($redirects as $redirect) {\n                    $targetIds = $this->filterCategoryIds((int)$redirect['redirect_category_id']);\n                    $targetValue = $this->findApplicableFilterValue($alias, $targetIds);\n                    if ($targetValue && (int)$targetValue->id === (int)$redirect['id']) return $targetValue;\n                }\n            }\n        }\n        return null;\n    }\n\n    protected function filterCategoryIds(int $categoryId): string\n    {\n        $model = new Category();\n        $children = $model->getIds($categoryId);\n        return $children ? $children.$categoryId : (string)$categoryId;\n    }\n\n    protected function getNamedFilterIdsFromQuery(): array"
+    },
+    {
+        "path": "app/controllers/admin/ProductController.php",
+        "kind": "replace",
+        "find": "\t\t    echo \"<select class='form-control' name='attrs[\".$group_id.\"]'>            ",
+        "replace": "            $chainSizeMultiple = (int)$group_id === 2 && in_array((int)($_POST['id'] ?? 0), [44,45], true);\n\t\t    echo \"<select class='form-control' name='attrs[\".$group_id.\"]\".($chainSizeMultiple ? '[]' : '').\"'\".($chainSizeMultiple ? \" multiple size='6'\" : '').\">            "
+    },
+    {
+        "path": "app/controllers/admin/ProductController.php",
+        "kind": "replace",
+        "find": "echo \"<option value='\".$attr_id.\"' \".$selected.\">\".$value.\"</option>\";",
+        "replace": "echo \"<option value='\".$attr_id.\"'>\".$value.\"</option>\";"
+    },
+    {
+        "path": "app/views/itscenter/admin/Product/edit.php",
+        "kind": "multi"
+    },
+    {
+        "path": "app/views/itscenter/admin/Product/copy.php",
+        "kind": "multi"
+    }
+]

@@ -1,0 +1,104 @@
+name: Deploy chain filter repair
+
+on:
+  push:
+    branches: [codex/chain-filter-repair-20261113]
+    paths:
+      - '.github/workflows/deploy-chain-filters.yml'
+      - '.github/chain-filter-repair/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: its-center-chain-filter-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      BEGET_HOST: ${{ secrets.BEGET_HOST }}
+      BEGET_PORT: ${{ secrets.BEGET_PORT }}
+      BEGET_USER: ${{ secrets.BEGET_USER }}
+      BEGET_PATH: ${{ secrets.BEGET_PATH }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: curl, dom
+          coverage: none
+      - name: Validate the scoped payload
+        run: |
+          cd .github/chain-filter-repair
+          sha256sum --check SHA256SUMS
+          php -l install.php
+          php -l payload/app/services/ProductFilterSelection.php
+          php -l payload/scripts/repair_chain_filter_sizes.php
+          php -l verify.php
+      - name: Configure existing SSH credentials
+        env:
+          SSH_KEY: ${{ secrets.BEGET_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test "$BEGET_HOST" = 'shinaspec.beget.tech'
+          test "$BEGET_USER" = 'shinaspec'
+          test "$BEGET_PATH" = '/home/s/shinaspec/its-center.ru/public_html'
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/chain_repair_key
+          chmod 600 ~/.ssh/chain_repair_key
+          cp .github/chain-filter-repair/known_hosts ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host beget-chain-repair
+            HostName $BEGET_HOST
+            User $BEGET_USER
+            Port $BEGET_PORT
+            IdentityFile ~/.ssh/chain_repair_key
+            BatchMode yes
+            StrictHostKeyChecking yes
+            IPQoS none
+            ConnectTimeout 25
+            ServerAliveInterval 15
+            ServerAliveCountMax 2
+          EOF
+          chmod 600 ~/.ssh/config
+      - name: Check SSH from GitHub
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if ssh beget-chain-repair 'printf "SSH_READY\n"'; then exit 0; fi
+            if [ "$attempt" -lt 3 ]; then sleep 10; fi
+          done
+          exit 1
+      - name: Upload only the repair package to a private directory
+        run: |
+          set -euo pipefail
+          remote_dir="/home/s/shinaspec/chain-filter-repair-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "REMOTE_DIR=$remote_dir" >> "$GITHUB_ENV"
+          tar -czf /tmp/chain-filter-repair.tar.gz -C .github/chain-filter-repair install.php patches.json payload
+          ssh beget-chain-repair "umask 077; mkdir '$remote_dir'"
+          scp /tmp/chain-filter-repair.tar.gz "beget-chain-repair:$remote_dir/package.tar.gz"
+          ssh beget-chain-repair "cd '$remote_dir' && tar -xzf package.tar.gz"
+      - name: Preview and install only reviewed changes
+        run: |
+          set -euo pipefail
+          ssh beget-chain-repair "/usr/local/bin/php8.2 '$REMOTE_DIR/install.php' '$BEGET_PATH'" | tee preview.json
+          ssh beget-chain-repair "/usr/local/bin/php8.2 '$REMOTE_DIR/install.php' '$BEGET_PATH' --apply" | tee publication.json
+      - name: Verify both sizes and old links over HTTP
+        run: |
+          set -euo pipefail
+          php .github/chain-filter-repair/verify.php | tee verification.json
+      - name: Retain publication and verification reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chain-filter-repair-reports
+          path: |
+            preview.json
+            publication.json
+            verification.json
+          if-no-files-found: ignore
+          retention-days: 14
