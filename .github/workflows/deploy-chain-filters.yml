@@ -43,9 +43,13 @@ jobs:
           SSH_KEY: ${{ secrets.BEGET_SSH_KEY }}
         run: |
           set -euo pipefail
-          test "$BEGET_HOST" = 'shinaspec.beget.tech'
-          test "$BEGET_USER" = 'shinaspec'
-          test "$BEGET_PATH" = '/home/s/shinaspec/its-center.ru/public_html'
+          test "$BEGET_HOST" = 'shinaspec.beget.tech' || { echo 'Unexpected SSH host'; exit 1; }
+          test "$BEGET_USER" = 'shinaspec' || { echo 'Unexpected SSH account'; exit 1; }
+          case "${BEGET_PATH%/}" in
+            its-center.ru/public_html|/home/s/shinaspec/its-center.ru/public_html) ;;
+            *) echo 'Unexpected site directory'; exit 1 ;;
+          esac
+          echo 'SITE_ROOT=/home/s/shinaspec/its-center.ru/public_html' >> "$GITHUB_ENV"
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/chain_repair_key
@@ -85,8 +89,8 @@ jobs:
       - name: Preview and install only reviewed changes
         run: |
           set -euo pipefail
-          ssh beget-chain-repair "/usr/local/bin/php8.2 '$REMOTE_DIR/install.php' '$BEGET_PATH'" | tee preview.json
-          ssh beget-chain-repair "/usr/local/bin/php8.2 '$REMOTE_DIR/install.php' '$BEGET_PATH' --apply" | tee publication.json
+          ssh beget-chain-repair "/usr/local/bin/php8.2 '$REMOTE_DIR/install.php' '$SITE_ROOT'" | tee preview.json
+          ssh beget-chain-repair "/usr/local/bin/php8.2 '$REMOTE_DIR/install.php' '$SITE_ROOT' --apply" | tee publication.json
       - name: Verify both sizes and old links over HTTP
         run: |
           set -euo pipefail
