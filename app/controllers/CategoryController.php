@@ -98,7 +98,7 @@ class CategoryController extends AppController
 
     // основной фильтр из ЧПУ: /category/{category_alias}/{filter_alias}
     if (!empty($filterAlias)) {
-        $selectedAttr = $this->findApplicableFilterValue((string)$filterAlias, (string)$ids);
+        $selectedAttr = $this->findApplicableFilterValue((string)$filterAlias, (string)$ids, (int)$category->id);
 
         if (!$selectedAttr) {
             throw new \Exception('Фильтр не найден', 404);
@@ -1180,7 +1180,7 @@ class CategoryController extends AppController
         return '';
     }
 
-    protected function findApplicableFilterValue(string $filterAlias, string $categoryIds)
+    protected function findApplicableFilterValue(string $filterAlias, string $categoryIds, int $sourceCategoryId = 0)
     {
         $filterAlias = trim(rawurldecode($filterAlias), '/');
         $categoryIds = trim($categoryIds, ',');
@@ -1217,7 +1217,36 @@ class CategoryController extends AppController
             }
         }
 
+        // A moved assortment need not leave products in the old category. Only an
+        // explicit active redirect to a category with matching products is valid.
+        if ($sourceCategoryId > 0) {
+            foreach (array_values(array_unique($aliases)) as $alias) {
+                $redirects = \R::getAll(
+                    "SELECT av.id, avcc.redirect_category_id
+                     FROM attribute_value av
+                     INNER JOIN attribute_value_category_canonical avcc ON avcc.attr_value_id = av.id
+                     INNER JOIN category target ON target.id = avcc.redirect_category_id
+                     WHERE av.alias = ? AND av.hide = 'show'
+                       AND avcc.category_id = ? AND avcc.is_active = 1
+                       AND avcc.mode = 'redirect' AND target.hide = 'show'
+                       AND target.id <> avcc.category_id ORDER BY av.id",
+                    [$alias, $sourceCategoryId]
+                );
+                foreach ($redirects as $redirect) {
+                    $targetIds = $this->filterCategoryIds((int)$redirect['redirect_category_id']);
+                    $targetValue = $this->findApplicableFilterValue($alias, $targetIds);
+                    if ($targetValue && (int)$targetValue->id === (int)$redirect['id']) return $targetValue;
+                }
+            }
+        }
         return null;
+    }
+
+    protected function filterCategoryIds(int $categoryId): string
+    {
+        $model = new Category();
+        $children = $model->getIds($categoryId);
+        return $children ? $children.$categoryId : (string)$categoryId;
     }
 
     protected function getNamedFilterIdsFromQuery(): array

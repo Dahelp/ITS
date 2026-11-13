@@ -787,10 +787,11 @@ class ProductController extends AppController {
 					<label class='col-sm-3 col-form-label'>".$group_item."</label>					
 				<div class='col-sm-9'>";
 		if(!empty($attrs[$group_id])){
-		    echo "<select class='form-control' name='attrs[".$group_id."]'>            
+            $chainSizeMultiple = (int)$group_id === 2 && in_array((int)($_POST['id'] ?? 0), [44,45], true);
+		    echo "<select class='form-control' name='attrs[".$group_id."]".($chainSizeMultiple ? '[]' : '')."'".($chainSizeMultiple ? " multiple size='6'" : '').">            
 				<option value=''> Выбрать фильтр</option>";									
 				foreach($attrs[$group_id] as $attr_id => $value){
-					echo "<option value='".$attr_id."' ".$selected.">".$value."</option>";
+					echo "<option value='".$attr_id."'>".$value."</option>";
 				}                
 				
 			echo "</select>";

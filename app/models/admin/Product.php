@@ -153,7 +153,7 @@ class Product extends AppModel {
 		$flag = false;
 		foreach($arr as $value){
 			if(is_array($value)){
-				$flag = traverseArray($value);
+				$flag = $this->traverseArray($value);
 				if($flag) return true;
 			}else{
 				if(isset($value) && $value != '') return true;
@@ -162,20 +162,18 @@ class Product extends AppModel {
 		return $flag;
 	}
 
-    public function editFilter($id, $data){        				
-			
-		\R::exec("DELETE FROM attribute_product WHERE product_id = ?", [$id]);
-		$sql_parts = '';
-		foreach($data['attrs'] as $s){					
-			
-			if($s !="") {
-				$sql_parts .= "($s, $id),";
-			}
-		}
-		$sql_parts = rtrim($sql_parts, ',');
-		
-		\R::exec("INSERT INTO attribute_product (attr_id, product_id) VALUES $sql_parts");
-            
+    public function editFilter($id, $data){
+        // Validate before deleting: a size group can now contain several IDs.
+        $ids = \app\services\ProductFilterSelection::ids($data['attrs'] ?? []);
+        if ($ids) {
+            $found = \R::getCol('SELECT id FROM attribute_value WHERE id IN ('.\R::genSlots($ids).')', $ids);
+            if (count($found) !== count($ids)) throw new \InvalidArgumentException('Фильтр не найден');
+        }
+        \R::exec('DELETE FROM attribute_product WHERE product_id = ?', [(int)$id]);
+        if (!$ids) return;
+        $params = [];
+        foreach ($ids as $attrId) { $params[] = $attrId; $params[] = (int)$id; }
+        \R::exec('INSERT INTO attribute_product (attr_id, product_id) VALUES '.implode(',', array_fill(0, count($ids), '(?,?)')), $params);
     }
 
     public function getImg(){

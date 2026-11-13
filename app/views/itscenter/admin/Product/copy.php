@@ -313,7 +313,8 @@
 							<label class="col-sm-3 col-form-label"><?= $group_item ?></label>
 							<div class="col-sm-9">
 							<?php if(!empty($attrs[$group_id])): ?>
-							<select class="form-control" name="attrs[<?=$group_id ?>]">            
+							<?php $chainSizeMultiple = (int)$group_id === 2 && (strpos((string)($product->article ?? ''), 'TSEP-') === 0); ?>
+<select class="form-control" name="attrs[<?=$group_id ?>]<?= $chainSizeMultiple ? '[]' : '' ?>"<?= $chainSizeMultiple ? ' multiple size="6"' : '' ?>>            
 									<option value=""> Выбрать фильтр</option>
 									
 										
@@ -324,6 +325,7 @@
 									<?php endforeach; ?>                
 									
 								</select>
+<?php if ($chainSizeMultiple): ?><small class="form-text text-muted">Можно выбрать несколько размеров шин. Для 8.15-15 / 28x9-15 отметьте оба обозначения (Ctrl + щелчок).</small><?php endif; ?>
 							<?php endif; ?>
 								</div>
 						</div>
