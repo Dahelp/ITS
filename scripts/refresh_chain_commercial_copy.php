@@ -50,6 +50,15 @@ function chainCommercialRewrite(string $text): string
         return $match[0];
     }, $text);
     if ($text === null) throw new RuntimeException('Marketing paragraph replacement failed');
+    $text = preg_replace_callback('/(?<!\p{L})(изготавливаем|производим|изготовим|выпускаем)(?!\p{L})/iu', static function ($match) {
+        $verbs = ['изготавливаем' => 'подбираем', 'производим' => 'предлагаем', 'изготовим' => 'подберём', 'выпускаем' => 'предлагаем'];
+        $replacement = $verbs[mb_strtolower($match[0], 'UTF-8')];
+        $first = mb_substr($match[0], 0, 1, 'UTF-8');
+        return $first === mb_strtoupper($first, 'UTF-8')
+            ? mb_strtoupper(mb_substr($replacement, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($replacement, 1, null, 'UTF-8')
+            : $replacement;
+    }, $text);
+    if ($text === null) throw new RuntimeException('Manufacturer verb replacement failed');
     $text = preg_replace(['/собственного производства/iu', '/собственное производство/iu', '/от производителя/iu'], ['под заказ', 'Качественные материалы', 'под заказ'], $text);
     if ($text === null) throw new RuntimeException('Commercial copy replacement failed');
     return $text;
