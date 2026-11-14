@@ -1,0 +1,103 @@
+name: Update chain commercial copy
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: Apply the reviewed text and spacing changes
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: its-center-production
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BEGET_HOST: ${{ secrets.BEGET_HOST }}
+      BEGET_PORT: ${{ secrets.BEGET_PORT }}
+      BEGET_USER: ${{ secrets.BEGET_USER }}
+      SITE_ROOT: /home/s/shinaspec/its-center.ru/public_html
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Require current master before accessing credentials
+        run: node .github/scripts/require-current-master.cjs
+      - name: Configure protected SSH access
+        env:
+          SSH_KEY: ${{ secrets.PRODUCTION_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test "$BEGET_HOST" = 'shinaspec.beget.tech'
+          test "$BEGET_USER" = 'shinaspec'
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/chain_copy_key
+          chmod 600 ~/.ssh/chain_copy_key
+          ssh-keygen -y -f ~/.ssh/chain_copy_key > /dev/null
+          cp .github/production-known-hosts ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host chain-copy
+            HostName $BEGET_HOST
+            User $BEGET_USER
+            Port $BEGET_PORT
+            IdentityFile ~/.ssh/chain_copy_key
+            BatchMode yes
+            StrictHostKeyChecking yes
+            ConnectTimeout 25
+            IPQoS none
+          EOF
+          chmod 600 ~/.ssh/config ~/.ssh/known_hosts
+          echo "REMOTE_DIR=/home/s/shinaspec/chain-commercial-copy-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
+      - name: Check SSH without modifying the site
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            node .github/scripts/require-current-master.cjs
+            if ssh chain-copy 'printf "SSH_READY\n"'; then exit 0; fi
+            if [ "$attempt" -lt 3 ]; then sleep 5; fi
+          done
+          exit 1
+      - name: Stage reviewed script in a private directory
+        run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
+          ssh chain-copy "umask 077; mkdir '$REMOTE_DIR'"
+          scp scripts/refresh_chain_commercial_copy.php "chain-copy:$REMOTE_DIR/edit.php"
+      - name: Preview scoped text changes
+        run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
+          ssh chain-copy "/usr/local/bin/php8.2 '$REMOTE_DIR/edit.php' --root='$SITE_ROOT' --report-dir='$REMOTE_DIR'"
+      - name: Apply text changes with private backup
+        if: inputs.apply == true
+        run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
+          ssh chain-copy "/usr/local/bin/php8.2 '$REMOTE_DIR/edit.php' --root='$SITE_ROOT' --report-dir='$REMOTE_DIR' --apply"
+      - name: Retrieve editorial result reports only
+        if: always()
+        run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
+          mkdir -p reports
+          for report in preview publication failure; do
+            if ssh chain-copy "test -f '$REMOTE_DIR/$report.json'"; then
+              scp "chain-copy:$REMOTE_DIR/$report.json" "reports/$report.json"
+            fi
+          done
+      - name: Verify public chain pages
+        if: inputs.apply == true
+        run: node .github/scripts/verify-chain-commercial-copy.cjs reports/publication.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chain-commercial-copy-results
+          path: reports/*.json
+          retention-days: 14
