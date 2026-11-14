@@ -42,15 +42,28 @@ function chainCommercialRewrite(string $text): string
         'Напрямую согласуем параметры заказа и предложим минимально возможный срок изготовления с учётом объёма и загрузки производства.' => 'Согласуем параметры заказа и срок изготовления с учётом исполнения, количества цепей и условий доставки.',
     ];
     $text = str_replace(array_keys($map), array_values($map), $text);
+    // CKEditor may encode spaces and punctuation differently in an SEO template.
+    // Replace that marketing paragraph as a whole; keep technical paragraphs intact.
+    $text = preg_replace_callback('~<p\b[^>]*>.*?</p>~su', static function ($match) use ($newQuality) {
+        $plain = html_entity_decode(strip_tags($match[0]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if (preg_match('/собственн[а-яё]*\s+производств|наш.{0,35}металлообработ/iu', $plain)) return '<p>' . $newQuality . '</p>';
+        return $match[0];
+    }, $text);
+    if ($text === null) throw new RuntimeException('Marketing paragraph replacement failed');
     $text = preg_replace(['/собственного производства/iu', '/собственное производство/iu', '/от производителя/iu'], ['под заказ', 'Качественные материалы', 'под заказ'], $text);
     if ($text === null) throw new RuntimeException('Commercial copy replacement failed');
     return $text;
 }
 
-function chainCommercialForbidden(string $text): bool
+function chainCommercialClaim(string $text): ?string
 {
     $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    return (bool)preg_match('/собственн\w*\s+производств|(?:^|[^\p{L}])(?:производим|изготавливаем|изготовим|выпускаем)(?:[^\p{L}]|$)|наш.{0,35}металлообработ|от\s+производителя|поставщик/iu', $text);
+    return preg_match('/собственн\w*\s+производств|(?:^|[^\p{L}])(?:производим|изготавливаем|изготовим|выпускаем)(?:[^\p{L}]|$)|наш.{0,35}металлообработ|от\s+производителя|поставщик/iu', $text, $match) ? $match[0] : null;
+}
+
+function chainCommercialForbidden(string $text): bool
+{
+    return chainCommercialClaim($text) !== null;
 }
 
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
@@ -116,7 +129,7 @@ try {
             foreach ($fields as $field) {
                 if (!isset($row[$field])) continue;
                 $after = chainCommercialRewrite((string)$row[$field]);
-                if (chainCommercialForbidden($after)) $report['issues'][] = ['table' => $table, 'id' => $row['id'], 'field' => $field, 'excerpt' => mb_substr(strip_tags($after), 0, 350)];
+                if (chainCommercialForbidden($after)) $report['issues'][] = ['table' => $table, 'id' => $row['id'], 'field' => $field, 'matched_phrase' => chainCommercialClaim($after), 'excerpt' => mb_substr(strip_tags($after), 0, 350)];
                 if ($after !== (string)$row[$field]) $changed[$field] = $after;
             }
             if ($table === 'product' && !str_contains($changed['content'] ?? $row['content'], 'data-chain-benefits="2026-11"')) $report['issues'][] = ['table' => $table, 'id' => $row['id'], 'field' => 'content', 'error' => 'Benefit block was not recognized'];
