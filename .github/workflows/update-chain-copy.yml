@@ -52,6 +52,11 @@ jobs:
             StrictHostKeyChecking yes
             ConnectTimeout 25
             IPQoS none
+            ControlMaster auto
+            ControlPersist 300
+            ControlPath ~/.ssh/chain-copy-%C
+            ServerAliveInterval 15
+            ServerAliveCountMax 3
           EOF
           chmod 600 ~/.ssh/config ~/.ssh/known_hosts
           echo "REMOTE_DIR=/home/s/shinaspec/chain-commercial-copy-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
