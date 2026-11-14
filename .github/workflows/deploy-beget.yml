@@ -8,52 +8,65 @@ on:
       - 'mobile/**'
       - '.github/workflows/avito-mobile.yml'
   workflow_dispatch:
+    inputs:
+      verify_only:
+        description: Verify protection and SSH without publishing files
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: its-center-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
+    env:
+      GH_TOKEN: ${{ github.token }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Require current master before accessing server credentials
+        run: node .github/scripts/require-current-master.cjs
 
       - name: Configure SSH
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.BEGET_SSH_KEY }}" > ~/.ssh/beget_deploy_key
+          printf '%s\n' "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/beget_deploy_key
           chmod 600 ~/.ssh/beget_deploy_key
-          ssh-keyscan -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keygen -y -f ~/.ssh/beget_deploy_key > /dev/null
+          cp .github/production-known-hosts ~/.ssh/known_hosts
+          printf 'Host *\n  BatchMode yes\n  ConnectTimeout 25\n  StrictHostKeyChecking yes\n  IPQoS none\n' > ~/.ssh/config
+          chmod 600 ~/.ssh/config ~/.ssh/known_hosts
 
       - name: Check SSH connection
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
-            "mkdir -p '${{ secrets.BEGET_PATH }}' && echo 'Beget SSH connection OK'"
+            "test -d '${{ secrets.BEGET_PATH }}' && printf 'Beget SSH read-only check OK\n'"
 
-      - name: Preserve verified recovery baseline
+      - name: Deploy files
+        if: inputs.verify_only != true
         shell: bash
         run: |
           set -euo pipefail
-          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cat /home/s/shinaspec/recovered-verified-20261113/manifest.json" > /tmp/its-verified-baseline.json
-          python3 - <<'PY'
-          import hashlib, json, pathlib, sys
-          data = json.loads(pathlib.Path('/tmp/its-verified-baseline.json').read_text())
-          files = data['files']
-          mismatches = [p for p, sha in files.items() if not pathlib.Path(p).is_file() or hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() != sha]
-          if mismatches:
-              print('Deployment stopped: checkout differs from the verified live recovery baseline. Integrate the recovered files before approving a new baseline.')
-              print('\n'.join(mismatches))
-              sys.exit(1)
-          print('Verified recovery baseline preserved:', len(files), 'files')
-          PY
-
-      - name: Deploy files
-        shell: bash
-        run: |
+          node .github/scripts/require-current-master.cjs
           rsync -rlgoDzvc --delete \
             -e "ssh -i ~/.ssh/beget_deploy_key -p ${{ secrets.BEGET_PORT }}" \
             --include='vendor/' \
@@ -100,52 +113,76 @@ jobs:
             ./ "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:${{ secrets.BEGET_PATH }}/"
 
       - name: Install Composer dependencies
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && composer-php7.4 install --no-dev --no-interaction --optimize-autoloader"
 
       - name: Install product certificates
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_certificates.php || php8.1 scripts/install_certificates.php || php7.4 scripts/install_certificates.php || php scripts/install_certificates.php) && (php8.2 scripts/seed_ekka_certificate.php || php8.1 scripts/seed_ekka_certificate.php || php7.4 scripts/seed_ekka_certificate.php || php scripts/seed_ekka_certificate.php)"
 
       - name: Install order traffic source
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_order_traffic_source.php || php8.1 scripts/add_order_traffic_source.php || php7.4 scripts/add_order_traffic_source.php || php scripts/add_order_traffic_source.php)"
 
       - name: Install unified cross references
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_unified_crosses.php || php8.1 scripts/install_unified_crosses.php || php7.4 scripts/install_unified_crosses.php || php scripts/install_unified_crosses.php)"
 
       - name: Seed wheel cross metadata
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/seed_wheel_cross_metadata.php || php8.1 scripts/seed_wheel_cross_metadata.php || php7.4 scripts/seed_wheel_cross_metadata.php || php scripts/seed_wheel_cross_metadata.php)"
 
       - name: Add article content
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_content_image_source.php || php8.1 scripts/add_content_image_source.php || php7.4 scripts/add_content_image_source.php || php scripts/add_content_image_source.php) && (php8.2 scripts/add_tire_wear_article.php || php8.1 scripts/add_tire_wear_article.php || php7.4 scripts/add_tire_wear_article.php || php scripts/add_tire_wear_article.php) && (php8.2 scripts/add_tire_pressure_monitoring_article.php || php8.1 scripts/add_tire_pressure_monitoring_article.php || php7.4 scripts/add_tire_pressure_monitoring_article.php || php scripts/add_tire_pressure_monitoring_article.php) && (php8.2 scripts/apply_seo_strong_tz.php || php8.1 scripts/apply_seo_strong_tz.php || php7.4 scripts/apply_seo_strong_tz.php || php scripts/apply_seo_strong_tz.php)"
 
       - name: Activate Avito messenger webhook
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
             "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/setup_avito_workspace.php && php8.2 bin/setup_avito_webhook.php"
 
       - name: Inventory API production shadow smoke test
+        if: inputs.verify_only != true
         shell: bash
         run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key \
             -p "${{ secrets.BEGET_PORT }}" \
             "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" \
