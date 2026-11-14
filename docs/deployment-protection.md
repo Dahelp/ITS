@@ -10,6 +10,8 @@ Workflow делает checkout точного `github.sha` и сверяет е�
 
 Проверки: `tests/DeploymentGuardTest.cjs`, actionlint. Операционные результаты и проверка настроек GitHub сохраняются в `outputs/deploy-protection/`, вне Git. Настройка защиты публикуется с `[skip ci]`, затем проверяется вручную с `verify_only=true`; общий деплой сайта для установки защиты не запускается.
 
-Настройка применена 14.11.2026. Проверка из актуального master: https://github.com/Dahelp/ITS/actions/runs/43626293755 — успешно, все шаги записи на сервер пропущены. Запуск из другой ветки: https://github.com/Dahelp/ITS/actions/runs/43626408249 — отклонён окружением production до выполнения шагов.
+Настройка применена 14.11.2026. Проверка из актуального master: https://github.com/Dahelp/ITS/actions/runs/43626293755/attempts/1 — успешно, все шаги записи на сервер пропущены. Запуск из другой ветки: https://github.com/Dahelp/ITS/actions/runs/43626408249 — отклонён окружением production до выполнения шагов.
 
 Общий секрет BEGET_SSH_KEY удалён после успешной проверки PRODUCTION_SSH_KEY. Устаревшие процессы Deploy chain filter repair, Audit accumulated project updates и Export low-stock tires отключены. Старые версии workflow без окружения production больше не получают SSH-ключ.
+
+Повторный запуск того же старого коммита после обновления master: https://github.com/Dahelp/ITS/actions/runs/43626293755/attempts/2 — остановлен на первом guard до настройки SSH: Stale commit. Проверка новой вершины master после удаления общего ключа: https://github.com/Dahelp/ITS/actions/runs/43626528000 — успешно; все шаги записи пропущены. Контроль цепей после настройки: 11/11, ошибок 0.
