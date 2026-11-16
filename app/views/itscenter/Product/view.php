@@ -403,6 +403,10 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                 <?php endif; ?>
                             </div>
 
+                            <?php if (\app\services\TsepChainCatalog::isChain($product) && ($product->unit ?? '') === 'компл.'): ?>
+                                <div data-chain-price-unit="2" style="margin:8px 0 16px;font-size:16px;line-height:1.5;font-weight:600">За комплект из 2 цепей на 2 колеса</div>
+                            <?php endif; ?>
+
                             <?php if ($quantity > 0): ?>
                                 <div class="current_price_success product-price-date">Цена актуальна на: <?= h($product->data_edit_price ?? '') ?></div>
                             <?php else: ?>

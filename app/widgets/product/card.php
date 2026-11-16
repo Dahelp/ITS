@@ -114,6 +114,9 @@
                         </div>
                     <?php endif; ?>
                 <?php endif; ?>
+                <?php if (\app\services\TsepChainCatalog::isChain($product) && ($product->unit ?? '') === 'компл.'): ?>
+                    <div data-chain-card-unit="2" style="margin-top:8px;font-size:14px;line-height:1.45">За комплект из 2 цепей</div>
+                <?php endif; ?>
             </div>
 
             <?php if ($isCompleteCard): ?>
