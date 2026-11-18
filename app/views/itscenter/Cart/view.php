@@ -37,6 +37,19 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 		<div class="col-md-12 cart-block" <?php if(!empty($_SESSION['cart'])){ ?>style="display:block"<?php }else{ ?>style="display:none"<?php } ?>>
 			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-customer-group="<?= (int)($checkoutCustomerGroup ?? 0) ?>" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
                 <link rel="stylesheet" href="/css/checkout-progress.css?v=<?= (int)filemtime(WWW.'/css/checkout-progress.css') ?>">
+                <?php if (!$userId): ?>
+                <fieldset class="bg-light rounded-3 p-3 mb-3">
+                  <legend class="h5">Как хотите оформить заказ?</legend>
+                  <label class="me-3"><input type="radio" name="checkout_mode" value="guest" checked> Оформить как гость</label>
+                  <button type="submit" class="btn btn-outline-primary" id="checkout-login" formaction="<?= PATH ?>/cart/login-checkout" formnovalidate>Войти</button>
+                  <p class="small text-muted mt-2 mb-0">Оформите заказ без регистрации и пароля. После заказа сможете настроить доступ в личный кабинет.</p>
+                  <input type="hidden" name="checkout_step" id="checkout-login-step" value="1">
+                  <input type="hidden" name="checkout_attachment" id="checkout-login-attachment" value="">
+                </fieldset>
+                <?php endif; ?>
+                <?php if (!empty($checkoutLoginResume)): ?>
+                <script type="application/json" id="checkout-login-resume"><?= json_encode($checkoutLoginResume, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?></script>
+                <?php endif; ?>
                 <div class="checkout-steps mb-3">
                   <nav class="checkout-steps__nav" aria-label="Шаги оформления заказа">
                     <button type="button" class="checkout-step is-active" data-step-badge="1" data-checkout-go="1" aria-current="step">1. Корзина</button>

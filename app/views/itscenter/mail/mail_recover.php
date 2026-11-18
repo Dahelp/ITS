@@ -23,7 +23,7 @@
 							<tr>
 								<td colspan="4" style="padding:20px 0 20px 0">Добрый день, <?=$uname?>!<br><br>
 									На сайт <?=$namecomp?> поступила заявка на восстановление пароля.<br>
-									Чтобы восстановить пароль пройдите по <a href="<?=PATH?>/user/recover-pass?key=<?=$hash?>">ссылке</a>.<br><br>
+									Чтобы восстановить пароль пройдите по <a href="<?=htmlspecialchars($recoveryUrl, ENT_QUOTES, 'UTF-8')?>">ссылке</a>.<br><br>
 									<b>Время запроса на востановление:</b> <?=date("Y-m-j H:i:s")?><br><br>
 									Время действия ссылки 1 час<br><br>
 										С уважением, <?=$namecomp?> <br>

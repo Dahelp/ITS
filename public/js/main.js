@@ -1226,6 +1226,8 @@ document.addEventListener('click', function(e){
 
   // submit
   $('#checkoutForm').off('submit.checkout').on('submit.checkout', function(e){
+    var submitter = e.originalEvent && e.originalEvent.submitter;
+    if (submitter && submitter.id === 'checkout-login') return;
     var currentStep = parseInt($(this).attr('data-current-step') || '1', 10);
     if (currentStep !== 3){
       e.preventDefault();

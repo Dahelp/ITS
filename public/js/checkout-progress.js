@@ -28,6 +28,12 @@
   }catch(e){}
   return;
  }
+ var loginButton=document.getElementById('checkout-login');
+ if(loginButton)loginButton.addEventListener('click',function(){
+  document.getElementById('checkout-login-step').value=form.dataset.currentStep||'1';
+  var file=form.elements.namedItem('rekvizity');
+  document.getElementById('checkout-login-attachment').value=file&&file.files&&file.files.length?'1':'';
+ });
  var owner=form.dataset.draftOwner||'guest',generation=form.dataset.draftGeneration||'0',key='checkout-draft-v1:'+owner;
  var dirty=false,restoring=false,started=false,attachment=false,suppressProgress=false;
  var hint=document.getElementById('checkout-form-notice'),banner=document.getElementById('checkout-resume'),savedStep=1;
@@ -40,16 +46,22 @@
  function save(){if(!dirty||restoring)return;if(!document.querySelector('.cart-qty')||Number(document.querySelector('.cart-qty').textContent)<=0){clear();return;}try{localStorage.setItem(key,JSON.stringify(snapshot()));dirty=false;}catch(e){message('Браузер не разрешил сохранить черновик. Не закрывайте страницу до завершения заказа.');}}
  function progress(){var step=parseInt(form.dataset.currentStep,10)||1;var label='Шаг '+step+' из 3 — '+['Корзина','Получение','Контакты и оплата'][step-1];document.getElementById('checkout-progress-label').textContent=label;var meter=document.getElementById('checkout-progress');meter.setAttribute('aria-valuenow',step);meter.setAttribute('aria-valuetext',label);document.getElementById('checkout-progress-fill').style.width=Math.round(step/3*100)+'%';form.querySelectorAll('[data-checkout-go]').forEach(function(button){var n=Number(button.dataset.checkoutGo);button.classList.toggle('is-active',n===step);button.classList.toggle('is-complete',n<step);if(n===step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');});if(suppressProgress){suppressProgress=false;return;}if(!restoring){dirty=true;save();}}
  function start(){if(started||!form.checkoutNavigation)return;started=true;var raw=null;try{raw=localStorage.getItem(key);}catch(e){}var draft=readDraft(raw,owner,generation,Date.now());
+  var loginResume=document.getElementById('checkout-login-resume'),returning=false;
+  if(loginResume){try{var resumed=JSON.parse(loginResume.textContent);if(resumed.time*1000>Date.now()-3600000){
+   draft={fields:resumed.fields,step:resumed.step,hadAttachment:resumed.attachment};returning=true;
+   localStorage.removeItem('checkout-draft-v1:guest');
+  }}catch(e){}}
+
   if(!document.querySelector('.cart-qty')||Number(document.querySelector('.cart-qty').textContent)<=0){clear();return;}
   if(raw&&!draft)clear();
   restoring=true;
   if(draft){attachment=draft.hadAttachment;savedStep=draft.step;var consent=field('checkout_legal_agree');if(consent)consent.checked=false;
    FIELDS.forEach(function(name){var input=field(name);if(!input||!Object.prototype.hasOwnProperty.call(draft.fields,name))return;var value=draft.fields[name];if(input.tagName==='SELECT'&&!Array.from(input.options).some(function(o){return o.value===value;}))return;input.value=value;input.dispatchEvent(new Event('change',{bubbles:true}));});
-   form.checkoutNavigation.restoreDelivery();form.checkoutNavigation.goTo(1);
-   banner.hidden=false;banner.querySelector('p').textContent=resumeText(Number(document.querySelector('.cart-qty').textContent));document.getElementById('checkout-continue').textContent='Продолжить оформление';
+   form.checkoutNavigation.restoreDelivery();form.checkoutNavigation.goTo(returning?savedStep:1);
+   banner.hidden=returning;banner.querySelector('p').textContent=resumeText(Number(document.querySelector('.cart-qty').textContent));document.getElementById('checkout-continue').textContent='Продолжить оформление';
    message(attachment?'Прикрепите реквизиты повторно: браузер не сохраняет файлы.':'');
   }
-  dirty=false;progress();restoring=false;
+  dirty=false;progress();restoring=false;if(returning){dirty=true;save();}
   form.addEventListener('input',function(e){if(!restoring&&FIELDS.indexOf(e.target.name)>=0){dirty=true;save();}});
   form.addEventListener('change',function(e){if(restoring)return;if(e.target.type==='file'){attachment=!!e.target.files.length;dirty=true;}else if(FIELDS.indexOf(e.target.name)>=0){dirty=true;save();}});
   form.querySelectorAll('[data-checkout-go]').forEach(function(button){button.addEventListener('click',function(){form.checkoutNavigation.goTo(Number(button.dataset.checkoutGo));});});

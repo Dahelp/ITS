@@ -98,7 +98,9 @@ class User extends AppModel {
 	
 	public function get_user_hash($hash){
 
-		$res = \R::findOne('recover', 'hash = ?', [$hash]);
+		if (!is_string($hash) || !preg_match('/^[a-f0-9]{64}$/D', $hash)) return false;
+		$res = \R::findOne('recover', 'hash = ? OR hash = ?', [hash('sha256', $hash), $hash]);
+        if (!$res) return false;
 		$now = time();
 		$times = $res["expire"] - $now;
 		if($times < 0) {

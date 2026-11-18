@@ -210,6 +210,7 @@ defined('WWW') or die('Access denied');
             </div>
 
             <form action="/user/login" method="post" class="callback-form js-modal-validate" novalidate>
+                <input type="hidden" name="login_csrf" value="<?= htmlspecialchars($_SESSION['login_csrf'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 <div class="modal-body">
 
                     <div style="position:absolute; left:-9999px; top:-9999px;">

@@ -294,11 +294,16 @@ class UserController extends AppController {
 			session_start();
 		}
 
+        if (empty($_SESSION['login_csrf'])) $_SESSION['login_csrf']=bin2hex(random_bytes(32));
 		if (empty($_POST)) {
 			$this->setMeta('Вход');
 			return;
 		}
 
+        if (!empty($_SESSION['checkout_login']) && !hash_equals($_SESSION['login_csrf'], (string)($_POST['login_csrf'] ?? ''))) {
+            $_SESSION['error']='Форма устарела. Повторите вход.';
+            redirect(PATH.'/user/login?checkout=1');
+        }
 		$data = $_POST;
 
 		// === honeypot (антибот) ===
@@ -339,8 +344,66 @@ class UserController extends AppController {
 		}
 		$this->sessClose();
 
+        if (!empty($_SESSION['checkout_login']) && $_SESSION['checkout_login']['time'] > time()-3600) {
+            $this->sessWriteOpen();
+            if ($ok) {
+                session_regenerate_id(true);
+                $_SESSION['checkout_login_resume'] = $_SESSION['checkout_login'];
+                unset($_SESSION['checkout_login']);
+            }
+            $this->sessClose();
+            redirect(PATH . ($ok ? '/cart/view' : '/user/login?checkout=1'));
+        }
 		redirect('cabinet');
 	}
+
+    public function setupPasswordAction(): void
+    {
+        $this->sessWriteOpen();
+        header('Cache-Control: no-store');
+        header('Referrer-Policy: no-referrer');
+        header('X-Robots-Tag: noindex, nofollow');
+        if (empty($_SESSION['setup_password_csrf'])) $_SESSION['setup_password_csrf']=bin2hex(random_bytes(32));
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token=(string)($_POST['hash'] ?? '');
+            $password=(string)($_POST['password'] ?? '');
+            if (!hash_equals($_SESSION['setup_password_csrf'], (string)($_POST['csrf'] ?? ''))) {
+                $_SESSION['error']='Форма устарела. Повторите попытку.';
+            } elseif (mb_strlen($password)<6 || strlen($password)>72) {
+                $_SESSION['error']='Пароль должен содержать от 6 символов до 72 байт.';
+            } elseif (\app\services\CheckoutAccount::setPassword($token,$password)) {
+                unset($_SESSION['setup_password_csrf']);
+                $_SESSION['success']='Пароль задан. Войдите в личный кабинет.';
+                redirect(PATH.'/user/login');
+            } else {
+                $_SESSION['error']='Ссылка недействительна или устарела. Запросите восстановление доступа.';
+                redirect(PATH.'/user/recover');
+            }
+            redirect(PATH.'/user/setup-password?key='.rawurlencode($token));
+        }
+        $this->setMeta('Задать пароль');
+    }
+
+    public function resendSetupAction(): void
+    {
+        $this->sessWriteOpen();
+        $result=$_SESSION['checkout_result'] ?? [];
+        if ($_SERVER['REQUEST_METHOD']!=='POST' || empty($_SESSION['setup_resend_token']) || !hash_equals($_SESSION['setup_resend_token'],(string)($_POST['csrf'] ?? '')) || empty($result['new']) || ($result['time']??0)<time()-86400) redirect(PATH.'/cart/view');
+        try {
+            $url=\app\services\CheckoutAccount::issue((int)$result['user_id']);
+            if ($url) {
+                $transport=(new Swift_SmtpTransport(App::$app->getProperty('smtp_host'),App::$app->getProperty('smtp_port'),App::$app->getProperty('smtp_protocol')))->setUsername(App::$app->getProperty('smtp_login'))->setPassword(App::$app->getProperty('smtp_password'));
+                $message=(new Swift_Message('Задайте пароль для личного кабинета'))->setFrom([App::$app->getProperty('smtp_login')=>App::$app->getProperty('shop_name')])->setTo($result['email'])->setBody('<p><a href="'.htmlspecialchars($url,ENT_QUOTES,'UTF-8').'">Задать пароль</a>. Ссылка действует 1 час.</p>','text/html');
+                if (!(new Swift_Mailer($transport))->send($message)) throw new \RuntimeException('Mail not accepted');
+                $_SESSION['checkout_result']['setup_sent']=true;
+                $_SESSION['success']='Ссылка отправлена на вашу почту.';
+            } else $_SESSION['success']='Повторная отправка доступна через 5 минут. Если пароль уже задан, войдите в кабинет.';
+        } catch (\Throwable $e) {
+            error_log('CR10: setup resend failed');
+            $_SESSION['error']='Не удалось отправить письмо. Попробуйте позже или восстановите доступ.';
+        }
+        redirect(PATH.'/cart/complete');
+    }
 
     public function logoutAction(){
 		$this->sessWriteOpen();
@@ -812,7 +875,7 @@ class UserController extends AppController {
 			// Вставка через плейсхолдеры
 			\R::exec(
 				"INSERT INTO recover (hash, expire, email) VALUES (?, ?, ?)",
-				[$token, $expire, $email]
+				[hash('sha256', $token), $expire, $email]
 			);
 
 			// Отправка писем
@@ -829,6 +892,8 @@ class UserController extends AppController {
 			$namecomp  = App::$app->getProperty('shop_name');
 			$tell_site = \ishop\App::options('option_telefon');
 			$uname     = $user['name'];
+            $hash = $token;
+            $recoveryUrl = \app\services\CheckoutAccount::baseUrl().'/user/recover-pass?key='.$token;
 
 			ob_start();
 			require APP . '/views/' . TEMPLATE . '/mail/mail_recover.php';
@@ -845,7 +910,7 @@ class UserController extends AppController {
 				->setBody($body, 'text/html');
 
 			$mailer->send($message_client);
-			$mailer->send($message_admin);
+            // Password links are sent exclusively to the mailbox owner.
 		}
 
 		// В любом случае (есть пользователь или нет) — одно и то же сообщение
@@ -860,11 +925,16 @@ class UserController extends AppController {
 			session_start();
 		}
 
+        if (empty($_SESSION['recover_pass_csrf'])) $_SESSION['recover_pass_csrf']=bin2hex(random_bytes(32));
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 			$this->setMeta('Создание нового пароля');
 			return;
 		}
 
+        if (!hash_equals($_SESSION['recover_pass_csrf'], (string)($_POST['csrf'] ?? ''))) {
+            $_SESSION['error']='Форма устарела. Запросите восстановление доступа.';
+            redirect(PATH.'/user/recover');
+        }
 		$hash = !empty($_POST['hash']) ? trim($_POST['hash']) : '';
 		$password = !empty($_POST['password']) ? trim($_POST['password']) : '';
 
@@ -897,6 +967,8 @@ class UserController extends AppController {
 		// Обновляем пароль и чистим recover через плейсхолдеры
 		\R::exec("UPDATE user SET password = ? WHERE email = ?", [$passHash, $uhash['email']]);
 		\R::exec("DELETE FROM recover WHERE email = ?", [$uhash['email']]);
+        \app\services\CheckoutAccount::ensureSchema();
+        \R::exec('UPDATE checkout_account_access SET pending=0,token_hash=NULL,expires=0 WHERE user_id=(SELECT id FROM user WHERE email=?)', [$uhash['email']]);
 
 		$user = \R::findOne('user', 'email = ?', [$uhash['email']]);
 		if ($user) {

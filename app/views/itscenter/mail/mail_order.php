@@ -21,7 +21,7 @@
 						<table cellspacing="0" cellpadding="0" style="width:660px;padding:20px;font-family:Tahoma, Helvetica, sans-serif;color:#212529;font-size:13px" align="center">
 							<tr>
 								<td colspan="4" style="padding:20px 0 20px 0">
-									<p>Здравствуйте <?=$uname?>.<br><br>
+									<p>Здравствуйте <?=htmlspecialchars((string)$uname, ENT_QUOTES, 'UTF-8')?>.<br><br>
 										Благодарим Вас за заказ!<br>
 										<?php 
 											$dayofweek = date('w', strtotime($date));
@@ -77,11 +77,11 @@
 									<?=$compname?>
 									<?=$nds?>
 									<?=$dogovor?>
-									<b>Имя:</b> <?=$uname?><br>
-									<b>Номер телефона:</b> <?=$telefon?><br>
-									<b>Электронная почта:</b> <a href="mailto:<?=$user_email?>" target="_blank"><?=$user_email?></a><br>
+									<b>Имя:</b> <?=htmlspecialchars((string)$uname, ENT_QUOTES, 'UTF-8')?><br>
+									<b>Номер телефона:</b> <?=htmlspecialchars((string)$telefon, ENT_QUOTES, 'UTF-8')?><br>
+									<b>Электронная почта:</b> <a href="mailto:<?=htmlspecialchars((string)$user_email, ENT_QUOTES, 'UTF-8')?>" target="_blank"><?=htmlspecialchars((string)$user_email, ENT_QUOTES, 'UTF-8')?></a><br>
 									<b>Способ обратной связи:</b> <?=$formCallback?><br>
-									<b>Комментарий:</b> <?=$note?><br>
+									<b>Комментарий:</b> <?=nl2br(htmlspecialchars((string)$note, ENT_QUOTES, 'UTF-8'))?><br>
 									<b>Время заказа:</b> <?=$date?><br><br><br>
 										С уважением, <?=$namecomp?> <br>
 									<b>Телефон:</b> <?=$tell_site?>

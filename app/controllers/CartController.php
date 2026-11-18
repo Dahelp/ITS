@@ -598,6 +598,11 @@ class CartController extends AppController {
             PATH . '/cart/view'
         );
 
+        $this->data['checkoutLoginResume'] = null;
+        if (!empty($_SESSION['checkout_login_resume'])) {
+            $this->data['checkoutLoginResume'] = $_SESSION['checkout_login_resume'];
+            unset($_SESSION['checkout_login_resume']);
+        }
         $this->data['checkoutFormData'] = [];
         if (isset($_SESSION['form_data']['checkout_token']) || isset($_SESSION['form_data']['dostavka_id'])) {
             $this->data['checkoutFormData'] = $_SESSION['form_data'];
@@ -690,6 +695,38 @@ class CartController extends AppController {
 		}
 	}
 	
+    public function loginCheckoutAction(): void
+    {
+        $this->sessOpenRW();
+        $token = (string)($_POST['checkout_token'] ?? '');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$token || !hash_equals((string)($_SESSION['checkout_token'] ?? ''), $token)) $this->redirectCartView(303);
+        $_SESSION['checkout_login'] = ['fields'=>\app\services\CheckoutAccount::fields($_POST), 'step'=>max(1,min(3,(int)($_POST['checkout_step'] ?? 1))), 'time'=>time(), 'attachment'=>!empty($_POST['checkout_attachment'])];
+        $this->sessClose();
+        redirect(PATH . '/user/login?checkout=1');
+    }
+
+    public function returnCheckoutAction(): void
+    {
+        $this->sessOpenRW();
+        if (!empty($_SESSION['checkout_login']) && $_SESSION['checkout_login']['time'] > time()-3600) {
+            $_SESSION['checkout_login_resume'] = $_SESSION['checkout_login'];
+        }
+        unset($_SESSION['checkout_login']);
+        $this->redirectCartView(303);
+    }
+
+    public function completeAction(): void
+    {
+        $this->sessOpenRW();
+        if (empty($_SESSION['checkout_result']) || $_SESSION['checkout_result']['time'] < time()-86400) $this->redirectCartView();
+        $this->data['result'] = $_SESSION['checkout_result'];
+        if (empty($_SESSION['setup_resend_token'])) $_SESSION['setup_resend_token']=bin2hex(random_bytes(32));
+        $this->setMeta('Заказ принят');
+        header('Cache-Control: no-store');
+        header('X-Robots-Tag: noindex, nofollow');
+        $this->sessClose();
+    }
+
     public function checkoutAction()
 {
     // 1) Сессия
@@ -753,7 +790,8 @@ class CartController extends AppController {
     $data    = $_POST;
 
     // e-mail: сначала из формы, если пусто или некорректен — берём из сессии авторизованного
-    $email = isset($data['email']) ? trim((string)$data['email']) : '';
+    $email = isset($data['email']) ? mb_strtolower(trim((string)$data['email']), 'UTF-8') : '';
+    if ($isAuth) $email = (string)$sessionUser['email'];
     if (($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) && !empty($sessionUser['email'])) {
         $email = trim((string)$sessionUser['email']);
     }
@@ -807,6 +845,13 @@ class CartController extends AppController {
         redirect();
     }
 
+    if (!$isAuth && (trim((string)($_POST['name'] ?? '')) === '' || mb_strlen((string)($_POST['name'] ?? '')) > 255 || mb_strlen($email)>150)) {
+        $_SESSION['error']='Укажите ФИО (до 255 символов) и email (до 150 символов).';
+        $_SESSION['form_data']=\app\services\CheckoutAccount::fields($_POST);
+        $_SESSION['checkout_token']=bin2hex(random_bytes(32));
+        $this->redirectCartView(303);
+    }
+
     // Validate payment before creating a customer or an order.
     $accountGroup = $isAuth && !empty($sessionUser['id'])
         ? \R::getCell('SELECT `groups` FROM user WHERE id=?', [(int)$sessionUser['id']]) : 0;
@@ -823,6 +868,12 @@ class CartController extends AppController {
     }
 
     // ====== Получаем / создаём пользователя ======
+    \app\services\CheckoutAccount::ensureSchema();
+    // Run compatibility DDL before the order transaction (MySQL DDL commits).
+    \app\services\CompleteEngagement::ensureSchema();
+    \R::begin();
+    try {
+    $newAccount = false;
     $user_id = null;
     $comp_id = null;
     $groups  = null;
@@ -844,14 +895,20 @@ class CartController extends AppController {
         if ($usok && !empty($usok['id'])) {
             // Пользователь найден по e-mail
             $user_id = (int)$usok['id'];
-            $comp_id = $usok['comp_id'] ?? null;
-            $groups  = $usok['groups'] ?? null;
+            // Email routes the order to its mailbox owner; it grants no profile access.
+            // Never inherit company, customer terms or manager from an unauthenticated match.
+            $comp_id = null;
+            $groups = $paymentGroup;
         } else {
             // Регистрация нового пользователя (кабинет создаётся автоматически)
             if (!$isAuth) {
                 $user = new \app\models\User();
                 $data = $_POST;
-
+                $data['email'] = $email;
+                $data['password'] = bin2hex(random_bytes(32));
+                $data['role'] = 'user';
+                $data['groups'] = $paymentGroup;
+                $data['newsletter'] = '0';
                 $user->load($data);
                 if (!$user->validate($data)) {
                     $user->getErrors();
@@ -887,6 +944,8 @@ class CartController extends AppController {
                         session_write_close();
                         redirect();
                     }
+                    $newAccount = true;
+                    \R::exec('INSERT INTO checkout_account_access (user_id) VALUES (?)', [(int)$user_id]);
                     AdminActivityLogger::incoming(
                         AdminActivityLogger::ACTION_CLIENT_SIGNUP,
                         'user',
@@ -934,10 +993,13 @@ class CartController extends AppController {
         $rekvizity = '0';
     }
 
-    $usm = \R::findOne('user', 'email = ?', [$user_email]);
+    $usm = $isAuth ? \R::load('user', (int)$user_id) : [
+        'name'=>(string)($_POST['name'] ?? ''), 'telefon'=>$telefon,
+        'groups'=>$paymentGroup, 'admin_id'=>0
+    ];
 
     // Если это юр. лицо
-    if (!empty($data['groups']) && (int)$data['groups'] === 4) {
+    if ($isAuth && !empty($data['groups']) && (int)$data['groups'] === 4) {
         $comp = \R::findOne('company', 'user_id = ?', [$data['user_id']]);
         if ($comp && !empty($comp['nds'])) {
             $data['nds'] = $comp['nds'];
@@ -953,8 +1015,26 @@ class CartController extends AppController {
     // Непосредственно сохранение заказа
     $order_id = \app\models\Order::saveOrder($data);
 
+    \R::exec('INSERT INTO checkout_order_contact (order_id,email,name,telefon) VALUES (?,?,?,?)', [$order_id,$user_email,(string)$usm['name'],(string)$usm['telefon']]);
+    \R::commit();
+    } catch (\Throwable $e) {
+        \R::rollback();
+        error_log('CR10: checkout persistence failed ('.get_class($e).' at '.$e->getFile().':'.$e->getLine().')');
+        $_SESSION['error']='Не удалось сохранить заказ. Попробуйте ещё раз.';
+        $_SESSION['form_data']=\app\services\CheckoutAccount::fields($_POST);
+        $_SESSION['checkout_token']=bin2hex(random_bytes(32));
+        $this->redirectCartView(303);
+    }
+    $setupUrl = null;
+    if ($newAccount) {
+        try { $setupUrl = \app\services\CheckoutAccount::issue((int)$user_id); }
+        catch (\Throwable $e) { error_log('CR10: cannot issue setup link for order '.(int)$order_id); }
+    }
+    $_SESSION['checkout_result'] = ['order_id'=>(int)$order_id,'email'=>$user_email,'guest'=>!$isAuth,'new'=>$newAccount,'user_id'=>$newAccount?(int)$user_id:0,'sent'=>false,'time'=>time()];
+
     // ========= Формирование данных для письма =========
     $ord   = \R::findOne('order', 'id = ?', [$order_id]);
+    $_SESSION['checkout_result']['number'] = (string)$ord['inv'];
     $dost  = \R::findOne('dostavka', 'id = ?', [$ord['dostavka_id']]);
     $bran  = \R::findOne('branch_office', 'branch_id = ?', [$ord['branch_id']]);
     $trans = \R::findOne('transport_company', 'id = ?', [$ord['transport_id']]);
@@ -982,7 +1062,7 @@ class CartController extends AppController {
         if ((int)$usm['groups'] === 4) {
             $vid = "<b>Вид клиента:</b> Юридическое лицо<br>";
 
-            $comp = \R::findOne('company', 'user_id = ?', [$data['user_id']]);
+            $comp = $isAuth ? \R::findOne('company', 'user_id = ?', [$data['user_id']]) : null;
             if ($comp) {
                 $compname = "<b>Компания (зарегистрирована):</b> " . $comp['comp_short_name'] . " (" . $comp['inn'] . ")<br>";
 
@@ -1020,7 +1100,8 @@ class CartController extends AppController {
         }
     }
 
-		\app\models\Order::mailOrder(
+	try {
+		$mailSent = \app\models\Order::mailOrder(
 		$order_id,
 		$user_email,
 		$usm['name']    ?? '',
@@ -1038,13 +1119,19 @@ class CartController extends AppController {
 		$nds,
 		$dogovor,
 		$formCallback,
-		$promo
+		$promo,
+        ['guest'=>!$isAuth,'setup_url'=>$setupUrl]
 	);
+        $_SESSION['checkout_result']['sent'] = $mailSent;
+    } catch (\Throwable $e) {
+        error_log('CR10: order saved, notification failed for order '.(int)$order_id);
+    }
+    $_SESSION['checkout_result']['setup_sent'] = !empty($_SESSION['checkout_result']['sent']) && !empty($setupUrl);
 
 	$this->emptyCart();
 
 	session_write_close();
-	redirect();
+	redirect(PATH . '/cart/complete');
 }
 	
 	public function dostavkaAction(){

@@ -158,6 +158,9 @@ class OrderController extends AppController {
 			throw new \Exception('Страница не найдена', 404);
 		}
 
+        \app\services\CheckoutAccount::ensureSchema();
+        $checkoutContact = \R::getRow('SELECT email,name,telefon FROM checkout_order_contact WHERE order_id=?', [$order_id]);
+        if ($checkoutContact) $order = array_replace($order, $checkoutContact);
 		$order_products = \R::findAll('order_product', "order_id = ?", [$order_id]);
 
 		$comp = null;

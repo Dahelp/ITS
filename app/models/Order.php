@@ -108,7 +108,7 @@ class Order extends AppModel {
 		}
 	}
 
-    public static function mailOrder($order_id, $user_email, $uname, $telefon, $admin_id, $note, $date, $dostavka_name, $branch_name, $address, $transport_company, $city_name, $vid, $compname, $nds, $dogovor, $formCallback, $promo){
+    public static function mailOrder($order_id, $user_email, $uname, $telefon, $admin_id, $note, $date, $dostavka_name, $branch_name, $address, $transport_company, $city_name, $vid, $compname, $nds, $dogovor, $formCallback, $promo, array $accountAccess = []){
        
 		if (session_status() !== PHP_SESSION_ACTIVE) {
 			session_start();
@@ -137,7 +137,15 @@ class Order extends AppModel {
             ->setBody($body, 'text/html')
         ;
 
+        // Build staff copy before adding the private mailbox-only setup URL.
         $body_admin = $body . TrafficSource::emailHtml();
+        if (!empty($accountAccess['guest'])) {
+            $url = $accountAccess['setup_url'] ?? null;
+            $accessHtml = $url
+                ? '<p>Для вас создан личный кабинет с этим заказом. <a href="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'">Задать пароль</a>. Ссылка действует 1 час.</p>'
+                : '<p>Заказ сохранён. <a href="'.PATH.'/user/login">Войти в кабинет</a>. <a href="'.PATH.'/user/recover">Восстановить доступ</a>.</p>';
+            $message_client->setBody(str_replace('</body>', $accessHtml.'</body>', $body), 'text/html');
+        }
         $message_admin = (new Swift_Message("Сделан заказ №{$ord["inv"]} на сайте " . App::$app->getProperty('shop_name')))
             ->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
             ->setTo(App::$app->getProperty('admin_email'))
@@ -145,27 +153,25 @@ class Order extends AppModel {
 		;
 		
 		
-		if($_FILES['rekvizity']['tmp_name']){
+		if(!empty($_FILES['rekvizity']['tmp_name'])){
 			$attachment = Swift_Attachment::fromPath($_FILES['rekvizity']['tmp_name']);
 			$attachment->setFilename($_FILES['rekvizity']['name']);
 			$message_admin->attach($attachment);
 		}
 		
-        if($admin_id !="0"){
-			$adm = \R::findOne('user', 'id = ?', [$admin_id]);
-			$message_manager = (new Swift_Message("Сделан заказ №{$ord["inv"]} на сайте " . App::$app->getProperty('shop_name')))
-				->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
-				->setTo($adm["email"])
-				->setBody($body_admin, 'text/html')
-			;
-			$result = $mailer->send($message_manager);
-		}
+        $clientSent = (bool)$mailer->send($message_client);
+        try {
+            $mailer->send($message_admin);
+            if ($admin_id != '0') {
+                $adm = \R::findOne('user', 'id = ?', [$admin_id]);
+                if ($adm && !empty($adm['email'])) {
+                    $message_manager = clone $message_admin;
+                    $message_manager->setTo($adm['email']);
+                    $mailer->send($message_manager);
+                }
+            }
+        } catch (\Throwable $e) { error_log('CR10: staff order notification failed for order '.(int)$order_id); }
 
-        // Send the message
-        $result = $mailer->send($message_client);
-        $result = $mailer->send($message_admin);
-		
-		
         unset($_SESSION['cart']);
 		unset($_SESSION['cart.qty']);
 		unset($_SESSION['cart.sum']);
@@ -182,6 +188,7 @@ class Order extends AppModel {
 		$_SESSION['success'] = ($dayofweek >= 1 && $dayofweek <= 5)
 			? 'Спасибо за Ваш заказ. Для согласования заказа с Вами свяжется менеджер в рабочее время ПН–ПТ с 09:00 до 17:00'
 			: 'Спасибо за Ваш заказ. Для согласования заказа с Вами свяжется менеджер в понедельник в рабочее время с 09:00 до 17:00';
+        return $clientSent;
     }
 
 }
