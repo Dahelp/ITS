@@ -860,6 +860,8 @@ class CartController extends AppController {
     try {
         if (!$paymentDelivery) throw new \DomainException('Выберите способ получения.');
         $paymentMethod = \app\services\CheckoutPayment::validate($_POST['payment_method'] ?? '', $paymentGroup, \app\services\CheckoutPayment::pickup((string)$paymentDelivery['name']));
+        $pickupBranch = \app\services\CheckoutPayment::pickup((string)$paymentDelivery['name'])
+            ? \app\services\CheckoutPickup::resolve(\R::getAll("SELECT branch_id,branch_name FROM branch_office WHERE hide='show'"), $_POST['branch_id'] ?? '') : null;
     } catch (\DomainException $e) {
         $_SESSION['error'] = $e->getMessage();
         $_SESSION['form_data'] = $_POST;
@@ -976,7 +978,7 @@ class CartController extends AppController {
     $cit       = \R::findOne('cities', 'city_name = ?', [$city_name]);
     $data['city_id'] = !empty($cit['city_id']) ? $cit['city_id'] : '';
 
-    $data['branch_id'] = !empty($_POST['branch_id']) ? $_POST['branch_id'] : '';
+    $data['branch_id'] = $pickupBranch !== null ? (string)$pickupBranch['branch_id'] : '';
 
     $data['groups'] = $paymentGroup;
     $data['payment_method'] = $paymentMethod;

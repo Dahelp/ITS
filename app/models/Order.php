@@ -127,6 +127,8 @@ class Order extends AppModel {
 		// Create a message
         $ord = \R::findOne('order', 'id = ?', [$order_id]);
         $paymentLabel = \app\services\CheckoutPayment::label($ord['payment_method'] ?? '', (int)($ord['payment_customer_type'] ?? 3));
+        $pickupDetails = \app\services\CheckoutPayment::pickup((string)$dostavka_name)
+            ? \app\services\CheckoutPickup::details((string)$branch_name) : null;
         ob_start();
         require APP . '/views/'.TEMPLATE.'/mail/mail_order.php';
         $body = ob_get_clean();

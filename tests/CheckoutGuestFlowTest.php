@@ -22,6 +22,7 @@ define('PATH','https://example.test');
 define('ROOT',dirname(__DIR__));
 require dirname(__DIR__).'/app/services/CheckoutAccount.php';
 require dirname(__DIR__).'/app/services/CheckoutPayment.php';
+require dirname(__DIR__).'/app/services/CheckoutPickup.php';
 require dirname(__DIR__).'/app/controllers/CartController.php';
 class Redirected extends \Exception {}
 function redirect($url=''){throw new Redirected($url);}
@@ -31,6 +32,7 @@ class R {
  public static function exec($sql,$p=[]){return 1;}
  public static function getCell($sql,$p=[]){return 3;}
  public static function getRow($sql,$p=[]){return ['id'=>1,'name'=>'Самовывоз'];}
+ public static function getAll($sql,$p=[]){return [['branch_id'=>0,'branch_name'=>'Подольск (мкр. Климовск)']];}
  public static function load($table,$id){return new \ArrayObject(['id'=>$id,'comp_id'=>22,'groups'=>3,'name'=>'Owner','telefon'=>'+79991234567','admin_id'=>0],\ArrayObject::ARRAY_AS_PROPS);}
  public static function findOne($table,$sql,$p=[]) {
   if($table==='user')return self::$existing?['id'=>5,'comp_id'=>22,'groups'=>4,'name'=>'PRIVATE','telefon'=>'PRIVATE','admin_id'=>42]:null;
@@ -57,6 +59,7 @@ foreach(['new','existing','authenticated','mail-failed']as$case){
  check(R::$committed,'Order committed before mail');
  check(empty($_SESSION['cart']) && isset($_SESSION['checkout_result']),'Cart cleared and confirmation retained');
  $data=\app\models\Order::$data;
+ check($data['branch_id']==='0','Zero-valued pickup branch preserved');
  check($data['groups']===3 && $data['admin_id']==0,'Guest cannot inherit private customer terms or manager');
  if($case==='existing')check($data['user_id']===5 && $data['comp_id']===null && R::$profileReads===0 && empty(\app\models\Order::$access['setup_url']),'Existing mailbox routes order without profile access or password reset');
  if($case==='new'){

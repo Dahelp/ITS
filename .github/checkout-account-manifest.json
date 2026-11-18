@@ -1,7 +1,7 @@
 {
   "app/controllers/CartController.php": {
     "before": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752",
-    "after": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752",
+    "after": "0643fcb736a795f88a16b7f9a706cd835e3d4a447cc544320a5f47705e3e01ef",
     "before_lf": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752"
   },
   "app/controllers/UserController.php": {
@@ -16,7 +16,7 @@
   },
   "app/models/Order.php": {
     "before": "457f4032ca5ce60a2e2489db2ec0317151fdc362901d25e5257c52ee05e9b220",
-    "after": "457f4032ca5ce60a2e2489db2ec0317151fdc362901d25e5257c52ee05e9b220",
+    "after": "288e51e090103ffdb03d8ff129989e5ce8ad6d3e8b07aca42396cb86e1c1d6a4",
     "before_lf": "457f4032ca5ce60a2e2489db2ec0317151fdc362901d25e5257c52ee05e9b220"
   },
   "app/models/User.php": {
@@ -28,6 +28,10 @@
     "before": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39",
     "after": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39",
     "before_lf": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39"
+  },
+  "app/services/CheckoutPickup.php": {
+    "before": null,
+    "after": "1987d248cc21de9d0c74f2b9e515053547bc88d58d2af9fff7fadabdc206f9fb"
   },
   "app/views/itscenter/Cart/view.php": {
     "before": "062e9d744093ff3f27d12cf725dae83a27095408734165424d9aa636805da8ca",
@@ -61,7 +65,7 @@
   },
   "app/views/itscenter/mail/mail_order.php": {
     "before": "92f653eca08150574ccae355443acde3708ff63e1fe75c1911c010c4aafd0396",
-    "after": "92f653eca08150574ccae355443acde3708ff63e1fe75c1911c010c4aafd0396",
+    "after": "cdbc7a63fa143eff4e8a709829e4820c2db9ed661c01077a972e38f3d1e06f38",
     "before_lf": "92f653eca08150574ccae355443acde3708ff63e1fe75c1911c010c4aafd0396"
   },
   "app/views/itscenter/mail/mail_recover.php": {

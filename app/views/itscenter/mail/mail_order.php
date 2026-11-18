@@ -70,8 +70,13 @@
 									<b>Способ оплаты:</b> <?=htmlspecialchars((string)($paymentLabel ?? 'Не указан'),ENT_QUOTES,'UTF-8')?><br>
                                     <b>Способ доставки:</b> <?=$dostavka_name?><br>
 									<?=$transport_company?>
-									<b>Город:</b> <?=$branch_name?><?=$city_name?>
+                                    <?php if (!empty($pickupDetails)): ?>
+                                    <b>Пункт самовывоза:</b> <?=htmlspecialchars($pickupDetails['city'], ENT_QUOTES, 'UTF-8')?><br>
+                                    <?php if ($pickupDetails['address'] !== ''): ?><b>Адрес самовывоза:</b> <?=htmlspecialchars($pickupDetails['address'], ENT_QUOTES, 'UTF-8')?><br><?php endif; ?>
+                                    <?php else: ?>
+									<b>Город:</b> <?=htmlspecialchars((string)$branch_name.(string)$city_name, ENT_QUOTES, 'UTF-8')?>
 									<?=$address?>
+                                    <?php endif; ?>
 									<br><br>
 									<?=$vid?>
 									<?=$compname?>
