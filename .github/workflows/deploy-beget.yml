@@ -14,6 +14,11 @@ on:
         type: boolean
         default: false
 
+      checkout_resume_only:
+        description: Publish only CR-01 checkout resume files with backup and drift checks
+        type: boolean
+        default: false
+
       lead_forms_only:
         description: Publish only the reviewed lead-form manifest with backup and drift checks
         type: boolean
@@ -67,7 +72,7 @@ jobs:
             "test -d '${{ secrets.BEGET_PATH }}' && printf 'Beget SSH read-only check OK\n'"
 
       - name: Deploy files
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -118,7 +123,7 @@ jobs:
             ./ "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:${{ secrets.BEGET_PATH }}/"
 
       - name: Install Composer dependencies
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -129,7 +134,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && composer-php7.4 install --no-dev --no-interaction --optimize-autoloader"
 
       - name: Install product certificates
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -137,7 +142,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_certificates.php || php8.1 scripts/install_certificates.php || php7.4 scripts/install_certificates.php || php scripts/install_certificates.php) && (php8.2 scripts/seed_ekka_certificate.php || php8.1 scripts/seed_ekka_certificate.php || php7.4 scripts/seed_ekka_certificate.php || php scripts/seed_ekka_certificate.php)"
 
       - name: Install order traffic source
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -145,7 +150,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_order_traffic_source.php || php8.1 scripts/add_order_traffic_source.php || php7.4 scripts/add_order_traffic_source.php || php scripts/add_order_traffic_source.php)"
 
       - name: Install unified cross references
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -153,7 +158,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_unified_crosses.php || php8.1 scripts/install_unified_crosses.php || php7.4 scripts/install_unified_crosses.php || php scripts/install_unified_crosses.php)"
 
       - name: Seed wheel cross metadata
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -161,7 +166,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/seed_wheel_cross_metadata.php || php8.1 scripts/seed_wheel_cross_metadata.php || php7.4 scripts/seed_wheel_cross_metadata.php || php scripts/seed_wheel_cross_metadata.php)"
 
       - name: Add article content
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -172,7 +177,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_content_image_source.php || php8.1 scripts/add_content_image_source.php || php7.4 scripts/add_content_image_source.php || php scripts/add_content_image_source.php) && (php8.2 scripts/add_tire_wear_article.php || php8.1 scripts/add_tire_wear_article.php || php7.4 scripts/add_tire_wear_article.php || php scripts/add_tire_wear_article.php) && (php8.2 scripts/add_tire_pressure_monitoring_article.php || php8.1 scripts/add_tire_pressure_monitoring_article.php || php7.4 scripts/add_tire_pressure_monitoring_article.php || php scripts/add_tire_pressure_monitoring_article.php) && (php8.2 scripts/apply_seo_strong_tz.php || php8.1 scripts/apply_seo_strong_tz.php || php7.4 scripts/apply_seo_strong_tz.php || php scripts/apply_seo_strong_tz.php)"
 
       - name: Activate Avito messenger webhook
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -183,7 +188,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/setup_avito_workspace.php && php8.2 bin/setup_avito_webhook.php"
 
       - name: Inventory API production shadow smoke test
-        if: inputs.verify_only != true && inputs.lead_forms_only != true
+        if: inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true
         shell: bash
         run: |
           set -euo pipefail
@@ -205,5 +210,20 @@ jobs:
           node .github/scripts/require-current-master.cjs
           tar -C /tmp/lead-forms-package -czf /tmp/lead-forms.tar.gz .
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" /tmp/lead-forms.tar.gz "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/package.tar.gz"
+          node .github/scripts/require-current-master.cjs
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"
+
+      - name: Publish bounded checkout resume release
+        if: inputs.verify_only != true && inputs.checkout_resume_only == true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
+          php .github/scripts/package-checkout-resume.php
+          release="checkout-resume-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "umask 077; mkdir \"\$HOME/$release\""
+          node .github/scripts/require-current-master.cjs
+          tar -C /tmp/checkout-resume-package -czf /tmp/checkout-resume.tar.gz .
+          scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" /tmp/checkout-resume.tar.gz "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/package.tar.gz"
           node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"

@@ -8,9 +8,26 @@
    return{version:1,owner:owner,generation:generation,updatedAt:d.updatedAt,step:Math.max(1,Math.min(3,parseInt(d.step,10)||1)),fields:fields,hadAttachment:d.hadAttachment===true};
   }catch(e){return null;}
  }
- var api={readDraft:readDraft,fields:FIELDS,ttl:TTL};
+ var api={readDraft:readDraft,fields:FIELDS,ttl:TTL,resumeText:resumeText};
  if(typeof module==='object'&&module.exports){module.exports=api;return;}
- var form=document.getElementById('checkoutForm');if(!form)return;
+ function resumeText(count){var n=Math.abs(count)%100,last=n%10;return 'Продолжить оформление? У вас '+count+' '+(n>=11&&n<=14?'товаров':last===1?'товар':last>=2&&last<=4?'товара':'товаров')+' в корзине';}
+ api.resumeText=resumeText;
+ var form=document.getElementById('checkoutForm');
+ if(!form){
+  var reminder=document.getElementById('checkout-site-resume');if(!reminder)return;
+  var reminderKey='checkout-draft-v1:'+reminder.dataset.draftOwner;
+  try{
+   var pending=readDraft(localStorage.getItem(reminderKey),reminder.dataset.draftOwner,reminder.dataset.draftGeneration,Date.now());
+   if(!pending)return;
+   if(Number(reminder.dataset.cartQty)<=0){localStorage.removeItem(reminderKey);return;}
+   document.getElementById('checkout-site-resume-text').textContent=resumeText(Number(reminder.dataset.cartQty));
+   reminder.hidden=false;
+   document.getElementById('checkout-site-resume-dismiss').addEventListener('click',function(){reminder.hidden=true;});
+   root.addEventListener('storage',function(e){if(e.key===reminderKey&&e.newValue===null)reminder.hidden=true;});
+   document.addEventListener('cart:cleared',function(){reminder.hidden=true;});
+  }catch(e){}
+  return;
+ }
  var owner=form.dataset.draftOwner||'guest',generation=form.dataset.draftGeneration||'0',key='checkout-draft-v1:'+owner;
  var dirty=false,restoring=false,started=false,attachment=false,suppressProgress=false;
  var hint=document.getElementById('checkout-form-notice'),banner=document.getElementById('checkout-resume'),savedStep=1;
@@ -29,11 +46,11 @@
   if(draft){attachment=draft.hadAttachment;savedStep=draft.step;var consent=field('checkout_legal_agree');if(consent)consent.checked=false;
    FIELDS.forEach(function(name){var input=field(name);if(!input||!Object.prototype.hasOwnProperty.call(draft.fields,name))return;var value=draft.fields[name];if(input.tagName==='SELECT'&&!Array.from(input.options).some(function(o){return o.value===value;}))return;input.value=value;input.dispatchEvent(new Event('change',{bubbles:true}));});
    form.checkoutNavigation.restoreDelivery();form.checkoutNavigation.goTo(1);
-   banner.hidden=false;document.getElementById('checkout-continue').textContent='Продолжить оформление';
+   banner.hidden=false;banner.querySelector('p').textContent=resumeText(Number(document.querySelector('.cart-qty').textContent));document.getElementById('checkout-continue').textContent='Продолжить оформление';
    message(attachment?'Прикрепите реквизиты повторно: браузер не сохраняет файлы.':'');
   }
   dirty=false;progress();restoring=false;
-  form.addEventListener('input',function(e){if(!restoring&&FIELDS.indexOf(e.target.name)>=0)dirty=true;});
+  form.addEventListener('input',function(e){if(!restoring&&FIELDS.indexOf(e.target.name)>=0){dirty=true;save();}});
   form.addEventListener('change',function(e){if(restoring)return;if(e.target.type==='file'){attachment=!!e.target.files.length;dirty=true;}else if(FIELDS.indexOf(e.target.name)>=0){dirty=true;save();}});
   form.querySelectorAll('[data-checkout-go]').forEach(function(button){button.addEventListener('click',function(){form.checkoutNavigation.goTo(Number(button.dataset.checkoutGo));});});
   document.getElementById('checkout-continue').addEventListener('click',function(){banner.hidden=true;form.checkoutNavigation.goTo(savedStep);});

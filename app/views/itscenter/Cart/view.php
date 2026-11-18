@@ -55,7 +55,6 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                 <?php $paymentRules = \app\services\CheckoutPayment::rules(\R::getAll('SELECT id,name FROM dostavka')); ?>
                 <script type="application/json" id="checkout-payment-rules"><?=json_encode($paymentRules,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?></script>
                 <script src="/js/checkout-payment.js?v=<?= (int)filemtime(WWW.'/js/checkout-payment.js') ?>" defer></script>
-                <script src="/js/checkout-progress.js?v=<?= (int)filemtime(WWW.'/js/checkout-progress.js') ?>" defer></script>
 				<div class="product-cart">
 					<div id="cartContent">
 

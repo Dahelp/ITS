@@ -1,0 +1,22 @@
+{
+  "public/js/checkout-progress.js": {
+    "after": "97ea65a43d1a8d1e0b7981444e54d301216a7a2507e4462607a4729231e23a0e",
+    "before_lf": "0a20967f649f4fba426ab10b631860f8a87f5df5dd72a8fd78b5da84f76f6a9d",
+    "before": "0a20967f649f4fba426ab10b631860f8a87f5df5dd72a8fd78b5da84f76f6a9d"
+  },
+  "app/views/itscenter/layouts/watches.php": {
+    "after": "a8b801153a3d5f9c270ab42f418bc0ac7399b3135cc8d325e3ea37f847674fc6",
+    "before_lf": "f112c4c23e16f4046874c7be60385f9cdb66f96437ceb4b543bb8fb125302128",
+    "before": "f112c4c23e16f4046874c7be60385f9cdb66f96437ceb4b543bb8fb125302128"
+  },
+  "app/views/itscenter/Cart/view.php": {
+    "after": "886e997b32bd553f0e4d4ef49aa535ed9e13755d4ee12eac40d278c9a8d76945",
+    "before_lf": "c80ed7e78b039dea236e09bde97332c0cd69330d139690425b6cd79c8ecf81e5",
+    "before": "c80ed7e78b039dea236e09bde97332c0cd69330d139690425b6cd79c8ecf81e5"
+  },
+  "app/views/itscenter/partials/checkout-resume.php": {
+    "after": "00ea8602024e0bcf794976f3a264a4aaab3e970a0db1db7ba0dd9f5058555795",
+    "before_lf": null,
+    "before": null
+  }
+}
