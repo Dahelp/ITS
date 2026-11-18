@@ -1,0 +1,12 @@
+{
+  "app/controllers/ProductController.php": {
+    "before": "4b0401e546fe56f688b7ad2ff5c04ec54b862fb4babd466725b73948eb58983c",
+    "before_lf": "4b0401e546fe56f688b7ad2ff5c04ec54b862fb4babd466725b73948eb58983c",
+    "after": "0ca9194033537d6ec0e26d3002ab7b84e1b96390756c76fd6aa102b5c132a4ed"
+  },
+  "app/models/admin/Product.php": {
+    "before": "fbebedc361ee38187f2c0223c0dcc547de753f0fd939abd3258d74ec33b2604e",
+    "before_lf": "fbebedc361ee38187f2c0223c0dcc547de753f0fd939abd3258d74ec33b2604e",
+    "after": "ec786fe734369af2b8fb618085f5aaa8f84549f01b54bbc5451b50f2aaf77433"
+  }
+}

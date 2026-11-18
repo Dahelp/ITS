@@ -302,8 +302,9 @@ class Product extends AppModel {
             $res = array("error" => "Допустимые расширения - .gif, .jpg, .png");
             exit(json_encode($res));
         }
-        $tmp_name = md5(time()).".$ext";
-		$new_name = md5(time()).".webp";
+        $uploadToken = bin2hex(random_bytes(16));
+        $tmp_name = $uploadToken . ".$ext";
+		$new_name = $uploadToken . ".webp";
 
 		$opts = ['webp_quality'=>85, 'jpeg_quality'=>85, 'png_compress'=>6, 'no_upscale'=>true];
 

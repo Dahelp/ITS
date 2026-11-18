@@ -268,7 +268,9 @@ class ProductController extends AppController
             $attributeValueMap[(int)$att['attribute_id']] = (string)$att['attribute_text'];
         }
 
-        $gallery = \R::findAll('gallery', 'product_id = ?', [$product->id]);
+        // Preserve legacy gallery rows with duplicate or zero IDs.
+        $gallery = array_map(static fn(array $row): object => (object)$row,
+            \R::getAll('SELECT id, img FROM gallery WHERE product_id = ? ORDER BY id, img', [$product->id]));
         $mods = \R::findAll('modification', 'product_id = ?', [$product->id]);
 
         $inseo = \R::findOne(
