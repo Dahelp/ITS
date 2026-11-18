@@ -1,74 +1,92 @@
 {
   "app/services/LeadForm.php": {
     "before": "a7f49c1ed39a2dcdf1f3a9582013942adc586cfec38815c59997f9480787a562",
-    "after": "9a4591b2d53db89c50dc2b868f4530238a59b008ec651347a4989583d890959f"
+    "after": "9a4591b2d53db89c50dc2b868f4530238a59b008ec651347a4989583d890959f",
+    "before_lf": "a7f49c1ed39a2dcdf1f3a9582013942adc586cfec38815c59997f9480787a562"
   },
   "app/models/Callback.php": {
     "before": "979cce94ccd9a4b2ea0fec323be5e8aa43843028475876285bdb03e1c5d9cdfe",
-    "after": "bb8feec278af99489d6f536879d19bb4d38e6e41846c3b0413e4946904d42ae0"
+    "after": "bb8feec278af99489d6f536879d19bb4d38e6e41846c3b0413e4946904d42ae0",
+    "before_lf": "979cce94ccd9a4b2ea0fec323be5e8aa43843028475876285bdb03e1c5d9cdfe"
   },
   "app/models/Product.php": {
     "before": "1b6122bacfb79d7881c4064af90e8adf4d78b25616b190f4a3c1fe104e2ffa55",
-    "after": "049ae8262fccf71de5479160bbade425bdddf5929bcd40d6e3b58914abd0ab26"
+    "after": "049ae8262fccf71de5479160bbade425bdddf5929bcd40d6e3b58914abd0ab26",
+    "before_lf": "1b6122bacfb79d7881c4064af90e8adf4d78b25616b190f4a3c1fe104e2ffa55"
   },
   "app/controllers/CallbackController.php": {
     "before": "c56f97aabe3a68fae7666eb94296c198bbce6dab674a1d5980a1db6ae7811b36",
-    "after": "b589a22f7dfbf9ce5481ae7da59435240bc53a7c81a33d5532215f6c58c36be1"
+    "after": "b589a22f7dfbf9ce5481ae7da59435240bc53a7c81a33d5532215f6c58c36be1",
+    "before_lf": "c56f97aabe3a68fae7666eb94296c198bbce6dab674a1d5980a1db6ae7811b36"
   },
   "app/controllers/UserController.php": {
     "before": "93744614da4b41badf2645509c88b8c081bb191b18aee9952af80a63a405d0e3",
-    "after": "9becfc0f89707622a96c21b93afeb81892c62b52bd2462e7a9633afdaccb2a9d"
+    "after": "9becfc0f89707622a96c21b93afeb81892c62b52bd2462e7a9633afdaccb2a9d",
+    "before_lf": "93744614da4b41badf2645509c88b8c081bb191b18aee9952af80a63a405d0e3"
   },
   "app/controllers/ProductController.php": {
     "before": "2db9a997185e0562af34b77cd26262be05986c0a94e5f9fea4d7d49612ba3169",
-    "after": "4b0401e546fe56f688b7ad2ff5c04ec54b862fb4babd466725b73948eb58983c"
+    "after": "4b0401e546fe56f688b7ad2ff5c04ec54b862fb4babd466725b73948eb58983c",
+    "before_lf": "2db9a997185e0562af34b77cd26262be05986c0a94e5f9fea4d7d49612ba3169"
   },
   "app/controllers/admin/OneclickController.php": {
     "before": "fb1fcb2634b9ae4c44c697b362f8a5f72c59bb0b295ee6a8c2baf5c9c1851588",
-    "after": "2627ed21fb7d20ff7de944226b6e30ab343367aa924b32586946b5c9c397ed3a"
+    "after": "2627ed21fb7d20ff7de944226b6e30ab343367aa924b32586946b5c9c397ed3a",
+    "before_lf": "fb1fcb2634b9ae4c44c697b362f8a5f72c59bb0b295ee6a8c2baf5c9c1851588"
   },
   "app/controllers/admin/SearchController.php": {
     "before": "c0a6c0978c6241b42d9411d1f902d3064256064ecaa3bd59244e8faf3525e283",
-    "after": "4ed21864058ff9cf03a329506a8dec567134b8a6b210523f72cb4480d6c14132"
+    "after": "4ed21864058ff9cf03a329506a8dec567134b8a6b210523f72cb4480d6c14132",
+    "before_lf": "c0a6c0978c6241b42d9411d1f902d3064256064ecaa3bd59244e8faf3525e283"
   },
   "app/services/admin/AdminDashboardService.php": {
     "before": "c234335fa675b476a0aecf992ff3e469f4b25c41903559d5e53c0dee423ca9ee",
-    "after": "a938912260032a9d0186e5723471bb6345f6165ecf2b4411fea5724377dffeb9"
+    "after": "a938912260032a9d0186e5723471bb6345f6165ecf2b4411fea5724377dffeb9",
+    "before_lf": "c234335fa675b476a0aecf992ff3e469f4b25c41903559d5e53c0dee423ca9ee"
   },
   "app/views/itscenter/Product/view.php": {
     "before": "89ea0e8fe29ba58bef2c25dc0431cee173304b96f2fc1881c7d3951d22cf64b0",
-    "after": "3b277e607bad265d7b515767317a6df81cf8cf687590772546fd989fd4a6ed19"
+    "after": "3b277e607bad265d7b515767317a6df81cf8cf687590772546fd989fd4a6ed19",
+    "before_lf": "89ea0e8fe29ba58bef2c25dc0431cee173304b96f2fc1881c7d3951d22cf64b0"
   },
   "app/views/itscenter/Cross/view.php": {
     "before": "0a0d83cc103def62898b2f213b00689877907bffe248ac92d7a9b4dcecbf380c",
-    "after": "541af0c7c8de645a7a64ee7fe3f80e235ac56e93a60b730ebfa5260cf6a2e7c3"
+    "after": "541af0c7c8de645a7a64ee7fe3f80e235ac56e93a60b730ebfa5260cf6a2e7c3",
+    "before_lf": "0a0d83cc103def62898b2f213b00689877907bffe248ac92d7a9b4dcecbf380c"
   },
   "app/views/itscenter/mail/mail_oneclick.php": {
     "before": "050cfd930eaf80e64cfabe8de8c87d4c1fdd273e4a49caad91cedd0eedbe88af",
-    "after": "37b0cfc96f52b2d18ed3c3534b108827dd151bbb732474e8d3baccc6ab3e9171"
+    "after": "37b0cfc96f52b2d18ed3c3534b108827dd151bbb732474e8d3baccc6ab3e9171",
+    "before_lf": "050cfd930eaf80e64cfabe8de8c87d4c1fdd273e4a49caad91cedd0eedbe88af"
   },
   "app/views/itscenter/mail/mail_oneclick_user.php": {
     "before": "2ed2f8055c30891595c68481e839b79d2d1a1cf099beba817322f032aad7d43a",
-    "after": "65f67b9ddc5eafe16119968283b1ea960486b6a31d28b20270ec96741bd26918"
+    "after": "65f67b9ddc5eafe16119968283b1ea960486b6a31d28b20270ec96741bd26918",
+    "before_lf": "2ed2f8055c30891595c68481e839b79d2d1a1cf099beba817322f032aad7d43a"
   },
   "app/views/itscenter/admin/Oneclick/index.php": {
     "before": "8a3d879bd948b34a343cc179d9d50df15d833523abd7e02a3995a467beb855c9",
-    "after": "06ef3f41a6a4193a735edfcf68a7af693c14e7f4e6fd9055764d7183083e64a9"
+    "after": "06ef3f41a6a4193a735edfcf68a7af693c14e7f4e6fd9055764d7183083e64a9",
+    "before_lf": "8a3d879bd948b34a343cc179d9d50df15d833523abd7e02a3995a467beb855c9"
   },
   "app/views/itscenter/admin/Main/index.php": {
     "before": "3b0686fd491e6bbe0bb0b342a49eb7b81a5c641511f1aa16a48903aef3c06c62",
-    "after": "2bb6600286d8f9b86a10c3e6cdbf7c336caf8a1d8eeb67b97d19601614b4d281"
+    "after": "2bb6600286d8f9b86a10c3e6cdbf7c336caf8a1d8eeb67b97d19601614b4d281",
+    "before_lf": "3b0686fd491e6bbe0bb0b342a49eb7b81a5c641511f1aa16a48903aef3c06c62"
   },
   "app/views/itscenter/layouts/admin.php": {
     "before": "293e10d9832a39d0821caae6db0e5e859487f643063260d0095259850ee1fb9b",
-    "after": "d367d2e7805da365c455a0fd7179ec40536381e2ccb139232f6a481e3e0901a3"
+    "after": "d367d2e7805da365c455a0fd7179ec40536381e2ccb139232f6a481e3e0901a3",
+    "before_lf": "973c35a743d66cb01e27b0d1aa2a0a4c72d945582ae15d9059e73d385e6fe27a"
   },
   "app/views/itscenter/partials/decide-block.php": {
     "before": "f05a48602de87e667dacdc5c989cd3d445fd2f4db787f3f29b2e0743859f0cd8",
-    "after": "abec28821df2c8c6729394e1b9373c7c6f609dbe59dcd39c99a8a28d2f0dafaf"
+    "after": "abec28821df2c8c6729394e1b9373c7c6f609dbe59dcd39c99a8a28d2f0dafaf",
+    "before_lf": "f05a48602de87e667dacdc5c989cd3d445fd2f4db787f3f29b2e0743859f0cd8"
   },
   "public/js/lead-forms.js": {
     "before": "04190670622a8cde4040cd90860f6ed8e388e88e2be9806ac61f21f50bb9a6fa",
-    "after": "82a12d03f1914c892cf6bbd4dc0561f2a6ed54e93d39cb98e53ecf4771c6c44c"
+    "after": "82a12d03f1914c892cf6bbd4dc0561f2a6ed54e93d39cb98e53ecf4771c6c44c",
+    "before_lf": "04190670622a8cde4040cd90860f6ed8e388e88e2be9806ac61f21f50bb9a6fa"
   }
 }

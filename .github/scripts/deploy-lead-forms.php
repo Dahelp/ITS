@@ -9,7 +9,7 @@ try {
  foreach($manifest as$p=>$v){
   if(!preg_match('~^(app|public|bin|scripts|config|vendor/ishop/core)/[A-Za-z0-9_./-]+$~D',$p)||str_contains($p,'..')||str_contains($p,'\\')||preg_match('~^(?:config/(?:api|config_db|config_db_tamozh|params)\.php|public/(?:uploads|storage|xml|xls|tmp|hot)/)~',$p))throw new RuntimeException('Protected path');
   $file=$root.'/'.$p;if(is_link($file))throw new RuntimeException('Symlink target');$hash=is_file($file)?hash_file('sha256',$file):null;
-  if($hash!==$v['before'])throw new RuntimeException('Production drift: '.$p);
+  if($hash!==$v['before']){if(!is_file($file)||!isset($v['before_lf'])||hash('sha256',str_replace("\r\n","\n",file_get_contents($file)))!==$v['before_lf'])throw new RuntimeException('Production drift: '.$p);$manifest[$p]['before']=$hash;}
   if($v['after']!==null){$src=$package.'/files/'.$p;if(!is_file($src)||hash_file('sha256',$src)!==$v['after'])throw new RuntimeException('Package mismatch: '.$p);if(str_ends_with($p,'.php')){exec(escapeshellarg(PHP_BINARY).' -l '.escapeshellarg($src).' 2>&1',$lint,$code);if($code)throw new RuntimeException('PHP lint: '.$p);}}
   $before[$p]=['sha256'=>$hash,'mode'=>is_file($file)?fileperms($file)&0777:0644];
  }
