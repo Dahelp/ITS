@@ -1,7 +1,7 @@
 <?php
 /** CLI-only bounded file release. Backups stay private on the hosting account. */
 if(PHP_SAPI!=='cli')exit(1);
-$root=getenv('PROJECT_RELEASE_TEST_ROOT')?:($argv[1]??'');$package=__DIR__;
+$root=getenv('PROJECT_RELEASE_TEST_ROOT')?:($argv[1]??'');$package=__DIR__;if(!is_dir($root)&&!str_starts_with($root,'/'))$root=dirname($package).'/'.$root;
 if(!is_dir($root)||file_exists($package.'/receipt.json'))throw new RuntimeException('Invalid root or release already applied');
 $manifest=json_decode(file_get_contents($package.'/manifest.json'),true,512,JSON_THROW_ON_ERROR);$installed=[];$before=[];
 function releaseRun($file,$arg=''){passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($file).' '.escapeshellarg($arg),$code);if($code)throw new RuntimeException('Release check failed: '.basename($file));}

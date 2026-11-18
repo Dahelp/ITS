@@ -206,4 +206,4 @@ jobs:
           tar -C /tmp/lead-forms-package -czf /tmp/lead-forms.tar.gz .
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" /tmp/lead-forms.tar.gz "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/package.tar.gz"
           node .github/scripts/require-current-master.cjs
-          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 install.php '${{ secrets.BEGET_PATH }}'"
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"
