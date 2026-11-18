@@ -116,49 +116,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         <?php if ($hasAction || ((float)$product->price_rrs > 0 && (float)$product->price_rrs > $basePrice)): ?><span class="pc-badge pc-badge--sale">Скидка</span><?php endif; ?>
                       </div>
                     <?php endif; ?>
-                    <section class="slider">
-                      <?php if (!empty($gallery)): ?>
-                        <div id="slider" class="flexslider product-flexslider-main">
-                          <ul class="slides">
-                            <li>
-                              <?= Img::productPicture('base', $product->img, $product->name, [
-                                'eager' => true,
-                                'classPicture' => 'main-photo'
-                              ]) ?>
-                            </li>
-                            <?php foreach ($gallery as $item): ?>
-                              <li data-slide-id="<?= (int)$item->id ?>">
-                                <?= Img::productPicture('gallery', $item->img, $product->name . ' — фото') ?>
-                              </li>
-                            <?php endforeach; ?>
-                          </ul>
-                        </div>
-
-                        <div id="carousel" class="flexslider product-flexslider-thumbs">
-                          <ul class="slides">
-                            <li>
-                              <?= Img::productPicture('mini', $product->img, $product->name . ' — превью') ?>
-                            </li>
-                            <?php foreach ($gallery as $item): ?>
-                              <li data-slide-id="<?= (int)$item->id ?>">
-                                <?= Img::productPicture('gallery', $item->img, $product->name . ' — фото') ?>
-                              </li>
-                            <?php endforeach; ?>
-                          </ul>
-                        </div>
-                      <?php else: ?>
-                        <div id="slider" class="flexslider product-flexslider-main">
-                          <ul class="slides">
-                            <li>
-                              <?= Img::productPicture('base', $product->img, $product->name, [
-                                'eager' => true,
-                                'classPicture' => 'main-photo'
-                              ]) ?>
-                            </li>
-                          </ul>
-                        </div>
-                      <?php endif; ?>
-                    </section>
+                    <?php require __DIR__ . '/../partials/product-gallery.php'; ?>
                   </div>
                 </div>
               </aside>

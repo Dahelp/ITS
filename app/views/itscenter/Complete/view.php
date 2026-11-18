@@ -73,73 +73,7 @@ $itog_price_complete = max(0, $price_complete - $effective_discount_complete);
                         <aside class="product-col product-col--gallery">
                             <div class="product-sticky-wrap">
                                 <div class="product-card product-gallery-card">
-                                    <section class="slider">
-                                        <?php if (!empty($gallery)): ?>
-                                            <div id="slider" class="flexslider product-flexslider-main">
-                                                <ul class="slides">
-                                                    <li>
-                                                        <?= Img::picture(
-                                                            ['fallback' => '/images/complete/baseimg/' . ltrim((string)$complete->img, '/')],
-                                                            $complete->name,
-                                                            \ishop\App::$app->getProperty('full_img_width') ?? 600,
-                                                            \ishop\App::$app->getProperty('full_img_height') ?? 600,
-                                                            ['lazy' => false, 'classPicture' => 'main-photo', 'attrs' => ['itemprop' => 'image']]
-                                                        ) ?>
-                                                    </li>
-                                                    <?php foreach ($gallery as $item): ?>
-                                                        <li>
-                                                            <?= Img::picture(
-                                                                ['fallback' => '/images/complete/gallery/' . ltrim((string)$item->img, '/')],
-                                                                $complete->name . ' — фото',
-                                                                600,
-                                                                600,
-                                                                ['lazy' => true, 'attrs' => ['itemprop' => 'image']]
-                                                            ) ?>
-                                                        </li>
-                                                    <?php endforeach; ?>
-                                                </ul>
-                                            </div>
-
-                                            <div id="carousel" class="flexslider product-flexslider-thumbs">
-                                                <ul class="slides">
-                                                    <li>
-                                                        <?= Img::picture(
-                                                            ['fallback' => '/images/complete/baseimg/' . ltrim((string)$complete->img, '/')],
-                                                            $complete->name . ' — превью',
-                                                            120,
-                                                            120,
-                                                            ['lazy' => true]
-                                                        ) ?>
-                                                    </li>
-                                                    <?php foreach ($gallery as $item): ?>
-                                                        <li>
-                                                            <?= Img::picture(
-                                                                ['fallback' => '/images/complete/gallery/' . ltrim((string)$item->img, '/')],
-                                                                $complete->name . ' — фото',
-                                                                120,
-                                                                120,
-                                                                ['lazy' => true]
-                                                            ) ?>
-                                                        </li>
-                                                    <?php endforeach; ?>
-                                                </ul>
-                                            </div>
-                                        <?php else: ?>
-                                            <div id="slider" class="flexslider product-flexslider-main">
-                                                <ul class="slides">
-                                                    <li>
-                                                        <?= Img::picture(
-                                                            ['fallback' => '/images/complete/baseimg/' . ltrim((string)$complete->img, '/')],
-                                                            $complete->name,
-                                                            600,
-                                                            600,
-                                                            ['lazy' => false, 'classPicture' => 'main-photo', 'attrs' => ['itemprop' => 'image']]
-                                                        ) ?>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        <?php endif; ?>
-                                    </section>
+                                    <?php $galleryProduct = $complete; $galleryKind = 'complete'; require __DIR__ . '/../partials/product-gallery.php'; ?>
                                 </div>
                             </div>
                         </aside>

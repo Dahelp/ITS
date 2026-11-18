@@ -1,0 +1,24 @@
+{
+  "app/views/itscenter/Product/view.php": {
+    "before": "3b277e607bad265d7b515767317a6df81cf8cf687590772546fd989fd4a6ed19",
+    "before_lf": "3b277e607bad265d7b515767317a6df81cf8cf687590772546fd989fd4a6ed19",
+    "after": "baee36bdf0220bcbf3ba9c92af605a3c0737efcfb47433deeb90a894e7d5a227"
+  },
+  "app/views/itscenter/Complete/view.php": {
+    "before": "9b23c08e07065dd4425a5a3cd5f278fb1b4e4e7788649224b13c70353fbaca9a",
+    "before_lf": "9b23c08e07065dd4425a5a3cd5f278fb1b4e4e7788649224b13c70353fbaca9a",
+    "after": "58084f2a3a356b1e1f86388fa3bec300949699fd2a9e54e4b32968d88b29ed4c"
+  },
+  "public/css/product-gallery.css": {
+    "before": null,
+    "after": "5b401e73cd4c91ebcca6d9f700cbda0eb767d468af20836e7791a6585be01fcc"
+  },
+  "public/js/product-gallery.js": {
+    "before": null,
+    "after": "75e6e618724070f5020de81fd570ef2e2a04f2983b9e3de30a09523b02abd896"
+  },
+  "app/views/itscenter/partials/product-gallery.php": {
+    "before": null,
+    "after": "6bc12fa686d53b0b6626a1833fcd172080afac83138e9bb961d906ba3739f808"
+  }
+}
