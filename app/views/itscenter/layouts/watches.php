@@ -233,6 +233,7 @@
 <body>	
 
 <?php require __DIR__ . '/../partials/header.php'; ?>
+<?php require __DIR__ . '/../partials/checkout-resume.php'; ?>
 
 <div class="content">
     <?php require __DIR__ . '/../partials/b2b-block.php'; ?>
@@ -321,6 +322,5 @@ window.APP_PATH = window.APP_CONFIG.path;
 <?php require __DIR__ . '/../partials/catalog-menu-shell.php'; ?>
 <script src="/js/main.js?v=<?= (int) @filemtime(WWW . '/js/main.js') ?>"></script>
 
-<?php require __DIR__ . '/../partials/checkout-resume.php'; ?>
 </body>
 </html>
