@@ -1,0 +1,23 @@
+<?php
+$repo=dirname(__DIR__);$dir=$repo.'/outputs/cr10-release/handoff-test-'.bin2hex(random_bytes(4));
+$root=$dir.'/account/site/public_html';mkdir($root.'/config',0777,true);
+file_put_contents($root.'/config/init.php','<?php define("CONF",'.var_export($root.'/config',true).');');
+file_put_contents($root.'/config/db_bootstrap.php','<?php require '.var_export($repo.'/tests/fixtures/CheckoutHandoffDatabase.php',true).';');
+$dataFile=$dir.'/fixture.json';putenv('CR10_HANDOFF_FIXTURE_DATA='.$dataFile);
+$original=['id'=>5,'email'=>'yuri@babachkov.ru','password'=>'original-hash','role'=>'b2buser','comp_id'=>1];
+$data=['users'=>[5=>$original],'orders'=>[['id'=>1,'user_id'=>5,'note'=>'Historical real order']],'companies'=>[['id'=>1,'user_id'=>5]],'recover'=>['old token'],'pending'=>[]];
+file_put_contents($dataFile,json_encode($data));
+$run=static function($mode)use($repo,$root){$out=[];$code=0;exec(escapeshellarg(PHP_BINARY).' '.escapeshellarg($repo.'/.github/scripts/checkout-account-maintenance.php').' '.escapeshellarg($root).' '.escapeshellarg($mode).' 2>&1',$out,$code);if($code)throw new RuntimeException(implode("\n",$out));};
+$check=static function($condition,$message){if(!$condition)throw new RuntimeException($message);};
+$run('suspend');$held=json_decode(file_get_contents($dataFile),true);
+$check($held['users'][5]['email']!==$original['email'],'Mailbox freed');
+$copy=$held['users'][5];$copy['email']=$original['email'];$check($copy===$original,'Only email changed');
+$check($held['orders']===$data['orders']&&$held['companies']===$data['companies'],'Real history retained');
+$held['users'][6]=['id'=>6,'email'=>$original['email'],'password'=>'qa-hash','role'=>'user','comp_id'=>null];
+$held['orders'][]=['id'=>2,'user_id'=>6,'note'=>'ТЕСТ CR-10 — НЕ ОБРАБАТЫВАТЬ'];$held['pending'][6]=1;
+file_put_contents($dataFile,json_encode($held));$run('restore');$restored=json_decode(file_get_contents($dataFile),true);
+$check($restored['users'][5]===$original,'Original mailbox, role and password restored');
+$check($restored['orders'][0]===$data['orders'][0]&&$restored['companies']===$data['companies'],'Real orders and company unchanged');
+$check($restored['orders'][1]['user_id']===5&&$restored['users'][6]['email']!==$original['email']&&$restored['pending'][6]===0,'QA order retained and setup link retired');
+$run('restore');$check(json_decode(file_get_contents($dataFile),true)===$restored,'Idempotent restoration');
+putenv('CR10_HANDOFF_FIXTURE_DATA');echo "CR10 reversible handoff: only mailbox changed, real B2B history/password preserved, QA order retained, restoration idempotent; no production data touched\n";

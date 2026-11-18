@@ -5,9 +5,9 @@
     "before_lf": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752"
   },
   "app/controllers/UserController.php": {
-    "before": "fb134ca825b1605927746af9cae7805ca5544d5d93ecac03af1bf667e61c76aa",
+    "before": "8e0b83c15ecb8c221e62a95f3dbac0ec6e898f96734d42fef9281ee46bd9a6c7",
     "after": "8e0b83c15ecb8c221e62a95f3dbac0ec6e898f96734d42fef9281ee46bd9a6c7",
-    "before_lf": "fb134ca825b1605927746af9cae7805ca5544d5d93ecac03af1bf667e61c76aa"
+    "before_lf": "8e0b83c15ecb8c221e62a95f3dbac0ec6e898f96734d42fef9281ee46bd9a6c7"
   },
   "app/controllers/admin/OrderController.php": {
     "before": "592a56901311d8a50f12cb80316b74306eb5f92f877c3ab9a18aabb0e96b9d30",
@@ -45,14 +45,14 @@
     "before_lf": "fa2ddabb043a5dc2164b9446f74a12128070eb8055269c181f71d9530124051f"
   },
   "app/views/itscenter/User/recover.php": {
-    "before": "d5dd1ff8e99457a3b73fc72601b5a6fdd93158d2bc284653902dc26156ecd009",
+    "before": "cb3612eaaf649aaee0711171155e5bc5dba0e7713994b66e67d2730d194e7bb0",
     "after": "cb3612eaaf649aaee0711171155e5bc5dba0e7713994b66e67d2730d194e7bb0",
-    "before_lf": "d5dd1ff8e99457a3b73fc72601b5a6fdd93158d2bc284653902dc26156ecd009"
+    "before_lf": "cb3612eaaf649aaee0711171155e5bc5dba0e7713994b66e67d2730d194e7bb0"
   },
   "app/views/itscenter/User/recover-pass.php": {
-    "before": "8e8ce00d2888de69281ba0a6c5fe7c30c2b33be984a9fcb0e87743cc5248bac4",
+    "before": "744728e89eafb59f5a01062935e1837ab458b0c006f9457e011695fd727322d4",
     "after": "744728e89eafb59f5a01062935e1837ab458b0c006f9457e011695fd727322d4",
-    "before_lf": "8e8ce00d2888de69281ba0a6c5fe7c30c2b33be984a9fcb0e87743cc5248bac4"
+    "before_lf": "744728e89eafb59f5a01062935e1837ab458b0c006f9457e011695fd727322d4"
   },
   "app/views/itscenter/User/setup-password.php": {
     "before": "a2740a243ee9567f4d7bd49d04ed19d56073ecf88eb5f29dc9d7dc6d2a9796c5",

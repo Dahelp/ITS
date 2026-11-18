@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'outputs/cr10-release
 const git=(...args)=>execFileSync('git',['-c','safe.directory=C:/xampp82/htdocs/its-center',...args],{cwd:root});
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const runtime=['app/controllers/CartController.php','app/controllers/UserController.php','app/controllers/admin/OrderController.php','app/models/Order.php','app/models/User.php','app/services/CheckoutAccount.php','app/views/itscenter/Cart/view.php','app/views/itscenter/Cart/complete.php','app/views/itscenter/User/login.php','app/views/itscenter/User/recover.php','app/views/itscenter/User/recover-pass.php','app/views/itscenter/User/setup-password.php','app/views/itscenter/mail/mail_order.php','app/views/itscenter/mail/mail_recover.php','app/views/itscenter/partials/modals.php','public/js/checkout-progress.js','public/js/main.js'];
-const tests=['tests/CheckoutAccountTest.php','tests/CheckoutGuestFlowTest.php','tests/CheckoutAccountMailTest.php','tests/CheckoutLoginFlowTest.php','tests/CheckoutLoginResumeTest.cjs','tests/CheckoutRecoverRoutesTest.php'];
+const tests=['tests/CheckoutAccountTest.php','tests/CheckoutGuestFlowTest.php','tests/CheckoutAccountMailTest.php','tests/CheckoutLoginFlowTest.php','tests/CheckoutLoginResumeTest.cjs','tests/CheckoutRecoverRoutesTest.php','tests/CheckoutEmailHandoffTest.php','tests/fixtures/CheckoutHandoffDatabase.php'];
 const support=['.github/scripts/package-checkout-account.php','.github/scripts/smoke-checkout-account.php','.github/scripts/checkout-account-maintenance.php','docs/cr10-checkout-account.md','scripts/prepare_cr10_release.cjs',...tests];
 function write(p,b){const dest=path.join(snapshot,p);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,b);}
 fs.mkdirSync(out,{recursive:true});
@@ -86,6 +86,15 @@ if(!workflow.includes('      checkout_account_maintenance:')){
           node .github/scripts/require-current-master.cjs
           ssh -i ~/.ssh/beget_deploy_key -p "\${{ secrets.BEGET_PORT }}" "\${{ secrets.BEGET_USER }}@\${{ secrets.BEGET_HOST }}" "php8.2 -d display_errors=stderr -d log_errors=0 '$release/maintenance.php' '\${{ secrets.BEGET_PATH }}' '$CR10_MODE'"
 `;
+}
+if(!workflow.includes('options: [none, inspect, reset, suspend, restore]')){
+    workflow=workflow.replace('options: [none, inspect, reset]','options: [none, inspect, reset, suspend, restore]');
+    workflow=workflow.replace('case "$CR10_MODE" in inspect|reset)', 'case "$CR10_MODE" in inspect|reset|suspend|restore)');
+    workflow=workflow.replace(/^        if: (.+)$/gm,(line,condition)=>{
+        if(condition.includes("(inputs.checkout_account_maintenance == 'inspect'"))return line.replace("inputs.checkout_account_maintenance == 'reset')","inputs.checkout_account_maintenance == 'reset' || inputs.checkout_account_maintenance == 'suspend' || inputs.checkout_account_maintenance == 'restore')");
+        if(condition.includes('inputs.verify_only != true'))return "        if: inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && "+condition;
+        return line;
+    });
 }
 write('.github/workflows/deploy-beget.yml',workflow);
 const files=[...runtime,...support,'.github/checkout-account-manifest.json','.github/workflows/deploy-beget.yml'];
