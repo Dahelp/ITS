@@ -823,7 +823,7 @@ class UserController extends AppController {
 		if (!$postToken || !$sessionToken || !hash_equals($sessionToken, $postToken)) {
 			$_SESSION['error'] = 'Форма устарела, обновите страницу и попробуйте ещё раз.';
 			$_SESSION['form_data'] = $_POST;
-			redirect('user/recover');
+			redirect(PATH.'/user/recover');
 		}
 
 		// одноразовый токен
@@ -832,7 +832,7 @@ class UserController extends AppController {
 		// honeypot
 		if (!empty($_POST['hp_field'])) {
 			// бот — молча уходим
-			redirect('user/recover');
+			redirect(PATH.'/user/recover');
 		}
 
 		// E-mail
@@ -842,7 +842,7 @@ class UserController extends AppController {
 		if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 			$_SESSION['error'] = 'Укажите корректный e-mail.';
 			$_SESSION['form_data'] = $_POST;
-			redirect('user/recover');
+			redirect(PATH.'/user/recover');
 		}
 
 		// Ищем пользователя (но не палим, найден ли он пользователю)
@@ -864,7 +864,7 @@ class UserController extends AppController {
 				if ($secondsSinceLast < $minInterval) {
 					// Не шлём повторно письмо, но сообщение пользователю всё равно успех
 					$_SESSION['success'] = 'Если такой e-mail зарегистрирован, ссылка на восстановление пароля уже отправлена.';
-					redirect('user/recover');
+					redirect(PATH.'/user/recover');
 				}
 			}
 
@@ -915,7 +915,7 @@ class UserController extends AppController {
 
 		// В любом случае (есть пользователь или нет) — одно и то же сообщение
 		$_SESSION['success'] = 'Если такой e-mail зарегистрирован, ссылка на восстановление пароля отправлена.';
-		redirect('user/recover');
+		redirect(PATH.'/user/recover');
 	}
 
 	
@@ -940,7 +940,7 @@ class UserController extends AppController {
 
 		if ($hash === '') {
 			$_SESSION['error'] = 'Некорректная ссылка для восстановления пароля.';
-			redirect('user/recover');
+			redirect(PATH.'/user/recover');
 		}
 
 		$userModel = new User();
@@ -948,18 +948,18 @@ class UserController extends AppController {
 
 		if (!$uhash) {
 			$_SESSION['error'] = 'Ссылка для восстановления пароля недействительна или устарела.';
-			redirect('user/recover');
+			redirect(PATH.'/user/recover');
 		}
 
 		if ($password === '') {
 			$_SESSION['error'] = 'Не введён новый пароль.';
-			redirect('user/recover-pass?key=' . urlencode($hash));
+			redirect(PATH.'/user/recover-pass?key=' . urlencode($hash));
 		}
 
 		// Минимальная проверка сложности пароля (можешь усилить по желанию)
 		if (mb_strlen($password, 'UTF-8') < 6) {
 			$_SESSION['error'] = 'Пароль должен быть не короче 6 символов.';
-			redirect('user/recover-pass?key=' . urlencode($hash));
+			redirect(PATH.'/user/recover-pass?key=' . urlencode($hash));
 		}
 
 		$passHash = password_hash($password, PASSWORD_DEFAULT);
@@ -976,7 +976,7 @@ class UserController extends AppController {
 		}
 
 		$_SESSION['success'] = 'Пароль обновлён. Теперь вы можете войти в личный кабинет с новым паролем.';
-		redirect('user/login');
+		redirect(PATH.'/user/login');
 	}
 	
     public function zvonokAction(){

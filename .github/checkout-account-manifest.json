@@ -1,79 +1,87 @@
 {
   "app/controllers/CartController.php": {
-    "before": "5d4e40f200d34a4e339e9c6b18cfc71028eebcda08196454b3c484477e7153e1",
+    "before": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752",
     "after": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752",
-    "before_lf": "5d4e40f200d34a4e339e9c6b18cfc71028eebcda08196454b3c484477e7153e1"
+    "before_lf": "ed174b2fd4a3b5038a499b77f4dc9dbff2d419833d0db64c5834d2294e5e3752"
   },
   "app/controllers/UserController.php": {
-    "before": "9becfc0f89707622a96c21b93afeb81892c62b52bd2462e7a9633afdaccb2a9d",
-    "after": "fb134ca825b1605927746af9cae7805ca5544d5d93ecac03af1bf667e61c76aa",
-    "before_lf": "9becfc0f89707622a96c21b93afeb81892c62b52bd2462e7a9633afdaccb2a9d"
+    "before": "fb134ca825b1605927746af9cae7805ca5544d5d93ecac03af1bf667e61c76aa",
+    "after": "8e0b83c15ecb8c221e62a95f3dbac0ec6e898f96734d42fef9281ee46bd9a6c7",
+    "before_lf": "fb134ca825b1605927746af9cae7805ca5544d5d93ecac03af1bf667e61c76aa"
   },
   "app/controllers/admin/OrderController.php": {
-    "before": "a7a81b1850038fbd8a9a0ffd4a0001b96bd3e7a89bb8fe2baf7113211011771a",
+    "before": "592a56901311d8a50f12cb80316b74306eb5f92f877c3ab9a18aabb0e96b9d30",
     "after": "592a56901311d8a50f12cb80316b74306eb5f92f877c3ab9a18aabb0e96b9d30",
-    "before_lf": "a7a81b1850038fbd8a9a0ffd4a0001b96bd3e7a89bb8fe2baf7113211011771a"
+    "before_lf": "592a56901311d8a50f12cb80316b74306eb5f92f877c3ab9a18aabb0e96b9d30"
   },
   "app/models/Order.php": {
-    "before": "b23d6ed0ea5b21ec4f10ede4313a7bbf07414d8879f1febf25aa5a4071c8d8ed",
+    "before": "457f4032ca5ce60a2e2489db2ec0317151fdc362901d25e5257c52ee05e9b220",
     "after": "457f4032ca5ce60a2e2489db2ec0317151fdc362901d25e5257c52ee05e9b220",
-    "before_lf": "b23d6ed0ea5b21ec4f10ede4313a7bbf07414d8879f1febf25aa5a4071c8d8ed"
+    "before_lf": "457f4032ca5ce60a2e2489db2ec0317151fdc362901d25e5257c52ee05e9b220"
   },
   "app/models/User.php": {
-    "before": "e3a29b31f132b8e1edf308d9ea71e8da55d856100c6828a6aa8d14b5f5a1b533",
+    "before": "1bfea0cc7aa2543804e55e313ae250f52ac9c5c7ada21985f2de6bc41ed4bb94",
     "after": "1bfea0cc7aa2543804e55e313ae250f52ac9c5c7ada21985f2de6bc41ed4bb94",
-    "before_lf": "3d426ec9b5fb4409e99fe507e1c84faa0d8e7133440d4d714628709e40fa95d4"
+    "before_lf": "1bfea0cc7aa2543804e55e313ae250f52ac9c5c7ada21985f2de6bc41ed4bb94"
   },
   "app/services/CheckoutAccount.php": {
-    "before": null,
-    "after": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39"
+    "before": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39",
+    "after": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39",
+    "before_lf": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39"
   },
   "app/views/itscenter/Cart/view.php": {
-    "before": "886e997b32bd553f0e4d4ef49aa535ed9e13755d4ee12eac40d278c9a8d76945",
+    "before": "062e9d744093ff3f27d12cf725dae83a27095408734165424d9aa636805da8ca",
     "after": "062e9d744093ff3f27d12cf725dae83a27095408734165424d9aa636805da8ca",
-    "before_lf": "886e997b32bd553f0e4d4ef49aa535ed9e13755d4ee12eac40d278c9a8d76945"
+    "before_lf": "062e9d744093ff3f27d12cf725dae83a27095408734165424d9aa636805da8ca"
   },
   "app/views/itscenter/Cart/complete.php": {
-    "before": null,
-    "after": "e88fd9e6c98d654c0fb1ece5192bedaf8c316461f49f4ec0859cf717f2c4b0c6"
+    "before": "e88fd9e6c98d654c0fb1ece5192bedaf8c316461f49f4ec0859cf717f2c4b0c6",
+    "after": "e88fd9e6c98d654c0fb1ece5192bedaf8c316461f49f4ec0859cf717f2c4b0c6",
+    "before_lf": "e88fd9e6c98d654c0fb1ece5192bedaf8c316461f49f4ec0859cf717f2c4b0c6"
   },
   "app/views/itscenter/User/login.php": {
-    "before": "5c7107ce7081a822aecbdf38bd97f50a93481cae5cfc96b3fa9437c83d9eeaf3",
+    "before": "fa2ddabb043a5dc2164b9446f74a12128070eb8055269c181f71d9530124051f",
     "after": "fa2ddabb043a5dc2164b9446f74a12128070eb8055269c181f71d9530124051f",
-    "before_lf": "5c7107ce7081a822aecbdf38bd97f50a93481cae5cfc96b3fa9437c83d9eeaf3"
+    "before_lf": "fa2ddabb043a5dc2164b9446f74a12128070eb8055269c181f71d9530124051f"
+  },
+  "app/views/itscenter/User/recover.php": {
+    "before": "d5dd1ff8e99457a3b73fc72601b5a6fdd93158d2bc284653902dc26156ecd009",
+    "after": "cb3612eaaf649aaee0711171155e5bc5dba0e7713994b66e67d2730d194e7bb0",
+    "before_lf": "d5dd1ff8e99457a3b73fc72601b5a6fdd93158d2bc284653902dc26156ecd009"
   },
   "app/views/itscenter/User/recover-pass.php": {
-    "before": "d2d2ddf642f462b13225ddbe2be82e42b1699b02532568dc07f8ca7b7ff06beb",
-    "after": "8e8ce00d2888de69281ba0a6c5fe7c30c2b33be984a9fcb0e87743cc5248bac4",
-    "before_lf": "d2d2ddf642f462b13225ddbe2be82e42b1699b02532568dc07f8ca7b7ff06beb"
+    "before": "8e8ce00d2888de69281ba0a6c5fe7c30c2b33be984a9fcb0e87743cc5248bac4",
+    "after": "744728e89eafb59f5a01062935e1837ab458b0c006f9457e011695fd727322d4",
+    "before_lf": "8e8ce00d2888de69281ba0a6c5fe7c30c2b33be984a9fcb0e87743cc5248bac4"
   },
   "app/views/itscenter/User/setup-password.php": {
-    "before": null,
-    "after": "a2740a243ee9567f4d7bd49d04ed19d56073ecf88eb5f29dc9d7dc6d2a9796c5"
+    "before": "a2740a243ee9567f4d7bd49d04ed19d56073ecf88eb5f29dc9d7dc6d2a9796c5",
+    "after": "a2740a243ee9567f4d7bd49d04ed19d56073ecf88eb5f29dc9d7dc6d2a9796c5",
+    "before_lf": "a2740a243ee9567f4d7bd49d04ed19d56073ecf88eb5f29dc9d7dc6d2a9796c5"
   },
   "app/views/itscenter/mail/mail_order.php": {
-    "before": "c191eb1d5b7870849efd914248050130a183f11a7740f4731035338f7903f4c8",
+    "before": "92f653eca08150574ccae355443acde3708ff63e1fe75c1911c010c4aafd0396",
     "after": "92f653eca08150574ccae355443acde3708ff63e1fe75c1911c010c4aafd0396",
-    "before_lf": "c191eb1d5b7870849efd914248050130a183f11a7740f4731035338f7903f4c8"
+    "before_lf": "92f653eca08150574ccae355443acde3708ff63e1fe75c1911c010c4aafd0396"
   },
   "app/views/itscenter/mail/mail_recover.php": {
-    "before": "e589bc15a8efe5258b666a84ffdef5750ea12794d54dc037e494991e1a7b3d5b",
+    "before": "d21fcd816d936c1bfa379633533aeb8819943531391849f1be7c0f230d8b47c7",
     "after": "d21fcd816d936c1bfa379633533aeb8819943531391849f1be7c0f230d8b47c7",
-    "before_lf": "e589bc15a8efe5258b666a84ffdef5750ea12794d54dc037e494991e1a7b3d5b"
+    "before_lf": "d21fcd816d936c1bfa379633533aeb8819943531391849f1be7c0f230d8b47c7"
   },
   "app/views/itscenter/partials/modals.php": {
-    "before": "fb78377283e75d92cf8a0363379bf55bbd0c83d16b30615fd0d9f803b524c682",
+    "before": "45a03bbeedec00c155a92f07910d641afb63879edb72f83f1ae66c74ad83fe58",
     "after": "45a03bbeedec00c155a92f07910d641afb63879edb72f83f1ae66c74ad83fe58",
-    "before_lf": "fb78377283e75d92cf8a0363379bf55bbd0c83d16b30615fd0d9f803b524c682"
+    "before_lf": "45a03bbeedec00c155a92f07910d641afb63879edb72f83f1ae66c74ad83fe58"
   },
   "public/js/checkout-progress.js": {
-    "before": "97ea65a43d1a8d1e0b7981444e54d301216a7a2507e4462607a4729231e23a0e",
+    "before": "11dd15936a70b83d7ee736928abedb73b61c9379633d9fc0db517afa2f83ef55",
     "after": "11dd15936a70b83d7ee736928abedb73b61c9379633d9fc0db517afa2f83ef55",
-    "before_lf": "97ea65a43d1a8d1e0b7981444e54d301216a7a2507e4462607a4729231e23a0e"
+    "before_lf": "11dd15936a70b83d7ee736928abedb73b61c9379633d9fc0db517afa2f83ef55"
   },
   "public/js/main.js": {
-    "before": "33f279f3860a7a80c0391f0890dc469212ac679688a691ca60b6dcaf7225f28d",
+    "before": "f7229f4bf202f2c6aa9399169c26c0055adc8e61ea9f0d813ad86169a580f1f4",
     "after": "f7229f4bf202f2c6aa9399169c26c0055adc8e61ea9f0d813ad86169a580f1f4",
-    "before_lf": "33f279f3860a7a80c0391f0890dc469212ac679688a691ca60b6dcaf7225f28d"
+    "before_lf": "f7229f4bf202f2c6aa9399169c26c0055adc8e61ea9f0d813ad86169a580f1f4"
   }
 }

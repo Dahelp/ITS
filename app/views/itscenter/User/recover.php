@@ -11,7 +11,7 @@ if (empty($_SESSION['recover_token'])) {
 
         <div class="register-main">
             <div class="col-md-6 account-left">
-                <form method="post" action="user/recover" id="recover" role="form" data-toggle="validator">
+                <form method="post" action="<?= PATH ?>/user/recover" id="recover" role="form" data-toggle="validator">
                     <input type="hidden" name="recover_token"
                            value="<?= htmlspecialchars($_SESSION['recover_token'], ENT_QUOTES, 'UTF-8') ?>">
 

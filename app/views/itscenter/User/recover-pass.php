@@ -17,7 +17,7 @@
 				<div class="col-md-12">
                     <div class="register-main">
                         <div class="col-md-6 account-left">
-                            <form method="post" action="user/recover-pass" id="recover" role="form" data-toggle="validator">                                
+                            <form method="post" action="<?= PATH ?>/user/recover-pass" id="recover" role="form" data-toggle="validator">                                
 								<div class="form-group has-feedback mb-3">
                                     <label class="form-label" for="new_pass">Новый пароль</label>
 									<input type="password" name="password" class="form-control" placeholder="Введите новый пароль" required>
