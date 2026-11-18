@@ -26,7 +26,7 @@ class OneclickController extends AppController
         );
         $namecomp = App::$app->getProperty('shop_name');
 
-        $this->setMeta('Заказы в 1 клик');
+        $this->setMeta('Заявки на заказ');
         $this->set(compact('clicks', 'namecomp'));
     }
 
@@ -38,7 +38,7 @@ class OneclickController extends AppController
             [date('Y-m-d H:i:s'), $_SESSION['user']['id'] ?? null, $id]
         );
         AdminActivityLogger::admin(AdminActivityLogger::ACTION_LEAD_PROCESS, 'mail_oneclick', (int)$id);
-        $_SESSION['success'] = 'Заказ в 1 клик взят в обработку';
+        $_SESSION['success'] = 'Заявка на заказ взята в обработку';
         redirect(ADMIN . '/oneclick');
     }
 
@@ -47,7 +47,7 @@ class OneclickController extends AppController
         $id = $this->getRequestID();
         \R::exec("UPDATE mail_oneclick SET hide = '2' WHERE id = ?", [$id]);
         AdminActivityLogger::admin(AdminActivityLogger::ACTION_LEAD_DONE, 'mail_oneclick', (int)$id);
-        $_SESSION['success'] = 'Заказ в 1 клик обработан';
+        $_SESSION['success'] = 'Заявка на заказ обработана';
         redirect(ADMIN . '/oneclick');
     }
 
@@ -56,7 +56,7 @@ class OneclickController extends AppController
         $id = $this->getRequestID();
         \R::exec("UPDATE mail_oneclick SET hide = '2' WHERE id = ?", [$id]);
         AdminActivityLogger::admin(AdminActivityLogger::ACTION_LEAD_CLOSE, 'mail_oneclick', (int)$id);
-        $_SESSION['success'] = 'Заказ в 1 клик закрыт';
+        $_SESSION['success'] = 'Заявка на заказ закрыта';
         redirect(ADMIN . '/oneclick');
     }
 
@@ -65,7 +65,7 @@ class OneclickController extends AppController
         $id = $this->getRequestID();
         $orderId = AdminLeadOrderService::createFromOneClick((int)$id);
         AdminActivityLogger::admin(AdminActivityLogger::ACTION_LEAD_DONE, 'mail_oneclick', (int)$id);
-        $_SESSION['success'] = 'Создан заказ #' . $orderId . ' из заявки в 1 клик';
+        $_SESSION['success'] = 'Создан заказ #' . $orderId . ' из заявки на заказ';
         redirect(ADMIN . '/order/view?id=' . $orderId);
     }
 }

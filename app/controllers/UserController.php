@@ -912,14 +912,12 @@ class UserController extends AppController {
         try {
             \app\services\LeadForm::guard('callback', $_POST);
             $phone = \app\services\LeadForm::phone($_POST['phone'] ?? '');
-            \app\services\LeadForm::rejectRecent('callback','phone',$phone);
             $name = \app\services\LeadForm::text($_POST['name'] ?? '', 200);
             $email = \app\services\LeadForm::text($_POST['email'] ?? '', 254);
             $comment = \app\services\LeadForm::text($_POST['comment'] ?? '', 3000);
             if ($email !== '' && !filter_var($email,FILTER_VALIDATE_EMAIL)) throw new \DomainException('Укажите корректную почту или оставьте поле пустым.');
             if (empty($_POST['agree'])) throw new \DomainException('Подтвердите согласие на обработку данных.');
             (new \app\models\Callback())->addCallback($phone, (int)($_SESSION['user']['id'] ?? 0), 'Заказать звонок', $name, $email, $comment);
-            \app\services\LeadForm::consumed('callback');
             $_SESSION['success']='Заявка принята. Менеджер перезвонит в рабочее время.';
         } catch (\DomainException $e) { $_SESSION['error']=$e->getMessage(); }
         redirect();

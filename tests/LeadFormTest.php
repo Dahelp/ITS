@@ -5,8 +5,8 @@ use app\services\LeadForm;
 function check($ok,$message){if(!$ok)throw new RuntimeException($message);}
 function rejects(callable $call){try{$call();}catch(DomainException $e){return;}throw new RuntimeException('Expected validation failure');}
 class R {
-    public static $recent=false; public static $query; public static $args;
-    public static function getCell($sql,$args){return self::$recent ? 42 : null;}
+    public static $locked=true; public static $releases=0; public static $recent=false; public static $query; public static $args;
+    public static function getCell($sql,$args){if (str_contains($sql,'GET_LOCK')) { check(strlen($args[0])<=64,'lock name length'); return self::$locked ? 1 : 0; } if (str_contains($sql,'RELEASE_LOCK')) { self::$releases++; return 1; } return self::$recent ? 42 : null;}
     public static function exec($sql,$args){self::$query=$sql;self::$args=$args;}
 }
 session_save_path(dirname(__DIR__).'/tmp');
@@ -24,11 +24,23 @@ rejects(fn()=>LeadForm::guard('callback',['lead_token'=>$next]));
 $_SESSION['lead_last_sent']=time()-61;
 LeadForm::guard('callback',['lead_token'=>$next]);
 check(LeadForm::phone('8 (912) 345-67-89')==='+79123456789','normalized phone');
-foreach(['+7 (9','+7 (999) 999-99-99','123',[], ''] as $phone) rejects(fn()=>LeadForm::phone($phone));
+foreach(['+7 (9','+7 (999) 999-99-99','+7 (912) 345-67-89abc',"+79123456789\n",'123',[], ''] as $phone) rejects(fn()=>LeadForm::phone($phone));
 foreach([0,-1,'1.5','1e2',10000,[]] as $qty) rejects(fn()=>LeadForm::quantity($qty));
 check(LeadForm::quantity('4')===4,'quantity');
 R::$recent=true;rejects(fn()=>LeadForm::rejectRecent('callback','phone','+79123456789'));R::$recent=false;
 LeadForm::rejectRecent('callback','phone','+79123456789');
+check(LeadForm::withPhoneLock('+79123456789',fn()=>42)===42,'save under lock');
+check(R::$releases===1,'release after save');
+R::$recent=true;
+rejects(fn()=>LeadForm::withPhoneLock('+79123456789',function(){throw new RuntimeException('must not save duplicate');}));
+check(R::$releases===2,'release after duplicate');
+R::$recent=false;
+rejects(fn()=>LeadForm::withPhoneLock('+79123456789',function(){throw new DomainException('storage failure');}));
+check(R::$releases===3,'release after save failure');
+R::$locked=false;
+rejects(fn()=>LeadForm::withPhoneLock('+79123456789',function(){throw new RuntimeException('must not save unlocked');}));
+check(R::$releases===3,'never release another connection lock');
+R::$locked=true;
 $method=new ReflectionMethod(app\services\admin\AdminLeadOrderService::class,'createOrderProduct');$method->setAccessible(true);
 $method->invoke(null,77,['product_id'=>11,'article'=>'A','quantity'=>4,'unit'=>'шт','product_name'=>'New name','name'=>'Snapshot','price'=>900,'unit_price'=>650]);
 check(R::$args[3]===4 && R::$args[6]===650.0,'lead quantity and price used');

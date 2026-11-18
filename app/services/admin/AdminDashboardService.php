@@ -283,7 +283,7 @@ class AdminDashboardService
         );
 
         $items[] = self::notificationItem(
-            'Заказы в 1 клик',
+            'Заявки на заказ',
             (int)\R::count('mail_oneclick', "hide = '0'"),
             $admin . '/oneclick?filter=new',
             \R::getCell("SELECT MAX(data_create) FROM mail_oneclick WHERE hide = '0'"),

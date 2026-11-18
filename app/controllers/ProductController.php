@@ -116,15 +116,18 @@ class ProductController extends AppController
                 $email_modal = \app\services\LeadForm::text($post['email_modal'] ?? '', 254);
                 $prim_modal = \app\services\LeadForm::text($post['prim_modal'] ?? '', 3000);
                 if ($email_modal !== '' && !filter_var($email_modal, FILTER_VALIDATE_EMAIL)) throw new \DomainException('Укажите корректную почту или оставьте поле пустым.');
-                $quantity = \app\services\LeadForm::quantity($post['quantity'] ?? 1);
-                \app\services\LeadForm::rejectRecent('mail_oneclick', 'tell_click', $tell_modal);
+                $quantity = \app\services\LeadForm::quantity($post['quantity'] ?? '');
+                if (!$product || !(int)$product->id) throw new \DomainException('Товар недоступен для заявки.');
                 $name_tovar = (string)$product->name;
                 $productId = (int)$product->id;
                 $unitPrice = (float)$product->price;
                 // Keep a snapshot: changing the catalogue later must not rewrite the enquiry.
                 $lead = \R::dispense('mail_oneclick');
                 foreach (['user_id'=>$userId,'product_id'=>$productId,'name'=>$name_tovar,'fio_click'=>$fio_modal,'tell_click'=>$tell_modal,'email_click'=>$email_modal,'prim_click'=>$prim_modal,'data_create'=>$data_create,'hide_call'=>'','data_call'=>'','call_uid'=>'','hide_order'=>'','order_id'=>'','hide'=>'0','quantity'=>$quantity,'unit_price'=>$unitPrice,'source_path'=>\app\services\LeadForm::source()] as $key=>$value) $lead->$key=$value;
-                $oneClickId = (int)\R::store($lead);
+                $oneClickId = \app\services\LeadForm::withPhoneLock($tell_modal, static function () use ($lead) {
+                    return (int)\R::store($lead);
+                });
+                if (!$oneClickId) throw new \DomainException('Не удалось сохранить заявку. Попробуйте ещё раз.');
                 \app\services\LeadForm::consumed('oneclick');
                 AdminActivityLogger::incoming(AdminActivityLogger::ACTION_ONECLICK, 'mail_oneclick', $oneClickId, $userId);
                 Product::mailZakazClick($name_tovar, $fio_modal, $tell_modal, $email_modal, $prim_modal, $quantity, $unitPrice);

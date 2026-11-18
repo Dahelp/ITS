@@ -360,12 +360,12 @@ if (property_exists($product, 'reserve')) {
 							<?php if(isset($cart[$product->id])): ?>
 								<input class="form-control detail-quantity me-2 korzina-<?=$product->id;?> clear-korzina" style="display:none;caret-color:transparent;" name="quantity" type="number" value="1" min="1" max="<?=$product->quantity?>" data-max="<?=$product->quantity?>" data-min="1">
 								<a data-id="<?=$product->id;?>" class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?=$product->id;?> clear-korzina" style="display:none;" href="cart/add?id=<?=$product->id;?>" data-max="<?=$product->quantity?>"><i class="fas fa-cart-plus"></i> В корзину</a>
-								<button class="btn btn-warning one-click korzina-<?=$product->id;?> clear-korzina" style="display:none;" type="submit">Купить в 1 клик</button>
+								<button class="btn btn-warning one-click korzina-<?=$product->id;?> clear-korzina" style="display:none;" type="submit">Заявка на заказ</button>
 								<button href="cart/show" onclick="getCart(); return false;" class="btn btn-success vkorzine-<?=$product->id;?> clear-vkorzine">В корзине</button>
 							<?php else: ?>
 								<input class="form-control detail-quantity me-2 korzina-<?=$product->id;?> clear-korzina" name="quantity" type="number" value="1" min="1" max="<?=$product->quantity?>" data-max="<?=$product->quantity?>" data-min="1">
 								<a data-id="<?=$product->id;?>" class="btn btn-soft-primary me-2 add-to-cart-link korzina-<?=$product->id;?> clear-korzina" href="cart/add?id=<?=$product->id;?>" data-max="<?=$product->quantity?>"><i class="fas fa-cart-plus"></i> В корзину</a>
-								<button class="btn btn-warning one-click korzina-<?=$product->id;?> clear-korzina" type="submit" data-toggle="modal" data-target="#Modalclick">Купить в 1 клик</button>
+								<button class="btn btn-warning one-click korzina-<?=$product->id;?> clear-korzina" type="submit" data-bs-toggle="modal" data-bs-target="#Modalclick">Заявка на заказ</button>
 								<button href="cart/show" onclick="getCart(); return false;" class="btn btn-success vkorzine-<?=$product->id;?> clear-vkorzine" style="display:none;">В корзине</button>
 							<?php endif; ?>
 							<?php endif; ?>
@@ -653,12 +653,12 @@ if (property_exists($product, 'reserve')) {
 <!--end-single-->
 </span>
 <!-- Modal 1 click -->
-<form action="/product/<?=$product->alias?>" method="post" class="modal fade" id="Modalclick" tabindex="-1" role="dialog" aria-labelledby="ModalclickLabel" aria-hidden="true" data-toggle="validator" data-lead-form>
+<form action="/product/<?=$product->alias?>" method="post" class="modal fade" id="Modalclick" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true" data-toggle="validator" data-lead-form>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
             <div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLiveLabel">Купить в 1 клик</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<h5 class="modal-title" id="exampleModalLiveLabel">Заявка на заказ</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
       </div>
@@ -672,7 +672,7 @@ if (property_exists($product, 'reserve')) {
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Имя (необязательно)</div>
-					<div class="fc_input"><input type="text" name="fio_modal" placeholder="Укажите Ф.И.О." value="<?=$userName?>" required></div>
+					<div class="fc_input"><input type="text" name="fio_modal" placeholder="Укажите Ф.И.О." value="<?=h($userName ?? '')?>"></div>
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Телефон <span>*</span></div>
@@ -680,7 +680,7 @@ if (property_exists($product, 'reserve')) {
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Почта (необязательно)</div>
-					<div class="fc_input"><input type="text" name="email_modal" placeholder="Укажите адрес электронной почты"></div>
+					<div class="fc_input"><input type="email" name="email_modal" placeholder="Укажите адрес электронной почты"></div>
 				</div>
 				<div class="fc-1">
 					<div class="fc_name">Комментарий к заказу</div>
@@ -693,7 +693,7 @@ if (property_exists($product, 'reserve')) {
             </div>
         </div>
   </div>
-</form><script defer src="/js/lead-forms.js?v=20261027"></script>
+</form><script defer src="/js/lead-forms.js?v=20261118"></script>
 
 <?php
 use app\helpers\PdfAssets;

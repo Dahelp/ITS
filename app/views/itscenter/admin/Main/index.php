@@ -102,9 +102,9 @@ $stockDelta = (int)($stockSummary['currentQty'] ?? 0) - (int)($stockSummary['pre
         </div>
 
         <div class="small-box bg-info">
-          <div class="inner"><h3><?= (int)$countOneClick ?></h3><p>Новые заказы в 1 клик</p></div>
+          <div class="inner"><h3><?= (int)$countOneClick ?></h3><p>Новые заявки на заказ</p></div>
           <div class="icon"><i class="ion ion-bag"></i></div>
-          <a href="/admin/oneclick" class="small-box-footer">Все заказы в 1 клик <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="/admin/oneclick" class="small-box-footer">Все заявки на заказ <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 

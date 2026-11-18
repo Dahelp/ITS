@@ -12,13 +12,17 @@ use app\services\TrafficSource;
 class Callback extends AppModel {
 
     public function addCallback($phone, $user_id = "", $title = '', $name = '', $email = '', $comment = ''){
-        $res = \R::exec(
+        $res = \app\services\LeadForm::withPhoneLock($phone, function () use ($phone, $user_id, $title, $name, $email, $comment) {
+            return \R::exec(
             "INSERT INTO `callback`
                 (`user_id`, `topic`, `phone`, `date_create`, `date_modified`, `user_modified`, `status`, `hide`, `contact_name`, `contact_email`, `comment`, `source_path`)
              VALUES (?, ?, ?, ?, '', '', '0', 'show', ?, ?, ?, ?)",
             [(int)$user_id, $title, $phone, date('Y-m-d H:i:s'), $name, $email, $comment, \app\services\LeadForm::source()]
         );
+        });
+        if (!$res) throw new \DomainException('Не удалось сохранить заявку. Попробуйте ещё раз.');
 				if($res){
+                    \app\services\LeadForm::consumed('callback');
 					
 					$callbackId = (int)\R::getCell('SELECT LAST_INSERT_ID()');				
 					AdminActivityLogger::incoming(AdminActivityLogger::ACTION_CALLBACK, 'callback', $callbackId, (int)$user_id);

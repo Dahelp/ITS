@@ -470,7 +470,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                                 type="submit"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#Modalclick">
-                                            Купить в 1 клик
+                                            Заявка на заказ
                                         </button>
 
                                         <button href="cart/show"
@@ -500,7 +500,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                                 type="submit"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#Modalclick">
-                                            Купить в 1 клик
+                                            Заявка на заказ
                                         </button>
 
                                         <button href="cart/show"
@@ -606,7 +606,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                                 type="submit"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#Modalclick">
-                                            Купить в 1 клик
+                                            Заявка на заказ
                                         </button>
 
                                         <button href="cart/show"
@@ -639,7 +639,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                                 type="submit"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#Modalclick">
-                                            Купить в 1 клик
+                                            Заявка на заказ
                                         </button>
 
                                         <button href="cart/show"
@@ -1499,12 +1499,12 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 </div>
 <!--end-single-->
 
-<!-- Modal Заказать в 1 клик -->
+<!-- Modal Заявка на заказ -->
 <div class="modal fade" id="Modalclick" tabindex="-1" aria-labelledby="ModalclickLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content callback-modal">
             <div class="modal-header">
-                <div class="modal-title" id="ModalclickLabel">Заказать в 1 клик</div>
+                <div class="modal-title" id="ModalclickLabel">Заявка на заказ</div>
 
                 <button type="button"
                         class="btn-close"
@@ -1630,7 +1630,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 </div>
 
 
-<script defer src="/js/lead-forms.js?v=20261027"></script>
+<script defer src="/js/lead-forms.js?v=20261118"></script>
 <!-- Modal Оформить товар под заказ -->
 <div class="modal fade" id="ModalRequest" tabindex="-1" aria-labelledby="ModalRequestLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

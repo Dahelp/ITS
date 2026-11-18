@@ -203,7 +203,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/order"><i class="fas fa-shopping-cart nav-icon"></i><p>Заказы</p></a></li>
-                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/oneclick"><i class="fas fa-bolt nav-icon"></i><p>Заказы в 1 клик</p></a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/oneclick"><i class="fas fa-bolt nav-icon"></i><p>Заявки на заказ</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/request"><i class="fas fa-inbox nav-icon"></i><p>Заявки</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/callback"><i class="fas fa-phone-alt nav-icon"></i><p>Обратные звонки</p></a></li>
                         <li class="nav-item"><a class="nav-link" href="<?= ADMIN ?>/availability"><i class="fas fa-clipboard-check nav-icon"></i><p>Запросы наличия</p></a></li>

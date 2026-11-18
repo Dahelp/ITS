@@ -2,11 +2,11 @@
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-      <div class="col-sm-6"><h1 class="m-0">Заказы в 1 клик</h1></div>
+      <div class="col-sm-6"><h1 class="m-0">Заявки на заказ</h1></div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?= ADMIN ?>">Главная</a></li>
-          <li class="breadcrumb-item active">Заказы в 1 клик</li>
+          <li class="breadcrumb-item active">Заявки на заказ</li>
         </ol>
       </div>
     </div>
@@ -15,7 +15,7 @@
 
 <section class="content">
   <div class="card">
-    <div class="card-header"><h3 class="card-title">Список заказов в 1 клик</h3></div>
+    <div class="card-header"><h3 class="card-title">Список заявок на заказ</h3></div>
     <div class="card-body">
       <div class="table-responsive">
         <table id="oneclick-table" class="table table-bordered table-hover">
@@ -50,7 +50,7 @@
                 <td><?php if ($productUrl): ?><a href="<?= $e($productUrl) ?>"><?= $e($click['product_name'] ?: $click['name']) ?></a><?php else: ?><?= $e($click['name']) ?><?php endif; ?></td>
                 <td><?= $e($click['fio_click']) ?></td>
                 <td><a href="tel:<?= $e($phone) ?>"><?= $e($click['tell_click']) ?></a></td>
-                <td><?php if (!empty($click['email_click'])): ?><a href="<?= ADMIN ?>/mailbox/answer?email=<?= rawurlencode((string)$click['email_click']) ?>&subject=<?= rawurlencode('Заказ товара в 1 клик на сайте ' . $namecomp) ?>"><?= $e($click['email_click']) ?></a><?php endif; ?></td>
+                <td><?php if (!empty($click['email_click'])): ?><a href="<?= ADMIN ?>/mailbox/answer?email=<?= rawurlencode((string)$click['email_click']) ?>&subject=<?= rawurlencode('Заявка на заказ на сайте ' . $namecomp) ?>"><?= $e($click['email_click']) ?></a><?php endif; ?></td>
                 <td><?= $e($click['prim_click']) ?><div>Количество: <?= (int)($click['quantity'] ?? 1) ?></div><?php if ($click['unit_price'] !== null): ?><div>Цена при заявке: <?= $e($click['unit_price']) ?> ₽</div><?php endif; ?></td>
                 <td><?= $e($click['data_create']) ?></td>
                 <td>

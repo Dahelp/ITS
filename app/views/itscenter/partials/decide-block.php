@@ -191,4 +191,4 @@ if (empty($_SESSION['callback_token'])) {
     </div>
 </div>
 
-<script defer src="/js/lead-forms.js?v=20261027"></script>
+<script defer src="/js/lead-forms.js?v=20261118"></script>

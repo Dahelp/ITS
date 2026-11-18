@@ -72,7 +72,7 @@ class Product extends AppModel {
         require APP . '/views/'.TEMPLATE.'/mail/mail_oneclick.php';
         $body_admin = ob_get_clean() . TrafficSource::emailHtml();
 
-        $message_admin = (new Swift_Message("Заказ товара в 1 клик на сайте {$namecomp}"))
+        $message_admin = (new Swift_Message("Заявка на заказ на сайте {$namecomp}"))
             ->setFrom([App::$app->getProperty('smtp_login') => $namecomp])
             ->setTo(App::$app->getProperty('admin_email'))
             ->setBody($body_admin, 'text/html')
@@ -88,7 +88,7 @@ class Product extends AppModel {
             return true;
         } catch (\Throwable $e) {
             error_log("[".date('Y-m-d H:i:s')."] mailZakazClick error: ".$e->getMessage()."\n", 3, ROOT.'/tmp/mail_errors.log');
-            $_SESSION['errors']['unique'][] = 'Не удалось отправить письмо по «1 клик». Попробуйте ещё раз или свяжитесь по телефону.';
+            $_SESSION['errors']['unique'][] = 'Не удалось отправить письмо с уведомлением о заявке. Заявка сохранена; повторная отправка не требуется.';
             return false;
         }
     }

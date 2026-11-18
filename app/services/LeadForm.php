@@ -12,7 +12,10 @@ final class LeadForm
 
     public static function phone($value): string
     {
-        $digits = is_string($value) ? preg_replace('/\D+/', '', $value) : '';
+        if (!is_string($value) || !preg_match('/^\+?[0-9 ()-]+$/D', $value)) {
+            throw new \DomainException('Укажите полный номер мобильного телефона РФ: +7 9ХХ ХХХ-ХХ-ХХ.');
+        }
+        $digits = preg_replace('/\D+/', '', $value);
         if (strlen($digits) === 11 && $digits[0] === '8') $digits[0] = '7';
         if (!preg_match('/^79\d{9}$/D', $digits) || preg_match('/^(\d)\1{8}$/D', substr($digits, 2))) {
             throw new \DomainException('Укажите полный номер мобильного телефона РФ: +7 9ХХ ХХХ-ХХ-ХХ.');
@@ -42,6 +45,22 @@ final class LeadForm
     {
         unset($_SESSION['lead_tokens'][$scope]);
         $_SESSION['lead_last_sent'] = time();
+    }
+
+    /** Serialize the duplicate check and save across independent sessions. */
+    public static function withPhoneLock(string $phone, callable $save)
+    {
+        $key = 'lead:' . substr(hash('sha256', $phone), 0, 56);
+        if ((int)\R::getCell('SELECT GET_LOCK(?, 5)', [$key]) !== 1) {
+            throw new \DomainException('Заявка обрабатывается. Подождите и попробуйте снова.');
+        }
+        try {
+            self::rejectRecent('callback', 'phone', $phone);
+            self::rejectRecent('mail_oneclick', 'tell_click', $phone);
+            return $save();
+        } finally {
+            \R::getCell('SELECT RELEASE_LOCK(?)', [$key]);
+        }
     }
 
     public static function rejectRecent(string $table, string $phoneField, string $phone): void

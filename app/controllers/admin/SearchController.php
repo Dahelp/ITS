@@ -79,7 +79,7 @@ class SearchController extends AppController
             [$numericId, $like, $like]
         ), static fn($r) => 'Заказ #' . ($r['inv'] ?: $r['id']), static fn($r) => trim(($r['user_name'] ?: $r['comp_name'] ?: 'Клиент не указан') . ($r['date'] ? ' / ' . date('d.m.Y H:i', strtotime($r['date'])) : '')));
 
-        $this->addRows($items, 'Заказ в 1 клик', \R::getAll(
+        $this->addRows($items, 'Заявка на заказ', \R::getAll(
             "SELECT mo.id, mo.product_id, mo.fio_click, mo.tell_click, mo.email_click, mo.data_create, p.name AS product_name, CONCAT('/admin/oneclick') AS url
              FROM mail_oneclick mo
              LEFT JOIN product p ON p.id = mo.product_id
