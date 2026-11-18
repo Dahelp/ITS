@@ -629,21 +629,30 @@ class CartController extends AppController {
 			}
 
 			$client = new \GuzzleHttp\Client();
-			$inn= isset($_GET['inn']) ? $_GET['inn'] : '';	
+			$inn = is_string($_GET['inn'] ?? null) ? trim($_GET['inn']) : '';
+            if (!preg_match('/^(?:[0-9]{10}|[0-9]{12})$/D', $inn)) { http_response_code(400); die; }
+            try {	
 			$response = $client->request('GET', 'http://84.47.156.246:8082/itscentr/hs/CompanyListFrom1C/getCompanyFrom1C?inn='.$inn.'',
 
 			 [
-				'auth' => [
+				'connect_timeout' => 3, 'timeout' => 10,
+                'auth' => [
 					'GetCompanyByINN',
 					'GetCompanyByINN'
 				]
 			]
 
 			);
-			$str = iconv("CP1252", "UTF-8", $response->getBody());
+            $response = json_decode((string)$response->getBody(), true);
+            if (empty($response['company']['companyFields']['Fullname'])) {
+                http_response_code(404); die;
+            }
+            } catch (\Throwable $e) { http_response_code(503); die; }
+            $response['company']['companyFields'] += ['shortName'=>'','CodeKPP'=>'','CodeOGRN'=>''];
+            $response['company']['companyAddresses'][0]['printForm'] = $response['company']['companyAddresses'][0]['printForm'] ?? '';
+            $response['company']['companyContacts'][0]['contact'] = ($response['company']['companyContacts'][0]['contact'] ?? []) + ['jobName'=>'Руководитель','f'=>'','i'=>'','o'=>''];
+            header('Cache-Control: no-store');
 
-			$response = json_decode($response->getBody(), true);
-				
 			echo "<div class=\"col-sm-12\">
 					<label class=\"form-label\" for=\"comp_name\">Название компании</label>
 					<input type=\"text\" name=\"comp_name\" class=\"form-control\" id=\"comp_name\" value=\"".htmlspecialchars($response["company"]["companyFields"]["Fullname"])."\">
@@ -967,7 +976,7 @@ class CartController extends AppController {
     // comp_id — либо из найденного пользователя, либо null
     $data['comp_id'] = !empty($comp_id) ? $comp_id : null;
 
-    $data['comp_short_name'] = !empty($_POST['comp_short_name']) ? $_POST['comp_short_name'] : '';
+    $data['comp_short_name'] = trim((string)($_POST['comp_name'] ?? $_POST['comp_short_name'] ?? ''));
     $data['inn']             = !empty($_POST['inn']) ? $_POST['inn'] : '';
     $data['note']            = !empty($_POST['note']) ? $_POST['note'] : '';
     $data['dostavka_id']     = !empty($_POST['dostavka_id']) ? $_POST['dostavka_id'] : '';
@@ -1056,7 +1065,7 @@ class CartController extends AppController {
     $nds      = '';
     $dogovor  = '';
 
-    if (!empty($data['user_id']) && $usm) {
+    if ($usm) {
         if ((int)$usm['groups'] === 3) {
             $vid = "<b>Вид клиента:</b> Физическое лицо<br>";
         }
@@ -1081,8 +1090,11 @@ class CartController extends AppController {
                 }
             } else {
                 // компания не зарегистрирована, берём из формы
-                if (!empty($data['inn'])) {
-                    $compname = "<b>Компания:</b> " . $data['comp_short_name'] . " (" . $data['inn'] . ")<br>";
+                if (!empty($data['inn']) || !empty($data['comp_short_name'])) {
+                    $compname = "<b>Компания:</b> " . htmlspecialchars($data['comp_short_name'], ENT_QUOTES, 'UTF-8') . " (" . htmlspecialchars($data['inn'], ENT_QUOTES, 'UTF-8') . ")<br>";
+                    foreach (['kpp'=>'КПП','url_address'=>'Юридический адрес'] as $key=>$label) {
+                        $compname .= '<b>'.$label.':</b> '.htmlspecialchars((string)($_POST[$key] ?? ''), ENT_QUOTES, 'UTF-8').'<br>';
+                    }
                 }
                 if (!empty($_POST['nds'])) {
                     if ($_POST['nds'] == '1') {

@@ -359,7 +359,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
           <?php if (!$compusers): ?>
             <div class="col-sm-6">
               <label class="form-label" for="groups">Вид <span class="text-danger">*</span></label>
-              <select name="groups" class="form-control" id="vidurlface" onchange="val()" data-step-field="3">
+              <select name="groups" class="form-control" id="vidurlface" data-step-field="3">
                 <option value="" selected="selected">Выберите вид клиента</option>
                 <option value="3">Физическое лицо</option>
                 <option value="4">Юридическое лицо</option>
@@ -367,10 +367,22 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
             </div>
 
             <div id="vid_urlface" style="display:none">
+<div class="col-sm-12">
+<label for="inn">ИНН (необязательно)</label>
+<div class="input-group"><input name="inn" id="inn" class="form-control inn" inputmode="numeric" maxlength="12" pattern="[0-9]{10}|[0-9]{12}" data-step-field="3"><button type="button" class="btn btn-primary btn-inn">Заполнить по ИНН</button></div>
+<small>Заполните реквизиты по ИНН из 1С или прикрепите файл.</small>
+<div id="company-status" role="status" aria-live="polite"></div>
+</div>
+<div class="innok">
+<input type="hidden" name="comp_short_name" id="comp_short_name">
+<label for="comp_name">Название компании</label><input name="comp_name" id="comp_name" class="form-control" data-step-field="3">
+<label for="kpp">КПП</label><input name="kpp" id="kpp" class="form-control" inputmode="numeric" maxlength="9" data-step-field="3">
+<label for="url_address">Юридический адрес</label><input name="url_address" id="url_address" class="form-control" data-step-field="3">
+</div>
               <div class="col-sm-12 rekvizity row">
                 <div class="col-sm-5">
-                  <label class="form-label" for="rekvizity">Прикрепить реквизиты <span class="text-danger">*</span></label>
-                  <input class="btn btn-default" type="file" name="rekvizity" data-step-field="3">
+                  <label class="form-label" for="rekvizity">Прикрепить реквизиты (PDF, Excel или фото)</label>
+                  <input class="btn btn-default" type="file" name="rekvizity" id="rekvizity" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.webp" data-step-field="3">
                 </div>
               </div>
 

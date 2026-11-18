@@ -196,30 +196,16 @@ $(document).ready(function () {
  initCategoryProductLazyLoading();
 });
 
-//addinn
-//$(document).ready(function () {
+// Restore lookup through the existing 1C endpoint.
 $('body').on('click', '.btn-inn', function(){
-
-
-
-			var inn = $('.inn').val();
-
-            $.ajax({
-                type: "GET",
-                url: '/cart/inn',
-				data: {inn:inn},
-                success: function(res) {					
-					$('.innok').html(""+res+"");
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    // Обработка ошибки
-                    $(".innok").text("Не удалось подключиться. Статус код: " + jqXHR.status);
-                }
-            });
-
-});	
-  
-
+ var button=this, inn=$('.inn').val().trim(), status=$('#company-status');
+ if(!/^(\d{10}|\d{12})$/.test(inn)){status.text('Введите ИНН из 10 или 12 цифр.');return;}
+ button.disabled=true;status.text('Ищем компанию в 1С…');
+ $.ajax({url:'/cart/inn',data:{inn:inn},timeout:15000})
+ .done(function(res){if($('.inn').val().trim()!==inn)return;var fields=$('<div>').html(res);fields.find('input').each(function(){var input=$('#checkoutForm').find('[name="'+this.name+'"]');if(input.length)input.val(this.value).trigger('change');});refreshCheckoutCompany();status.text('Проверьте заполненные реквизиты компании.');})
+ .fail(function(){status.text('Не удалось получить реквизиты из 1С. Заполните данные вручную или прикрепите файл.');})
+ .always(function(){button.disabled=false;});
+});
 
 (function($){
   var lastXhr = null;
@@ -1820,44 +1806,15 @@ $(document).off('change.delivery', '#dostavka_id').on('change.delivery', '#dosta
 });
 
 
-$(document).off('change.clientType', '#vidurlface').on('change.clientType', '#vidurlface', function(){
-  var vid = $(this).val();
-
-  if(vid==3) {
-    $('#vid_urlface').hide().html('');
-  }
-
-  if(vid==4) {
-    $('#vid_urlface').show().html(
-      '<div class="col-sm-12 rekvizity row">' +
-        '<div class="col-sm-5">' +
-          '<label class="form-label" for="rekvizity">Прикрепить реквизиты <span class="text-danger">*</span></label>' +
-          '<input class="btn btn-default" type="file" name="rekvizity" id="rekvizity" required />' +
-        '</div>' +
-      '</div>' +
-      '<div class="col-sm-6">' +
-        '<label class="form-label" for="nds">Система налогообложения <span class="text-danger">*</span></label>' +
-        '<select name="nds" class="form-control" id="nds" required>' +
-          '<option value="" selected="selected">Выберите систему налогообложения</option>' +
-          '<option value="1">с НДС</option>' +
-          '<option value="2">без НДС</option>' +
-        '</select>' +
-      '</div>' +
-      '<p></p>' +
-      '<div class="col-sm-6">' +
-        '<label class="form-label" for="dogovor">Условия поставки <span class="text-danger">*</span></label>' +
-        '<select name="dogovor" class="form-control" id="dogovor" required>' +
-          '<option value="" selected="selected">Выберите условия поставки</option>' +
-          '<option value="1">Договор</option>' +
-          '<option value="2">Счёт-договор</option>' +
-        '</select>' +
-      '</div>'
-    );
-  }
-
-  if (typeof initCheckoutSteps === 'function') initCheckoutSteps();
-});
-
+function refreshCheckoutCompany(){
+ var block=$('#vid_urlface'), visible=$('#vidurlface').val()==='4'||$('#checkout-payment-method').val()==='bank_transfer';
+ block.toggle(visible).find('input,select').prop('disabled',!visible);
+ var legal=$('#vidurlface').val()==='4', step=$('#checkoutForm').attr('data-current-step');
+ block.find('[name="nds"],[name="dogovor"]').prop('required',legal&&step==='3');
+}
+$(document).on('change.clientType', '#vidurlface, #checkout-payment-method', refreshCheckoutCompany);
+$(document).on('checkout:ready', '#checkoutForm', refreshCheckoutCompany);
+$(function(){refreshCheckoutCompany();var form=document.getElementById('checkoutForm');if(form)new MutationObserver(refreshCheckoutCompany).observe(form,{attributes:true,attributeFilter:['data-current-step']});});
 
 $(document).on('click','[data-toggle="class-toggle"]',function () {
 	var $this = $(this);

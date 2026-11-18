@@ -1,6 +1,6 @@
 (function(root){
  'use strict';
- var FIELDS=['dostavka_id','transport_id','branch_id','city_name','address','groups','nds','dogovor','name','telefon','email','form_callback','note','payment_method'];
+ var FIELDS=['dostavka_id','transport_id','branch_id','city_name','address','groups','nds','dogovor','name','telefon','email','form_callback','note','comp_name','kpp','url_address','comp_short_name','inn','payment_method'];
  var TTL=24*60*60*1000;
  function readDraft(raw,owner,generation,now){
   try{var d=JSON.parse(raw);if(!d||d.version!==1||d.owner!==owner||d.generation!==generation||!Number.isFinite(d.updatedAt)||now-d.updatedAt>TTL||d.updatedAt>now+300000||!d.fields||Array.isArray(d.fields))return null;
