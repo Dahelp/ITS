@@ -1,7 +1,7 @@
 <?php
 namespace app\controllers {class AppController {}}
 namespace {
-define('PATH','https://example.test');require dirname(__DIR__).'/app/controllers/UserController.php';
+define('PATH','https://example.test');define('WWW',dirname(__DIR__).'/public');require dirname(__DIR__).'/app/controllers/UserController.php';
 class RecoverRedirect extends \Exception {}function redirect($url=''){throw new RecoverRedirect($url);}
 ini_set('session.use_cookies','0');session_save_path(sys_get_temp_dir());session_start();
 $_SERVER['REQUEST_METHOD']='POST';$_SESSION=['recover_token'=>'csrf'];$_POST=['recover_token'=>'csrf','email'=>'invalid'];
