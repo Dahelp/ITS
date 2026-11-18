@@ -140,14 +140,18 @@ class Order extends AppModel {
         ;
 
         // Build staff copy before adding the private mailbox-only setup URL.
-        $body_admin = $body . TrafficSource::emailHtml();
+        $invitationMarker = '<!--checkout-account-invitation-->';
+        $body_admin = str_replace($invitationMarker, '', $body) . TrafficSource::emailHtml();
+        $clientBody = str_replace($invitationMarker, '', $body);
         if (!empty($accountAccess['guest'])) {
             $url = $accountAccess['setup_url'] ?? null;
             $accessHtml = $url
-                ? '<p>Для вас создан личный кабинет с этим заказом. <a href="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'">Задать пароль</a>. Ссылка действует 1 час.</p>'
-                : '<p>Заказ сохранён. <a href="'.PATH.'/user/login">Войти в кабинет</a>. <a href="'.PATH.'/user/recover">Восстановить доступ</a>.</p>';
-            $message_client->setBody(str_replace('</body>', $accessHtml.'</body>', $body), 'text/html');
+                ? '<strong style="font-size:16px">Ваш заказ сохранён в личном кабинете</strong><p style="margin:10px 0 16px">Задайте пароль, чтобы просматривать заказы и быстрее оформлять следующие покупки. Ссылка действует 1 час.</p><a style="display:inline-block;padding:11px 18px;border-radius:8px;background:#c4382c;color:#ffffff;text-decoration:none;font-weight:bold" href="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'">Задать пароль</a>'
+                : '<strong style="font-size:16px">Ваш личный кабинет</strong><p style="margin:10px 0 0">Заказ сохранён. <a href="'.PATH.'/user/login">Войти в кабинет</a> · <a href="'.PATH.'/user/recover">Восстановить доступ</a></p>';
+            $accessHtml = '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 24px;background:#f4f6f9;border:1px solid #e4e8ed;border-radius:12px"><tr><td style="padding:20px;color:#26384b;font-family:Tahoma,Helvetica,sans-serif;font-size:14px;line-height:1.5">'.$accessHtml.'</td></tr></table>';
+            $clientBody = str_replace($invitationMarker, $accessHtml, $body);
         }
+        $message_client->setBody($clientBody, 'text/html');
         $message_admin = (new Swift_Message("Сделан заказ №{$ord["inv"]} на сайте " . App::$app->getProperty('shop_name')))
             ->setFrom([App::$app->getProperty('smtp_login') => App::$app->getProperty('shop_name')])
             ->setTo(App::$app->getProperty('admin_email'))

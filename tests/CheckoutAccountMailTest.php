@@ -16,6 +16,7 @@ function sendFixture($access){$_SESSION=['cart'=>[],'cart.qty'=>0,'cart.sum'=>0,
 $secret=PATH.'/user/setup-password?key='.str_repeat('a',64);
 if(!sendFixture(['guest'=>true,'setup_url'=>$secret]))throw new \RuntimeException('Delivery status lost');
 if(count(Swift_Mailer::$sent)!==3 || strpos(Swift_Mailer::$sent[0]->body,$secret)===false)throw new \RuntimeException('Buyer setup link absent');
+if(strpos(Swift_Mailer::$sent[0]->body,$secret)>strpos(Swift_Mailer::$sent[0]->body,'Наименование') || str_contains(Swift_Mailer::$sent[0]->body,'<!--checkout-account-invitation-->'))throw new \RuntimeException('Invitation is outside main email or marker was not replaced');
 foreach(array_slice(Swift_Mailer::$sent,1)as$m)if(strpos($m->body,$secret)!==false)throw new \RuntimeException('Private setup link disclosed to staff');
 Swift_Mailer::$sent=[];Swift_Mailer::$failStaff=true;
 if(!sendFixture(['guest'=>true]))throw new \RuntimeException('Staff failure hid buyer delivery');

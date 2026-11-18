@@ -69,6 +69,9 @@ $orders=R::getAll('SELECT * FROM `order` WHERE user_id=?',[$uid]);
 $otherOrders=array_filter($orders,static fn($o)=>!str_contains((string)($o['note']??''),'ТЕСТ CR-10 — НЕ ОБРАБАТЫВАТЬ'));
 $companies=(int)R::getCell('SELECT COUNT(*) FROM company WHERE user_id=?',[$uid]);
 $report=['mode'=>$mode,'matches'=>1,'role'=>(string)$user['role'],'orders'=>count($orders),'non_cr10_orders'=>count($otherOrders),'companies'=>$companies,'changed'=>false];
+$access=R::getRow('SELECT pending FROM checkout_account_access WHERE user_id=?',[$uid]);
+$report['setup_completed']=$access && (int)$access['pending']===0;
+$report['login_recorded']=!empty($user['date_last_visit']) && $user['date_last_visit']!=='0000-00-00 00:00:00';
 if($mode==='inspect'){echo json_encode($report,JSON_UNESCAPED_UNICODE).PHP_EOL;exit;}
 if($user['role']!=='user'||$otherOrders||$companies||!empty($user['comp_id']))throw new RuntimeException('Refusing account deletion: non-test history, company or privileged account; inspect report first');
 // Keep historical test orders visible by moving them to an inert archive contact.

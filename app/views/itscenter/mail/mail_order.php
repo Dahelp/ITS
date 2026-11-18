@@ -33,7 +33,9 @@
 											Ваш заказ на сайте <?=$namecomp?> оформлен. Для согласования заказа с Вами свяжется менеджер в понедельник в рабочее время с 09:00 до 17:00		
 										<?php } ?>
 										<br><br>
-										<strong>Ваш заказ: № <?=$order_prefix?><?=$order_id?> от <?=$date?>
+									</p>
+                                    <!--checkout-account-invitation-->
+										<p><strong>Ваш заказ: № <?=$order_prefix?><?=$order_id?> от <?=$date?></strong>
 									</p>
 									<table style="border: 1px solid #ddd; border-collapse: collapse; width: 100%;">
 										<thead>

@@ -1,10 +1,11 @@
 <?php $esc=static fn($v)=>htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8'); ?>
-<div class="container py-5">
+<div class="container checkout-account-page">
+ <div class="checkout-account-card">
   <h1>Заказ №<?= $esc($result['number'] ?? $result['order_id']) ?> принят</h1>
   <p>Менеджер свяжется с вами для согласования заказа в рабочее время ПН–ПТ с 09:00 до 17:00.</p>
   <p><?= !empty($result['sent']) ? 'Подтверждение отправлено на' : 'Заказ сохранён. Не удалось отправить подтверждение на' ?> <?= $esc($result['email']) ?>.</p>
   <?php if (!empty($result['guest'])): ?>
-    <section class="bg-light rounded-3 p-4 my-4" aria-labelledby="account-title">
+    <section class="checkout-account-invitation" aria-labelledby="account-title">
     <?php if (!empty($result['new'])): ?>
       <h2 id="account-title">Ваш заказ сохранён в личном кабинете</h2>
       <p>Чтобы просматривать заказы и быстрее оформлять следующие покупки, задайте пароль.</p>
@@ -25,4 +26,5 @@
     <p><a class="btn btn-primary" href="<?= PATH ?>/user/orders">Мои заказы</a></p>
   <?php endif; ?>
   <a href="<?= PATH ?>">Продолжить покупки</a>
+ </div>
 </div>

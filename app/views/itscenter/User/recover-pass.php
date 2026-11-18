@@ -20,7 +20,11 @@
                             <form method="post" action="<?= PATH ?>/user/recover-pass" id="recover" role="form" data-toggle="validator">                                
 								<div class="form-group has-feedback mb-3">
                                     <label class="form-label" for="new_pass">Новый пароль</label>
-									<input type="password" name="password" class="form-control" placeholder="Введите новый пароль" required>
+                                    <div data-password-field class="checkout-password">
+                                      <div class="checkout-password__input"><input id="new_pass" type="password" name="password" autocomplete="new-password" class="form-control" placeholder="Введите новый пароль" minlength="6" maxlength="72" required><button type="button" class="checkout-password__toggle" data-password-toggle aria-controls="new_pass" aria-pressed="false">Показать</button></div>
+                                      <button type="button" class="checkout-password__generate" data-password-generate>Сгенерировать пароль</button>
+                                      <p data-password-status class="checkout-password__status" role="status"></p>
+                                    </div>
                                     <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 </div>
 								<input type="hidden" name="hash" value="<?=htmlspecialchars((string)($_GET['key'] ?? ''), ENT_QUOTES, 'UTF-8')?>">
@@ -36,3 +40,4 @@
     </div>
 </div>
 <!--product-end-->
+<script src="/js/account-password.js?v=<?= (int)filemtime(WWW.'/js/account-password.js') ?>" defer></script>

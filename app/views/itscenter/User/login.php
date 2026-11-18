@@ -8,9 +8,10 @@
     <label for="account-email" class="form-label">Электронная почта</label>
     <input id="account-email" type="email" name="email" autocomplete="username" class="form-control mb-3" required>
     <label for="account-password" class="form-label">Пароль</label>
-    <input id="account-password" type="password" name="password" autocomplete="current-password" class="form-control mb-3" required>
+    <div data-password-field class="checkout-password"><div class="checkout-password__input"><input id="account-password" type="password" name="password" autocomplete="current-password" class="form-control" required><button type="button" class="checkout-password__toggle" data-password-toggle aria-controls="account-password" aria-pressed="false">Показать</button></div></div>
     <button type="submit" class="btn btn-primary">Войти</button>
     <a class="ms-3" href="<?= PATH ?>/user/recover">Не помню пароль</a>
   </form>
   <?php if ($checkout): ?><p class="mt-3"><a href="<?= PATH ?>/cart/return-checkout">Продолжить как гость</a></p><?php endif; ?>
 </div>
+<script src="/js/account-password.js?v=<?= (int)filemtime(WWW.'/js/account-password.js') ?>" defer></script>
