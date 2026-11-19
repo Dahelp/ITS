@@ -2219,10 +2219,10 @@ document.addEventListener('DOMContentLoaded', function () {
             slidesOffsetAfter: 12
           },
           1281: {
-            slidesPerView: 5.083,
+            slidesPerView: 5,
             spaceBetween: 12,
-            slidesOffsetBefore: 12,
-            slidesOffsetAfter: 12
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0
           }
         }
       });
