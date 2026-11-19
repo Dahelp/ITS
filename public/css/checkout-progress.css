@@ -1,3 +1,24 @@
 .checkout-steps__nav{display:flex;gap:10px;flex-wrap:wrap}.checkout-steps .checkout-step{appearance:none;background:#f1f5f9;border:1px solid #cbd6e2;border-radius:10px;color:#233b53;padding:10px 18px;min-height:44px;font-size:16px;cursor:pointer;flex:1 1 160px;text-align:left}.checkout-steps .checkout-step.is-active{background:#0b456b;color:white;border-color:#0b456b}.checkout-steps .checkout-step.is-complete{border-color:#799e95}.checkout-step:focus-visible{outline:3px solid #3188ca;outline-offset:2px}.checkout-progress__label{font-weight:600;font-size:15px;margin:12px 0 8px}.checkout-progress{height:7px;border-radius:6px;background:#e2e8f0;overflow:hidden}.checkout-progress__fill{height:100%;width:33%;background:#0b456b;transition:width .2s ease}.checkout-resume{background:#eef5fb;border:1px solid #cbddec;border-radius:12px;padding:16px;margin-top:16px}.checkout-resume[hidden]{display:none}.checkout-resume p{margin:0 0 12px}.checkout-resume .btn{min-height:44px;margin:0 8px 6px 0}@media(max-width:575px){.checkout-steps__nav{gap:6px}.checkout-steps .checkout-step{flex:1 1 0;min-width:0;padding:9px 7px;font-size:13px;text-align:center}.checkout-resume .btn{width:100%;margin-right:0}}
 
 .checkout-payment select{min-height:44px;font-size:16px;max-width:100%}.checkout-payment-summary{font-size:14px;line-height:1.5;margin:8px 0 18px;color:#52657a}.checkout-payment-summary strong{color:#233b53}#checkout-form-notice[hidden]{display:none}
+
+/* Company, banking and marking details share a spaced responsive layout. */
+#checkoutForm .checkout-company{box-sizing:border-box;margin:16px 0 8px;padding:24px;border:1px solid #e1e6ec;border-radius:12px;background:#fff;min-width:0}
+#checkoutForm .checkout-company h3{font-size:20px;line-height:1.35;margin:0 0 20px;color:#24374a}
+#checkoutForm .checkout-company-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 20px}
+#checkoutForm .checkout-company-wide{grid-column:1/-1}
+#checkoutForm .checkout-company-field{min-width:0}
+#checkoutForm .checkout-company .form-label{display:block;margin:0 0 8px;line-height:1.45}
+#checkoutForm .checkout-company .form-control{width:100%;min-width:0}
+#checkoutForm .checkout-company .input-group{display:flex;align-items:stretch;flex-wrap:nowrap}
+#checkoutForm .checkout-company .input-group .form-control{flex:1 1 0;width:0}
+#checkoutForm .checkout-company .input-group .btn{flex-shrink:0;white-space:nowrap}
+#checkoutForm .checkout-company-help{display:block;margin:10px 0 0;color:#647183;font-size:13px;line-height:1.6}
+#checkoutForm .checkout-company-help:empty{display:none}
+#checkoutForm .checkout-company>p{margin:0 0 20px}
+#checkoutForm .checkout-company input[type=file]{height:auto;min-height:44px;padding:10px;font-size:14px}
+#checkoutForm .checkout-purpose-help{margin-top:16px;padding:16px 18px;border-radius:8px;background:#f5f7f9;color:#526174;font-size:14px;line-height:1.65}
+#checkoutForm .checkout-purpose-help p{margin:0 0 12px}#checkoutForm .checkout-purpose-help small{display:block}
+@media(max-width:575px){#checkoutForm .checkout-company{padding:18px 14px}#checkoutForm .checkout-company-grid{grid-template-columns:minmax(0,1fr);gap:20px}#checkoutForm .checkout-company .input-group{flex-wrap:wrap;gap:10px}#checkoutForm .checkout-company .input-group .form-control{flex-basis:100%;width:100%}#checkoutForm .checkout-company .input-group .btn{width:100%;border-radius:6px}}
+
+#checkoutForm .btn-inn{background:#c4382c;border-color:#c4382c;color:#fff}#checkoutForm .btn-inn:hover{background:#a92e24;border-color:#a92e24}

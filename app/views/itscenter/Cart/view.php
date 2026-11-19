@@ -366,49 +366,66 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
               </select>
             </div>
 
-            <div id="vid_urlface" style="display:none">
-<div class="col-sm-12">
-<label for="inn">ИНН (необязательно)</label>
-<div class="input-group"><input name="inn" id="inn" class="form-control inn" inputmode="numeric" maxlength="12" pattern="[0-9]{10}|[0-9]{12}" data-step-field="3"><button type="button" class="btn btn-primary btn-inn">Заполнить по ИНН</button></div>
-<small>Заполните реквизиты по ИНН из 1С или прикрепите файл.</small>
-<div id="company-status" role="status" aria-live="polite"></div>
-</div>
-<div class="innok">
-<input type="hidden" name="comp_short_name" id="comp_short_name">
-<label for="comp_name">Название компании</label><input name="comp_name" id="comp_name" class="form-control" data-step-field="3">
-<label for="kpp">КПП</label><input name="kpp" id="kpp" class="form-control" inputmode="numeric" maxlength="9" data-step-field="3">
-<label for="url_address">Юридический адрес</label><input name="url_address" id="url_address" class="form-control" data-step-field="3">
-</div>
-              <div class="col-sm-12 rekvizity row">
-                <div class="col-sm-5">
-                  <label class="form-label" for="rekvizity">Прикрепить реквизиты (PDF, Excel или фото)</label>
-                  <input class="btn btn-default" type="file" name="rekvizity" id="rekvizity" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.webp" data-step-field="3">
+            <section id="vid_urlface" class="col-12 checkout-company" style="display:none" aria-labelledby="company-heading">
+              <h3 id="company-heading">Реквизиты компании</h3>
+              <div class="checkout-company-grid">
+                <div class="checkout-company-field checkout-company-wide">
+                  <label class="form-label" for="inn">ИНН <span class="text-muted">(необязательно)</span></label>
+                  <div class="input-group"><input name="inn" id="inn" value="<?=h($checkoutFormData['inn']??'')?>" class="form-control inn" inputmode="numeric" maxlength="12" pattern="[0-9]{10}|[0-9]{12}" data-step-field="3"><button type="button" class="btn btn-primary btn-inn">Заполнить по ИНН</button></div>
+                  <small class="checkout-company-help">Заполните реквизиты по ИНН или прикрепите файл.</small>
+                  <div id="company-status" class="checkout-company-help" role="status" aria-live="polite"></div>
+                </div>
+                <input type="hidden" name="comp_short_name" id="comp_short_name">
+                <?php foreach (['comp_name'=>'Название компании','kpp'=>'КПП','url_address'=>'Юридический адрес','ogrn'=>'ОГРН / ОГРНИП','dir_name'=>'Руководитель'] as $key=>$label): ?>
+                <div class="checkout-company-field <?= $key==='kpp'?'':'checkout-company-wide' ?>">
+                  <label class="form-label" for="<?=h($key)?>"><?=h($label)?></label>
+                  <input name="<?=h($key)?>" id="<?=h($key)?>" class="form-control" data-step-field="3" value="<?=h($checkoutFormData[$key]??'')?>" <?= $key==='kpp'?'inputmode="numeric" maxlength="9" pattern="[0-9]{9}"':'' ?>>
+                </div>
+                <?php endforeach; ?>
+                <div class="checkout-company-field">
+                  <label class="form-label" for="nds">Система налогообложения <span class="text-danger">*</span></label>
+                  <select name="nds" id="nds" class="form-control" data-step-field="3"><option value="">Выберите систему налогообложения</option><option value="1">С НДС</option><option value="2">Без НДС</option></select>
+                </div>
+                <div class="checkout-company-field">
+                  <label class="form-label" for="dogovor">Условия поставки <span class="text-danger">*</span></label>
+                  <select name="dogovor" id="dogovor" class="form-control" data-step-field="3"><option value="">Выберите условия поставки</option><option value="1">Договор</option><option value="2">Счёт-договор</option></select>
                 </div>
               </div>
+            </section>
+          <?php endif; ?>
 
-              <div class="col-sm-6">
-                <label class="form-label" for="nds">Система налогообложения <span class="text-danger">*</span></label>
-                <select name="nds" class="form-control" data-step-field="3">
-                  <option value="" selected="selected">Выберите систему налогообложения</option>
-                  <option value="1">с НДС</option>
-                  <option value="2">без НДС</option>
-                </select>
+          <section id="checkout-bank" class="col-12 checkout-company" style="display:none" aria-labelledby="bank-heading">
+            <h3 id="bank-heading">Банковские реквизиты</h3>
+            <p class="checkout-company-help">Заполните банковские реквизиты или прикрепите файл, в котором они указаны.</p>
+            <div class="checkout-company-grid">
+              <?php foreach (['bank'=>'Наименование банка','bik'=>'БИК','raschet'=>'Расчётный счёт','korschet'=>'Корреспондентский счёт'] as $key=>$label): ?>
+              <div class="checkout-company-field <?= $key==='bank'?'checkout-company-wide':'' ?>">
+                <label class="form-label" for="<?=h($key)?>"><?=h($label)?></label>
+                <input name="<?=h($key)?>" id="<?=h($key)?>" class="form-control" data-bank-field data-step-field="3" value="<?=h($checkoutFormData[$key]??$compusers[$key]??'')?>" <?= $key==='bank'?'maxlength="255"':($key==='bik'?'inputmode="numeric" maxlength="9" pattern="[0-9]{9}"':'inputmode="numeric" maxlength="20" pattern="[0-9]{20}"') ?>>
               </div>
-
-              <p></p>
-
-              <div class="col-sm-6">
-                <label class="form-label" for="dogovor">Условия поставки <span class="text-danger">*</span></label>
-                <select name="dogovor" class="form-control" data-step-field="3">
-                  <option value="" selected="selected">Выберите условия поставки</option>
-                  <option value="1">Договор</option>
-                  <option value="2">Счёт-договор</option>
-                </select>
+              <?php endforeach; ?>
+              <div class="checkout-company-field checkout-company-wide">
+                <label class="form-label" for="rekvizity">Файл с реквизитами</label>
+                <input class="form-control" type="file" name="rekvizity" id="rekvizity" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.webp" data-step-field="3">
+                <small class="checkout-company-help">PDF, Excel или фото. Прикрепите полные реквизиты компании, включая банковские.</small>
               </div>
             </div>
+          </section>
 
-            <p></p>
-          <?php endif; ?>
+          <section class="col-12 checkout-company" aria-labelledby="purpose-heading">
+            <h3 id="purpose-heading">Цель покупки</h3>
+            <label class="form-label" for="purchase_purpose">Как вы планируете использовать товар? <span class="text-danger">*</span></label>
+            <select name="purchase_purpose" id="purchase_purpose" class="form-control" data-step-field="3" aria-describedby="purchase-purpose-help">
+              <option value="">Выберите цель покупки</option>
+              <option value="own_use" <?=($checkoutFormData['purchase_purpose']??'')==='own_use'?'selected':''?>>Для собственного использования</option>
+              <option value="resale" <?=($checkoutFormData['purchase_purpose']??'')==='resale'?'selected':''?>>Для перепродажи</option>
+            </select>
+            <div id="purchase-purpose-help" class="checkout-purpose-help">
+              <p><strong>Для собственного использования:</strong> дальнейшей перепродажи не будет. Маркированные товары необходимо вывести из оборота.</p>
+              <p><strong>Для перепродажи:</strong> маркированные товары остаются в обороте, коды маркировки передаются покупателю.</p>
+              <small>Этот выбор определяет оформление передачи маркированных товаров.</small>
+            </div>
+          </section>
 
           <?php if(!isset($_SESSION['user'])): ?>
             <div class="col-sm-6">

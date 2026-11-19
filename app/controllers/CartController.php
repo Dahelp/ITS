@@ -869,6 +869,16 @@ class CartController extends AppController {
     try {
         if (!$paymentDelivery) throw new \DomainException('Выберите способ получения.');
         $paymentMethod = \app\services\CheckoutPayment::validate($_POST['payment_method'] ?? '', $paymentGroup, \app\services\CheckoutPayment::pickup((string)$paymentDelivery['name']));
+        $companyFields = \app\services\CheckoutCompany::fields($_POST);
+        if ($paymentGroup===4 && $isAuth) {
+            $savedCompany=\R::findOne('company','user_id = ?',[(int)$sessionUser['id']]);
+            if ($savedCompany) foreach (array_keys(\app\services\CheckoutCompany::LABELS) as $key) {
+                if ($companyFields[$key]==='') $companyFields[$key]=(string)($savedCompany[$key]??'');
+            }
+        }
+        $hasCompanyFile=!empty($_FILES['rekvizity']) && (int)$_FILES['rekvizity']['error']===UPLOAD_ERR_OK;
+        if (isset($_FILES['rekvizity']['error']) && !in_array((int)$_FILES['rekvizity']['error'],[UPLOAD_ERR_OK,UPLOAD_ERR_NO_FILE],true)) throw new \DomainException('Не удалось загрузить файл реквизитов. Прикрепите его повторно.');
+        \app\services\CheckoutCompany::validate($companyFields,$paymentGroup===4,$hasCompanyFile);
         $pickupBranch = \app\services\CheckoutPayment::pickup((string)$paymentDelivery['name'])
             ? \app\services\CheckoutPickup::resolve(\R::getAll("SELECT branch_id,branch_name FROM branch_office WHERE hide='show'"), $_POST['branch_id'] ?? '') : null;
     } catch (\DomainException $e) {
@@ -978,7 +988,10 @@ class CartController extends AppController {
 
     $data['comp_short_name'] = trim((string)($_POST['comp_name'] ?? $_POST['comp_short_name'] ?? ''));
     $data['inn']             = !empty($_POST['inn']) ? $_POST['inn'] : '';
-    $data['note']            = !empty($_POST['note']) ? $_POST['note'] : '';
+    $customerNote = is_string($_POST['note'] ?? null) ? trim($_POST['note']) : '';
+    $data['note'] = $customerNote;
+    $companySummary=\app\services\CheckoutCompany::text($companyFields);
+    if ($companySummary!=='') $data['note'] .= ($data['note']!=='' ? "\n\n" : '')."Реквизиты и цель покупки:\n".$companySummary;
     $data['dostavka_id']     = !empty($_POST['dostavka_id']) ? $_POST['dostavka_id'] : '';
     $data['address']         = !empty($_POST['address']) ? $_POST['address'] : '';
     $data['transport_id']    = !empty($_POST['transport_id']) ? $_POST['transport_id'] : '';
@@ -1114,6 +1127,7 @@ class CartController extends AppController {
         }
     }
 
+    $compname=\app\services\CheckoutCompany::html($companyFields);
 	try {
 		$mailSent = \app\models\Order::mailOrder(
 		$order_id,
@@ -1121,7 +1135,7 @@ class CartController extends AppController {
 		$usm['name']    ?? '',
 		$usm['telefon'] ?? '',
 		$usm['admin_id'] ?? 0,
-		$ord['note']    ?? '',
+		$customerNote,
 		$ord['date']    ?? '',
 		$dost['name']   ?? '',
 		$bran['branch_name'] ?? '',
@@ -1134,7 +1148,7 @@ class CartController extends AppController {
 		$dogovor,
 		$formCallback,
 		$promo,
-        ['guest'=>!$isAuth,'setup_url'=>$setupUrl]
+        ['guest'=>!$isAuth,'setup_url'=>$setupUrl,'company_fields'=>$companyFields,'company_card'=>$paymentGroup===4||$paymentMethod==='bank_transfer']
 	);
         $_SESSION['checkout_result']['sent'] = $mailSent;
     } catch (\Throwable $e) {

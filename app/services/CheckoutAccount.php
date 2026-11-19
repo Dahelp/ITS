@@ -47,7 +47,7 @@ final class CheckoutAccount
     public static function fields(array $data): array
     {
         $result=[];
-        foreach (['dostavka_id','transport_id','branch_id','city_name','address','groups','nds','dogovor','name','telefon','email','form_callback','note','comp_name','kpp','url_address','comp_short_name','inn','payment_method'] as $key) {
+        foreach (['dostavka_id','transport_id','branch_id','city_name','address','groups','nds','dogovor','name','telefon','email','form_callback','note','comp_name','kpp','url_address','comp_short_name','inn','ogrn','dir_name','bank','bik','raschet','korschet','purchase_purpose','payment_method'] as $key) {
             if (isset($data[$key]) && is_string($data[$key])) $result[$key]=mb_substr($data[$key],0,$key==='note'?5000:2000);
         }
         return $result;

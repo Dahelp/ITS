@@ -9,6 +9,11 @@ on:
       - '.github/workflows/avito-mobile.yml'
   workflow_dispatch:
     inputs:
+      checkout_company_mail_qa:
+        description: Send the explicitly authorized organization QA emails to the test mailbox
+        type: boolean
+        default: false
+
       checkout_account_only:
         description: Publish only CR-10 checkout account files with backup and drift checks
         type: boolean
@@ -297,6 +302,17 @@ jobs:
           mkdir -p /tmp/checkout-account-reports
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/receipt.json" /tmp/checkout-account-reports/
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/smoke.json" /tmp/checkout-account-reports/
+
+      - name: Send authorized checkout company test emails
+        if: inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true && inputs.checkout_company_mail_qa == true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/scripts/require-current-master.cjs
+          release="checkout-account-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '$release' && php8.2 -d error_reporting=22527 -d display_errors=stderr -d log_errors=0 company-mail-qa.php '${{ secrets.BEGET_PATH }}' --send"
+          node .github/scripts/require-current-master.cjs
+          scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/company-mail-qa.json" /tmp/checkout-account-reports/
 
       - name: Save checkout account publication receipt
         if: inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true

@@ -15,4 +15,5 @@ foreach($manifest as $path=>$hashes){
 if(!copy($root.'/.github/checkout-account-manifest.json',$target.'/manifest.json') ||
    !copy(__DIR__.'/deploy-lead-forms.php',$target.'/install.php') ||
    !copy(__DIR__.'/smoke-checkout-account.php',$target.'/smoke.php'))throw new RuntimeException('Package support copy failed');
+if(!copy(__DIR__.'/checkout-company-mail-qa.php',$target.'/company-mail-qa.php'))throw new RuntimeException('QA script copy failed');
 echo 'CR-10 bounded package: '.count($manifest)." files\n";

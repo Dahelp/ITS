@@ -108,7 +108,8 @@ class Order extends AppModel {
 		}
 	}
 
-    public static function mailOrder($order_id, $user_email, $uname, $telefon, $admin_id, $note, $date, $dostavka_name, $branch_name, $address, $transport_company, $city_name, $vid, $compname, $nds, $dogovor, $formCallback, $promo, array $accountAccess = []){
+    public static function mailOrder($order_id, $user_email, $uname, $telefon, $admin_id, $note, $date, $dostavka_name, $branch_name, $address, $transport_company, $city_name, $vid, $compname, $nds, $dogovor, $formCallback, $promo, array $accountAccess = [], ?array &$deliveryReport = null){
+        $deliveryReport=['customer'=>false,'staff'=>false,'company_card'=>false];
        
 		if (session_status() !== PHP_SESSION_ACTIVE) {
 			session_start();
@@ -159,6 +160,16 @@ class Order extends AppModel {
 		;
 		
 		
+        if (!empty($accountAccess['company_card']) && !empty($accountAccess['company_fields'])) {
+            $card=\app\services\CompanyCard::bytes($accountAccess['company_fields'],[
+                'number'=>(string)($ord['inv']??$order_id),'date'=>(string)$date,
+                'name'=>(string)$uname,'phone'=>(string)$telefon,'email'=>(string)$user_email,
+                'has_attachment'=>!empty($_FILES['rekvizity']['tmp_name'])
+            ]);
+            $safeNumber=preg_replace('/[^A-Za-z0-9_-]/','',(string)($ord['inv']??$order_id));
+            $message_admin->attach(new Swift_Attachment($card,'Карточка организации '.$safeNumber.'.docx','application/vnd.openxmlformats-officedocument.wordprocessingml.document'));
+            $deliveryReport['company_card']=true;
+        }
 		if(!empty($_FILES['rekvizity']['tmp_name'])){
 			$attachment = Swift_Attachment::fromPath($_FILES['rekvizity']['tmp_name']);
 			$attachment->setFilename($_FILES['rekvizity']['name']);
@@ -166,8 +177,9 @@ class Order extends AppModel {
 		}
 		
         $clientSent = (bool)$mailer->send($message_client);
+        $deliveryReport['customer']=$clientSent;
         try {
-            $mailer->send($message_admin);
+            $deliveryReport['staff']=(bool)$mailer->send($message_admin);
             if ($admin_id != '0') {
                 $adm = \R::findOne('user', 'id = ?', [$admin_id]);
                 if ($adm && !empty($adm['email'])) {

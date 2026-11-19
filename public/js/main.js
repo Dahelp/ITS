@@ -1,4 +1,4 @@
-﻿$(function () {
+$(function () {
     if ($.fn.select2) {
         $('.js-filter-select').each(function () {
             if ($(this).hasClass('select2-hidden-accessible')) {
@@ -200,10 +200,10 @@ $(document).ready(function () {
 $('body').on('click', '.btn-inn', function(){
  var button=this, inn=$('.inn').val().trim(), status=$('#company-status');
  if(!/^(\d{10}|\d{12})$/.test(inn)){status.text('Введите ИНН из 10 или 12 цифр.');return;}
- button.disabled=true;status.text('Ищем компанию в 1С…');
+ button.disabled=true;status.text('Ищем реквизиты компании…');
  $.ajax({url:'/cart/inn',data:{inn:inn},timeout:15000})
- .done(function(res){if($('.inn').val().trim()!==inn)return;var fields=$('<div>').html(res);fields.find('input').each(function(){var input=$('#checkoutForm').find('[name="'+this.name+'"]');if(input.length)input.val(this.value).trigger('change');});refreshCheckoutCompany();status.text('Проверьте заполненные реквизиты компании.');})
- .fail(function(){status.text('Не удалось получить реквизиты из 1С. Заполните данные вручную или прикрепите файл.');})
+ .done(function(res){if($('.inn').val().trim()!==inn)return;var fields=$('<div>').html(res);fields.find('input').each(function(){if(['comp_name','comp_short_name','kpp','url_address','ogrn','dir_name'].indexOf(this.name)<0)return;var input=$('#checkoutForm').find('[name="'+this.name+'"]');if(input.length)input.val(this.value).trigger('change');});refreshCheckoutCompany();status.text('Проверьте заполненные реквизиты компании.');})
+ .fail(function(){status.text('Не удалось получить реквизиты. Заполните данные вручную или прикрепите файл.');})
  .always(function(){button.disabled=false;});
 });
 
@@ -1807,12 +1807,15 @@ $(document).off('change.delivery', '#dostavka_id').on('change.delivery', '#dosta
 
 
 function refreshCheckoutCompany(){
- var block=$('#vid_urlface'), visible=$('#vidurlface').val()==='4'||$('#checkout-payment-method').val()==='bank_transfer';
- block.toggle(visible).find('input,select').prop('disabled',!visible);
- var legal=$('#vidurlface').val()==='4', step=$('#checkoutForm').attr('data-current-step');
- block.find('[name="nds"],[name="dogovor"]').prop('required',legal&&step==='3');
+ var form=$('#checkoutForm'), account=Number(form.attr('data-customer-group'))||0;
+ var legal=(account||Number($('#vidurlface').val()))===4, visible=legal||$('#checkout-payment-method').val()==='bank_transfer';
+ var active=form.attr('data-current-step')==='3', file=document.getElementById('rekvizity'), attached=!!(file&&file.files&&file.files.length);
+ $('#vid_urlface,#checkout-bank').toggle(visible).find('input,select').prop('disabled',!visible);
+ $('#vid_urlface').find('[name="nds"],[name="dogovor"]').prop('required',legal&&active);
+ $('#comp_name,[data-bank-field]').prop('required',legal&&active&&!attached);
+ $('#purchase_purpose').prop('required',active);
 }
-$(document).on('change.clientType', '#vidurlface, #checkout-payment-method', refreshCheckoutCompany);
+$(document).on('change.clientType', '#vidurlface, #checkout-payment-method, #rekvizity', refreshCheckoutCompany);
 $(document).on('checkout:ready', '#checkoutForm', refreshCheckoutCompany);
 $(function(){refreshCheckoutCompany();var form=document.getElementById('checkoutForm');if(form)new MutationObserver(refreshCheckoutCompany).observe(form,{attributes:true,attributeFilter:['data-current-step']});});
 

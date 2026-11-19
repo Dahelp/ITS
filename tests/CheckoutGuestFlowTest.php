@@ -22,6 +22,7 @@ define('PATH','https://example.test');
 define('ROOT',dirname(__DIR__));
 require dirname(__DIR__).'/app/services/CheckoutAccount.php';
 require dirname(__DIR__).'/app/services/CheckoutPayment.php';
+require dirname(__DIR__).'/app/services/CheckoutCompany.php';
 require dirname(__DIR__).'/app/services/CheckoutPickup.php';
 require dirname(__DIR__).'/app/controllers/CartController.php';
 class Redirected extends \Exception {}
@@ -44,10 +45,11 @@ class R {
 }
 ini_set('session.use_cookies','0');session_save_path(sys_get_temp_dir());session_start();
 function check($v,$message){if(!$v)throw new \RuntimeException($message);}
-foreach(['new','existing','authenticated','mail-failed']as$case){
+foreach(['new','existing','authenticated','mail-failed','legal-own','legal-resale']as$case){
  if(session_status()!==PHP_SESSION_ACTIVE)session_start();
  $_SESSION=['checkout_token'=>'test-token','cart'=>[1=>['qty'=>1]],'cart.currency'=>['code'=>'RUB']];
- $_POST=['checkout_token'=>'test-token','checkout_legal_agree'=>'1','email'=>'BUYER@example.test','telefon'=>'+79991234567','name'=>'Submitted Name','groups'=>'3','dostavka_id'=>'1','payment_method'=>'card','form_callback'=>'E-mail','role'=>'admin','password'=>'attacker'];
+ $_POST=['checkout_token'=>'test-token','checkout_legal_agree'=>'1','email'=>'BUYER@example.test','telefon'=>'+79991234567','name'=>'Submitted Name','groups'=>'3','dostavka_id'=>'1','payment_method'=>'card','form_callback'=>'E-mail','purchase_purpose'=>'own_use','role'=>'admin','password'=>'attacker'];
+ if(str_starts_with($case,'legal-'))$_POST=array_replace($_POST,['groups'=>'4','nds'=>'1','dogovor'=>'2','payment_method'=>'bank_transfer','comp_name'=>'ООО Тест','inn'=>'5614073401','kpp'=>'561401001','bank'=>'Тестовый банк','bik'=>'044525225','raschet'=>'40702810000000000001','korschet'=>'30101810000000000001','purchase_purpose'=>$case==='legal-resale'?'resale':'own_use']);
  $_SERVER['REQUEST_METHOD']='POST';
  $_COOKIE=['cookie_accepted'=>'true'];
  R::$existing=$case==='existing';R::$profileReads=0;
@@ -60,7 +62,8 @@ foreach(['new','existing','authenticated','mail-failed']as$case){
  check(empty($_SESSION['cart']) && isset($_SESSION['checkout_result']),'Cart cleared and confirmation retained');
  $data=\app\models\Order::$data;
  check($data['branch_id']==='0','Zero-valued pickup branch preserved');
- check($data['groups']===3 && $data['admin_id']==0,'Guest cannot inherit private customer terms or manager');
+ check($data['groups']===(str_starts_with($case,'legal-')?4:3) && $data['admin_id']==0,'Guest cannot inherit private customer terms or manager');
+ if(str_starts_with($case,'legal-')){check(str_contains($data['note'],'044525225')&&str_contains($data['note'],'5614073401'),'Company and bank details not persisted');check(\app\models\Order::$access['company_fields']['purchase_purpose']===($case==='legal-resale'?'resale':'own_use'),'Purpose lost in mail handoff');check(\app\models\Order::$access['company_card'],'Card not requested');}
  if($case==='existing')check($data['user_id']===5 && $data['comp_id']===null && R::$profileReads===0 && empty(\app\models\Order::$access['setup_url']),'Existing mailbox routes order without profile access or password reset');
  if($case==='new'){
   check(\app\models\User::$loaded['role']==='user' && \app\models\User::$loaded['password']!=='attacker','Guest cannot choose role or password');

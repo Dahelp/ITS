@@ -1,27 +1,45 @@
 {
   "app/controllers/CartController.php": {
-    "before": "0643fcb736a795f88a16b7f9a706cd835e3d4a447cc544320a5f47705e3e01ef",
-    "before_lf": "0643fcb736a795f88a16b7f9a706cd835e3d4a447cc544320a5f47705e3e01ef",
-    "after": "3fcbe55078b8029606621efa754c682bdd484db1f4930fa5a74775edeb51ad42"
+    "before": "3fcbe55078b8029606621efa754c682bdd484db1f4930fa5a74775edeb51ad42",
+    "after": "fef7fd292130540db0ff1f0b8902d630d781e63255dad2ebff4ad95682dae04a",
+    "before_lf": "3fcbe55078b8029606621efa754c682bdd484db1f4930fa5a74775edeb51ad42"
+  },
+  "app/models/Order.php": {
+    "before": "38ad8e894d394268089b2c8b721b76852b9aedfd2f009bac546b43028c5d29ab",
+    "after": "5ed16b51dc65a908261391e0c0868ac49758d50efc4c382d245439c2bc17055e",
+    "before_lf": "38ad8e894d394268089b2c8b721b76852b9aedfd2f009bac546b43028c5d29ab"
   },
   "app/services/CheckoutAccount.php": {
-    "before": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39",
-    "before_lf": "59c9226843243fbda60b9acdf636ceee292286514549dd88530d3c8d647f3f39",
-    "after": "bb600b14eafbc5bca8f0432daa6fd9417d55db8c80ce8ad41926c308e22e1b7e"
+    "before": "bb600b14eafbc5bca8f0432daa6fd9417d55db8c80ce8ad41926c308e22e1b7e",
+    "after": "f115367036deb7ab293101b8914e44e8b8f02498af82c48c47eb59db3b801923",
+    "before_lf": "bb600b14eafbc5bca8f0432daa6fd9417d55db8c80ce8ad41926c308e22e1b7e"
+  },
+  "app/services/CheckoutCompany.php": {
+    "before": null,
+    "after": "f8b2633b159a6fa03e80602dd36ce7bba504d956183f83bcff3c84c8add5d258"
+  },
+  "app/services/CompanyCard.php": {
+    "before": null,
+    "after": "a2ecdefe700dc6769c32298cb2f357ad76d967efe120f1291a7d41d87408a7a5"
   },
   "app/views/itscenter/Cart/view.php": {
-    "before": "062e9d744093ff3f27d12cf725dae83a27095408734165424d9aa636805da8ca",
-    "before_lf": "062e9d744093ff3f27d12cf725dae83a27095408734165424d9aa636805da8ca",
-    "after": "15348eced2ade483bc797b36d45ec8e36da22fda2f620f96145fa05adba211b1"
+    "before": "15348eced2ade483bc797b36d45ec8e36da22fda2f620f96145fa05adba211b1",
+    "after": "3634d0e38487eb556bc07b767c8ec840e4f0de9e7046564c59bd82830f99bd7a",
+    "before_lf": "15348eced2ade483bc797b36d45ec8e36da22fda2f620f96145fa05adba211b1"
   },
   "public/js/main.js": {
-    "before": "f7229f4bf202f2c6aa9399169c26c0055adc8e61ea9f0d813ad86169a580f1f4",
-    "before_lf": "f7229f4bf202f2c6aa9399169c26c0055adc8e61ea9f0d813ad86169a580f1f4",
-    "after": "cd169ef6a891a0d760a5c4774e0dea018c84175f45967832537aa0774aa67b1e"
+    "before": "cd169ef6a891a0d760a5c4774e0dea018c84175f45967832537aa0774aa67b1e",
+    "after": "d4030fe61bb7a7b522af1cb0816a2b2c28ceaa9821f5e558000d1ff43c6d3787",
+    "before_lf": "cd169ef6a891a0d760a5c4774e0dea018c84175f45967832537aa0774aa67b1e"
   },
   "public/js/checkout-progress.js": {
-    "before": "11dd15936a70b83d7ee736928abedb73b61c9379633d9fc0db517afa2f83ef55",
-    "before_lf": "11dd15936a70b83d7ee736928abedb73b61c9379633d9fc0db517afa2f83ef55",
-    "after": "28ea7d96f2ad8d311eff6f7f4bba9287927dffb7afb86968b14d96377d76a229"
+    "before": "28ea7d96f2ad8d311eff6f7f4bba9287927dffb7afb86968b14d96377d76a229",
+    "after": "0078813c439643a189a7c38c8356fcdbee57386ab5a45126c0768f127acfd2a0",
+    "before_lf": "28ea7d96f2ad8d311eff6f7f4bba9287927dffb7afb86968b14d96377d76a229"
+  },
+  "public/css/checkout-progress.css": {
+    "before": "d8899a9d46ac459e74431c8dbb7b80421a4c71375bb6025fafb0826d8ccc7e19",
+    "after": "f98a28331a19d6bd9045db7159851f76920eaa076e835c6d383a2664636d2eec",
+    "before_lf": "d8899a9d46ac459e74431c8dbb7b80421a4c71375bb6025fafb0826d8ccc7e19"
   }
 }

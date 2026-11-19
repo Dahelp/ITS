@@ -9,6 +9,9 @@ foreach(['checkout_account_access'=>['user_id','token_hash','expires','sent_at',
     $columns=array_column(R::getAll("SHOW COLUMNS FROM `$table`"),'Field');
     if(array_diff($required,$columns))throw new RuntimeException('Incomplete CR-10 schema: '.$table);
 }
+$cardFields=\app\services\CheckoutCompany::fields(['comp_name'=>'Тестовая организация','purchase_purpose'=>'own_use']);
+$card=\app\services\CompanyCard::bytes($cardFields,['number'=>'PREFLIGHT','date'=>date('d.m.Y')]);
+if(substr($card,0,2)!=='PK')throw new RuntimeException('Company DOCX preflight failed');
 $checks=[];
 foreach(['/' => null,'/cart/view'=>'id="checkout-login"','/user/login'=>'name="login_csrf"','/user/setup-password'=>'Задать пароль','/js/checkout-progress.js'=>'checkout-login-resume','/js/main.js'=>"submitter.id === 'checkout-login'"]as$path=>$marker){
     $ch=curl_init('https://its-center.ru'.$path.'?cr10='.time());
@@ -18,5 +21,5 @@ foreach(['/' => null,'/cart/view'=>'id="checkout-login"','/user/login'=>'name="l
     if($marker!==null&&!str_contains($body,$marker))throw new RuntimeException('CR-10 marker absent: '.$path);
     $checks[]=['path'=>$path,'status'=>$status];
 }
-file_put_contents(__DIR__.'/smoke.json',json_encode(['schema'=>'ok','http'=>$checks,'orders_created'=>0,'mail_sent'=>false],JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+file_put_contents(__DIR__.'/smoke.json',json_encode(['company_docx'=>'ok','schema'=>'ok','http'=>$checks,'orders_created'=>0,'mail_sent'=>false],JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
 echo "CR-10: schema and six public HTTP checks OK; no orders or email created by deployment\n";
