@@ -1603,11 +1603,12 @@ function setCompareButtonState(productId, active) {
 }
 
 function setWishlistButtonState(productId, active) {
-    var $btn = $('#wishlist-' + productId);
+    var $btn = $('[id="wishlist-' + productId + '"]');
     if (!$btn.length) return;
 
     $btn.toggleClass('is-active', !!active)
-        .attr('title', active ? 'В избранном' : 'Добавить в избранное');
+        .attr('title', active ? 'В избранном' : 'Добавить в избранное')
+        .attr('aria-pressed', String(!!active));
 
     var $icon = $btn.find('i');
     if (!$icon.length) return;
@@ -1684,6 +1685,10 @@ $('body').on('click', '.js-wishlist, .btn-wishlist, .btn-wishlist2', function (e
     var product_id = parseInt($btn.data('id') || 0, 10);
 
     if (!product_id) return;
+    if (window.GuestFavorites && window.GuestFavorites.isGuest()) {
+        window.GuestFavorites.toggle(product_id);
+        return;
+    }
 
     $.ajax({
         url: (window.APP_PATH || '') + '/user/wishlists-toggle',
@@ -1697,6 +1702,7 @@ $('body').on('click', '.js-wishlist, .btn-wishlist, .btn-wishlist2', function (e
             var added = (res.state === 'added');
 
             setWishlistButtonState(product_id, added);
+            if (window.GuestFavorites) window.GuestFavorites.refresh();
 
             $('#wishlist-' + product_id)
                 .removeClass('btn-wishlist btn-wishlist2 btn-icon')

@@ -102,6 +102,8 @@ Router::add('^admin/avito/import-xls/?$', [
     'prefix'     => 'admin',
 ]);
 
+Router::add('^favorites/?$', ['controller' => 'Favorites', 'action' => 'index']);
+
 // default routes
 Router::add('^api/mobile/v1/avito/(?P<operation>[a-z-]+)/?$', ['controller'=>'AvitoMobile','action'=>'handle']);
 Router::add('^admin$', ['controller' => 'Main', 'action' => 'index', 'prefix' => 'admin']);

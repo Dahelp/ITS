@@ -7960,3 +7960,6 @@ $rules=<<<'CSS'
 .advantages-inner > .container::before {
   box-shadow: var(--site-block-shadow) !important;
 }
+
+/* Favorite state on product details and cart as well as catalog cards. */
+.js-wishlist.is-active i, .cart-action--fav.is-active i { color: #ef4444; }

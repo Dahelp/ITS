@@ -17,7 +17,7 @@
 
         <?php if (!$isCompleteCard): ?>
         <div class="pc-actions">
-            <?php if ($userId > 0): ?>
+            
                 <button
                     id="wishlist-<?= (int)$pid ?>"
                     class="pc-iconbtn js-wishlist <?= $wishlisted ? 'is-active' : '' ?>"
@@ -30,7 +30,7 @@
                     aria-label="Избранное">
                     <i class="<?= $wishlisted ? 'fas fa-heart' : 'far fa-heart' ?>"></i>
                 </button>
-            <?php endif; ?>
+            
 
             <button
                 id="comparison-<?= (int)$pid ?>"

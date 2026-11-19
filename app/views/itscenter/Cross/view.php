@@ -380,8 +380,8 @@ if (property_exists($product, 'reserve')) {
 						</button>
 
 						<div class="product-icon-actions">
-							<?php if ($userId): ?>
-								<?php $wishlisted = \R::count('product_wishlists', 'product_id = ? AND user_id = ?', [$product->id, $userId]) > 0; ?>
+							
+								<?php $wishlisted = $userId > 0 && \R::count('product_wishlists', 'product_id = ? AND user_id = ?', [$product->id, $userId]) > 0; ?>
 								<button
 									id="wishlist-<?= (int)$product->id ?>"
 									class="pc-iconbtn js-wishlist <?= $wishlisted ? 'is-active' : '' ?>"
@@ -392,7 +392,7 @@ if (property_exists($product, 'reserve')) {
 									aria-label="Избранное">
 									<i class="<?= $wishlisted ? 'fas fa-heart' : 'far fa-heart' ?>"></i>
 								</button>
-							<?php endif; ?>
+							
 
 							<?php $inCompare = !empty($comparison[$product->id]); ?>
 							<button

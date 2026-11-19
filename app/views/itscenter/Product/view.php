@@ -636,7 +636,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                       </button>
 
                       <div class="product-icon-actions">
-                        <?php if ($userId): ?>
+                        
                           <button
                               id="wishlist-<?= (int)$product->id ?>"
                               class="pc-iconbtn js-wishlist <?= $productWishlisted ? 'is-active' : '' ?>"
@@ -647,7 +647,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                               aria-label="Избранное">
                               <i class="<?= $productWishlisted ? 'fas fa-heart' : 'far fa-heart' ?>"></i>
                           </button>
-                        <?php endif; ?>
+                        
 
                         <?php $inCompare = !empty($comparison[$product->id]); ?>
                         <button

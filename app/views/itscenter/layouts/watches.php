@@ -320,6 +320,7 @@ window.APP_PATH = window.APP_CONFIG.path;
 </script>
 
 <?php require __DIR__ . '/../partials/catalog-menu-shell.php'; ?>
+<script src="/js/guest-favorites.js?v=<?= (int) @filemtime(WWW . '/js/guest-favorites.js') ?>"></script>
 <script src="/js/main.js?v=<?= (int) @filemtime(WWW . '/js/main.js') ?>"></script>
 
 </body>

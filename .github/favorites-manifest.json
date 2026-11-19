@@ -1,0 +1,54 @@
+{
+  "app/controllers/FavoritesController.php": {
+    "before": null,
+    "after": "1b00419c5b4c5635aba51021cd881b0d9af1e78331ab72435acfa26d6bece276"
+  },
+  "app/views/itscenter/Favorites/index.php": {
+    "before": null,
+    "after": "83beb82de8bc15aacdf0cb4bcff0eeb92fe41b5835e47abd75d6964edd95d40d"
+  },
+  "public/js/guest-favorites.js": {
+    "before": null,
+    "after": "5150f8a0f6f6cf172579e871ef275c3447ebb13184ba18c67323c4e0f023b36b"
+  },
+  "app/widgets/product/card.php": {
+    "before": "6e50e8fa5286d31e708172aceeee0d8d3ba00d1f403dafb46626326a2c629551",
+    "after": "67350ae3c52090a6ea11c3dd05dc714967e3f34b85fa3a4c24edfac3ffd66dd1",
+    "before_lf": "81ca7d8f337af54495e515d4a5036b811b95243839a877a8b7c2079b2104e0a0"
+  },
+  "app/views/itscenter/Product/view.php": {
+    "before": "a75228fcd0d82a2a5194e7e0460d25354cf394790ba960acb667f841a9435adb",
+    "after": "53700d90ce766989d3038e17a5fb6811a992fbf6b0e4104fbf8aeb805da5395c",
+    "before_lf": "d9bae97377f616996696380105d34197a084d61aa1a73ff66e1d5a5b6bd7b7ad"
+  },
+  "app/views/itscenter/Cross/view.php": {
+    "before": "41a1901885c37cff2fdbea515f002b0f5a210efed7ffd9189cf022ad337dea3f",
+    "after": "1c85405c735b26f6d7c3f8e07474f94e06c81b177dce3b9e92caf9fc54f4e9d1",
+    "before_lf": "541af0c7c8de645a7a64ee7fe3f80e235ac56e93a60b730ebfa5260cf6a2e7c3"
+  },
+  "config/routes.php": {
+    "before": "7fea55a0104336192a565e9ffd4abaa07b651b059d769d8de9eebbff4e793544",
+    "after": "fafc4407c96e1204df7d5b670b70a9b8ec4131ff6cd717f3f375dcdd2df46489",
+    "before_lf": "7fefea734ed7fef8f2cc87905b35bdffef0cf3484d74437b1a3311e12c30f20d"
+  },
+  "app/views/itscenter/partials/header.php": {
+    "before": "efead646570e626c6a5f933b37760f662e30c5d0f9a64411c8f6857eb4568a29",
+    "after": "19a7ea7a0a308c1e97c7cfe5a1ef374808dcca99c7de46d79464c78a4f3b342f",
+    "before_lf": "7045920cb4ffdd3cb8328e875e894090e108054abeb662b23f3845aa53c3c00b"
+  },
+  "app/views/itscenter/layouts/watches.php": {
+    "before": "98e167874ce416a54dc2ae2d5c40da19e39873987b3ace2a73df00eb98ce2f26",
+    "after": "d99c1cbefb10ab69e83435652bf9a09125f259896943152de2c25878f179a8ef",
+    "before_lf": "cb5ea54d6c9f1ec7ed184bb578ca6e256316d817bd6778e4219b039d8281bed5"
+  },
+  "public/js/main.js": {
+    "before": "ee0ea13e9100338710c34a98cdfc398325dc5ca6ea64a25318d31f4ad92fa8b3",
+    "after": "c15353c4bdea3511e5e03bfcf33aee5a79f5c665bc4d0df3be65a66138576e7c",
+    "before_lf": "62f6663120d7aec4a256d7c04106928ba30d79fcb8b515cfb54b2b46ae280407"
+  },
+  "public/css/style.css": {
+    "before": "3180d67a8dedc3c7069ae1ba136796d1d5b82a0b093090b711bba3ffccc9faa7",
+    "after": "3012efb4e78fc8e29bd487ea14bb9685e63bc234f4e2d21a2344f85afb3c5829",
+    "before_lf": "ef9d24ac19e47d6ef2a12e4bf26939a601df86012004e6eb4c924255f241be36"
+  }
+}
