@@ -1,6 +1,6 @@
 <?php
 if(PHP_SAPI!=='cli')exit(1);
-$root=$argv[1]??'';$mode=$argv[2]??'audit';
+$root=realpath($argv[1]??'');$mode=$argv[2]??'audit';
 if($root!=='/home/s/shinaspec/its-center.ru/public_html'||!in_array($mode,['audit','publish'],true))throw new RuntimeException('Invalid target');
 require $root.'/config/init.php';require CONF.'/db_bootstrap.php';
 $alias='cepi-protivoskolzheniya-dlya-spectehniki-v-prodazhe';
