@@ -14,6 +14,7 @@ final class CompanyCardData
 
     public static function forOrder(array $order): array
     {
+        $profileSource=false;
         $snapshot=\R::getRow('SELECT fields_json,contact_json FROM checkout_order_company WHERE order_id=?', [(int)$order['id']]);
         if ($snapshot) {
             $fields=CheckoutCompany::fields(json_decode($snapshot['fields_json'],true,512,JSON_THROW_ON_ERROR));
@@ -21,9 +22,11 @@ final class CompanyCardData
         } else {
             $fields=self::legacyFields((string)($order['note']??''));
             // Never replace historical order details with a subsequently edited profile.
-            if (!$fields && !empty($order['comp_id'])) {
-                $company=\R::getRow('SELECT * FROM company WHERE id=? AND user_id=?', [(int)$order['comp_id'],(int)$order['user_id']]);
-                if ($company) $fields=CheckoutCompany::fields($company);
+            if (!$fields) {
+                $company=!empty($order['comp_id'])
+                    ? \R::getRow('SELECT * FROM company WHERE id=? AND user_id=?', [(int)$order['comp_id'],(int)$order['user_id']])
+                    : \R::getRow('SELECT * FROM company WHERE user_id=? ORDER BY id LIMIT 1',[(int)$order['user_id']]);
+                if ($company) { $fields=CheckoutCompany::fields($company); $profileSource=true; }
             }
             $contact=\R::getRow('SELECT name,telefon,email FROM checkout_order_contact WHERE order_id=?',[(int)$order['id']]);
             if (!$contact) $contact=\R::getRow('SELECT name,telefon,email FROM user WHERE id=?',[(int)$order['user_id']]);
@@ -31,7 +34,7 @@ final class CompanyCardData
         $fields=CheckoutCompany::fields($fields);
         $available=!empty($fields['comp_name']) || !empty($fields['inn']) || (int)($order['payment_customer_type']??0)===4 || ($order['payment_method']??'')==='bank_transfer';
         return ['fields'=>$fields,'context'=>[
-            'number'=>(string)($order['inv']??$order['id']),'date'=>(string)($order['date']??''),
+            'number'=>(string)($order['inv']??$order['id']),'date'=>(string)($order['date']??''),'source_profile'=>$profileSource,
             'name'=>(string)($contact['name']??''),'phone'=>(string)($contact['telefon']??''),'email'=>(string)($contact['email']??''),'has_attachment'=>!empty($contact['has_attachment'])
         ],'available'=>$available];
     }

@@ -80,5 +80,8 @@ R::$order[12]=['id'=>12,'user_id'=>7,'comp_id'=>70,'inv'=>'OLD12','note'=>"Ко�
 $card=expectDownload($user,['order_id'=>12]);cardCheck($card->fields['comp_name']==='Историческая организация' && $card->fields['bik']==='044525225' && $card->fields['purchase_purpose']==='own_use','Legacy order details lost');
 R::$order[13]=['id'=>13,'user_id'=>7,'comp_id'=>70,'inv'=>'OLD13','note'=>'Старый заказ'];
 $card=expectDownload($user,['order_id'=>13]);cardCheck($card->fields['comp_name']==='Текущая компания','Old order cannot use its linked organization');
+cardCheck($card->context['source_profile']===true,'Current profile not distinguished from a historical snapshot');
+R::$order[14]=['id'=>14,'user_id'=>7,'comp_id'=>null,'inv'=>'OLD14','note'=>'Заказ до появления сохранённых реквизитов'];
+$card=expectDownload($user,['order_id'=>14]);cardCheck($card->fields['comp_name']==='Текущая компания' && $card->context['source_profile']===true,'Legacy order without company ID cannot export its owner organization');
 echo "DOCX downloads: own company, own order, admin permissions, immutable details, legacy orders and leading zeros OK; no files or mail exposed\n";
 }

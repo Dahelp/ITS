@@ -14,6 +14,7 @@ final class CompanyCard
         $section->addTitle('Карточка организации',0);
         $section->addText('Реквизиты покупателя для оформления документов и передачи в бухгалтерию.',[],['spaceAfter'=>100]);
         $caption=!empty($context['number']) ? 'Заказ № '.$context['number'].' от '.($context['date']??'') : 'Дата формирования '.($context['date']??date('d.m.Y'));
+        if (!empty($context['source_profile'])) $caption='Заказ № '.$context['number'].'. Реквизиты организации на '.date('d.m.Y');
         $section->addText($caption,['size'=>10],['spaceAfter'=>180]);
         $tableStyle=['borderSize'=>4,'borderColor'=>'D9DFE5','cellMargin'=>100,'layout'=>'fixed','width'=>9706,'unit'=>'dxa'];
         $write=function($title,$rows)use($section,$tableStyle){
