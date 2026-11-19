@@ -12,6 +12,8 @@ foreach(['checkout_account_access'=>['user_id','token_hash','expires','sent_at',
 $cardFields=\app\services\CheckoutCompany::fields(['comp_name'=>'Тестовая организация','purchase_purpose'=>'own_use']);
 $card=\app\services\CompanyCard::bytes($cardFields,['number'=>'PREFLIGHT','date'=>date('d.m.Y')]);
 if(substr($card,0,2)!=='PK')throw new RuntimeException('Company DOCX preflight failed');
+$companyColumns=array_column(R::getAll('SHOW COLUMNS FROM company'),'Field');
+if(array_diff(array_merge(array_keys(\app\services\CheckoutCompany::LABELS),['id','comp_short_name','user_id','tip','postal_address','nds','dogovor','data_create','hide']),$companyColumns))throw new RuntimeException('Incomplete company schema');
 $checks=[];
 foreach(['/' => null,'/cart/view'=>'id="checkout-login"','/user/login'=>'name="login_csrf"','/user/setup-password'=>'Задать пароль','/js/checkout-progress.js'=>'checkout-login-resume','/js/main.js'=>"submitter.id === 'checkout-login'"]as$path=>$marker){
     $ch=curl_init('https://its-center.ru'.$path.'?cr10='.time());

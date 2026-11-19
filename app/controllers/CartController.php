@@ -983,6 +983,11 @@ class CartController extends AppController {
         ? $user_id
         : ($_SESSION['user']['id'] ?? null);
 
+    // A guest email match cannot change the mailbox owner's company.
+    if ($paymentGroup===4 && ($isAuth || $newAccount)) {
+        $savedCompanyId=\app\services\CheckoutCompany::saveForOwner((int)$data['user_id'],$companyFields,$_POST);
+        if ($savedCompanyId) $comp_id=$savedCompanyId;
+    }
     // comp_id — либо из найденного пользователя, либо null
     $data['comp_id'] = !empty($comp_id) ? $comp_id : null;
 

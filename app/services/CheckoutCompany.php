@@ -26,6 +26,34 @@ final class CheckoutCompany
             if ($fields[$key]==='') throw new \DomainException('Заполните поле «'.self::LABELS[$key].'» или прикрепите файл с реквизитами.');
         }
     }
+    /** Caller must already be inside the checkout transaction and own this account. */
+    public static function saveForOwner(int $userId, array $fields, array $terms): ?int
+    {
+        if ($userId<1 || ($fields['comp_name']??'')==='') return null;
+        $owner=\R::getRow('SELECT id,comp_id FROM user WHERE id=? FOR UPDATE',[$userId]);
+        if (empty($owner['id']) || (int)$owner['id']!==$userId) throw new \RuntimeException('Company owner missing');
+        $company=\R::getRow('SELECT * FROM company WHERE user_id=? ORDER BY id LIMIT 1 FOR UPDATE',[$userId]);
+        if ($company) {
+            $companyId=(int)$company['id'];
+            // Retain existing company terms and details; fill only previously empty fields.
+            foreach (self::LABELS as $key=>$label) if (($fields[$key]??'')!=='' && empty($company[$key])) {
+                \R::exec('UPDATE company SET `'.$key.'`=? WHERE id=? AND user_id=?',[$fields[$key],$companyId,$userId]);
+            }
+        } else {
+            $values=[];
+            foreach (self::LABELS as $key=>$label) $values[$key]=(string)($fields[$key]??'');
+            $values+=['comp_short_name'=>$fields['comp_name'],'user_id'=>$userId,'tip'=>1,'postal_address'=>$fields['url_address']??'',
+                'nds'=>in_array((string)($terms['nds']??''),['1','2'],true)?(string)$terms['nds']:'',
+                'dogovor'=>in_array((string)($terms['dogovor']??''),['1','2'],true)?(string)$terms['dogovor']:'',
+                'data_create'=>date('Y-m-d H:i:s'),'hide'=>'show'];
+            $columns=implode(',',array_map(static fn($key)=>'`'.$key.'`',array_keys($values)));
+            \R::exec('INSERT INTO company ('.$columns.') VALUES ('.implode(',',array_fill(0,count($values),'?')).')',array_values($values));
+            $companyId=(int)\R::getInsertID();
+            if ($companyId<1) throw new \RuntimeException('Company not saved');
+        }
+        \R::exec('UPDATE user SET comp_id=? WHERE id=?',[$companyId,$userId]);
+        return $companyId;
+    }
     public static function text(array $fields): string
     {
         $lines=[];

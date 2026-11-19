@@ -2,6 +2,7 @@
 /** CLI-only QA of the actual order mailer with an isolated, read-only database double. */
 if(PHP_SAPI!=='cli')exit(1);
 $root=$argv[1]??dirname(__DIR__,2);
+if (!is_dir($root)) $root=dirname(__DIR__).'/'.$root;
 $send=in_array('--send',$argv,true);
 $report=__DIR__.'/company-mail-qa.json';
 if($send && is_file($report))throw new RuntimeException('QA mail already attempted in this release');
