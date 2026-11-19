@@ -125,6 +125,7 @@ jobs:
             --exclude='public/xml/' \
             --exclude='public/storage/' \
             --exclude='public/uploads/' \
+            --exclude='/public/images/***' \
             --filter='protect app/services/HomeCatalog.php' \
             --filter='protect public/css/home.css' \
             --filter='protect public/js/home.js' \
