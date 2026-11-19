@@ -38,8 +38,8 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-customer-group="<?= (int)($checkoutCustomerGroup ?? 0) ?>" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
                 <link rel="stylesheet" href="/css/checkout-progress.css?v=<?= (int)filemtime(WWW.'/css/checkout-progress.css') ?>">
                 <?php if (!$userId): ?>
-                <fieldset class="checkout-mode bg-light rounded-3 p-3 mb-3">
-                  <legend class="h5">Как хотите оформить заказ?</legend>
+                <section class="checkout-mode bg-light rounded-3 p-3 mb-3" role="group" aria-labelledby="checkout-mode-title">
+                  <h2 class="h5" id="checkout-mode-title">Как хотите оформить заказ?</h2>
                   <?php $mode=($checkoutFormData['checkout_mode']??'guest')==='register'?'register':'guest'; ?>
                   <input type="hidden" name="checkout_mode" id="checkout-mode" value="<?=h($mode)?>">
                   <div class="checkout-mode__options">
@@ -50,7 +50,7 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                   <button type="submit" class="btn btn-outline-primary" id="checkout-login" formaction="<?= PATH ?>/cart/login-checkout" formnovalidate>Войти в существующий кабинет</button>
                   <input type="hidden" name="checkout_step" id="checkout-login-step" value="1">
                   <input type="hidden" name="checkout_attachment" id="checkout-login-attachment" value="">
-                </fieldset>
+                </section>
                 <?php endif; ?>
                 <?php if (!empty($checkoutLoginResume)): ?>
                 <script type="application/json" id="checkout-login-resume"><?= json_encode($checkoutLoginResume, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE) ?></script>
