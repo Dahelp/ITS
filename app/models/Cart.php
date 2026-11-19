@@ -493,15 +493,16 @@ class Cart extends AppModel {
         $productId = (int)($item['product_id'] ?? $this->getProductIdFromKey((string)$id));
         $product = \R::findOne('product', 'id = ?', [$productId]);
         if (!$product) return 0;
-        $free = max(0, (int)$product->quantity - max(0, (int)($product->reserve ?? 0)));
+        // The inventory import already excludes reserve from quantity.
+        $free = max(0, (int)$product->quantity);
         $variant = preg_match('/-(\d+)$/', (string)$id, $match) ? (int)$match[1] : null;
         if ($variant === 0) {
             foreach (\R::findAll('modification', 'product_id = ?', [$productId]) as $mod) {
-                $free += max(0, (int)$mod->quantity - max(0, (int)($mod->reserve ?? 0)));
+                $free += max(0, (int)$mod->quantity);
             }
         } elseif ($variant !== null) {
             $mod = \R::findOne('modification', 'id = ? AND product_id = ?', [$variant, $productId]);
-            $free = $mod ? max(0, (int)$mod->quantity - max(0, (int)($mod->reserve ?? 0))) : 0;
+            $free = $mod ? max(0, (int)$mod->quantity) : 0;
         }
         // The same stock must not be sold twice via a separate item and a set.
         foreach ($_SESSION['cart'] ?? [] as $key => $other) {

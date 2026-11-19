@@ -1,0 +1,12 @@
+{
+    "app/views/itscenter/Product/view.php": {
+        "before": "baee36bdf0220bcbf3ba9c92af605a3c0737efcfb47433deeb90a894e7d5a227",
+        "before_lf": "baee36bdf0220bcbf3ba9c92af605a3c0737efcfb47433deeb90a894e7d5a227",
+        "after": "d9bae97377f616996696380105d34197a084d61aa1a73ff66e1d5a5b6bd7b7ad"
+    },
+    "app/models/Cart.php": {
+        "before": "aa5b40a22f7ed47cc27a2dd035f10cb35530be8efa8d798ef09ea0c40f1abd9d",
+        "before_lf": "aa5b40a22f7ed47cc27a2dd035f10cb35530be8efa8d798ef09ea0c40f1abd9d",
+        "after": "c46563ab0de03d25be60215aa989535f6ee6b97ad6c5edb83ca87bd5a0fb999b"
+    }
+}

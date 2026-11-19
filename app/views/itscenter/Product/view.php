@@ -60,7 +60,8 @@ foreach ($mods as $m) {
     $sum_mods += (int)$m->quantity;
 }
 $reserve = property_exists($product, 'reserve') ? (int)$product->reserve : 0;
-$itog_qty = max(0, (int)$product->quantity - $reserve);
+// 1C quantity is already free stock; reserve is informational, not another deduction.
+$itog_qty = max(0, (int)$product->quantity);
 $quantity = (int)$product->quantity;
 
 $comp_priceopt = $userId
@@ -307,7 +308,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                     $quantity = (int)($product->quantity ?? 0);
                     $reserve = (int)($product->reserve ?? 0);
                     $stockStatusId = (int)($product->stock_status_id ?? 0);
-                    $itog_qty = max(0, $quantity - $reserve);
+                    $itog_qty = max(0, $quantity);
                     ?>
 
                     <?php if (!$hasMods): ?>
@@ -388,8 +389,8 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                         echo '<span class="nalich_no">' . (\app\services\TsepChainCatalog::isChain($product) ? \app\services\TsepChainCatalog::orderText() : 'Товар можно приобрести под заказ. Цена, наличие и срок доставки согласовываются с менеджером. Доставка 3-5 рабочих дней после поступления оплаты по счёту.') . '</span>';
                                     } elseif ($stockStatusId === 3) {
                                         echo '<span class="nalich_postuplenie">Ожидается поступление. Уточняйте у менеджера.</span>';
-                                    } elseif ($reserve > 0 && $quantity > 0) {
-                                        echo '<span class="nalich_no"><i class="far fa-clock" aria-hidden="true"></i> Свободного остатка нет. Весь товар в резерве (' . $reserve . ' шт.).</span>';
+                                    } elseif ($reserve > 0 && $itog_qty === 0) {
+                                        echo '<span class="nalich_no"><i class="far fa-clock" aria-hidden="true"></i> Свободного остатка нет. В резерве: ' . $reserve . ' шт.</span>';
                                     } else {
                                         echo '<span class="nalich_no"><i class="far fa-times-circle fa-tabls" aria-hidden="true"></i> Нет в наличии, о поступлении уточняйте у менеджера</span>';
                                     }
@@ -473,7 +474,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                         <button class="btn btn-warning" type="submit" data-bs-toggle="modal" data-bs-target="#ModalRequest">
                                             <?= \app\services\TsepChainCatalog::isChain($product) ? 'Оставить заявку' : 'Оформить под заказ' ?>
                                         </button>
-                                    <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $quantity > 0)): ?>
+                                    <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $itog_qty === 0)): ?>
                                         <button class="btn btn-stock-notify" type="button" data-bs-toggle="modal" data-bs-target="#ModalAvailability" data-product-id="<?= (int)$product->id ?>" data-product-name="<?= h($product->name) ?>" data-product-url="<?= PATH ?>/product/<?= h($product->alias) ?>">
                                             Сообщить о поступлении
                                         </button>
@@ -496,7 +497,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                         $quantity = (int)($product->quantity ?? 0) + (int)$sum_mods;
                         $reserve = (int)($product->reserve ?? 0);
                         $stockStatusId = (int)($product->stock_status_id ?? 0);
-                        $itog_qty = max(0, $quantity - $reserve);
+                        $itog_qty = max(0, $quantity);
                         ?>
 
                         <div class="product-buy-top">
@@ -524,8 +525,8 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                         echo '<span class="nalich_no">' . (\app\services\TsepChainCatalog::isChain($product) ? \app\services\TsepChainCatalog::orderText() : 'Товар можно приобрести под заказ. Цена, наличие и срок доставки согласовываются с менеджером. Доставка 3-5 рабочих дней после поступления оплаты по счёту.') . '</span>';
                                     } elseif ($stockStatusId === 3) {
                                         echo '<span class="nalich_postuplenie">Ожидается поступление. Уточняйте у менеджера.</span>';
-                                    } elseif ($reserve > 0 && $quantity > 0) {
-                                        echo '<span class="nalich_no"><i class="far fa-clock" aria-hidden="true"></i> Свободного остатка нет. Весь товар в резерве (' . $reserve . ' шт.).</span>';
+                                    } elseif ($reserve > 0 && $itog_qty === 0) {
+                                        echo '<span class="nalich_no"><i class="far fa-clock" aria-hidden="true"></i> Свободного остатка нет. В резерве: ' . $reserve . ' шт.</span>';
                                     } else {
                                         echo '<span class="nalich_no"><i class="far fa-times-circle fa-tabls" aria-hidden="true"></i> Нет в наличии, о поступлении уточняйте у менеджера</span>';
                                     }
@@ -619,7 +620,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                                         <button class="btn btn-warning" type="submit" data-bs-toggle="modal" data-bs-target="#ModalRequest">
                                             <?= \app\services\TsepChainCatalog::isChain($product) ? 'Оставить заявку' : 'Оформить под заказ' ?>
                                         </button>
-                                    <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $quantity > 0)): ?>
+                                    <?php elseif ($stockStatusId === 3 || $stockStatusId === 0 || ($reserve > 0 && $itog_qty === 0)): ?>
                                         <button class="btn btn-stock-notify" type="button" data-bs-toggle="modal" data-bs-target="#ModalAvailability" data-product-id="<?= (int)$product->id ?>" data-product-name="<?= h($product->name) ?>" data-product-url="<?= PATH ?>/product/<?= h($product->alias) ?>">
                                             Сообщить о поступлении
                                         </button>
@@ -715,7 +716,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                   $prod_qty .= $prod["qty"] . ",";
 
                   $totalStock = max(0, (int)$prod["quantity"] + (int)($prod['modification_quantity'] ?? 0));
-                  $freeStock = max(0, $totalStock - max(0, (int)($prod['reserve'] ?? 0)));
+                  $freeStock = max(0, $totalStock);
                   $canUseProduct = ($prod['hide'] ?? '') !== 'hide';
                   $setsFromProduct = $canUseProduct ? intdiv($freeStock, max(1, (int)$prod['qty'])) : 0;
                   $availableSets = min($availableSets ?? PHP_INT_MAX, $setsFromProduct);
@@ -805,7 +806,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                             <?php
                               $totalStock = max(0, (int)$prod['quantity'] + (int)($prod['modification_quantity'] ?? 0));
                               $reserveStock = max(0, (int)($prod['reserve'] ?? 0));
-                              $freeStock = max(0, $totalStock - $reserveStock);
+                              $freeStock = max(0, $totalStock);
                             ?>
                             <div class="complete-comp-item">
                               <div class="complete-comp-item__name"><?=$prod["name"]?></div>
@@ -1368,6 +1369,9 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
             <div class="container">
               <section class="pb-5 mb-2 mb-xl-4 recomend-1">
                 <h2 class="h3 pb-2 mb-grid-gutter text-center">Связанные товары</h2>
+                <?php if ((int)$product->category_id === 31): ?>
+                  <p class="text-muted small text-center mb-3">Перед покупкой сверьте размер камеры, тип вентиля и исполнение диска.</p>
+                <?php endif; ?>
                 <div class="review-wrap">
                   <div class="wrap-container">
                     <div class="inner-container">
@@ -1428,6 +1432,9 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
             <div class="container">
               <section class="pb-5 mb-2 mb-xl-4 recomend-1">
                 <h2 class="h3 pb-2 mb-grid-gutter text-center">Похожие товары</h2>
+                <?php if ((int)$product->category_id === 31): ?>
+                  <p class="text-muted small text-center mb-3">Сравните диапазон размеров и вентиль камеры перед заменой.</p>
+                <?php endif; ?>
                 <div class="review-wrap">
                   <div class="wrap-container">
                     <div class="inner-container">
