@@ -24,6 +24,9 @@
 						<h5 class="mb-0 h6">Компания</h5>
 					</div>
 					<div class="card-body">
+                        <?php if (!empty($company->id)): ?>
+                        <a class="btn btn-outline-primary mb-4" href="<?=PATH?>/user/company-card">Скачать карточку организации (.docx)</a>
+                        <?php endif; ?>
 						<form action="user/company" method="post" data-toggle="validator">
 							<div class="box-body">
 								<div class="form-group has-feedback mb-3">

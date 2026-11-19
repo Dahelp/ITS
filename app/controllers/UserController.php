@@ -445,6 +445,28 @@ class UserController extends AppController {
         $this->setMeta('Изменение личных данных');
     }
 	
+    public function companyCardAction(): void
+    {
+        if (!User::checkAuth() || empty($_SESSION['user']['id'])) { redirect(PATH.'/user/login'); return; }
+        $ownerId=(int)$_SESSION['user']['id'];
+        if (isset($_GET['order_id'])) {
+            $id=filter_var($_GET['order_id'],FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
+            $order=$id ? \R::getRow('SELECT * FROM `order` WHERE id=? AND user_id=?',[$id,$ownerId]) : [];
+            if (!$order) throw new \Exception('Страница не найдена',404);
+            $card=\app\services\CompanyCardData::forOrder($order);
+            if (!$card['available']) throw new \Exception('Реквизиты организации не найдены',404);
+            \app\services\CompanyCard::download($card['fields'],$card['context'],(string)$order['id']);
+            return;
+        }
+        // An arbitrary company ID in the URL never grants access to another profile.
+        $company=\R::getRow('SELECT * FROM company WHERE user_id=? ORDER BY id LIMIT 1',[$ownerId]);
+        if (!$company) throw new \Exception('Реквизиты организации не найдены',404);
+        $contact=\R::getRow('SELECT name,telefon,email FROM user WHERE id=?',[$ownerId]);
+        \app\services\CompanyCard::download(\app\services\CheckoutCompany::fields($company),[
+            'date'=>date('d.m.Y'),'name'=>(string)($contact['name']??''),'phone'=>(string)($contact['telefon']??''),'email'=>(string)($contact['email']??'')
+        ],(string)$company['id']);
+    }
+
 	public function companyAction(){
         if(!User::checkAuth()) redirect('');
         if(!empty($_POST)){
@@ -558,9 +580,10 @@ class UserController extends AppController {
 		}
 
 		$status = \R::findOne('order_status', 'id = ?', [$order_info->status]);
+        $companyCardAvailable=\app\services\CompanyCardData::forOrder($order_info->export())['available'];
 
 		$this->setMeta('Просмотр заказа');
-		$this->set(compact('order', 'order_info', 'status', 'id', 'cartActionToken'));
+		$this->set(compact('order', 'order_info', 'status', 'id', 'cartActionToken','companyCardAvailable'));
 	}
 	
 	public function wishlistAction() {

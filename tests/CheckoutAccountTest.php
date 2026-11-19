@@ -41,3 +41,8 @@ check(Account::issue(7)===null,'Setup cannot reset existing password');
 $fields=Account::fields(['password'=>'secret','role'=>'admin','checkout_token'=>'csrf','name'=>'Иван','email'=>['bad'],'note'=>str_repeat('x',6000)]);
 check(!isset($fields['password'],$fields['role'],$fields['checkout_token'],$fields['email']) && $fields['name']==='Иван' && strlen($fields['note'])===5000,'Safe bounded checkout handoff');
 echo "CR10 account: hashed expiring single-use tokens, cooldown, existing account protection and safe handoff OK\n";
+check(Account::mode(null)==='guest' && Account::mode('guest')==='guest' && Account::mode('register')==='register','Checkout modes');
+foreach (['admin',[],17] as $badMode) {
+    try { Account::mode($badMode); throw new LogicException('Invalid checkout mode accepted'); }
+    catch (DomainException $expected) {}
+}

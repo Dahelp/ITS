@@ -16,6 +16,7 @@ final class CheckoutAccount
     {
         \R::exec('CREATE TABLE IF NOT EXISTS checkout_account_access (user_id INT NOT NULL PRIMARY KEY, token_hash CHAR(64) NULL, expires INT NOT NULL DEFAULT 0, sent_at INT NOT NULL DEFAULT 0, pending TINYINT NOT NULL DEFAULT 1, UNIQUE KEY token_hash (token_hash)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
         \R::exec('CREATE TABLE IF NOT EXISTS checkout_order_contact (order_id INT NOT NULL PRIMARY KEY, email VARCHAR(150) NOT NULL, name VARCHAR(255) NOT NULL, telefon VARCHAR(100) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        \R::exec('CREATE TABLE IF NOT EXISTS checkout_order_company (order_id INT NOT NULL PRIMARY KEY, fields_json MEDIUMTEXT NOT NULL, contact_json TEXT NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     }
 
     public static function issue(int $userId): ?string
@@ -44,10 +45,17 @@ final class CheckoutAccount
         } catch (\Throwable $e) { \R::rollback(); throw $e; }
     }
 
+    public static function mode($requested): string
+    {
+        if ($requested===null || $requested==='') return 'guest';
+        if (!is_string($requested) || !in_array($requested,['guest','register'],true)) throw new \DomainException('Выберите способ оформления заказа.');
+        return $requested;
+    }
+
     public static function fields(array $data): array
     {
         $result=[];
-        foreach (['dostavka_id','transport_id','branch_id','city_name','address','groups','nds','dogovor','name','telefon','email','form_callback','note','comp_name','kpp','url_address','comp_short_name','inn','ogrn','dir_name','bank','bik','raschet','korschet','purchase_purpose','payment_method'] as $key) {
+        foreach (['checkout_mode','dostavka_id','transport_id','branch_id','city_name','address','groups','nds','dogovor','name','telefon','email','form_callback','note','comp_name','kpp','url_address','comp_short_name','inn','ogrn','dir_name','bank','bik','raschet','korschet','purchase_purpose','payment_method'] as $key) {
             if (isset($data[$key]) && is_string($data[$key])) $result[$key]=mb_substr($data[$key],0,$key==='note'?5000:2000);
         }
         return $result;

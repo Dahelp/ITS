@@ -50,6 +50,9 @@
     <input type="hidden" name="order_id" value="<?= (int)$id ?>">
     <button type="submit" class="btn btn-outline-primary btn-sm">Повторить заказ</button>
 </form>
+<?php if (!empty($companyCardAvailable)): ?>
+<a class="btn btn-outline-primary btn-sm" href="<?=PATH?>/user/company-card?order_id=<?=(int)$id?>">Карточка организации (.docx)</a>
+<?php endif; ?>
 <div class="small text-muted mt-2">Товары добавятся в корзину по текущим ценам и свободным остаткам. Комплекты — отдельными товарами.</div>
 </div>
 

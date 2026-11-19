@@ -5,7 +5,7 @@ if(!$root)throw new RuntimeException('Missing site root');
 require $root.'/config/init.php';
 require CONF.'/db_bootstrap.php';
 app\services\CheckoutAccount::ensureSchema();
-foreach(['checkout_account_access'=>['user_id','token_hash','expires','sent_at','pending'],'checkout_order_contact'=>['order_id','email','name','telefon']]as$table=>$required){
+foreach(['checkout_account_access'=>['user_id','token_hash','expires','sent_at','pending'],'checkout_order_contact'=>['order_id','email','name','telefon'],'checkout_order_company'=>['order_id','fields_json','contact_json']]as$table=>$required){
     $columns=array_column(R::getAll("SHOW COLUMNS FROM `$table`"),'Field');
     if(array_diff($required,$columns))throw new RuntimeException('Incomplete CR-10 schema: '.$table);
 }
@@ -23,5 +23,13 @@ foreach(['/' => null,'/cart/view'=>'id="checkout-login"','/user/login'=>'name="l
     if($marker!==null&&!str_contains($body,$marker))throw new RuntimeException('CR-10 marker absent: '.$path);
     $checks[]=['path'=>$path,'status'=>$status];
 }
-file_put_contents(__DIR__.'/smoke.json',json_encode(['company_docx'=>'ok','schema'=>'ok','http'=>$checks,'orders_created'=>0,'mail_sent'=>false],JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+$protected=[];
+foreach (['/user/company-card','/user/company-card?order_id=1','/admin/order/company-card?id=1'] as $path) {
+    $ch=curl_init('https://its-center.ru'.$path);
+    curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_TIMEOUT=>20,CURLOPT_CONNECTTIMEOUT=>10,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_HTTPHEADER=>['Cache-Control: no-cache']]);
+    curl_exec($ch);$status=curl_getinfo($ch,CURLINFO_HTTP_CODE);$type=(string)curl_getinfo($ch,CURLINFO_CONTENT_TYPE);curl_close($ch);
+    if (!in_array($status,[302,303],true) || str_contains($type,'wordprocessingml')) throw new RuntimeException('Anonymous card download was not protected: '.$path);
+    $protected[]=['path'=>$path,'status'=>$status];
+}
+file_put_contents(__DIR__.'/smoke.json',json_encode(['protected_downloads'=>$protected,'company_docx'=>'ok','schema'=>'ok','http'=>$checks,'orders_created'=>0,'mail_sent'=>false],JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
 echo "CR-10: schema and six public HTTP checks OK; no orders or email created by deployment\n";

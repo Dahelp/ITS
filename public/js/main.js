@@ -1806,6 +1806,16 @@ $(document).off('change.delivery', '#dostavka_id').on('change.delivery', '#dosta
 });
 
 
+function refreshCheckoutMode(){
+ var input=document.getElementById('checkout-mode');if(!input)return;
+ var value=input.value==='register'?'register':'guest';input.value=value;
+ document.querySelectorAll('[name="checkout_mode_choice"]').forEach(function(radio){radio.checked=radio.value===value;});
+ var help=document.getElementById('checkout-mode-help');if(help)help.textContent=value==='register'?'После заказа отправим на ваш email ссылку для установки пароля. Если кабинет уже есть, подскажем, как войти.':'Отправим подтверждение заказа на email. Настраивать личный кабинет не потребуется.';
+}
+$(document).on('change.checkoutMode','[name="checkout_mode_choice"]',function(){var input=document.getElementById('checkout-mode');if(input){input.value=this.value;input.dispatchEvent(new Event('change',{bubbles:true}));}});
+$(document).on('change.checkoutMode','#checkout-mode',refreshCheckoutMode);
+$(refreshCheckoutMode);
+
 function refreshCheckoutCompany(){
  var form=$('#checkoutForm'), account=Number(form.attr('data-customer-group'))||0;
  var legal=(account||Number($('#vidurlface').val()))===4, visible=legal||$('#checkout-payment-method').val()==='bank_transfer';

@@ -9,6 +9,17 @@ use ishop\libs\Pagination;
 
 class OrderController extends AppController {
 
+    public function companyCardAction(): void
+    {
+        if (!\app\models\User::isAdmin()) throw new \Exception('Доступ запрещён',403);
+        $id=filter_var($_GET['id']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
+        $order=$id ? \R::getRow('SELECT * FROM `order` WHERE id=?',[$id]) : [];
+        if (!$order) throw new \Exception('Страница не найдена',404);
+        $card=\app\services\CompanyCardData::forOrder($order);
+        if (!$card['available']) throw new \Exception('Реквизиты организации не найдены',404);
+        \app\services\CompanyCard::download($card['fields'],$card['context'],(string)$order['id']);
+    }
+
     public function indexAction(){
         $statusFilter = isset($_GET['status']) ? (int)$_GET['status'] : 0;
         $where = $statusFilter > 0 ? 'WHERE `order`.`status` = ?' : '';
@@ -161,6 +172,7 @@ class OrderController extends AppController {
         \app\services\CheckoutAccount::ensureSchema();
         $checkoutContact = \R::getRow('SELECT email,name,telefon FROM checkout_order_contact WHERE order_id=?', [$order_id]);
         if ($checkoutContact) $order = array_replace($order, $checkoutContact);
+        $companyCardAvailable=\app\services\CompanyCardData::forOrder($order)['available'];
 		$order_products = \R::findAll('order_product', "order_id = ?", [$order_id]);
 
 		$comp = null;
@@ -171,7 +183,7 @@ class OrderController extends AppController {
 		}
 
 		$this->setMeta("Заказ №{$order_prefix}{$order_id}");
-		$this->set(compact('order', 'order_products', 'curr', 'namecomp', 'comp'));
+		$this->set(compact('order', 'order_products', 'curr', 'namecomp', 'comp','companyCardAvailable'));
 	}
 	
 	public function addAction(){		

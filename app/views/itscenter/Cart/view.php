@@ -38,11 +38,16 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
 			<form method="post" action="<?= PATH ?>/cart/checkout" role="form" enctype="multipart/form-data" id="checkoutForm" data-customer-group="<?= (int)($checkoutCustomerGroup ?? 0) ?>" data-draft-owner="<?= $userId ? 'user-'.$userId : 'guest' ?>" data-draft-generation="<?= htmlspecialchars((string)($_SESSION['checkout_draft_generation'] ?? '0'), ENT_QUOTES, 'UTF-8') ?>">
                 <link rel="stylesheet" href="/css/checkout-progress.css?v=<?= (int)filemtime(WWW.'/css/checkout-progress.css') ?>">
                 <?php if (!$userId): ?>
-                <fieldset class="bg-light rounded-3 p-3 mb-3">
+                <fieldset class="checkout-mode bg-light rounded-3 p-3 mb-3">
                   <legend class="h5">Как хотите оформить заказ?</legend>
-                  <label class="me-3"><input type="radio" name="checkout_mode" value="guest" checked> Оформить как гость</label>
-                  <button type="submit" class="btn btn-outline-primary" id="checkout-login" formaction="<?= PATH ?>/cart/login-checkout" formnovalidate>Войти</button>
-                  <p class="small text-muted mt-2 mb-0">Оформите заказ без регистрации и пароля. После заказа сможете настроить доступ в личный кабинет.</p>
+                  <?php $mode=($checkoutFormData['checkout_mode']??'guest')==='register'?'register':'guest'; ?>
+                  <input type="hidden" name="checkout_mode" id="checkout-mode" value="<?=h($mode)?>">
+                  <div class="checkout-mode__options">
+                    <label class="checkout-mode__option"><input type="radio" name="checkout_mode_choice" value="guest" <?=$mode==='guest'?'checked':''?>> <span><strong>Оформить как гость</strong><small>Без регистрации и пароля.</small></span></label>
+                    <label class="checkout-mode__option"><input type="radio" name="checkout_mode_choice" value="register" <?=$mode==='register'?'checked':''?>> <span><strong>Оформить с регистрацией личного кабинета</strong><small>История заказов и сохранённые реквизиты.</small></span></label>
+                  </div>
+                  <p id="checkout-mode-help" class="small text-muted mt-3 mb-3" aria-live="polite"><?=$mode==='register'?'После заказа отправим на ваш email ссылку для установки пароля.':'Отправим подтверждение заказа на email. Настраивать личный кабинет не потребуется.'?></p>
+                  <button type="submit" class="btn btn-outline-primary" id="checkout-login" formaction="<?= PATH ?>/cart/login-checkout" formnovalidate>Войти в существующий кабинет</button>
                   <input type="hidden" name="checkout_step" id="checkout-login-step" value="1">
                   <input type="hidden" name="checkout_attachment" id="checkout-login-attachment" value="">
                 </fieldset>
@@ -59,11 +64,6 @@ $curR = (string)($_SESSION['cart.currency']['symbol_right'] ?? '');
                   <div id="checkout-progress-label" class="checkout-progress__label" aria-live="polite">Шаг 1 из 3 — Корзина</div>
                   <div id="checkout-progress" class="checkout-progress" role="progressbar" aria-label="Оформление заказа" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1"><div id="checkout-progress-fill" class="checkout-progress__fill"></div></div>
                   <div id="checkout-form-notice" class="alert alert-info mt-2" role="status" hidden></div>
-                  <div id="checkout-resume" class="checkout-resume" hidden>
-                    <p>Вы не завершили оформление заказа.</p>
-                    <button type="button" id="checkout-continue" class="btn btn-primary">Продолжить оформление</button>
-                    <button type="button" id="checkout-start-over" class="btn btn-outline-secondary">Остаться в корзине</button>
-                  </div>
                 </div>
                 <?php $paymentRules = \app\services\CheckoutPayment::rules(\R::getAll('SELECT id,name FROM dostavka')); ?>
                 <script type="application/json" id="checkout-payment-rules"><?=json_encode($paymentRules,JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?></script>

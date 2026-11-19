@@ -72,6 +72,12 @@
 						</div>
 					</form>
 				</div>
+                <?php if (!empty($companyCardAvailable)): ?>
+                <div class="d-inline-flex flex-column ml-3 mb-2">
+                    <span class="small mb-2">Карточка организации</span>
+                    <a class="btn btn-outline-primary" href="<?=ADMIN?>/order/company-card?id=<?=(int)$order['id']?>">Скачать .docx</a>
+                </div>
+                <?php endif; ?>
 				<?php if($order['seller']) { ?>
 				<div class="order_schet">
 					<span class="glyphicon form-control-feedback" aria-hidden="true">Счёт</span>

@@ -867,6 +867,7 @@ class CartController extends AppController {
     $paymentGroup = \app\services\CheckoutPayment::group($accountGroup, $_POST['groups'] ?? null);
     $paymentDelivery = \R::getRow('SELECT id,name FROM dostavka WHERE id=?', [(int)($_POST['dostavka_id'] ?? 0)]);
     try {
+        $checkoutMode=$isAuth ? 'account' : \app\services\CheckoutAccount::mode($_POST['checkout_mode']??'guest');
         if (!$paymentDelivery) throw new \DomainException('Выберите способ получения.');
         $paymentMethod = \app\services\CheckoutPayment::validate($_POST['payment_method'] ?? '', $paymentGroup, \app\services\CheckoutPayment::pickup((string)$paymentDelivery['name']));
         $companyFields = \app\services\CheckoutCompany::fields($_POST);
@@ -1045,6 +1046,7 @@ class CartController extends AppController {
     $order_id = \app\models\Order::saveOrder($data);
 
     \R::exec('INSERT INTO checkout_order_contact (order_id,email,name,telefon) VALUES (?,?,?,?)', [$order_id,$user_email,(string)$usm['name'],(string)$usm['telefon']]);
+    \app\services\CompanyCardData::store((int)$order_id,$companyFields,['name'=>(string)$usm['name'],'telefon'=>(string)$usm['telefon'],'email'=>(string)$user_email,'has_attachment'=>$hasCompanyFile]);
     \R::commit();
     } catch (\Throwable $e) {
         \R::rollback();
@@ -1055,11 +1057,13 @@ class CartController extends AppController {
         $this->redirectCartView(303);
     }
     $setupUrl = null;
-    if ($newAccount) {
+    $registerAccount=!$isAuth && $checkoutMode==='register';
+    $setupPending=$registerAccount && ($newAccount || (int)\R::getCell('SELECT pending FROM checkout_account_access WHERE user_id=?',[(int)$user_id])===1);
+    if ($setupPending) {
         try { $setupUrl = \app\services\CheckoutAccount::issue((int)$user_id); }
         catch (\Throwable $e) { error_log('CR10: cannot issue setup link for order '.(int)$order_id); }
     }
-    $_SESSION['checkout_result'] = ['order_id'=>(int)$order_id,'email'=>$user_email,'guest'=>!$isAuth,'new'=>$newAccount,'user_id'=>$newAccount?(int)$user_id:0,'sent'=>false,'time'=>time()];
+    $_SESSION['checkout_result'] = ['order_id'=>(int)$order_id,'email'=>$user_email,'guest'=>!$isAuth,'new'=>$setupPending,'user_id'=>$setupPending?(int)$user_id:0,'checkout_mode'=>$checkoutMode,'sent'=>false,'time'=>time()];
 
     // ========= Формирование данных для письма =========
     $ord   = \R::findOne('order', 'id = ?', [$order_id]);
@@ -1153,7 +1157,7 @@ class CartController extends AppController {
 		$dogovor,
 		$formCallback,
 		$promo,
-        ['guest'=>!$isAuth,'setup_url'=>$setupUrl,'company_fields'=>$companyFields,'company_card'=>$paymentGroup===4||$paymentMethod==='bank_transfer']
+        ['guest'=>$registerAccount,'setup_url'=>$setupUrl,'company_fields'=>$companyFields,'company_card'=>$paymentGroup===4||$paymentMethod==='bank_transfer']
 	);
         $_SESSION['checkout_result']['sent'] = $mailSent;
     } catch (\Throwable $e) {

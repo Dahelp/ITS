@@ -23,16 +23,17 @@ define('ROOT',dirname(__DIR__));
 require dirname(__DIR__).'/app/services/CheckoutAccount.php';
 require dirname(__DIR__).'/app/services/CheckoutPayment.php';
 require dirname(__DIR__).'/app/services/CheckoutCompany.php';
+require dirname(__DIR__).'/app/services/CompanyCardData.php';
 require dirname(__DIR__).'/app/services/CheckoutPickup.php';
 require dirname(__DIR__).'/app/controllers/CartController.php';
 class Redirected extends \Exception {}
 function redirect($url=''){throw new Redirected($url);}
 class R {
- public static $existing=false,$committed=false,$profileReads=0,$companyWrites=0,$accountGroup=3;
+ public static $existing=false,$committed=false,$profileReads=0,$companyWrites=0,$accountGroup=3,$pending=0,$snapshotWrites=0;
  public static function begin(){self::$committed=false;}public static function commit(){self::$committed=true;}public static function rollback(){}
- public static function exec($sql,$p=[]){if(str_starts_with($sql,'INSERT INTO company'))self::$companyWrites++;return 1;}
+ public static function exec($sql,$p=[]){if(str_starts_with($sql,'INSERT INTO company'))self::$companyWrites++;if(str_starts_with($sql,'INSERT INTO checkout_order_company'))self::$snapshotWrites++;return 1;}
  public static function getInsertID(){return 77;}
- public static function getCell($sql,$p=[]){return self::$accountGroup;}
+ public static function getCell($sql,$p=[]){return str_contains($sql,'SELECT pending')?self::$pending:self::$accountGroup;}
  public static function getRow($sql,$p=[]){if(str_contains($sql,'FROM user'))return ['id'=>$p[0],'comp_id'=>0];if(str_contains($sql,'FROM company'))return [];return ['id'=>1,'name'=>'Самовывоз'];}
  public static function getAll($sql,$p=[]){return [['branch_id'=>0,'branch_name'=>'Подольск (мкр. Климовск)']];}
  public static function load($table,$id){return new \ArrayObject(['id'=>$id,'comp_id'=>22,'groups'=>self::$accountGroup,'name'=>'Owner','telefon'=>'+79991234567','admin_id'=>0],\ArrayObject::ARRAY_AS_PROPS);}
@@ -46,21 +47,21 @@ class R {
 }
 ini_set('session.use_cookies','0');session_save_path(sys_get_temp_dir());session_start();
 function check($v,$message){if(!$v)throw new \RuntimeException($message);}
-foreach(['new','existing','authenticated','mail-failed','legal-own','legal-resale','legal-existing','legal-authenticated']as$case){
+foreach(['new','existing','authenticated','mail-failed','legal-own','legal-resale','legal-existing','legal-authenticated','new-guest','existing-pending']as$case){
  if(session_status()!==PHP_SESSION_ACTIVE)session_start();
  $_SESSION=['checkout_token'=>'test-token','cart'=>[1=>['qty'=>1]],'cart.currency'=>['code'=>'RUB']];
- $_POST=['checkout_token'=>'test-token','checkout_legal_agree'=>'1','email'=>'BUYER@example.test','telefon'=>'+79991234567','name'=>'Submitted Name','groups'=>'3','dostavka_id'=>'1','payment_method'=>'card','form_callback'=>'E-mail','purchase_purpose'=>'own_use','role'=>'admin','password'=>'attacker'];
+ $_POST=['checkout_token'=>'test-token','checkout_mode'=>$case==='new-guest'?'guest':'register','checkout_legal_agree'=>'1','email'=>'BUYER@example.test','telefon'=>'+79991234567','name'=>'Submitted Name','groups'=>'3','dostavka_id'=>'1','payment_method'=>'card','form_callback'=>'E-mail','purchase_purpose'=>'own_use','role'=>'admin','password'=>'attacker'];
  if(str_starts_with($case,'legal-'))$_POST=array_replace($_POST,['groups'=>'4','nds'=>'1','dogovor'=>'2','payment_method'=>'bank_transfer','comp_name'=>'ООО Тест','inn'=>'5614073401','kpp'=>'561401001','bank'=>'Тестовый банк','bik'=>'044525225','raschet'=>'40702810000000000001','korschet'=>'30101810000000000001','purchase_purpose'=>$case==='legal-resale'?'resale':'own_use']);
  $_SERVER['REQUEST_METHOD']='POST';
  $_COOKIE=['cookie_accepted'=>'true'];
- R::$existing=in_array($case,['existing','legal-existing'],true);R::$profileReads=0;R::$companyWrites=0;
+ R::$existing=in_array($case,['existing','legal-existing','existing-pending'],true);R::$profileReads=0;R::$companyWrites=0;R::$snapshotWrites=0;R::$pending=$case==='existing-pending'?1:0;
  R::$accountGroup=$case==='legal-authenticated'?4:3;
  \app\models\User::$auth=in_array($case,['authenticated','legal-authenticated'],true);
  if(\app\models\User::$auth)$_SESSION['user']=['id'=>5,'email'=>'owner@example.test','telefon'=>'+79991234567'];
  \app\models\Order::$fail=$case==='mail-failed';
  $controller=new \app\controllers\CartController();
  try{$controller->checkoutAction();throw new \RuntimeException('No redirect');}catch(Redirected $e){check($e->getMessage()===PATH.'/cart/complete','Success redirect');}
- check(R::$committed,'Order committed before mail');
+ check(R::$committed && R::$snapshotWrites===1,'Order and immutable company snapshot committed before mail');
  check(empty($_SESSION['cart']) && isset($_SESSION['checkout_result']),'Cart cleared and confirmation retained');
  $data=\app\models\Order::$data;
  check($data['branch_id']==='0','Zero-valued pickup branch preserved');
@@ -73,6 +74,8 @@ foreach(['new','existing','authenticated','mail-failed','legal-own','legal-resal
   check(\app\models\User::$loaded['role']==='user' && \app\models\User::$loaded['password']!=='attacker','Guest cannot choose role or password');
   check(!empty(\app\models\Order::$access['setup_url']),'New account gets setup invitation');
  }
+ if($case==='new-guest')check(empty(\app\models\Order::$access['guest'])&&empty(\app\models\Order::$access['setup_url'])&&!$_SESSION['checkout_result']['new'],'Guest unexpectedly invited to register');
+ if($case==='existing-pending')check(!empty(\app\models\Order::$access['setup_url'])&&$_SESSION['checkout_result']['new'],'Pending contact cannot activate its cabinet by email');
  if($case==='authenticated')check($_SESSION['checkout_result']['email']==='owner@example.test' && !\app\models\Order::$access['guest'],'Authenticated owner is authoritative');
  if($case==='mail-failed')check(!$_SESSION['checkout_result']['sent'],'SMTP failure keeps committed order and confirmation');
 }

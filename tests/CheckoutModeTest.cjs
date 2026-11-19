@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const main=fs.readFileSync('public/js/main.js','utf8');
+const a=main.indexOf('function refreshCheckoutMode(){'),b=main.indexOf("$(document).on('change.checkoutMode'",a);
+const input={value:'register'},radios=[{value:'guest',checked:true},{value:'register',checked:false}],help={textContent:''};
+const refresh=vm.runInNewContext('('+main.slice(a,b).trim()+')',{document:{getElementById:id=>id==='checkout-mode'?input:help,querySelectorAll:()=>radios}});
+refresh();assert(radios[1].checked&&!radios[0].checked);assert(help.textContent.includes('ссылку'));
+input.value='guest';refresh();assert(radios[0].checked&&!radios[1].checked);assert(help.textContent.includes('не потребуется'));
+input.value='unexpected';refresh();assert.equal(input.value,'guest');
+const progress=require('../public/js/checkout-progress.js');
+const now=Date.now(),draft=progress.readDraft(JSON.stringify({version:1,owner:'guest',generation:'0',updatedAt:now,fields:{checkout_mode:'register'},step:3}),'guest','0',now);
+assert.equal(draft.fields.checkout_mode,'register');
+const view=fs.readFileSync('app/views/itscenter/Cart/view.php','utf8');
+assert(view.includes('Оформить с регистрацией личного кабинета'));assert(!view.includes('id="checkout-resume"'));
+console.log('Checkout modes: both choices, restored selection, distinct help and draft persistence; no resume prompt inside checkout OK');

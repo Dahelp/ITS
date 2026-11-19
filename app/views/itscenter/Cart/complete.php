@@ -4,7 +4,7 @@
   <h1>Заказ №<?= $esc($result['number'] ?? $result['order_id']) ?> принят</h1>
   <p>Менеджер свяжется с вами для согласования заказа в рабочее время ПН–ПТ с 09:00 до 17:00.</p>
   <p><?= !empty($result['sent']) ? 'Подтверждение отправлено на' : 'Заказ сохранён. Не удалось отправить подтверждение на' ?> <?= $esc($result['email']) ?>.</p>
-  <?php if (!empty($result['guest'])): ?>
+  <?php if (!empty($result['guest']) && ($result['checkout_mode']??'register')==='register'): ?>
     <section class="checkout-account-invitation" aria-labelledby="account-title">
     <?php if (!empty($result['new'])): ?>
       <h2 id="account-title">Ваш заказ сохранён в личном кабинете</h2>
@@ -22,8 +22,10 @@
       <a class="btn btn-outline-secondary" href="<?= PATH ?>/user/recover">Восстановить доступ</a>
     <?php endif; ?>
     </section>
-  <?php else: ?>
+  <?php elseif (empty($result['guest'])): ?>
     <p><a class="btn btn-primary" href="<?= PATH ?>/user/orders">Мои заказы</a></p>
+  <?php else: ?>
+    <p>Заказ оформлен как гостевой. Сохраните письмо с подтверждением заказа.</p>
   <?php endif; ?>
   <a href="<?= PATH ?>">Продолжить покупки</a>
  </div>
