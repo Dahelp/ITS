@@ -1,6 +1,8 @@
 <?php
 if(PHP_SAPI!=='cli')exit(1);
-$root=realpath($argv[1]??'');$mode=$argv[2]??'';$package=__DIR__;
+$target=$argv[1]??'';$package=__DIR__;
+if($target!==''&&!str_starts_with($target,'/')&&!preg_match('~^[A-Za-z]:[\\\\/]~',$target))$target=dirname($package).'/'.$target;
+$root=realpath($target);$mode=$argv[2]??'';
 if(!$root||!in_array($mode,['audit','publish'],true))throw new RuntimeException('Invalid release parameters');
 $manifest=json_decode(file_get_contents($package.'/manifest.json'),true,512,JSON_THROW_ON_ERROR);$installed=[];$before=[];$audit=[];@mkdir($package.'/reports',0700,true);
 foreach($manifest as$p=>$v){
