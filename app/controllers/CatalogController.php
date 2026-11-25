@@ -38,7 +38,9 @@ class CatalogController extends AppController {
 		}
 
 		header('Content-Type: text/html; charset=UTF-8');
-		header('Cache-Control: public, max-age=300, stale-while-revalidate=600');
+		if (session_id() === '' && empty($_COOKIE[session_name()])) {
+			header('Cache-Control: public, max-age=300, stale-while-revalidate=600');
+		}
 		require APP . '/views/itscenter/partials/catalog-menu.php';
 		die;
 	}

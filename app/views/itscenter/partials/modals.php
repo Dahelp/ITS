@@ -113,7 +113,7 @@ defined('WWW') or die('Access denied');
 
             <form action="<?= PATH ?>/user/zvonok" method="post" class="callback-form js-modal-validate" data-lead-form novalidate>
                 <div class="modal-body">
-                    <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('callback') ?>">
+                    <?= \app\services\LeadForm::tokenField('callback') ?>
                     <input type="text" name="hp_field" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" value="">
 
 

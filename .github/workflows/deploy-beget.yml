@@ -9,6 +9,12 @@ on:
       - '.github/workflows/avito-mobile.yml'
   workflow_dispatch:
     inputs:
+      performance_mode:
+        description: Audit or publish bounded performance stages 1-2
+        type: choice
+        default: none
+        options: [none, audit, publish]
+
       chain_news_mode:
         description: Audit or publish the requested chain news item only
         type: choice
@@ -115,7 +121,7 @@ jobs:
             "test -d '${{ secrets.BEGET_PATH }}' && printf 'Beget SSH read-only check OK\n'"
 
       - name: Deploy files
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -167,7 +173,7 @@ jobs:
             ./ "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:${{ secrets.BEGET_PATH }}/"
 
       - name: Install Composer dependencies
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -178,7 +184,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && composer-php7.4 install --no-dev --no-interaction --optimize-autoloader"
 
       - name: Install product certificates
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -186,7 +192,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_certificates.php || php8.1 scripts/install_certificates.php || php7.4 scripts/install_certificates.php || php scripts/install_certificates.php) && (php8.2 scripts/seed_ekka_certificate.php || php8.1 scripts/seed_ekka_certificate.php || php7.4 scripts/seed_ekka_certificate.php || php scripts/seed_ekka_certificate.php)"
 
       - name: Install order traffic source
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -194,7 +200,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_order_traffic_source.php || php8.1 scripts/add_order_traffic_source.php || php7.4 scripts/add_order_traffic_source.php || php scripts/add_order_traffic_source.php)"
 
       - name: Install unified cross references
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -202,7 +208,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/install_unified_crosses.php || php8.1 scripts/install_unified_crosses.php || php7.4 scripts/install_unified_crosses.php || php scripts/install_unified_crosses.php)"
 
       - name: Seed wheel cross metadata
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -210,7 +216,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/seed_wheel_cross_metadata.php || php8.1 scripts/seed_wheel_cross_metadata.php || php7.4 scripts/seed_wheel_cross_metadata.php || php scripts/seed_wheel_cross_metadata.php)"
 
       - name: Add article content
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -221,7 +227,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && (php8.2 scripts/add_content_image_source.php || php8.1 scripts/add_content_image_source.php || php7.4 scripts/add_content_image_source.php || php scripts/add_content_image_source.php) && (php8.2 scripts/add_tire_wear_article.php || php8.1 scripts/add_tire_wear_article.php || php7.4 scripts/add_tire_wear_article.php || php scripts/add_tire_wear_article.php) && (php8.2 scripts/add_tire_pressure_monitoring_article.php || php8.1 scripts/add_tire_pressure_monitoring_article.php || php7.4 scripts/add_tire_pressure_monitoring_article.php || php scripts/add_tire_pressure_monitoring_article.php) && (php8.2 scripts/apply_seo_strong_tz.php || php8.1 scripts/apply_seo_strong_tz.php || php7.4 scripts/apply_seo_strong_tz.php || php scripts/apply_seo_strong_tz.php)"
 
       - name: Activate Avito messenger webhook
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -232,7 +238,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/setup_avito_workspace.php && php8.2 bin/setup_avito_webhook.php"
 
       - name: Inventory API production shadow smoke test
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only != true && inputs.checkout_resume_only != true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -243,7 +249,7 @@ jobs:
             "cd '${{ secrets.BEGET_PATH }}' && php8.2 bin/audit_cron.php && php8.2 bin/sync_inventory_api.php --id=36 --categories=* --mode=shadow --limit=3 --require-api=1 && php8.2 bin/export_inventory_csv.php --mirror-dir=/home/s/shinaspec/its50.ru/public_html/xls/nalichie && php8.2 -d display_errors=stderr -d log_errors=0 bin/diagnose_inventory_mirror.php"
 
       - name: Publish bounded lead forms release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.lead_forms_only == true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -258,7 +264,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"
 
       - name: Publish bounded checkout resume release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.checkout_resume_only == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.gallery_fix_only != true && inputs.verify_only != true && inputs.checkout_resume_only == true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -273,7 +279,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"
 
       - name: Publish bounded gallery fix release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.verify_only != true && inputs.gallery_fix_only == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.gallery_zoom_only != true && inputs.verify_only != true && inputs.gallery_fix_only == true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -288,7 +294,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"
 
       - name: Publish bounded gallery zoom release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.verify_only != true && inputs.gallery_zoom_only == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.checkout_account_only != true && inputs.verify_only != true && inputs.gallery_zoom_only == true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -303,7 +309,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd \"\$HOME/$release\" && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}'"
 
       - name: Publish bounded checkout account release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -322,7 +328,7 @@ jobs:
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/smoke.json" /tmp/checkout-account-reports/
 
       - name: Send authorized checkout company test emails
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true && inputs.checkout_company_mail_qa == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true && inputs.checkout_company_mail_qa == true))))
         shell: bash
         run: |
           set -euo pipefail
@@ -333,7 +339,7 @@ jobs:
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/company-mail-qa.json" /tmp/checkout-account-reports/
 
       - name: Save checkout account publication receipt
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true)))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.checkout_account_maintenance != 'suspend' && inputs.checkout_account_maintenance != 'restore' && inputs.checkout_account_maintenance != 'inspect' && inputs.checkout_account_maintenance != 'reset' && inputs.verify_only != true && inputs.checkout_account_only == true))))
         uses: actions/upload-artifact@v4
         with:
           name: checkout-account-publication
@@ -341,7 +347,7 @@ jobs:
           retention-days: 30
 
       - name: Maintain authorized checkout test account
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.verify_only != true && (inputs.checkout_account_maintenance == 'inspect' || inputs.checkout_account_maintenance == 'reset' || inputs.checkout_account_maintenance == 'suspend' || inputs.checkout_account_maintenance == 'restore'))))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.stock_fix_only != true && (inputs.verify_only != true && (inputs.checkout_account_maintenance == 'inspect' || inputs.checkout_account_maintenance == 'reset' || inputs.checkout_account_maintenance == 'suspend' || inputs.checkout_account_maintenance == 'restore')))))
         shell: bash
         env:
           CR10_MODE: ${{ inputs.checkout_account_maintenance }}
@@ -357,7 +363,7 @@ jobs:
           ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "php8.2 -d display_errors=stderr -d log_errors=0 '$release/maintenance.php' '${{ secrets.BEGET_PATH }}' '$CR10_MODE'"
 
       - name: Publish bounded free stock release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.verify_only != true && inputs.stock_fix_only == true))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.verify_only != true && inputs.stock_fix_only == true)))
         shell: bash
         run: |
           set -euo pipefail
@@ -375,7 +381,7 @@ jobs:
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/receipt.json" /tmp/stock-fix-receipt.json
 
       - name: Save free stock publication receipt
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.verify_only != true && inputs.stock_fix_only == true))
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode != 'audit' && inputs.favorites_mode != 'publish' && (inputs.verify_only != true && inputs.stock_fix_only == true)))
         uses: actions/upload-artifact@v4
         with:
           name: stock-fix-publication
@@ -383,7 +389,7 @@ jobs:
           retention-days: 30
 
       - name: Audit bounded favorites release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.verify_only != true && inputs.favorites_mode == 'audit')
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.verify_only != true && inputs.favorites_mode == 'audit'))
         shell: bash
         run: |
           set -euo pipefail
@@ -400,7 +406,7 @@ jobs:
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/audit.tar.gz" /tmp/favorites-audit/
 
       - name: Save favorites audit artifact
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode == 'audit')
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode == 'audit'))
         uses: actions/upload-artifact@v4
         with:
           name: favorites-audit
@@ -408,7 +414,7 @@ jobs:
           retention-days: 3
 
       - name: Publish bounded favorites release
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.verify_only != true && inputs.favorites_mode == 'publish')
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.verify_only != true && inputs.favorites_mode == 'publish'))
         shell: bash
         run: |
           set -euo pipefail
@@ -431,7 +437,7 @@ jobs:
           scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/smoke.json" /tmp/favorites-reports/
 
       - name: Save favorites publish artifact
-        if: inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode == 'publish')
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode != 'audit' && inputs.chain_news_mode != 'publish' && (inputs.favorites_mode == 'publish'))
         uses: actions/upload-artifact@v4
         with:
           name: favorites-publish
@@ -439,7 +445,7 @@ jobs:
           retention-days: 30
 
       - name: Audit or publish chain news
-        if: inputs.verify_only != true && (inputs.chain_news_mode == 'audit' || inputs.chain_news_mode == 'publish')
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.verify_only != true && (inputs.chain_news_mode == 'audit' || inputs.chain_news_mode == 'publish'))
         shell: bash
         env:
           NEWS_MODE: ${{ inputs.chain_news_mode }}
@@ -464,9 +470,38 @@ jobs:
           fi
 
       - name: Save chain news reports
-        if: inputs.chain_news_mode == 'audit' || inputs.chain_news_mode == 'publish'
+        if: inputs.performance_mode != 'audit' && inputs.performance_mode != 'publish' && (inputs.chain_news_mode == 'audit' || inputs.chain_news_mode == 'publish')
         uses: actions/upload-artifact@v4
         with:
           name: chain-news-reports
           path: /tmp/chain-news-reports/
+          retention-days: 14
+
+      - name: Audit or publish bounded performance stages
+        if: inputs.verify_only != true && (inputs.performance_mode == 'audit' || inputs.performance_mode == 'publish')
+        shell: bash
+        env:
+          PERFORMANCE_MODE: ${{ inputs.performance_mode }}
+        run: |
+          set -euo pipefail
+          case "$PERFORMANCE_MODE" in audit|publish) ;; *) exit 1 ;; esac
+          node .github/scripts/require-current-master.cjs
+          php .github/scripts/package-performance.php
+          release="performance-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "umask 077; mkdir '$release'"
+          node .github/scripts/require-current-master.cjs
+          tar -C /tmp/performance-package -czf /tmp/performance.tar.gz .
+          scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" /tmp/performance.tar.gz "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/package.tar.gz"
+          node .github/scripts/require-current-master.cjs
+          ssh -i ~/.ssh/beget_deploy_key -p "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}" "cd '$release' && tar -xzf package.tar.gz && php8.2 -d display_errors=stderr -d log_errors=0 install.php '${{ secrets.BEGET_PATH }}' '$PERFORMANCE_MODE'"
+          node .github/scripts/require-current-master.cjs
+          mkdir -p /tmp/performance-reports
+          scp -i ~/.ssh/beget_deploy_key -P "${{ secrets.BEGET_PORT }}" "${{ secrets.BEGET_USER }}@${{ secrets.BEGET_HOST }}:$release/reports/*.json" /tmp/performance-reports/
+
+      - name: Save performance reports
+        if: always() && (inputs.performance_mode == 'audit' || inputs.performance_mode == 'publish')
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-reports
+          path: /tmp/performance-reports/
           retention-days: 14

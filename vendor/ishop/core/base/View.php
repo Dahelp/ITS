@@ -30,6 +30,12 @@ class View {
 
     public function render($data)
     {
+        // Some private controllers release the lock after their SQL work.
+        // Resume only a session already opened for this request, before output,
+        // so flash consumption and authenticated form tokens are persisted.
+        if (session_status() === PHP_SESSION_NONE && session_id() !== '') {
+            session_start();
+        }
         if (is_array($data)) {
             extract($data, EXTR_SKIP);
         }

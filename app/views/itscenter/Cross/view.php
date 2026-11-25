@@ -381,7 +381,7 @@ if (property_exists($product, 'reserve')) {
 
 						<div class="product-icon-actions">
 							
-								<?php $wishlisted = $userId > 0 && \R::count('product_wishlists', 'product_id = ? AND user_id = ?', [$product->id, $userId]) > 0; ?>
+								<?php $wishlisted = \R::count('product_wishlists', 'product_id = ? AND user_id = ?', [$product->id, $userId]) > 0; ?>
 								<button
 									id="wishlist-<?= (int)$product->id ?>"
 									class="pc-iconbtn js-wishlist <?= $wishlisted ? 'is-active' : '' ?>"
@@ -392,8 +392,6 @@ if (property_exists($product, 'reserve')) {
 									aria-label="Избранное">
 									<i class="<?= $wishlisted ? 'fas fa-heart' : 'far fa-heart' ?>"></i>
 								</button>
-							
-
 							<?php $inCompare = !empty($comparison[$product->id]); ?>
 							<button
 								id="comparison-<?= (int)$product->id ?>"
@@ -653,7 +651,7 @@ if (property_exists($product, 'reserve')) {
 <!--end-single-->
 </span>
 <!-- Modal 1 click -->
-<form action="/product/<?=$product->alias?>" method="post" class="modal fade" id="Modalclick" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true" data-toggle="validator" data-lead-form>
+<form action="/product/<?=$product->alias?>" method="post" class="modal fade" id="Modalclick" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true" data-toggle="validator" data-lead-form novalidate>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
             <div class="modal-header">
@@ -663,7 +661,7 @@ if (property_exists($product, 'reserve')) {
 				</button>
       </div>
             <div class="modal-body"><p>Менеджер свяжется с вами и подтвердит заказ.</p>
- <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('oneclick') ?>">
+ <?= \app\services\LeadForm::tokenField('oneclick') ?>
  <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">
  <label>Количество <input type="number" name="quantity" min="1" max="9999" value="1" required></label>
 				<div class="fc-3"><?=$product->name;?>
@@ -693,7 +691,7 @@ if (property_exists($product, 'reserve')) {
             </div>
         </div>
   </div>
-</form><script defer src="/js/lead-forms.js?v=20261118"></script>
+</form>
 
 <?php
 use app\helpers\PdfAssets;

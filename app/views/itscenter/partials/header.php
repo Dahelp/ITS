@@ -35,11 +35,10 @@ $telefon_href = str_replace(['(', ')', ' ', '-'], '', (string)$tell_zv);
 $cmp = (int)($_SESSION['comparison_count'] ?? 0);
 $cartQty = (int)($_SESSION['cart.qty'] ?? 0);
 
-if (session_status() !== PHP_SESSION_ACTIVE) { @session_start(); }
-if (empty($_SESSION['favorites_csrf'])) { $_SESSION['favorites_csrf'] = bin2hex(random_bytes(32)); }
 $userId = (int)($_SESSION['user']['id'] ?? 0);
 $isAuth = $userId > 0;
 
+if ($isAuth && empty($_SESSION['favorites_csrf'])) { $_SESSION['favorites_csrf'] = bin2hex(random_bytes(32)); }
 $wishlistCount = 0;
 if ($isAuth) {
     $wishlistCount = (int)\R::count('product_wishlists', 'user_id = ?', [$userId]);
@@ -115,18 +114,14 @@ if ($isAuth) {
 								<span class="header-action-link__count" id="comparison_kol"><?= (int)$cmp ?></span>
 							</a>
 						</div>
-
-						
 							<div class="header-actions__item">
-								<a href="<?= PATH ?>/favorites/" data-favorites-user="<?= $userId ?>" data-favorites-token="<?= htmlspecialchars($_SESSION['favorites_csrf'], ENT_QUOTES, 'UTF-8') ?>" class="header-action-link">
+								<a href="<?= PATH ?>/favorites/" data-favorites-user="<?= $userId ?>" data-favorites-token="<?= htmlspecialchars($_SESSION['favorites_csrf'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="header-action-link">
 									<i class="far fa-heart"></i>
 									<span>Избранное</span>
 									<span class="header-action-link__count" id="wishlist_kol"><?= (int)$wishlistCount ?></span>
 								</a>
 							</div>
-						
-
-						<div class="header-actions__item">
+											<div class="header-actions__item">
 							<a href="<?= PATH ?>/cart/view"
 							   class="header-action-link js-open-cart">
 								<i class="fas fa-shopping-cart"></i>

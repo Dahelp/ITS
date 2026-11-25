@@ -237,11 +237,6 @@
 
 <div class="content">
     <?php require __DIR__ . '/../partials/b2b-block.php'; ?>
-	<?php
-	if (session_status() !== PHP_SESSION_ACTIVE) {
-		session_start();
-	}
-	?>
 
 	<?php if (!empty($_SESSION['success']) || !empty($_SESSION['error']) || !empty($_SESSION['warning']) || !empty($_SESSION['info'])): ?>
 		<div class="container">
@@ -299,6 +294,8 @@
 
 <?php $curr = \ishop\App::$app->getProperty('currency'); ?>
 
+<script src="/js/traffic-source.js?v=<?= (int)filemtime(WWW . '/js/traffic-source.js') ?>"></script>
+<script defer src="/js/lead-forms.js?v=<?= (int)filemtime(WWW . '/js/lead-forms.js') ?>"></script>
 <script src="/js/jquery-1.11.0.min.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/public/adminlte/plugins/select2/js/select2.full.min.js"></script>

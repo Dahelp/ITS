@@ -89,11 +89,9 @@ FileETag None
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
-  # HTML — без кэша
+  # Static HTML may be stored, but must be revalidated.
   <FilesMatch "\.(?:html)$">
-    Header set Cache-Control "no-cache, no-store, must-revalidate"
-    Header set Pragma "no-cache"
-    Header set Expires "0"
+    Header set Cache-Control "no-cache"
   </FilesMatch>
 
   # JSON — 5 минут

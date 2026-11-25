@@ -676,8 +676,6 @@ class App
             return;
         }
 
-        ensure_session_started();
-
         $userId = (int)($_SESSION['user']['id'] ?? 0);
         if ($userId <= 0) {
             return;

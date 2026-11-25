@@ -4,18 +4,43 @@ final class TrafficSource
 {
     public const SEARCH='search', DIRECT='yandex_direct', DIRECT_VISIT='direct_visit';
     private const SESSION_KEY='traffic_source';
+    public const COOKIE_NAME='its_traffic_source';
+    private static ?array $captured = null;
     public static function capture(array $query,string $referer=''): string
     {
-        if(session_status()!==PHP_SESSION_ACTIVE) session_start();
-        if(!empty($_SESSION[self::SESSION_KEY]['code'])) return (string)$_SESSION[self::SESSION_KEY]['code'];
-        $code=self::classify($query,$referer);
-        $_SESSION[self::SESSION_KEY]=['code'=>$code,'label'=>self::label($code),'landing_url'=>mb_substr((string)($_SERVER['REQUEST_URI']??''),0,2000),'referer'=>mb_substr($referer,0,1000),'captured_at'=>date('Y-m-d H:i:s')];
-        return $code;
+        $stored = $_SESSION[self::SESSION_KEY] ?? null;
+        if (is_array($stored) && self::validCode($stored['code'] ?? null)) return $stored['code'];
+        self::$captured = self::fromCookie() ?? [
+            'code'=>self::classify($query,$referer),
+            'landing_url'=>mb_substr((string)($_SERVER['REQUEST_URI']??''),0,1000),
+            'referer'=>mb_substr($referer,0,500),
+            'captured_at'=>date('Y-m-d H:i:s'),
+        ];
+        self::$captured['label'] = self::label(self::$captured['code']);
+        if (session_status() === PHP_SESSION_ACTIVE) $_SESSION[self::SESSION_KEY] = self::$captured;
+        return self::$captured['code'];
     }
     public static function code(): string
     {
-        $code=$_SESSION[self::SESSION_KEY]['code']??self::DIRECT_VISIT;
-        return in_array($code,[self::SEARCH,self::DIRECT,self::DIRECT_VISIT],true)?$code:self::DIRECT_VISIT;
+        $code=$_SESSION[self::SESSION_KEY]['code']??self::$captured['code']??(self::fromCookie()['code']??self::DIRECT_VISIT);
+        return self::validCode($code)?$code:self::DIRECT_VISIT;
+    }
+    private static function validCode($code): bool
+    {
+        return is_string($code) && in_array($code,[self::SEARCH,self::DIRECT,self::DIRECT_VISIT],true);
+    }
+    private static function fromCookie(): ?array
+    {
+        $raw = $_COOKIE[self::COOKIE_NAME] ?? null;
+        if (!is_string($raw) || strlen($raw) > 8000) return null;
+        $data = json_decode($raw, true);
+        // Analytics metadata only; never an authentication/authorization input.
+        if (!is_array($data) || !self::validCode($data['code'] ?? null)) return null;
+        $result = ['code'=>$data['code']];
+        foreach (['landing_url'=>1000,'referer'=>500,'captured_at'=>40] as $key=>$limit) {
+            $result[$key] = isset($data[$key]) && is_string($data[$key]) ? mb_substr($data[$key],0,$limit) : '';
+        }
+        return $result;
     }
     public static function label(?string $code=null): string
     {

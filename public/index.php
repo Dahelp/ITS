@@ -40,6 +40,16 @@ $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $pathOnly   = parse_url($requestUri, PHP_URL_PATH) ?: '/';
 $method     = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
+require_once dirname(__DIR__) . '/app/services/SessionPolicy.php';
+\app\services\SessionPolicy::register($pathOnly, $method);
+
+// Validate token requests before any session or database bootstrap work.
+if ($pathOnly === '/session/lead-token') {
+    require_once dirname(__DIR__) . '/config/init.php';
+    \app\services\LeadTokenEndpoint::handle();
+    exit;
+}
+
 if (($method === 'GET' || $method === 'HEAD') && preg_match('~[A-Z]~', $pathOnly)) {
     $lowerPath = strtolower($pathOnly);
 
@@ -78,41 +88,7 @@ if ($method === 'GET' || $method === 'HEAD') {
         exit();
     }
 }
-$needSession = false;
-
-$sessionPrefixes = [
-    '/user',
-    '/cart',
-    '/order',
-    '/checkout',
-    '/comparison',
-    '/wishlist',
-    '/admin',
-];
-
-foreach ($sessionPrefixes as $prefix) {
-    if ($pathOnly === $prefix || str_starts_with($pathOnly, $prefix . '/')) {
-        $needSession = true;
-        break;
-    }
-}
-
-/**
- * Для POST-запросов поднимаем сессию:
- * формы, логин, флеш-сообщения после redirect и т.п.
- */
-if ($method === 'POST') {
-    $needSession = true;
-}
-
-/**
- * Если у клиента уже есть cookie PHP-сессии, значит это не анонимный гость:
- * нужно открыть сессию и прочитать авторизацию/корзину/флеши.
- */
-$sessionName = session_name();
-if (!$needSession && !empty($_COOKIE[$sessionName])) {
-    $needSession = true;
-}
+$needSession = \app\services\SessionPolicy::needsSession($pathOnly, $method, $_COOKIE, $_GET);
 
 if ($needSession && session_status() === PHP_SESSION_NONE) {
     session_start();

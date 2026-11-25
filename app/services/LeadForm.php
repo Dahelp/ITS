@@ -4,9 +4,30 @@ namespace app\services;
 /** Shared validation for short lead forms. No mail is sent until a lead is saved. */
 final class LeadForm
 {
+    /** Rendering a public page must not create a session or a visitor token. */
+    public static function tokenField(string $scope): string
+    {
+        if (!in_array($scope, ['callback', 'oneclick'], true)) throw new \InvalidArgumentException('Invalid lead scope');
+        $active = session_status() === PHP_SESSION_ACTIVE;
+        $token = $active ? self::token($scope) : '';
+        $html = '<input type="hidden" name="lead_token" data-lead-scope="'.$scope.'" value="'.$token.'">';
+        if (!$active) {
+            $path = parse_url((string)($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?: '/';
+            // A local path only; avoid network-path links and control characters.
+            $path = '/' . ltrim(str_replace(["\r", "\n", "\\"], ['', '', '/'], $path), '/');
+            // Apache's front-controller rewrite adds a routing key to $_GET.
+            // Rebuild only the query that the visitor actually requested.
+            parse_str((string)(parse_url((string)($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_QUERY) ?? ''), $query);
+            $query['lead_form'] = '1';
+            $url = htmlspecialchars($path . '?' . http_build_query($query), ENT_QUOTES, 'UTF-8');
+            $html .= '<noscript><p>Перед отправкой <a rel="nofollow" href="'.$url.'">подготовьте форму без JavaScript</a>.</p></noscript>';
+        }
+        return $html;
+    }
+
     public static function token(string $scope): string
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE && !session_start()) throw new \RuntimeException('Cannot start lead session');
         return $_SESSION['lead_tokens'][$scope] ??= bin2hex(random_bytes(32));
     }
 

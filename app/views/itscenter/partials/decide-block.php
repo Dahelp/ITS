@@ -3,9 +3,6 @@ $tell_zv = $tell_zv ?? \ishop\App::options('option_telefon');
 $telefon_href = str_replace(['(', ')', ' ', '-'], '', (string)$tell_zv);
 $callbackMascot = 'images/home/callback-mascot-red.webp';
 
-if (empty($_SESSION['callback_token'])) {
-    $_SESSION['callback_token'] = bin2hex(random_bytes(32));
-}
 ?>
 <div class="decide decide--pro">
 		<div class="container">
@@ -143,11 +140,9 @@ if (empty($_SESSION['callback_token'])) {
 
                             <form action="/callback" data-lead-form class="form decide-right-form" method="post" data-toggle="validator" novalidate="true">
                                 <input type="hidden" name="title" value="Заказать звонок">
-                                <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('callback') ?>">
+                                <?= \app\services\LeadForm::tokenField('callback') ?>
                                 <input type="hidden" name="agree" value="1">
 
-                                <input type="hidden" name="callback_token"
-                                    value="<?= htmlspecialchars($_SESSION['callback_token'], ENT_QUOTES, 'UTF-8') ?>">
 
                                 <div style="position:absolute; left:-9999px; top:-9999px;">
                                     <label>Ваш сайт
@@ -190,5 +185,3 @@ if (empty($_SESSION['callback_token'])) {
         </div>
     </div>
 </div>
-
-<script defer src="/js/lead-forms.js?v=20261118"></script>

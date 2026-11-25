@@ -647,8 +647,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                               aria-label="Избранное">
                               <i class="<?= $productWishlisted ? 'fas fa-heart' : 'far fa-heart' ?>"></i>
                           </button>
-                        
-
                         <?php $inCompare = !empty($comparison[$product->id]); ?>
                         <button
                             id="comparison-<?= (int)$product->id ?>"
@@ -1481,7 +1479,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
                 <div class="modal-body">
                     <p>Менеджер свяжется с вами, уточнит доставку и подтвердит заказ.</p>
                     <label class="form-label">Количество <input class="form-control" type="number" name="quantity" min="1" max="9999" value="1" required></label>
-                    <input type="hidden" name="lead_token" value="<?= \app\services\LeadForm::token('oneclick') ?>">
+                    <?= \app\services\LeadForm::tokenField('oneclick') ?>
                     <input type="text" name="hp_field" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" value="">
 
                     <div class="availability-product mb-3">
@@ -1595,7 +1593,6 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 </div>
 
 
-<script defer src="/js/lead-forms.js?v=20261118"></script>
 <!-- Modal Оформить товар под заказ -->
 <div class="modal fade" id="ModalRequest" tabindex="-1" aria-labelledby="ModalRequestLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
