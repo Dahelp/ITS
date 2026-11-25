@@ -192,7 +192,7 @@ class ProductController extends AppController
                 FROM related_product
                 WHERE product_id = ?
             ) AND hide = ?
-            ORDER BY quantity DESC",
+            ORDER BY GREATEST(0, quantity + COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = product.id), 0)) DESC, id ASC",
             [$product->id, 'show']
         );
 
@@ -203,7 +203,7 @@ class ProductController extends AppController
                 FROM similar_product
                 WHERE product_id = ?
             ) AND hide = ?
-            ORDER BY quantity DESC",
+            ORDER BY GREATEST(0, quantity + COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = product.id), 0)) DESC, id ASC",
             [$product->id, 'show']
         );
 
@@ -396,7 +396,7 @@ class ProductController extends AppController
         $services = [];
         $servicesWidgetContext = [];
 
-        if ((int)$product->category_id !== 38) {
+        if (!in_array((int)$product->category_id, [38, 39, 40, 42], true)) {
             $services = \R::getAll(
                 "SELECT p.*
                 FROM service_product sp
@@ -404,9 +404,12 @@ class ProductController extends AppController
                 WHERE sp.product_id = ?
                 AND p.category_id = 38
                 AND p.hide = 'show'
-                ORDER BY sp.id ASC",
+                ORDER BY GREATEST(0, p.quantity + COALESCE((SELECT SUM(m.quantity) FROM modification m WHERE m.product_id = p.id), 0)) DESC, sp.id ASC",
                 [(int)$product->id]
             );
+
+            $serviceProduct = $product->export();
+            $services = array_values(array_filter($services, static fn($service) => \app\services\ProductRelationPlanner::canRecommendService($serviceProduct, $service)));
 
             $servicesWidgetContext = !empty($services)
                 ? \app\widgets\product\Product::buildContext($services)
