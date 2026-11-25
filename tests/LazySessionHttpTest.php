@@ -36,7 +36,7 @@ try {
     $paths = ['/catalog/shiny','/category/shiny-dlya-vilochnyh-pogruzchikov'];
     // This local product currently stalls independently of session handling;
     // keep the regression suite bounded and allow explicit separate diagnosis.
-    if (in_array('--include-product',$argv,true)) $paths[]='/product/6-50-10-12pr-ttf-qh207-134a5-superguider-shina-dlya-vilochnogo-pogruzchika';
+    if ($base === 'https://its-center.ru' || in_array('--include-product',$argv,true)) $paths[]='/product/6-50-10-12pr-ttf-qh207-134a5-superguider-shina-dlya-vilochnogo-pogruzchika';
     foreach ($paths as $path) {
         $r = request($path);
         check($r['status'] === 200,'public page returns 200: '.$path);

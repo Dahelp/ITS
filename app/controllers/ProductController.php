@@ -217,7 +217,7 @@ class ProductController extends AppController
         );
 
         $p_model = new Product();
-        $p_model->setRecentlyViewed($product->id);
+        // The browser records history without making this GET set a cookie.
 
         $r_viewed = $p_model->getRecentlyViewed();
         $recentlyViewed = null;

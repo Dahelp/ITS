@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="<?= PATH ?>/css/product-badges.css?v=<?= (int)filemtime(WWW . '/css/product-badges.css') ?>">
 <link rel="stylesheet" href="<?= PATH ?>/css/product-fulfilment.css?v=<?= (int)filemtime(WWW . '/css/product-fulfilment.css') ?>">
+<script defer src="/js/recently-viewed.js?v=<?= (int)filemtime(WWW . '/js/recently-viewed.js') ?>"></script>
 <?php use app\helpers\Img; ?>
 
 <?php
@@ -95,7 +96,7 @@ $rwcount = (int)($reviewStat['cnt'] ?? 0);
 <!--end-breadcrumbs-->
 
 <!--start-single-->
-<div class="single contact">
+<div class="single contact" data-recent-product-id="<?= (int)$product->id ?>">
     <div class="container">
         <section>
           <?php if (\app\services\TsepChainCatalog::isChain($product)): ?>
