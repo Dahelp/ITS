@@ -15,7 +15,7 @@ for(const source of sources){
  });
  let result;try{result=transform({filename:source,code:Buffer.from(css),minify:true,errorRecovery:true,targets:{chrome:90<<16,firefox:90<<16,safari:14<<16}});}catch(e){throw new Error(source+': '+e.message+' at '+JSON.stringify(e.loc));}
  for(const warning of result.warnings)if(!(source==='css/style.css' && warning.type==='SelectorError' && warning.value?.type==='EmptySelector'))throw Error('Unexpected CSS warning: '+JSON.stringify(warning));
- warnings.push(...result.warnings);const licenses=(raw.toString('utf8').match(/\/\*[\s\S]*?\*\//g)||[]).filter(x=>/copyright|license/i.test(x));chunks.push(licenses.join('\n')+'\n'+'/* '+source+' */\n'+result.code.toString());
+ warnings.push(...result.warnings);const licenses=(raw.toString('utf8').match(/\/\*[\s\S]*?\*\//g)||[]).filter(x=>/copyright|license/i.test(x));chunks.push(licenses.join('\n').replace(/\r\n/g,'\n')+'\n'+'/* '+source+' */\n'+result.code.toString());
 }
 const output=Buffer.from('@charset "UTF-8";\n'+chunks.join('\n')+'\n');
 fs.writeFileSync(path.join(root,'public/css/site.bundle.min.css'),output);

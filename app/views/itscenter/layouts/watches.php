@@ -91,6 +91,9 @@
 	<link rel="shortcut icon" href="/images/favicon.svg" type="image/svg+xml" />
 
 	<?= $this->getMeta(); ?>
+	<?php if($controller==='Product' && !empty($product)): ?>
+	<?= \app\services\ProductImagePreload::render(\app\helpers\Img::productPicture('base',$product->img??'', '', ['eager'=>true])); ?>
+	<?php endif; ?>
 
 	<link rel="preconnect" href="https://mc.yandex.ru" crossorigin>
 	<meta name="yandex-verification" content="881bb639ff32cffe" />
