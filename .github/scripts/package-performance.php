@@ -6,4 +6,5 @@ $manifest=json_decode(file_get_contents($root.'/.github/performance-release/mani
 foreach($manifest as$p=>$v){if(!preg_match('~^(?:(app|public|bin|vendor/ishop/core)/[A-Za-z0-9_./-]+|config/db_bootstrap\.php)$~D',$p)||str_contains($p,'..'))throw new RuntimeException('Invalid path');if(hash_file('sha256',$root.'/'.$p)!==$v['after'])throw new RuntimeException('Source hash: '.$p);$dest=$target.'/files/'.$p;@mkdir(dirname($dest),0700,true);if(!copy($root.'/'.$p,$dest))throw new RuntimeException('Package copy');}
 copy($root.'/.github/performance-release/manifest.json',$target.'/manifest.json');copy($root.'/.github/performance-release/install.php',$target.'/install.php');copy($root.'/tests/LazySessionHttpTest.php',$target.'/smoke.php');
 if(is_file($root.'/tests/HtmlPageCacheHttpTest.php'))copy($root.'/tests/HtmlPageCacheHttpTest.php',$target.'/cache-smoke.php');
+foreach(['read-audit.php','profile-worker.php']as$file)if(is_file($root.'/.github/performance-release/'.$file))copy($root.'/.github/performance-release/'.$file,$target.'/'.$file);
 echo 'Performance package: '.count($manifest).' files'.PHP_EOL;

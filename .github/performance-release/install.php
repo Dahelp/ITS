@@ -14,7 +14,11 @@ foreach($manifest as$p=>$v){
  if(str_ends_with($p,'.php')){exec(escapeshellarg(PHP_BINARY).' -l '.escapeshellarg($src).' 2>&1',$lint,$code);if($code)throw new RuntimeException('Lint: '.$p);}
 }
 file_put_contents($package.'/reports/audit.json',json_encode(['at'=>gmdate('c'),'mode'=>$mode,'files'=>$audit],JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
-if($mode==='audit'){echo 'Read-only audit: '.count($audit).' files, drift='.count(array_filter($audit,fn($v)=>!$v['compatible'])).PHP_EOL;exit;}
+if($mode==='audit'){
+ if(is_file($package.'/read-audit.php')){passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/read-audit.php').' '.escapeshellarg($root),$auditCode);if($auditCode)throw new RuntimeException('Read-only inspection failed');}
+ echo 'Read-only audit: '.count($audit).' files, drift='.count(array_filter($audit,fn($v)=>!$v['compatible'])).PHP_EOL;exit;
+}
+if(!$manifest)throw new RuntimeException('Audit-only package cannot publish');
 if(is_file($package.'/receipt.json'))throw new RuntimeException('Already applied');foreach($audit as$p=>$v)if(!$v['compatible'])throw new RuntimeException('Production drift: '.$p);
 try{
  foreach($before as$p=>$v){if($v['hash']===null)continue;$backup=$package.'/backup/'.$p;if(!is_dir(dirname($backup)))mkdir(dirname($backup),0700,true);if(!copy($root.'/'.$p,$backup)||hash_file('sha256',$backup)!==$v['hash'])throw new RuntimeException('Backup: '.$p);}
