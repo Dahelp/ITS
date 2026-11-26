@@ -39,6 +39,7 @@ final class HtmlPageCache
         $parts = parse_url($uri);
         if (!$parts || isset($parts['host']) || isset($parts['fragment'])) return null;
         $path = $parts['path'] ?? '';
+        if (array_intersect(explode('/',$path),['.','..'])) return null;
         if (!preg_match('~^/(?:catalog/[a-z0-9-]+|category/[a-z0-9-]+(?:/[a-z0-9._-]+){0,3}|product/[a-z0-9-]+)$~D', $path)) return null;
         $query = $parts['query'] ?? '';
         if ($query !== '' && (str_starts_with($path,'/product/') || !preg_match('~^page=([1-9][0-9]?)$~D',$query))) return null;
@@ -140,7 +141,7 @@ final class HtmlPageCache
             if ($this->generation()!==$generation) return false;
             $allowed=[];
             foreach ($headers as $line) {
-                if (preg_match('~^(?:set-cookie|location|content-encoding):|^cache-control:.*(?:private|no-store)~i',$line)) return false;
+                if (preg_match('~^(?:set-cookie|location|content-encoding|content-disposition|refresh):|^cache-control:.*(?:private|no-store)~i',$line)) return false;
                 if (stripos($line,'Content-Type:')===0 && !preg_match('~^content-type:\s*text/html(?:;|$)~i',$line)) return false;
                 if (stripos($line,'Vary:')===0 && !preg_match('~^vary:\s*accept-encoding\s*$~i',$line)) return false;
                 if (preg_match('~^(?:content-type|x-robots-tag|content-language|link|content-security-policy|referrer-policy|x-content-type-options):~i',$line) && !preg_match('/[\r\n]/',$line)) $allowed[]=$line;

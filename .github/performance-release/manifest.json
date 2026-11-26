@@ -22,7 +22,7 @@
   "app/services/HtmlPageCache.php": {
     "before": null,
     "before_lf": null,
-    "after": "4995d9bd3d258081ddda2a2b144bd716c7141f5b99af1c85da776d359cb83eca"
+    "after": "e64cbf8bda3842caeef797a881abc45ab24f25a5ab8e8bc06d4fc71025ded115"
   },
   "app/services/HtmlCacheInvalidator.php": {
     "before": null,

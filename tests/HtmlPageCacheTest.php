@@ -10,6 +10,7 @@ check(HtmlPageCache::identity(array_replace($server,['REQUEST_METHOD'=>'HEAD']),
 foreach ([['REQUEST_METHOD'=>'POST'],['HTTP_HOST'=>'foreign.example'],['HTTP_AUTHORIZATION'=>'Bearer private'],['HTTP_X_REQUESTED_WITH'=>'XMLHttpRequest'],['HTTP_RANGE'=>'bytes=0-20'],['HTTP_CACHE_CONTROL'=>'no-cache'],['REQUEST_URI'=>'/user/login'],['REQUEST_URI'=>'/catalog-menu'],['REQUEST_URI'=>'/category/test?sort=price'],['REQUEST_URI'=>'/category/test?page[]=2'],['REQUEST_URI'=>'/category/test?page=2&page=3'],['REQUEST_URI'=>'/product/test?page=2'],['REQUEST_URI'=>'/category/test?lead_form=1'],['REQUEST_URI'=>'/category/test?utm_source=direct']] as $change) check(HtmlPageCache::identity(array_replace($server,$change),[])===null,'unsafe request bypass: '.json_encode($change));
 foreach(['PHPSESSID','currency','recentlyViewed','unknown_customer_state']as$name) check(HtmlPageCache::identity($server,[$name=>'value'])===null,'personal cookie bypass: '.$name);
 check(HtmlPageCache::identity($server,['its_traffic_source'=>'metadata','cookie_accepted'=>'true','_ga_123'=>'analytics'])===$key,'non-personal analytics ignored');
+check(HtmlPageCache::identity(array_replace($server,['REQUEST_URI'=>'/category/test/../cart']),[])===null,'non-canonical dot segments bypass');
 check(HtmlPageCache::identity(array_replace($server,['REQUEST_URI'=>'/category/test?page=2']),[])!==HtmlPageCache::identity(array_replace($server,['REQUEST_URI'=>'/category/test?page=3']),[]),'pagination separated');
 $dir=dirname(__DIR__).'/tmp/html-cache-test-'.bin2hex(random_bytes(5));$now=time();
 $cache=new HtmlPageCache($dir,300,static function()use(&$now){return $now;});
@@ -21,6 +22,7 @@ check(!$cache->write($key,$gen,$html,['Set-Cookie: PHPSESSID=private']),'never c
 check(!$cache->write($key,$gen,$html,['Cache-Control: private, no-store']),'never cache private response');
 check(!$cache->write($key,$gen,$html,['Content-Type: application/json']),'never change response MIME type');
 check(!$cache->write($key,$gen,$html,['Vary: Cookie']),'unknown response variation bypasses storage');
+check(!$cache->write($key,$gen,$html,['Content-Disposition: attachment']),'downloads never become inline cached HTML');
 check(!$cache->write($key,$gen,'<html>partial',[]),'never cache partial/error page');
 $private=str_replace('public','<input name="lead_token" value="'.str_repeat('a',64).'">',$html);
 check(!$cache->write($key,$gen,$private,[]),'defence against cached session token');
