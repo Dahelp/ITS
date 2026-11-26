@@ -308,7 +308,7 @@ class App
             (string)$text,
             function (string $urlsys) use ($id, $attributes) {
                 // An array marks duplicate keys: preserve the original database resolver for ambiguity.
-                if($attributes!==null && !is_array($attributes[$urlsys]??null))return ($attributes[$urlsys]??'')?:'';
+                if($attributes!==null && array_key_exists($urlsys,$attributes) && !is_array($attributes[$urlsys]))return ($attributes[$urlsys]??'')?:'';
                 return \R::getCell(
                     "SELECT pa.attribute_text
                      FROM product_attribute pa

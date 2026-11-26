@@ -91,10 +91,10 @@ class Product
         $seoAttributes=[];
         if(!empty($context['productInseoByCategoryId'])){
             $slots=implode(',',array_fill(0,count($productIds),'?'));
-            foreach(\R::getAll("SELECT pa.product_id, a.url_params, pa.attribute_text FROM product_attribute pa JOIN attribute a ON a.id=pa.attribute_id WHERE pa.product_id IN ($slots) AND a.url_params<>''",$productIds)as$row){
+            foreach(\R::getAll("SELECT pa.product_id, a.url_params, MAX(pa.attribute_text) AS attribute_text, COUNT(*) AS attribute_count FROM product_attribute pa JOIN attribute a ON a.id=pa.attribute_id WHERE pa.product_id IN ($slots) AND a.url_params<>'' GROUP BY pa.product_id,a.url_params",$productIds)as$row){
                 $pid=(int)$row['product_id'];$key=(string)$row['url_params'];
                 if(!isset($seoAttributes[$pid]))$seoAttributes[$pid]=[];
-                $seoAttributes[$pid][$key]=array_key_exists($key,$seoAttributes[$pid])?[]:$row['attribute_text'];
+                $seoAttributes[$pid][$key]=(int)$row['attribute_count']>1?[]:$row['attribute_text'];
             }
         }
         // seo names
