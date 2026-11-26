@@ -127,6 +127,10 @@
 	</style>
 
 	<link rel="stylesheet" href="/css/site.bundle.min.css?v=<?= (int) @filemtime(WWW . '/css/site.bundle.min.css') ?>">
+	<?php if($controller==='Category'): ?>
+	<link rel="stylesheet" href="/css/catalog-facets.css?v=20261112h">
+	<link rel="stylesheet" href="/css/catalog-controls.css?v=20261026b">
+	<?php endif; ?>
 	<?php if (!empty($needFancybox)): ?>
 	<link rel="stylesheet" href="/css/fancybox-4.0.31.min.css?v=<?= (int)filemtime(WWW . '/css/fancybox-4.0.31.min.css') ?>"/>
 	<?php endif; ?>

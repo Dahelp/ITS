@@ -1,32 +1,7 @@
 {
   "app/views/itscenter/layouts/watches.php": {
-    "before": "a0dcb5335ac97ee8f5b6266a46aa1d3287071887636af7955279100feccefa22",
-    "before_lf": "a0dcb5335ac97ee8f5b6266a46aa1d3287071887636af7955279100feccefa22",
-    "after": "dd57ab246ad99d97e48d302ca069c31c46944fef2c5f6533f84ec600f11643ad"
-  },
-  "public/css/site.bundle.min.css": {
-    "before": "ec2a25fee64a6f444bc891d8598e098be604d0d436e9f5ff69b694622c2075c9",
-    "before_lf": "ec2a25fee64a6f444bc891d8598e098be604d0d436e9f5ff69b694622c2075c9",
-    "after": "48bee2054613d6c717248bf704ba6c97071cbf57b632ae75d34678b656803bac"
-  },
-  "public/css/fancybox-4.0.31.min.css": {
-    "before": null,
-    "before_lf": null,
-    "after": "b8f0373da373c3bcf45c0c096399050969fe474702cbad829d018ad42e50cafd"
-  },
-  "public/css/fancybox-4.0.31.LICENSE.txt": {
-    "before": null,
-    "before_lf": null,
-    "after": "bf656ef54bed68b7f3ceb121fd14caa09f4c4615040c437e8f06d82b7646a89f"
-  },
-  "vendor/ishop/core/App.php": {
-    "before": "d2381aff43bd326040919b6ce29347ec0cf21cf7e3c52a9327104975164f1661",
-    "before_lf": "d2381aff43bd326040919b6ce29347ec0cf21cf7e3c52a9327104975164f1661",
-    "after": "404f93a31c74f5b2409b300fe0fc45a0ec5dc63ba77f3870a73929c148b22831"
-  },
-  "app/widgets/product/Product.php": {
-    "before": "1a8f46ef7eabfecb7768a22a3ec64d0c326b1a4279370d9e9162104684fd7175",
-    "before_lf": "1a8f46ef7eabfecb7768a22a3ec64d0c326b1a4279370d9e9162104684fd7175",
-    "after": "a5b56f8e3a8ec7010f3d8038f4ad5ddf3b5d5ee6336b67eb2e1337fe3397f916"
+    "before": "dd57ab246ad99d97e48d302ca069c31c46944fef2c5f6533f84ec600f11643ad",
+    "before_lf": "dd57ab246ad99d97e48d302ca069c31c46944fef2c5f6533f84ec600f11643ad",
+    "after": "24bad69fd84eb88ca3ac9ff7bcbf012fcae120407bbed6207fbe40dc489b2554"
   }
 }
