@@ -3,14 +3,14 @@
 $date_update = date('Y-m-d H:i:s');
 $cronId = !empty($_GET['id']) ? (int)$_GET['id'] : 2;
 
-$viewcrons = \R::findOne('cron', 'id = ?', [$cronId]);
+$viewcrons = defined('SITEMAP_CLI') && SITEMAP_CLI ? ['url_download'=>'sitemap.xml'] : \R::findOne('cron', 'id = ?', [$cronId]);
 if (!$viewcrons) {
     http_response_code(500);
     exit('Cron not found');
 }
 
 $fileName = trim($viewcrons['url_download']);
-if ($fileName === '') {
+if (!preg_match('/^[a-zA-Z0-9_-]+\.xml$/D', $fileName)) {
     http_response_code(500);
     exit('Empty cron file name');
 }
@@ -101,6 +101,9 @@ if ($sm_filter_landings) {
         return $ids;
     };
 
+    $available=[];
+    $relation=\app\services\CatalogFacetBridge::relationSql();
+    foreach(\R::getAll("SELECT DISTINCT p.category_id, ap.attr_id FROM product p JOIN {$relation} ap ON ap.product_id=p.id WHERE p.hide='show'") as $edge)$available[(int)$edge['category_id']][(int)$edge['attr_id']]=true;
     foreach ($sm_filter_landings as $row) {
         $categoryId = (int)$row['category_id'];
         $valueId = (int)$row['value_id'];
@@ -109,19 +112,9 @@ if ($sm_filter_landings) {
             continue;
         }
 
-        $categoryIds = implode(',', array_map('intval', $collectCategoryIds($categoryId)));
-
-        $hasProducts = (int)\R::getCell(
-            "SELECT COUNT(*)
-             FROM product p
-             INNER JOIN attribute_product ap ON ap.product_id = p.id
-             WHERE p.hide = 'show'
-               AND p.category_id IN ($categoryIds)
-               AND ap.attr_id = ?",
-            [$valueId]
-        );
-
-        if ($hasProducts < 1) {
+        $hasProducts=false;
+        foreach($collectCategoryIds($categoryId) as $subCategory)if(!empty($available[$subCategory][$valueId])){$hasProducts=true;break;}
+        if (!$hasProducts) {
             continue;
         }
 
@@ -173,10 +166,10 @@ if ($sm_content_type) {
 | 5. Категории
 |--------------------------------------------------------------------------
 */
-$sm_category = \R::getAll("SELECT alias FROM category WHERE hide = 'show' AND alias <> ''");
+$sm_category = \R::getAll("SELECT c.alias, c.type_id, EXISTS(SELECT 1 FROM category child WHERE child.parent_id=c.id AND (child.hide='show' OR child.hide='' OR child.hide IS NULL)) AS has_children FROM category c WHERE c.hide = 'show' AND alias <> ''");
 if ($sm_category) {
     foreach ($sm_category as $smc) {
-        $addUrl(PATH . '/category/' . $smc['alias']);
+        $addUrl(PATH . (((int)$smc['type_id']===1 && $smc['has_children'])?'/catalog/':'/category/') . $smc['alias']);
     }
 }
 
@@ -268,6 +261,7 @@ if (!@rename($tmpFile, $targetFile)) {
 | 11. Обновление cron + история
 |--------------------------------------------------------------------------
 */
+if(defined('SITEMAP_CLI') && SITEMAP_CLI){echo json_encode(['urls'=>count($urls),'file'=>$fileName,'bytes'=>strlen($text)],JSON_UNESCAPED_SLASHES).PHP_EOL;return;}
 \R::exec("UPDATE cron SET date_update = ? WHERE id = ?", [$date_update, $cronId]);
 
 if (!empty($_SESSION['user']['id'])) {

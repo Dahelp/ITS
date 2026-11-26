@@ -13,14 +13,17 @@ foreach($manifest as$p=>$v){
  $src=$package.'/files/'.$p;if(!is_file($src)||hash_file('sha256',$src)!==$v['after'])throw new RuntimeException('Package hash: '.$p);
  if(str_ends_with($p,'.php')){exec(escapeshellarg(PHP_BINARY).' -l '.escapeshellarg($src).' 2>&1',$lint,$code);if($code)throw new RuntimeException('Lint: '.$p);}
 }
+if(is_file($package.'/dependencies.json'))foreach(json_decode(file_get_contents($package.'/dependencies.json'),true,512,JSON_THROW_ON_ERROR)as$p=>$v){if(!preg_match('~^public/(css|adminlte)/[a-zA-Z0-9_./-]+$~D',$p)||str_contains($p,'..'))throw new RuntimeException('Invalid dependency');$file=$root.'/'.$p;$hash=is_file($file)?hash_file('sha256',$file):null;$lf=is_file($file)?hash('sha256',str_replace("\r\n","\n",file_get_contents($file))):null;$audit[$p]=['dependency'=>true,'actual'=>$hash,'expected'=>$v['hash'],'compatible'=>$hash===$v['hash']||($lf!==null&&$lf===$v['lf'])];}
 file_put_contents($package.'/reports/audit.json',json_encode(['at'=>gmdate('c'),'mode'=>$mode,'files'=>$audit],JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
 if($mode==='audit'){
+ if(is_file($package.'/schema.php')){passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/schema.php').' '.escapeshellarg($root).' plan',$schemaCode);if($schemaCode)throw new RuntimeException('Index preflight failed');}
  if(is_file($package.'/read-audit.php')){passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/read-audit.php').' '.escapeshellarg($root),$auditCode);if($auditCode)throw new RuntimeException('Read-only inspection failed');}
  echo 'Read-only audit: '.count($audit).' files, drift='.count(array_filter($audit,fn($v)=>!$v['compatible'])).PHP_EOL;exit;
 }
 if(!$manifest)throw new RuntimeException('Audit-only package cannot publish');
 if(is_file($package.'/receipt.json'))throw new RuntimeException('Already applied');foreach($audit as$p=>$v)if(!$v['compatible'])throw new RuntimeException('Production drift: '.$p);
 try{
+ if(is_file($package.'/schema.php')){passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/schema.php').' '.escapeshellarg($root).' apply',$schemaCode);if($schemaCode)throw new RuntimeException('Online index migration failed; see schema report');}
  foreach($before as$p=>$v){if($v['hash']===null)continue;$backup=$package.'/backup/'.$p;if(!is_dir(dirname($backup)))mkdir(dirname($backup),0700,true);if(!copy($root.'/'.$p,$backup)||hash_file('sha256',$backup)!==$v['hash'])throw new RuntimeException('Backup: '.$p);}
  $paths=array_keys($manifest);usort($paths,static function($a,$b){$rank=static fn($p)=>$p==='public/index.php'?100:(str_starts_with($p,'public/js/')?0:(str_starts_with($p,'app/services/')?10:30));return $rank($a)<=>$rank($b);});
  foreach($paths as$p){$dest=$root.'/'.$p;if(!is_dir(dirname($dest)))mkdir(dirname($dest),0755,true);$tmp=$dest.'.performance-'.getmypid();if(!copy($package.'/files/'.$p,$tmp))throw new RuntimeException('Copy: '.$p);chmod($tmp,$before[$p]['mode']);if(!rename($tmp,$dest))throw new RuntimeException('Atomic install: '.$p);$installed[]=$p;}
@@ -28,10 +31,16 @@ try{
  if(is_file($root.'/app/services/HtmlPageCache.php')){require_once $root.'/app/services/HtmlPageCache.php';if(!(new \app\services\HtmlPageCache($root.'/tmp/html-page-cache'))->invalidate())throw new RuntimeException('HTML cache purge failed');}
  putenv('PERFORMANCE_BASE_URL=https://its-center.ru');putenv('PERFORMANCE_REPORT_PATH='.$package.'/reports/smoke.json');passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/smoke.php'),$code);if($code)throw new RuntimeException('Production HTTP smoke failed');
  if(is_file($package.'/cache-smoke.php')){putenv('PERFORMANCE_CACHE_REPORT_PATH='.$package.'/reports/cache-smoke.json');passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/cache-smoke.php'),$code);if($code)throw new RuntimeException('Production HTML cache smoke failed');}
- $receipt=['at'=>gmdate('c'),'files'=>count($manifest),'backup'=>$package.'/backup','database_changed'=>false,'smoke'=>'passed'];file_put_contents($package.'/receipt.json',json_encode($receipt,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));copy($package.'/receipt.json',$package.'/reports/receipt.json');echo 'Performance release published; HTTP smoke passed'.PHP_EOL;
+ if(is_file($root.'/bin/rebuild_sitemap.php')&&isset($manifest['bin/rebuild_sitemap.php'])){
+  $generated=$root.'/public/cron/sitemap.xml';$generatedExisted=is_file($generated);if($generatedExisted&&!copy($generated,$package.'/sitemap-backup.xml'))throw new RuntimeException('Sitemap backup failed');
+  exec(escapeshellarg(PHP_BINARY).' '.escapeshellarg($root.'/bin/rebuild_sitemap.php').' 2>&1',$sitemapOutput,$sitemapCode);file_put_contents($package.'/reports/sitemap.json',json_encode(['exit'=>$sitemapCode,'output'=>$sitemapOutput]));if($sitemapCode)throw new RuntimeException('Sitemap generation failed');
+ }
+ $receipt=['at'=>gmdate('c'),'files'=>count($manifest),'backup'=>$package.'/backup','database_changed'=>is_file($package.'/reports/schema.json')&&!empty(json_decode(file_get_contents($package.'/reports/schema.json'),true)['created']),'smoke'=>'passed'];file_put_contents($package.'/receipt.json',json_encode($receipt,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));copy($package.'/receipt.json',$package.'/reports/receipt.json');echo 'Performance release published; HTTP smoke passed'.PHP_EOL;
+ if(is_file($package.'/read-audit.php'))passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/read-audit.php').' '.escapeshellarg($root));
 }catch(Throwable$e){
+ if(isset($generated)){if($generatedExisted){$restore=$generated.'.restore-'.getmypid();if(!copy($package.'/sitemap-backup.xml',$restore)||!rename($restore,$generated))throw new RuntimeException('SITEMAP ROLLBACK FAILED');}elseif(is_file($generated))unlink($generated);}
  foreach(array_reverse($installed)as$p){$dest=$root.'/'.$p;if($before[$p]['hash']===null){if(is_file($dest))unlink($dest);}else{$tmp=$dest.'.performance-restore-'.getmypid();if(!copy($package.'/backup/'.$p,$tmp))throw new RuntimeException('ROLLBACK COPY FAILED: '.$p);chmod($tmp,$before[$p]['mode']);if(!rename($tmp,$dest))throw new RuntimeException('ROLLBACK RENAME FAILED: '.$p);}}
  foreach($installed as$p){$actual=is_file($root.'/'.$p)?hash_file('sha256',$root.'/'.$p):null;if($actual!==$before[$p]['hash'])throw new RuntimeException('ROLLBACK HASH FAILED: '.$p);}
  if(class_exists('app\\services\\HtmlPageCache',false))(new \app\services\HtmlPageCache($root.'/tmp/html-page-cache'))->invalidate();
- file_put_contents($package.'/reports/failure.json',json_encode(['error'=>$e->getMessage(),'rolled_back'=>count($installed),'at'=>gmdate('c')],JSON_PRETTY_PRINT));fwrite(STDERR,$e->getMessage().'; changes rolled back'.PHP_EOL);exit(1);
+ file_put_contents($package.'/reports/failure.json',json_encode(['error'=>$e->getMessage(),'rolled_back'=>count($installed),'additive_indexes_retained'=>is_file($package.'/reports/schema.json'),'at'=>gmdate('c')],JSON_PRETTY_PRINT));fwrite(STDERR,$e->getMessage().'; changes rolled back'.PHP_EOL);exit(1);
 }

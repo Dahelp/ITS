@@ -64,6 +64,7 @@ class CategoryController extends AppController
     $ids = $catModel->getIds($category->id);
     $ids = !$ids ? (string)$category->id : $ids . $category->id;
 
+    if(isset($_GET['page']) && (!is_string($_GET['page']) || !preg_match('/^[1-9][0-9]{0,5}$/D',$_GET['page'])))throw new \Exception('Страница не найдена',404);
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $page = max(1, $page);
 
@@ -236,6 +237,7 @@ class CategoryController extends AppController
     }
 
     $pagination = new Pagination($page, $perpage, $total);
+    if($page>$pagination->countPages)throw new \Exception('Страница не найдена',404);
     $start = (int)$pagination->getStart();
 
     $products = \R::find(
@@ -588,7 +590,6 @@ class CategoryController extends AppController
         && !empty($categoryFilterSeo['robots'])
         && empty($_GET['filter'])
         && empty($_GET['sort'])
-        && $page <= 1
     ) {
         $metaRobots = (string)$categoryFilterSeo['robots'];
     }

@@ -1,1 +1,62 @@
-{}
+{
+  "app/services/HtmlPageCache.php": {
+    "before": "e64cbf8bda3842caeef797a881abc45ab24f25a5ab8e8bc06d4fc71025ded115",
+    "before_lf": "e64cbf8bda3842caeef797a881abc45ab24f25a5ab8e8bc06d4fc71025ded115",
+    "after": "1d6c3dd3e4d9603e7dce4a2034b07da53ad380d6471969e510056c59ba92bd7a"
+  },
+  "vendor/ishop/core/Cache.php": {
+    "before": "a9d479c54bcacf1f5de593747d1a3de8bd70787f42907908016272c1fe704d1b",
+    "before_lf": "a9d479c54bcacf1f5de593747d1a3de8bd70787f42907908016272c1fe704d1b",
+    "after": "e878ae5c2f61905e350901fc4240921d42d1dcf1a9399a78c1849b5ba08b507a"
+  },
+  "app/services/CatalogCacheClock.php": {
+    "before": null,
+    "before_lf": null,
+    "after": "37e8ee40d352ace9de2605b2e79adb9439b8940ad1b533c15c3292bd278d62e3"
+  },
+  "app/controllers/AppController.php": {
+    "before": "10f38dd1632b7004b583f71c0c89650a5aa9d55a3c34f3d7177e71726a927a2e",
+    "before_lf": "10f38dd1632b7004b583f71c0c89650a5aa9d55a3c34f3d7177e71726a927a2e",
+    "after": "539b131c5c7bb1a96ecb051c05db2cbcfab4e4d9f033e24df6f2efbeb6809182"
+  },
+  "app/widgets/currency/Currency.php": {
+    "before": "072de032048796e076360a6efce0f36287c821cc742233b362b0ef8e3c74b504",
+    "before_lf": "072de032048796e076360a6efce0f36287c821cc742233b362b0ef8e3c74b504",
+    "after": "2d35a3041cb6b91cc8afffcc1130cacea49412939361987761b192631b89a735"
+  },
+  "app/views/itscenter/layouts/watches.php": {
+    "before": "ce99158f941c585b0b695641aa98d8d87214c7d92d3f69b2055eaef32495c53f",
+    "before_lf": "ce99158f941c585b0b695641aa98d8d87214c7d92d3f69b2055eaef32495c53f",
+    "after": "2bbcfa302c934042e80dfa9343295fc79b158bf350f9986b582a7e17b303a217"
+  },
+  "vendor/ishop/core/base/View.php": {
+    "before": "ca7560fd7061446b9e75352b6c2726242f78c2871be5d15633ec39d5233702f6",
+    "before_lf": "ca7560fd7061446b9e75352b6c2726242f78c2871be5d15633ec39d5233702f6",
+    "after": "d5bd385c00d8dcde0d4b1eb262e999729cd0f62b1442bb6452036ca82abaa5d4"
+  },
+  "app/controllers/CategoryController.php": {
+    "before": "2b6d4c85a0e1fd52fcb74aeb393bdc3b4060098ad52b6f8780f8fb12978e864b",
+    "before_lf": "2b6d4c85a0e1fd52fcb74aeb393bdc3b4060098ad52b6f8780f8fb12978e864b",
+    "after": "45aeadb002cc23bd09f96b9f6b9debc906e390ba122c6b382dd293aab14f5d2a"
+  },
+  "app/views/itscenter/Cron/sitemap.php": {
+    "before": "eccb23474f3f809206cb9d84208461c155df321d40691fd488fe39bf9c9a2223",
+    "before_lf": "eccb23474f3f809206cb9d84208461c155df321d40691fd488fe39bf9c9a2223",
+    "after": "d729dc99668d794822e0c62aa260da7b018b57d3f6262199cc1c1efde5280d2b"
+  },
+  "public/robots.txt": {
+    "before": "8bcdb390152614672438bb6ca936fa801d5604c256d353dae8d26c5e0d99b195",
+    "before_lf": "8bcdb390152614672438bb6ca936fa801d5604c256d353dae8d26c5e0d99b195",
+    "after": "26566ea08f1ae02e40850945cc9404cbd01ef349eaafece496732252da8620c1"
+  },
+  "bin/rebuild_sitemap.php": {
+    "before": null,
+    "before_lf": null,
+    "after": "e3a36c8779751d82c0570c57fb9b4ddef1ce75eff5ee07c7dc7e512a2d6c2331"
+  },
+  "public/css/site.bundle.min.css": {
+    "before": null,
+    "before_lf": null,
+    "after": "ec2a25fee64a6f444bc891d8598e098be604d0d436e9f5ff69b694622c2075c9"
+  }
+}

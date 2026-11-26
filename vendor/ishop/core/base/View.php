@@ -116,27 +116,11 @@ class View {
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-        /**
-         * Для страниц пагинации page>1:
-         * 1. Убираем из title хвост вида "- Страница 2"
-         * 2. canonical делаем без query-параметров
-         */
-        if ($page > 1 && $title) {
-            $title = preg_replace('~\s*[-–—|]\s*Страница\s+\d+\s*$~ui', '', $title);
-        }
-
-        /**
-         * Canonical без ?page=2, ?sort=, ?filter= и прочих GET-параметров.
-         *
-         * Было:
-         * https://its-center.ru/category/shiny-dlya-vilochnyh-pogruzchikov?page=2
-         *
-         * Станет:
-         * https://its-center.ru/category/shiny-dlya-vilochnyh-pogruzchikov
-         */
+        // Pagination keeps its title and its own canonical URL. Other query variants use the base URL.
         $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $canonicalUrl = !empty($shopUrl) ? $shopUrl : PATH . $requestPath;
         $canonicalUrl = strtok($canonicalUrl, '?');
+        if($page>1 && ($this->route['controller']??'')==='Category' && preg_match('/^page=[1-9][0-9]*$/D',(string)parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY)) && preg_match('/^[1-9][0-9]*$/D',(string)$_GET['page']))$canonicalUrl.='?page='.$page;
 
         /**
          * Для og:url лучше тоже отдавать чистый URL без GET-параметров.

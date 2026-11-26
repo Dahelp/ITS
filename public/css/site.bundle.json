@@ -1,0 +1,31 @@
+{
+  "compiler": "lightningcss@1.33.0",
+  "sources": {
+    "css/bootstrap.css": "80118526fd24ec4d1565d647cb22cc03963779ec8b7396992d9449bab9bcd9ad",
+    "css/flexslider.css": "5d32b7d207246bdee573fb6c8ae7e4ce518b63ac9c4ac8865724b8a4d1a6e8b5",
+    "css/aiz-core.css": "c474ee51c037b62c5b11853cf8371a825b63b1474c52a8974ec0371f020e2191",
+    "css/style.css": "3012efb4e78fc8e29bd487ea14bb9685e63bc234f4e2d21a2344f85afb3c5829",
+    "adminlte/plugins/fontawesome-free/css/all.min.css": "839ce8e32e994f4fb4af526183b8f41ba67e47c7025746cc94e7e6a53d3d3453",
+    "adminlte/plugins/select2/css/select2.min.css": "3c6632c1d1fd0b539360f60973adca7c0eb01ec7e192067e02b8028a18519ae3",
+    "adminlte/plugins/select2-bootstrap5-theme/select2-bootstrap-5-theme.min.css": "5cb35411fccf18705e4ad112d836cb514459ddeefddc169b970cc99588fa5b64",
+    "css/swiper-bundle.min.css": "a19fe7de8cfd2833535f975fc9186b5023f8995b7050698bb5e9c59d30e5873d",
+    "css/fonts-override.css": "7265834c6da1e15e9fa4d8ebf72c3f06f7f7a5dbaeef229c9aaf8ffd31b88a06"
+  },
+  "original_bytes": 855359,
+  "bundle_bytes": 684161,
+  "gzip_bytes": 118355,
+  "warnings": [
+    {
+      "message": "Invalid empty selector",
+      "type": "SelectorError",
+      "value": {
+        "type": "EmptySelector"
+      },
+      "loc": {
+        "filename": "css/style.css",
+        "line": 7894,
+        "column": 79
+      }
+    }
+  ]
+}

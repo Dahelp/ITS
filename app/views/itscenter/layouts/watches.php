@@ -49,12 +49,7 @@
 		$robots = 'noindex, nofollow';
 	} elseif ($isLegacyFilterGroupController) {
 		$robots = 'noindex, follow';
-	} elseif ($isPaginationPage) {
-		/**
-		 * Все страницы пагинации page>1 закрываем от индексации.
-		 * Например:
-		 * /category/shiny-dlya-vilochnyh-pogruzchikov?page=2
-		 */
+	} elseif ($isPaginationPage && ($controller!=='Category' || !preg_match('/^page=[1-9][0-9]*$/D',(string)parse_url($_SERVER['REQUEST_URI'],PHP_URL_QUERY)))) {
 		$robots = 'noindex, follow';
 	} elseif ($controller === 'Category') {
 		$hasExtraFilter = !empty($_GET['filter']);
@@ -81,7 +76,7 @@
 	if (
 		$manualRobots !== ''
 		&& in_array($manualRobots, $allowedRobots, true)
-		&& !$isPaginationPage
+		&& (!$isPaginationPage || str_starts_with($manualRobots,'noindex'))
 		&& empty($_GET['filter'])
 		&& empty($_GET['sort'])
 	) {
@@ -125,15 +120,7 @@
 		}
 	</style>
 
-	<link rel="stylesheet" href="/css/bootstrap.css">
-	<link rel="stylesheet" href="/css/flexslider.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="/css/aiz-core.css">
-	<link rel="stylesheet" href="<?= PATH ?>/css/style.css?v=<?= (int) @filemtime(WWW . '/css/style.css') ?>" type="text/css" media="all" />
-	<link rel="stylesheet" href="/public/adminlte/plugins/fontawesome-free/css/all.min.css" />
-	<link rel="stylesheet" href="/public/adminlte/plugins/select2/css/select2.min.css" />
-	<link rel="stylesheet" href="/public/adminlte/plugins/select2-bootstrap5-theme/select2-bootstrap-5-theme.min.css" />
-	<link rel="stylesheet" href="/css/swiper-bundle.min.css" />
-	<link rel="stylesheet" href="/css/fonts-override.css">
+	<link rel="stylesheet" href="/css/site.bundle.min.css?v=<?= (int) @filemtime(WWW . '/css/site.bundle.min.css') ?>">
 	<?php if (!empty($needFancybox)): ?>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"/>
 	<?php endif; ?>

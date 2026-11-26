@@ -15,6 +15,9 @@ final class HtmlPageCache
     private $renderLock = null;
     private bool $streamed = false;
     private array $mutationCallbacks = [];
+    private ?int $notAfter = null;
+    public function limitUntil(int $timestamp): void { if($timestamp>0)$this->notAfter=min($this->notAfter??PHP_INT_MAX,$timestamp); }
+    public function stamp(): ?string { return $this->ready() ? $this->generation() : null; }
 
     public function __construct(?string $dir = null, int $ttl = 300, ?callable $clock = null)
     {
@@ -150,7 +153,9 @@ final class HtmlPageCache
                 || preg_match('~data-favorites-token=["\x27][^"\x27]+["\x27]~i',$html)) return false;
             if (!preg_match('~<!doctype html~i',$html) || stripos($html,'</html>')===false || preg_match('~(?:Fatal error|Warning|Notice):~',$html)) return false;
             $now=($this->clock)();
-            $meta=['generation'=>$generation,'created'=>$now,'expires'=>min($now+$this->ttl,strtotime('tomorrow',$now)),'headers'=>$allowed,'hash'=>hash('sha256',$html)];
+            $expires=min($now+$this->ttl,strtotime('tomorrow',$now),$this->notAfter??PHP_INT_MAX);
+            if($expires<=$now)return false;
+            $meta=['generation'=>$generation,'created'=>$now,'expires'=>$expires,'headers'=>$allowed,'hash'=>hash('sha256',$html)];
             $compressed=gzencode($html,3); if ($compressed===false) return false;
             $json=json_encode($meta,JSON_UNESCAPED_SLASHES);if ($json===false) return false;
             $data=$json."\n".$compressed;

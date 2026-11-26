@@ -22,7 +22,9 @@ class Currency{
     }
 
     public static function getCurrencies(){
-        return \R::getAssoc("SELECT code, title, symbol_left, symbol_right, value, base FROM currency ORDER BY base DESC");
+        $cache=\ishop\Cache::instance();$rows=$cache->get('currencies_front_v1');
+        if($rows===false){$rows=\R::getAssoc("SELECT code, title, symbol_left, symbol_right, value, base FROM currency ORDER BY base DESC");$cache->set('currencies_front_v1',$rows,300);}
+        return $rows;
     }
 
     public static function getCurrency($currencies){

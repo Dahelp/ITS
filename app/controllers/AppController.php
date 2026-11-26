@@ -44,24 +44,21 @@ class AppController extends Controller
     protected function shareCommonData(): void
     {
         $cache = Cache::instance();
-        $banners = $cache->get('banners_front');
+        $banners = $cache->get('banners_front_v2');
 
         if ($banners === false) {
-            $now = date('Y-m-d H:i:s');
-
             $banners = \R::getAll("
                 SELECT *
                 FROM plagins_banner
                 WHERE hide = 'show'
-                  AND (start_at IS NULL OR start_at <= ?)
-                  AND (end_at   IS NULL OR end_at   >= ?)
                 ORDER BY position DESC, id DESC
-            ", [$now, $now]);
+            ");
 
             // кэшируем на 5 минут
-            $cache->set('banners_front', $banners, 300);
+            $cache->set('banners_front_v2', $banners, 300);
         }
-
+        $banners=\app\services\CatalogCacheClock::activeBanners($banners,time(),static function(int $at):void{\app\services\HtmlPageCache::instance()->limitUntil($at);});
+        \app\services\CatalogCacheClock::promotionBoundary();
         App::$app->setProperty('banners_front', $banners);
     }
 
