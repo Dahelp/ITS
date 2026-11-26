@@ -24,3 +24,6 @@ if ($adapter === null) {
     \RedBeanPHP\R::setup($db['dsn'], $db['user'], $db['pass']);
     \RedBeanPHP\R::freeze(true);
 }
+
+// CLI inventory/catalog jobs must invalidate the same HTML cache as web edits.
+\app\services\HtmlCacheInvalidator::attach(\RedBeanPHP\R::getDatabaseAdapter());

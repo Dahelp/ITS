@@ -186,6 +186,20 @@ foreach ($legacyFilterRedirects as $prefix => $targetUrl) {
 }
 
 
+require_once dirname(__DIR__) . '/app/services/HtmlPageCache.php';
+$htmlPageCache = \app\services\HtmlPageCache::instance();
+// Covers admin modules using PDO directly as well as stateful legacy GET actions.
+if ((str_starts_with($pathOnly,'/admin/') && ($method==='POST' || preg_match('~/(?:add|edit|delete|save|update|import|copy|clear|refresh|change|apply|sync|set)[a-z-]*(?:/|$)~i',$pathOnly)))
+    || preg_match('~^/cron/(?:refresh|import|sync|update)~i',$pathOnly)) {
+    $htmlPageCache->beginMutation();
+}
+try {
+    if ($htmlPageCache->handle($_SERVER,$_COOKIE)) exit;
+} catch (\Throwable $cacheError) {
+    header('X-Page-Cache: BYPASS');
+    error_log('HTML page cache bypassed: '.$cacheError->getMessage());
+}
+
 require_once dirname(__DIR__) . '/config/init.php';
 
 if (preg_match('~^/([a-z0-9\-_]+)/([a-z0-9\.\-_]+)$~iu', $legacyPath, $matches)) {

@@ -1,17 +1,37 @@
 {
-  "app/controllers/ProductController.php": {
-    "before": "0e66b322d047cbbd0a3497e6d9986090e86a85216ce8ffe10db2aba67135c0d3",
-    "before_lf": "0e66b322d047cbbd0a3497e6d9986090e86a85216ce8ffe10db2aba67135c0d3",
-    "after": "6ee364a31968a05daa8153c920f4ab8ee41fec807c3d832d117e39ad80fef888"
+  "public/index.php": {
+    "before": "6900a21e435d7310b74433e1a546afa50da8b75500639ab9343da15772e960af",
+    "before_lf": "6900a21e435d7310b74433e1a546afa50da8b75500639ab9343da15772e960af",
+    "after": "b57a558caceb31047cd3f862d45ee7a6832d7a388d5f70310602c3aaead53687"
   },
-  "app/views/itscenter/Product/view.php": {
-    "before": "b6b52c6e1b0a12db9b01394142aaf6815c9c5dd444876d4449f0f9704de551f3",
-    "before_lf": "b6b52c6e1b0a12db9b01394142aaf6815c9c5dd444876d4449f0f9704de551f3",
-    "after": "7fa49c8c1561b91d60255ebfc51489189ee25c76f6cf0729b6d9fdd62bcd7bdb"
+  "vendor/ishop/core/Db.php": {
+    "before": "fb47bd447571693b031ab7b216f3a7b78ba04d63954def492fcfb0bcb0b15833",
+    "before_lf": "fb47bd447571693b031ab7b216f3a7b78ba04d63954def492fcfb0bcb0b15833",
+    "after": "b91db9740f19c34983e8a27b863b65a71aca87b96332e2dddb71460ec4cd6db1"
   },
-  "public/js/recently-viewed.js": {
+  "vendor/ishop/core/Cache.php": {
+    "before": "906ede5636eaab4fc4031eab4d18986d5dddc5476cbee06c5e81b351d3c36c24",
+    "before_lf": "906ede5636eaab4fc4031eab4d18986d5dddc5476cbee06c5e81b351d3c36c24",
+    "after": "a9d479c54bcacf1f5de593747d1a3de8bd70787f42907908016272c1fe704d1b"
+  },
+  "config/db_bootstrap.php": {
+    "before": "ee409095084a8a857f6684cddb910f6a76177d34b65e9bfd4cb3f41519733073",
+    "before_lf": "ee409095084a8a857f6684cddb910f6a76177d34b65e9bfd4cb3f41519733073",
+    "after": "707efaa97503ff76534dc7ae5985ef4316d837caf7064e20d248347aa9edb70a"
+  },
+  "app/services/HtmlPageCache.php": {
     "before": null,
     "before_lf": null,
-    "after": "46f704f7eee0a13d77b583d36d15c417f3c061c1069fc502f5f34ce2654390ff"
+    "after": "4995d9bd3d258081ddda2a2b144bd716c7141f5b99af1c85da776d359cb83eca"
+  },
+  "app/services/HtmlCacheInvalidator.php": {
+    "before": null,
+    "before_lf": null,
+    "after": "e41497fccd5a6179ea2329f90983af800d5b22dbba8cbb968e0c5a773cf8ecaf"
+  },
+  "bin/html_cache.php": {
+    "before": null,
+    "before_lf": null,
+    "after": "ac44c4098ea5c919a194b5018f12c67dcd5fbc79147d42525ddcc95844b24668"
   }
 }

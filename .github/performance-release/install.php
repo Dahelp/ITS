@@ -6,7 +6,7 @@ $root=realpath($target);$mode=$argv[2]??'';
 if(!$root||!in_array($mode,['audit','publish'],true))throw new RuntimeException('Invalid release parameters');
 $manifest=json_decode(file_get_contents($package.'/manifest.json'),true,512,JSON_THROW_ON_ERROR);$installed=[];$before=[];$audit=[];@mkdir($package.'/reports',0700,true);
 foreach($manifest as$p=>$v){
- if(!preg_match('~^(app|public|bin|vendor/ishop/core)/[A-Za-z0-9_./-]+$~D',$p)||str_contains($p,'..')||str_contains($p,'\\')||str_starts_with($p,'public/tmp/'))throw new RuntimeException('Invalid release path');
+ if(!preg_match('~^(?:(app|public|bin|vendor/ishop/core)/[A-Za-z0-9_./-]+|config/db_bootstrap\.php)$~D',$p)||str_contains($p,'..')||str_contains($p,'\\')||str_starts_with($p,'public/tmp/'))throw new RuntimeException('Invalid release path');
  $file=$root.'/'.$p;if(is_link($file))throw new RuntimeException('Symlink target: '.$p);
  $hash=is_file($file)?hash_file('sha256',$file):null;$lf=is_file($file)?hash('sha256',str_replace("\r\n","\n",file_get_contents($file))):null;
  $compatible=$hash===$v['before']||($hash!==null&&$lf===($v['before_lf']??null));$audit[$p]=['actual'=>$hash,'expected'=>$v['before'],'compatible'=>$compatible];$before[$p]=['hash'=>$hash,'mode'=>is_file($file)?fileperms($file)&0777:0644];
@@ -21,10 +21,13 @@ try{
  $paths=array_keys($manifest);usort($paths,static function($a,$b){$rank=static fn($p)=>$p==='public/index.php'?100:(str_starts_with($p,'public/js/')?0:(str_starts_with($p,'app/services/')?10:30));return $rank($a)<=>$rank($b);});
  foreach($paths as$p){$dest=$root.'/'.$p;if(!is_dir(dirname($dest)))mkdir(dirname($dest),0755,true);$tmp=$dest.'.performance-'.getmypid();if(!copy($package.'/files/'.$p,$tmp))throw new RuntimeException('Copy: '.$p);chmod($tmp,$before[$p]['mode']);if(!rename($tmp,$dest))throw new RuntimeException('Atomic install: '.$p);$installed[]=$p;}
  foreach($manifest as$p=>$v)if(hash_file('sha256',$root.'/'.$p)!==$v['after'])throw new RuntimeException('Installed hash: '.$p);
+ if(is_file($root.'/app/services/HtmlPageCache.php')){require_once $root.'/app/services/HtmlPageCache.php';if(!(new \app\services\HtmlPageCache($root.'/tmp/html-page-cache'))->invalidate())throw new RuntimeException('HTML cache purge failed');}
  putenv('PERFORMANCE_BASE_URL=https://its-center.ru');putenv('PERFORMANCE_REPORT_PATH='.$package.'/reports/smoke.json');passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/smoke.php'),$code);if($code)throw new RuntimeException('Production HTTP smoke failed');
- $receipt=['at'=>gmdate('c'),'files'=>count($manifest),'backup'=>$package.'/backup','database_changed'=>false,'smoke'=>'passed'];file_put_contents($package.'/receipt.json',json_encode($receipt,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));copy($package.'/receipt.json',$package.'/reports/receipt.json');echo 'Stages 1-2 published; HTTP smoke passed'.PHP_EOL;
+ if(is_file($package.'/cache-smoke.php')){putenv('PERFORMANCE_CACHE_REPORT_PATH='.$package.'/reports/cache-smoke.json');passthru(escapeshellarg(PHP_BINARY).' '.escapeshellarg($package.'/cache-smoke.php'),$code);if($code)throw new RuntimeException('Production HTML cache smoke failed');}
+ $receipt=['at'=>gmdate('c'),'files'=>count($manifest),'backup'=>$package.'/backup','database_changed'=>false,'smoke'=>'passed'];file_put_contents($package.'/receipt.json',json_encode($receipt,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));copy($package.'/receipt.json',$package.'/reports/receipt.json');echo 'Performance release published; HTTP smoke passed'.PHP_EOL;
 }catch(Throwable$e){
  foreach(array_reverse($installed)as$p){$dest=$root.'/'.$p;if($before[$p]['hash']===null){if(is_file($dest))unlink($dest);}else{$tmp=$dest.'.performance-restore-'.getmypid();if(!copy($package.'/backup/'.$p,$tmp))throw new RuntimeException('ROLLBACK COPY FAILED: '.$p);chmod($tmp,$before[$p]['mode']);if(!rename($tmp,$dest))throw new RuntimeException('ROLLBACK RENAME FAILED: '.$p);}}
  foreach($installed as$p){$actual=is_file($root.'/'.$p)?hash_file('sha256',$root.'/'.$p):null;if($actual!==$before[$p]['hash'])throw new RuntimeException('ROLLBACK HASH FAILED: '.$p);}
+ if(class_exists('app\\services\\HtmlPageCache',false))(new \app\services\HtmlPageCache($root.'/tmp/html-page-cache'))->invalidate();
  file_put_contents($package.'/reports/failure.json',json_encode(['error'=>$e->getMessage(),'rolled_back'=>count($installed),'at'=>gmdate('c')],JSON_PRETTY_PRINT));fwrite(STDERR,$e->getMessage().'; changes rolled back'.PHP_EOL);exit(1);
 }

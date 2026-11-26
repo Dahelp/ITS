@@ -34,6 +34,7 @@ class Cache{
         if(file_exists($file)){
             unlink($file);
         }
+        \app\services\HtmlPageCache::instance()->invalidate();
     }
 
 }

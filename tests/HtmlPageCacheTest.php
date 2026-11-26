@@ -1,0 +1,55 @@
+<?php
+require dirname(__DIR__).'/app/services/HtmlPageCache.php';
+require dirname(__DIR__).'/vendor/autoload.php';
+use app\services\HtmlPageCache;
+use app\services\HtmlCacheInvalidator;
+function check($ok,$message){if(!$ok)throw new RuntimeException($message);}
+$server=['REQUEST_METHOD'=>'GET','HTTP_HOST'=>'its.local','REQUEST_URI'=>'/category/test/6.50-10'];
+$key=HtmlPageCache::identity($server,[]);check(is_string($key),'canonical landing allowed');
+check(HtmlPageCache::identity(array_replace($server,['REQUEST_METHOD'=>'HEAD']),[])===$key,'HEAD and GET share identity');
+foreach ([['REQUEST_METHOD'=>'POST'],['HTTP_HOST'=>'foreign.example'],['HTTP_AUTHORIZATION'=>'Bearer private'],['HTTP_X_REQUESTED_WITH'=>'XMLHttpRequest'],['HTTP_RANGE'=>'bytes=0-20'],['HTTP_CACHE_CONTROL'=>'no-cache'],['REQUEST_URI'=>'/user/login'],['REQUEST_URI'=>'/catalog-menu'],['REQUEST_URI'=>'/category/test?sort=price'],['REQUEST_URI'=>'/category/test?page[]=2'],['REQUEST_URI'=>'/category/test?page=2&page=3'],['REQUEST_URI'=>'/product/test?page=2'],['REQUEST_URI'=>'/category/test?lead_form=1'],['REQUEST_URI'=>'/category/test?utm_source=direct']] as $change) check(HtmlPageCache::identity(array_replace($server,$change),[])===null,'unsafe request bypass: '.json_encode($change));
+foreach(['PHPSESSID','currency','recentlyViewed','unknown_customer_state']as$name) check(HtmlPageCache::identity($server,[$name=>'value'])===null,'personal cookie bypass: '.$name);
+check(HtmlPageCache::identity($server,['its_traffic_source'=>'metadata','cookie_accepted'=>'true','_ga_123'=>'analytics'])===$key,'non-personal analytics ignored');
+check(HtmlPageCache::identity(array_replace($server,['REQUEST_URI'=>'/category/test?page=2']),[])!==HtmlPageCache::identity(array_replace($server,['REQUEST_URI'=>'/category/test?page=3']),[]),'pagination separated');
+$dir=dirname(__DIR__).'/tmp/html-cache-test-'.bin2hex(random_bytes(5));$now=time();
+$cache=new HtmlPageCache($dir,300,static function()use(&$now){return $now;});
+check($cache->invalidate(),'initial generation created');$gen=file_get_contents($dir.'/generation');
+$html='<!doctype html><html><head><title>Test</title></head><body>public</body></html>';
+check($cache->write($key,$gen,$html,['Content-Type: text/html; charset=UTF-8','X-Robots-Tag: index, follow']),'store complete HTML');
+check($cache->read($key)['html']===$html,'exact decoded body');
+check(!$cache->write($key,$gen,$html,['Set-Cookie: PHPSESSID=private']),'never cache cookie response');
+check(!$cache->write($key,$gen,$html,['Cache-Control: private, no-store']),'never cache private response');
+check(!$cache->write($key,$gen,$html,['Content-Type: application/json']),'never change response MIME type');
+check(!$cache->write($key,$gen,$html,['Vary: Cookie']),'unknown response variation bypasses storage');
+check(!$cache->write($key,$gen,'<html>partial',[]),'never cache partial/error page');
+$private=str_replace('public','<input name="lead_token" value="'.str_repeat('a',64).'">',$html);
+check(!$cache->write($key,$gen,$private,[]),'defence against cached session token');
+$now+=301;check($cache->read($key)===null,'hard expiry, no stale price fallback');$now-=301;
+$cache->beginMutation();check($cache->read($key)===null,'active writer bypasses old HTML');
+check(!$cache->write($key,$gen,$html,[]),'render spanning mutation cannot publish');$cache->endMutation();
+check($cache->read($key)===null,'old generation remains inaccessible after commit');
+$gen=file_get_contents($dir.'/generation');check($cache->write($key,$gen,$html,[]),'new generation can populate');
+$cache->disable();check($cache->read($key)===null,'kill switch fails open');$cache->enable();check($cache->read($key)===null,'enable starts clean generation');
+$gen=file_get_contents($dir.'/generation');$keys=[];
+for($i=0;$i<55;$i++){$k='ab'.substr(hash('sha256',(string)$i),2);$keys[]=$k;check($cache->write($k,$gen,$html,[]),'bounded shard write');}
+check(count(glob($dir.'/ab/*.htmlcache'))<=48,'hard per-shard entry budget');
+$latest=end($keys);file_put_contents($dir.'/ab/'.$latest.'.htmlcache',"invalid\nnot-gzip");check($cache->read($latest)===null,'corrupt file is a cache miss');
+foreach(['UPDATE `product` SET price=? WHERE id=?','INSERT IGNORE INTO modification VALUES (?)','DELETE FROM category WHERE id=?','REPLACE INTO catalog_category_display VALUES (?)','/* import */ UPDATE db.product SET quantity=?','ALTER TABLE attribute ADD value INT']as$sql)check(HtmlCacheInvalidator::affectsCatalog($sql),'catalog write: '.$sql);
+foreach(['SELECT * FROM product','UPDATE user_online SET unix=?','INSERT INTO order_product VALUES (?)','CREATE TABLE IF NOT EXISTS catalog_dictionary (id INT)','SET NAMES utf8mb4']as$sql)check(!HtmlCacheInvalidator::affectsCatalog($sql),'unrelated or idempotent SQL: '.$sql);
+// Exercise the actual RedBean adapter and a real isolated database transaction.
+\RedBeanPHP\R::setup('sqlite:'.$dir.'/fixture.sqlite');
+\RedBeanPHP\R::exec('CREATE TABLE product (id INTEGER PRIMARY KEY, price INTEGER)');
+\RedBeanPHP\R::exec('INSERT INTO product VALUES (1,100)');
+\RedBeanPHP\R::freeze(true);
+HtmlCacheInvalidator::attach(\RedBeanPHP\R::getDatabaseAdapter(),new HtmlCacheInvalidator($cache,$dir.'/objects'));
+require dirname(__DIR__).'/config/db_bootstrap.php';
+$gen=file_get_contents($dir.'/generation');check($cache->write($key,$gen,$html,[]),'seed before SQL mutation');
+\RedBeanPHP\R::begin();\RedBeanPHP\R::exec('UPDATE product SET price=200 WHERE id=1');
+check($cache->read($key)===null,'real uncommitted SQL bypasses old HTML');
+\RedBeanPHP\R::commit();$cache->endMutation();
+check($cache->read($key)===null && (int)\RedBeanPHP\R::getCell('SELECT price FROM product WHERE id=1')===200,'commit changes price and discards old page');
+$gen=file_get_contents($dir.'/generation');check($cache->write($key,$gen,$html,[]),'seed before rollback');
+\RedBeanPHP\R::begin();\RedBeanPHP\R::exec('UPDATE product SET price=999 WHERE id=1');\RedBeanPHP\R::rollback();$cache->endMutation();
+check($cache->read($key)===null && (int)\RedBeanPHP\R::getCell('SELECT price FROM product WHERE id=1')===200,'rollback cannot publish speculative cached values');
+\RedBeanPHP\R::close();
+echo "HTML cache: safe identities, cookie/query isolation, exact body, TTL, mutation race, token defence, corruption, kill switch and disk budget OK\n";
