@@ -91,6 +91,19 @@
 	<link rel="shortcut icon" href="/images/favicon.svg" type="image/svg+xml" />
 
 	<?= $this->getMeta(); ?>
+	<script id="early-ui">
+	(function(root){
+		root.classList.add('ui-early','facets-early');
+		if(/(?:^|;\s*)cookie_accepted=[^;]+/.test(document.cookie))root.classList.add('has-cookie-consent');
+		window.addEventListener('error',function(event){
+			var source=(event.target&&event.target.src)||event.filename||'';
+			if(source.indexOf('/js/catalog-facets.js')!==-1){
+				root.classList.remove('facets-early');
+				Array.prototype.forEach.call(document.querySelectorAll('.catalog-facets.is-enhanced'),function(panel){panel.classList.remove('is-enhanced');});
+			}
+		},true);
+	})(document.documentElement);
+	</script>
 	<?php if($controller==='Product' && !empty($product)): ?>
 	<?= \app\services\ProductImagePreload::render(\app\helpers\Img::productPicture('base',$product->img??'', '', ['eager'=>true])); ?>
 	<?php foreach(['product-gallery','product-badges','product-fulfilment'] as $criticalStyle): if(is_file(WWW.'/css/'.$criticalStyle.'.css')): ?>
@@ -104,6 +117,10 @@
 
 	<style>
 		/* Критические anti-FOUC стили до загрузки основных CSS */
+		html.ui-early:not(.has-cookie-consent) #cookie-bar.cookie-bar { display: flex !important; }
+		@media(max-width:991.98px) {
+			html.facets-early .catalog-facets:not(.is-open) .catalog-facets__panel { display: none; }
+		}
 		.collapse:not(.show) {
 			display: none !important;
 		}

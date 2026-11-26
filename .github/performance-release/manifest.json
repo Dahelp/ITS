@@ -1,7 +1,7 @@
 {
   "app/views/itscenter/layouts/watches.php": {
-    "before": "dd57ab246ad99d97e48d302ca069c31c46944fef2c5f6533f84ec600f11643ad",
-    "before_lf": "dd57ab246ad99d97e48d302ca069c31c46944fef2c5f6533f84ec600f11643ad",
-    "after": "24bad69fd84eb88ca3ac9ff7bcbf012fcae120407bbed6207fbe40dc489b2554"
+    "before": "24bad69fd84eb88ca3ac9ff7bcbf012fcae120407bbed6207fbe40dc489b2554",
+    "before_lf": "24bad69fd84eb88ca3ac9ff7bcbf012fcae120407bbed6207fbe40dc489b2554",
+    "after": "6c35f57cc1aaf84db7dea411c711df005e945815239ec0a387086d8a9d5d7bf0"
   }
 }
