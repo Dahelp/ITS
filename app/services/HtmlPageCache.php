@@ -17,7 +17,12 @@ final class HtmlPageCache
     private array $mutationCallbacks = [];
     private ?int $notAfter = null;
     public function limitUntil(int $timestamp): void { if($timestamp>0)$this->notAfter=min($this->notAfter??PHP_INT_MAX,$timestamp); }
-    public function stamp(): ?string { return $this->ready() ? $this->generation() : null; }
+    public function stamp(): ?string
+    {
+        if(!$this->ready())return null;
+        $guard=$this->guard();if(!$guard)return null;
+        try{return $this->generation();}finally{flock($guard,LOCK_UN);fclose($guard);}
+    }
 
     public function __construct(?string $dir = null, int $ttl = 300, ?callable $clock = null)
     {

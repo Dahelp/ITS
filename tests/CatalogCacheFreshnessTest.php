@@ -8,7 +8,9 @@ function verify($value,$message){if(!$value)throw new RuntimeException($message)
 $now=time();$page=new HtmlPageCache(CACHE.'/html',300,static function()use(&$now){return$now;});
 $slot=new ReflectionProperty(HtmlPageCache::class,'instance');$slot->setAccessible(true);$slot->setValue(null,$page);
 $page->invalidate();$one=new \ishop\Cache();verify($one->set('price',['price'=>100]),'initial write');verify($one->get('price')===['price'=>100],'read atomic object');
-$page->beginMutation();$page->endMutation();
+$page->beginMutation();
+$during=new \ishop\Cache();verify($during->get('price')===false&&!$during->set('price',['price'=>999]),'uncommitted mutation cannot publish or read shared objects');
+$page->endMutation();
 $two=new \ishop\Cache();verify($two->get('price')===false,'new request cannot read old price');verify(!$one->set('price',['price'=>50]),'old renderer cannot publish after mutation');
 verify($two->set('price',['price'=>200]),'new renderer publishes committed price');
 file_put_contents(CACHE.'/'.md5('price').'.txt','invalid');verify($two->get('price')===false,'corruption is a miss');

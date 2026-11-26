@@ -2,7 +2,7 @@
   "app/services/HtmlPageCache.php": {
     "before": "e64cbf8bda3842caeef797a881abc45ab24f25a5ab8e8bc06d4fc71025ded115",
     "before_lf": "e64cbf8bda3842caeef797a881abc45ab24f25a5ab8e8bc06d4fc71025ded115",
-    "after": "1d6c3dd3e4d9603e7dce4a2034b07da53ad380d6471969e510056c59ba92bd7a"
+    "after": "f1b8af4714a0c817f169c892542b32133dd920ce8a6fcecea669c0ba03506650"
   },
   "vendor/ishop/core/Cache.php": {
     "before": "a9d479c54bcacf1f5de593747d1a3de8bd70787f42907908016272c1fe704d1b",
