@@ -10,7 +10,7 @@ final class CatalogCacheClock
         foreach($rows as$row){
             $start=($row['start_at']??null)===null?null:(strtotime((string)$row['start_at'])?:0);
             $end=($row['end_at']??null)===null?null:(strtotime((string)$row['end_at'])?:0);
-            foreach([$start,$end]as$boundary)if($boundary!==null&&$boundary>$now)$limit($boundary);
+            foreach([$start,$end===null?null:$end+1]as$boundary)if($boundary!==null&&$boundary>$now)$limit($boundary);
             if(($start===null||$start<=$now)&&($end===null||$end>=$now))$active[]=$row;
         }
         return $active;

@@ -12,7 +12,7 @@
   "app/services/CatalogCacheClock.php": {
     "before": null,
     "before_lf": null,
-    "after": "37e8ee40d352ace9de2605b2e79adb9439b8940ad1b533c15c3292bd278d62e3"
+    "after": "e5e7999304346649646a2002a607440e51aeb0aa190af422b1a6f1c856f85dfc"
   },
   "app/controllers/AppController.php": {
     "before": "10f38dd1632b7004b583f71c0c89650a5aa9d55a3c34f3d7177e71726a927a2e",

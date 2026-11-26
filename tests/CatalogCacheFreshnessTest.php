@@ -18,4 +18,8 @@ $limits=[];$rows=[['id'=>1,'start_at'=>null,'end_at'=>null],['id'=>2,'start_at'=
 $active=\app\services\CatalogCacheClock::activeBanners($rows,$now,static function($at)use(&$limits){$limits[]=$at;});
 verify(array_column($active,'id')===[1]&&$limits===[$now+20],'future banner expires HTML before activation');
 $active=\app\services\CatalogCacheClock::activeBanners($rows,$now+20,static function(){});verify(array_column($active,'id')===[1,2],'banner starts without database write');
+$limits=[];$endRow=[['id'=>4,'start_at'=>null,'end_at'=>date('Y-m-d H:i:s',$now)]];
+$active=\app\services\CatalogCacheClock::activeBanners($endRow,$now,static function($at)use(&$limits){$limits[]=$at;});
+verify(count($active)===1&&$limits===[$now+1],'inclusive banner end expires in the following second');
+verify(\app\services\CatalogCacheClock::activeBanners($endRow,$now+1,static function(){})===[],'banner disappears after its inclusive end');
 echo "Freshness: object generation, mutation race, corruption, scheduled HTML expiry and banner activation passed\n";
