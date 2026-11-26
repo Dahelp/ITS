@@ -12,8 +12,8 @@
     "css/fonts-override.css": "7265834c6da1e15e9fa4d8ebf72c3f06f7f7a5dbaeef229c9aaf8ffd31b88a06"
   },
   "original_bytes": 855359,
-  "bundle_bytes": 684161,
-  "gzip_bytes": 118355,
+  "bundle_bytes": 684269,
+  "gzip_bytes": 118380,
   "warnings": [
     {
       "message": "Invalid empty selector",

@@ -1,12 +1,22 @@
 {
   "app/views/itscenter/layouts/watches.php": {
-    "before": "2bbcfa302c934042e80dfa9343295fc79b158bf350f9986b582a7e17b303a217",
-    "before_lf": "2bbcfa302c934042e80dfa9343295fc79b158bf350f9986b582a7e17b303a217",
-    "after": "a0dcb5335ac97ee8f5b6266a46aa1d3287071887636af7955279100feccefa22"
+    "before": "a0dcb5335ac97ee8f5b6266a46aa1d3287071887636af7955279100feccefa22",
+    "before_lf": "a0dcb5335ac97ee8f5b6266a46aa1d3287071887636af7955279100feccefa22",
+    "after": "dd57ab246ad99d97e48d302ca069c31c46944fef2c5f6533f84ec600f11643ad"
   },
-  "app/services/ProductImagePreload.php": {
+  "public/css/site.bundle.min.css": {
+    "before": "ec2a25fee64a6f444bc891d8598e098be604d0d436e9f5ff69b694622c2075c9",
+    "before_lf": "ec2a25fee64a6f444bc891d8598e098be604d0d436e9f5ff69b694622c2075c9",
+    "after": "48bee2054613d6c717248bf704ba6c97071cbf57b632ae75d34678b656803bac"
+  },
+  "public/css/fancybox-4.0.31.min.css": {
     "before": null,
     "before_lf": null,
-    "after": "0311e3ce8a6806494c5d0bc3a36096beadec35534a4ce2e391c7492af5e5edc5"
+    "after": "b8f0373da373c3bcf45c0c096399050969fe474702cbad829d018ad42e50cafd"
+  },
+  "public/css/fancybox-4.0.31.LICENSE.txt": {
+    "before": null,
+    "before_lf": null,
+    "after": "bf656ef54bed68b7f3ceb121fd14caa09f4c4615040c437e8f06d82b7646a89f"
   }
 }

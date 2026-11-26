@@ -7,7 +7,8 @@ const sources=['css/bootstrap.css','css/flexslider.css','css/aiz-core.css','css/
 const hashes={},chunks=[];let original=0;const warnings=[];
 for(const source of sources){
  const raw=fs.readFileSync(path.join(root,'public',source));original+=raw.length;hashes[source]=crypto.createHash('sha256').update(raw).digest('hex');
- let css=raw.toString('utf8').replace(/([;{]\s*)\*[a-z-]+\s*:[^;}]*;/gi,'$1').replace(/@charset\s+["'][^"']+["'];/gi,'').replace(/\/\*[#@]\s*sourceMappingURL=[\s\S]*?\*\//g,'');
+ let css=raw.toString('utf8').replace(/\r\n/g,'\n').replace(/([;{]\s*)\*[a-z-]+\s*:[^;}]*;/gi,'$1').replace(/@charset\s+["'][^"']+["'];/gi,'').replace(/\/\*[#@]\s*sourceMappingURL=[\s\S]*?\*\//g,'');
+ css=css.replace(/@font-face\s*\{[^{}]*\}/gi,block=>/font-display\s*:/i.test(block)?block:block.replace('{','{font-display:swap;'));
  css=css.replace(/url\(\s*(["']?)([^)"']+)\1\s*\)/gi,(all,q,url)=>{
   url=url.trim();if(/^(?:data:|https?:|\/\/|#)/i.test(url))return all;
   const parsed=new URL(url,'https://its-center.ru/'+source);const resolved=parsed.pathname.replace(/^\/public\/adminlte\//,'/adminlte/');

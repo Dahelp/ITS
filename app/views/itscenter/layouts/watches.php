@@ -93,6 +93,9 @@
 	<?= $this->getMeta(); ?>
 	<?php if($controller==='Product' && !empty($product)): ?>
 	<?= \app\services\ProductImagePreload::render(\app\helpers\Img::productPicture('base',$product->img??'', '', ['eager'=>true])); ?>
+	<?php foreach(['product-gallery','product-badges','product-fulfilment'] as $criticalStyle): if(is_file(WWW.'/css/'.$criticalStyle.'.css')): ?>
+	<link rel="preload" as="style" href="/css/<?= $criticalStyle ?>.css?v=<?= (int)filemtime(WWW.'/css/'.$criticalStyle.'.css') ?>">
+	<?php endif; endforeach; ?>
 	<?php endif; ?>
 
 	<link rel="preconnect" href="https://mc.yandex.ru" crossorigin>
@@ -125,7 +128,7 @@
 
 	<link rel="stylesheet" href="/css/site.bundle.min.css?v=<?= (int) @filemtime(WWW . '/css/site.bundle.min.css') ?>">
 	<?php if (!empty($needFancybox)): ?>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"/>
+	<link rel="stylesheet" href="/css/fancybox-4.0.31.min.css?v=<?= (int)filemtime(WWW . '/css/fancybox-4.0.31.min.css') ?>"/>
 	<?php endif; ?>
 	<meta name="geo.placename" content="ул. Комунальная, 26, стр. 2, Климовск, Московская область, Россия, 142184" />
 	<meta name="geo.position" content="55.360413;37.562371" />
@@ -293,7 +296,7 @@
 <script defer src="/js/jquery.flexslider.js"></script>
 <script src="/js/swiper-bundle.min.js"></script>
 <?php if (!empty($needFancybox)): ?>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.umd.js"></script>
 <?php endif; ?>
 <script>
 window.APP_CONFIG = {
