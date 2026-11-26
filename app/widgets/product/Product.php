@@ -87,6 +87,16 @@ class Product
             }
         }
 
+        // Fetch attributes once for the card list instead of one SQL query per placeholder.
+        $seoAttributes=[];
+        if(!empty($context['productInseoByCategoryId'])){
+            $slots=implode(',',array_fill(0,count($productIds),'?'));
+            foreach(\R::getAll("SELECT pa.product_id, a.url_params, pa.attribute_text FROM product_attribute pa JOIN attribute a ON a.id=pa.attribute_id WHERE pa.product_id IN ($slots) AND a.url_params<>''",$productIds)as$row){
+                $pid=(int)$row['product_id'];$key=(string)$row['url_params'];
+                if(!isset($seoAttributes[$pid]))$seoAttributes[$pid]=[];
+                $seoAttributes[$pid][$key]=array_key_exists($key,$seoAttributes[$pid])?[]:$row['attribute_text'];
+            }
+        }
         // seo names
         foreach ($products as $product) {
             $pid = (int)($product['id'] ?? $product->id ?? 0);
@@ -98,7 +108,7 @@ class Product
 
             $seoTpl = (string)($context['productInseoByCategoryId'][$cid]['name'] ?? '');
             if ($seoTpl !== '') {
-                $context['seoNameByProductId'][$pid] = (string)\ishop\App::seoreplace($seoTpl, $pid);
+                $context['seoNameByProductId'][$pid] = (string)\ishop\App::seoreplace($seoTpl, $pid, $seoAttributes[$pid]??[]);
             } else {
                 $context['seoNameByProductId'][$pid] = (string)($product['name'] ?? $product->name ?? '');
             }

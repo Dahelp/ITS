@@ -18,5 +18,15 @@
     "before": null,
     "before_lf": null,
     "after": "bf656ef54bed68b7f3ceb121fd14caa09f4c4615040c437e8f06d82b7646a89f"
+  },
+  "vendor/ishop/core/App.php": {
+    "before": "d2381aff43bd326040919b6ce29347ec0cf21cf7e3c52a9327104975164f1661",
+    "before_lf": "d2381aff43bd326040919b6ce29347ec0cf21cf7e3c52a9327104975164f1661",
+    "after": "8cf074c4ab5b6c69847c3d1f619e80344c95e1d572c5caf3f81109fe241b4241"
+  },
+  "app/widgets/product/Product.php": {
+    "before": "1a8f46ef7eabfecb7768a22a3ec64d0c326b1a4279370d9e9162104684fd7175",
+    "before_lf": "1a8f46ef7eabfecb7768a22a3ec64d0c326b1a4279370d9e9162104684fd7175",
+    "after": "889c38dcb6b8b48616132ce01a39e79e559486a67127384792a021f2c588f95b"
   }
 }

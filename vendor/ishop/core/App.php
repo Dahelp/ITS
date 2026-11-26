@@ -302,11 +302,13 @@ class App
         return $str . ' ' . $rub . ' ' . $value[1] . ' копеек.';
     }
 
-    public static function seoreplace($text, $id)
+    public static function seoreplace($text, $id, ?array $attributes = null)
     {
         return self::replaceSeoPlaceholders(
             (string)$text,
-            function (string $urlsys) use ($id) {
+            function (string $urlsys) use ($id, $attributes) {
+                // An array marks duplicate keys: preserve the original database resolver for ambiguity.
+                if($attributes!==null && !is_array($attributes[$urlsys]??null))return ($attributes[$urlsys]??'')?:'';
                 return \R::getCell(
                     "SELECT pa.attribute_text
                      FROM product_attribute pa
